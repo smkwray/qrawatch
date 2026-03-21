@@ -1,6 +1,6 @@
 # Treasury Maturity Composition as Shadow Balance-Sheet Policy
 
-[Project website](https://smkwray.github.io/qrawatch/) | [GitHub repository](https://github.com/smkwray/qrawatch)
+[Project website](https://smkwray.github.io/qrawatch/)
 
 This repo is a reproducible research and data product for the project:
 
@@ -32,7 +32,7 @@ The repo now has a reproducible backend product and public site, with a delibera
 - the publish layer under `output/publish/` is the frontend-facing API
 - investor allotments, primary dealer, and SEC N-MFP are now summary-ready extension modules
 
-Exact official quarter coverage currently spans `2023Q4` through `2024Q3`.
+Exact official quarter coverage currently spans `2023Q4` through `2025Q4`.
 This public release should be read as an in-progress research/data product, not as a finished long-history dataset.
 
 ## Quickstart
@@ -119,7 +119,7 @@ Some pieces are seeded rather than fully automated:
 
 ## Current limitations
 
-- the exact official quarter history is still short and currently covers only `2023Q4` through `2024Q3`
+- the exact official quarter history is still short and currently covers only `2023Q4` through `2025Q4`
 - the event-study layer is informative but still small-sample
 - extension modules are supporting context, not the headline result
 - the long-history version of the project still needs additional official quarter capture
@@ -164,8 +164,8 @@ If `FRED_API_KEY` is set in `.env`, the FRED downloader uses the official API to
 
 ## What comes next
 
-- extend exact official quarter capture into 2025
-- extend the official quarter history backward after the 2025 forward pass
+- extend exact official quarter capture beyond `2025Q4`
+- extend the official quarter history backward now that the recent forward panel is built
 - deepen extensions after the core quarter history is longer
 
 The current workflow emphasizes reproducibility:

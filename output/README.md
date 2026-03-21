@@ -1,9 +1,6 @@
 # output
 
-This directory is created by the scaffold and is intended for reproducible outputs.
+This directory stores generated tables, figures, and publish-layer artifacts.
 
-- `data/raw/` stores untouched downloads plus manifests
-- `data/interim/` stores extracted text and intermediate panels
-- `data/processed/` stores cleaned analysis-ready datasets
-- `output/` stores human-readable tables and figures
-- `logs/` stores run logs if you choose to add them
+- `output/publish/` is the frontend-facing public artifact layer
+- other subdirectories under `output/` hold generated presentation outputs rather than source data
