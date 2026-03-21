@@ -2,6 +2,8 @@
   "title": "QRA Event Robustness",
   "rows": [
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "all_events",
       "event_date_type": "official_release_date",
       "headline_bucket": "control_hold",
@@ -21,9 +23,12 @@
       "slope_10y_2y_d1": -0.0266666666666671,
       "slope_10y_2y_d3": -0.0266666666666668,
       "slope_30y_2y_d1": -0.0366666666666664,
-      "slope_30y_2y_d3": -0.0099999999999999
+      "slope_30y_2y_d3": -0.0099999999999999,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "all_events",
       "event_date_type": "official_release_date",
       "headline_bucket": "easing",
@@ -43,9 +48,12 @@
       "slope_10y_2y_d1": 0.0449999999999996,
       "slope_10y_2y_d3": 0.0149999999999996,
       "slope_30y_2y_d1": 0.0699999999999998,
-      "slope_30y_2y_d3": 0.03
+      "slope_30y_2y_d3": 0.03,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "all_events",
       "event_date_type": "official_release_date",
       "headline_bucket": "tightening",
@@ -65,9 +73,12 @@
       "slope_10y_2y_d1": 0.0450000000000001,
       "slope_10y_2y_d3": 0.1600000000000001,
       "slope_30y_2y_d1": 0.0799999999999998,
-      "slope_30y_2y_d3": 0.2299999999999997
+      "slope_30y_2y_d3": 0.2299999999999997,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "all_events",
       "event_date_type": "market_pricing_marker_minus_1d",
       "headline_bucket": "control_hold",
@@ -87,9 +98,12 @@
       "slope_10y_2y_d1": -0.0266666666666665,
       "slope_10y_2y_d3": -0.0533333333333336,
       "slope_30y_2y_d1": -0.0733333333333335,
-      "slope_30y_2y_d3": -0.1099999999999999
+      "slope_30y_2y_d3": -0.1099999999999999,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "all_events",
       "event_date_type": "market_pricing_marker_minus_1d",
       "headline_bucket": "easing",
@@ -109,9 +123,12 @@
       "slope_10y_2y_d1": -0.0549999999999998,
       "slope_10y_2y_d3": -0.0100000000000002,
       "slope_30y_2y_d1": -0.0649999999999999,
-      "slope_30y_2y_d3": 0.0049999999999998
+      "slope_30y_2y_d3": 0.0049999999999998,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "all_events",
       "event_date_type": "market_pricing_marker_minus_1d",
       "headline_bucket": "tightening",
@@ -131,9 +148,12 @@
       "slope_10y_2y_d1": 0.0299999999999995,
       "slope_10y_2y_d3": 0.0749999999999996,
       "slope_30y_2y_d1": 0.0500000000000002,
-      "slope_30y_2y_d3": 0.13
+      "slope_30y_2y_d3": 0.13,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "overlap_excluded",
       "event_date_type": "official_release_date",
       "headline_bucket": "control_hold",
@@ -153,9 +173,12 @@
       "slope_10y_2y_d1": -0.0266666666666671,
       "slope_10y_2y_d3": -0.0266666666666668,
       "slope_30y_2y_d1": -0.0366666666666664,
-      "slope_30y_2y_d3": -0.0099999999999999
+      "slope_30y_2y_d3": -0.0099999999999999,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "overlap_excluded",
       "event_date_type": "official_release_date",
       "headline_bucket": "easing",
@@ -175,9 +198,12 @@
       "slope_10y_2y_d1": 0.0449999999999996,
       "slope_10y_2y_d3": 0.0149999999999996,
       "slope_30y_2y_d1": 0.0699999999999998,
-      "slope_30y_2y_d3": 0.03
+      "slope_30y_2y_d3": 0.03,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "overlap_excluded",
       "event_date_type": "official_release_date",
       "headline_bucket": "tightening",
@@ -197,9 +223,12 @@
       "slope_10y_2y_d1": 0.0450000000000001,
       "slope_10y_2y_d3": 0.1600000000000001,
       "slope_30y_2y_d1": 0.0799999999999998,
-      "slope_30y_2y_d3": 0.2299999999999997
+      "slope_30y_2y_d3": 0.2299999999999997,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "overlap_excluded",
       "event_date_type": "market_pricing_marker_minus_1d",
       "headline_bucket": "control_hold",
@@ -219,9 +248,12 @@
       "slope_10y_2y_d1": -0.0266666666666665,
       "slope_10y_2y_d3": -0.0533333333333336,
       "slope_30y_2y_d1": -0.0733333333333335,
-      "slope_30y_2y_d3": -0.1099999999999999
+      "slope_30y_2y_d3": -0.1099999999999999,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "overlap_excluded",
       "event_date_type": "market_pricing_marker_minus_1d",
       "headline_bucket": "easing",
@@ -241,9 +273,12 @@
       "slope_10y_2y_d1": -0.0549999999999998,
       "slope_10y_2y_d3": -0.0100000000000002,
       "slope_30y_2y_d1": -0.0649999999999999,
-      "slope_30y_2y_d3": 0.0049999999999998
+      "slope_30y_2y_d3": 0.0049999999999998,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "sample_variant": "overlap_excluded",
       "event_date_type": "market_pricing_marker_minus_1d",
       "headline_bucket": "tightening",
@@ -263,7 +298,8 @@
       "slope_10y_2y_d1": 0.0299999999999995,
       "slope_10y_2y_d3": 0.0749999999999996,
       "slope_30y_2y_d1": 0.0500000000000002,
-      "slope_30y_2y_d3": 0.13
+      "slope_30y_2y_d3": 0.13,
+      "overlap_exclusion_note": "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
     }
   ]
 }

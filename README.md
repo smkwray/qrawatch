@@ -31,8 +31,9 @@ The repo now has a reproducible backend product and public site, with a delibera
 - the duration headline is a hybrid exact-plus-proxy construction with explicit fallback comparisons
 - the publish layer under `output/publish/` is the frontend-facing API
 - investor allotments, primary dealer, and SEC N-MFP are now summary-ready extension modules
+- QRA event, shock-crosswalk, usability, leave-one-out, and absorption bridge tables are published when their source files exist
 
-Exact official quarter coverage currently spans `2023Q4` through `2025Q4`.
+Exact official quarter coverage currently spans `2022Q3`, `2022Q4`, and `2023Q3` through `2025Q4`; the two intervening quarters remain hybrid.
 This public release should be read as an in-progress research/data product, not as a finished long-history dataset.
 
 ## Quickstart
@@ -118,11 +119,12 @@ Some pieces are seeded rather than fully automated:
 - the duration headline still combines exact non-bill net supply with a QT proxy, and publish artifacts keep fallback constructions explicit
 - the SEC N-MFP backend stops at summary analytics depth rather than security-level research depth
 - TIC remains out of scope for the current public release
+- the QRA elasticity layer is published as provisional-supporting research infrastructure, not as a settled headline elasticity estimate
 - QRA downloads now use deterministic filenames of the form `<slug>_<sha1>.pdf|.html` and record provenance in `data/raw/qra/downloads.csv`
 
 ## Current limitations
 
-- the exact official quarter history is still short and currently covers only `2023Q4` through `2025Q4`
+- the exact official quarter history is still short and non-contiguous, currently including `2022Q3`, `2022Q4`, and `2023Q3` through `2025Q4`; the two intervening quarters remain hybrid
 - the event-study layer is informative but still small-sample
 - extension modules are supporting context, not the headline result
 - the long-history version of the project still needs additional official quarter capture
@@ -136,6 +138,7 @@ The backend now emits a publish-ready layer under `output/publish/`, derived fro
 - seed-vs-official shortfall comparisons
 - QRA event tables, baseline summaries, and robustness summaries
 - optional QRA event elasticity tables built from the manual shock template plus the event panel
+- QRA event registry, shock crosswalk, event usability, leave-one-out, and auction absorption tables when the source files exist
 - plumbing baseline summaries and robustness summaries
 - duration-supply summaries and construction comparisons
 - data-source and extension-status inventories

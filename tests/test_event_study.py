@@ -2,7 +2,9 @@ import pandas as pd
 import pytest
 
 from ati_shadow_policy.research.event_study import (
+    build_overlap_exclusion_audit_note,
     build_event_panel,
+    build_qra_event_registry_v2,
     summarize_event_panel,
     summarize_event_panel_robustness,
 )
@@ -39,6 +41,8 @@ def test_build_event_panel_preserves_context_columns() -> None:
     assert panel.loc[0, "headline_bucket"] == "tightening"
     assert panel.loc[0, "event_date_requested"] == pd.Timestamp("2024-01-03")
     assert panel.loc[0, "event_date_aligned"] == pd.Timestamp("2024-01-03")
+    assert panel.loc[0, "spec_id"] == "spec_qra_event_v2"
+    assert panel.loc[0, "treatment_variant"] == "event_window_deltas_v1"
     assert panel.loc[0, "x_level_t"] == 4
     assert panel.loc[0, "x_d1"] == 2
     assert panel.loc[0, "x_d3"] == 5
@@ -134,8 +138,9 @@ def test_summarize_event_panel_groups_on_headline_bucket() -> None:
 
     summary = summarize_event_panel(panel)
 
-    assert list(summary.columns) == ["headline_bucket", "x_d1", "x_d3", "y_d1", "y_d3"]
+    assert list(summary.columns) == ["spec_id", "treatment_variant", "headline_bucket", "x_d1", "x_d3", "y_d1", "y_d3"]
     assert list(summary["headline_bucket"]) == ["control_hold", "tightening"]
+    assert set(summary["spec_id"]) == {"spec_qra_event_v2"}
     assert summary.loc[summary["headline_bucket"] == "tightening", "x_d1"].iloc[0] == 3.0
 
 
@@ -172,11 +177,22 @@ def test_summarize_event_panel_robustness_separates_overlap_exclusion() -> None:
     )
     summary = summarize_event_panel_robustness(panel)
 
-    assert list(summary.columns) == ["sample_variant", "event_date_type", "headline_bucket", "n_events", "x_d1", "x_d3"]
+    assert list(summary.columns) == [
+        "spec_id",
+        "treatment_variant",
+        "sample_variant",
+        "event_date_type",
+        "headline_bucket",
+        "n_events",
+        "x_d1",
+        "x_d3",
+        "overlap_exclusion_note",
+    ]
     assert list(summary["sample_variant"]) == ["all_events", "overlap_excluded"]
     assert list(summary["n_events"]) == [2, 1]
     assert summary.loc[summary["sample_variant"] == "all_events", "x_d1"].iloc[0] == 2.5
     assert summary.loc[summary["sample_variant"] == "overlap_excluded", "x_d1"].iloc[0] == 2.0
+    assert "removed 1 overlap-annotated event" in summary.loc[0, "overlap_exclusion_note"]
 
 
 def test_summarize_event_panel_robustness_does_not_emit_unused_date_type_categories() -> None:
@@ -195,3 +211,66 @@ def test_summarize_event_panel_robustness_does_not_emit_unused_date_type_categor
     assert len(summary) == 2
     assert set(summary["event_date_type"]) == {"official_release_date"}
     assert list(summary["headline_bucket"]) == ["tightening", "tightening"]
+    assert "identical to all_events" in summary.loc[0, "overlap_exclusion_note"]
+
+
+def test_build_overlap_exclusion_audit_note_handles_no_overlap_flags() -> None:
+    panel = pd.DataFrame(
+        {
+            "event_id": ["e1"],
+            "overlap_flag": [False],
+        }
+    )
+    robustness = pd.DataFrame(
+        {
+            "sample_variant": ["all_events", "overlap_excluded"],
+            "event_date_type": ["official_release_date", "official_release_date"],
+            "headline_bucket": ["tightening", "tightening"],
+            "x_d1": [1.0, 1.0],
+            "x_d3": [2.0, 2.0],
+        }
+    )
+    note = build_overlap_exclusion_audit_note(panel, robustness)
+    assert "no overlap-annotated events were flagged" in note
+
+
+def test_build_qra_event_registry_v2_emits_required_fields() -> None:
+    panel = pd.DataFrame(
+        {
+            "event_id": ["e1", "e1"],
+            "quarter": ["2024Q1", "2024Q1"],
+            "event_date_type": ["official_release_date", "market_pricing_marker_minus_1d"],
+            "policy_statement_url": ["https://example.com/policy", "https://example.com/policy"],
+            "financing_estimates_url": ["https://example.com/financing", "https://example.com/financing"],
+            "timing_quality": ["same_day_release_bundle", "same_day_release_bundle"],
+            "overlap_flag": [True, True],
+            "overlap_label": ["FOMC", "FOMC"],
+            "current_quarter_action": ["tightening", "tightening"],
+            "forward_guidance_bias": ["neutral", "neutral"],
+            "headline_bucket": ["tightening", "tightening"],
+            "classification_review_status": ["reviewed", "reviewed"],
+        }
+    )
+    registry = build_qra_event_registry_v2(panel)
+    assert list(registry.columns) == [
+        "event_id",
+        "quarter",
+        "release_timestamp_et",
+        "release_bundle_type",
+        "policy_statement_url",
+        "financing_estimates_url",
+        "timing_quality",
+        "overlap_severity",
+        "overlap_label",
+        "financing_need_news_flag",
+        "composition_news_flag",
+        "forward_guidance_flag",
+        "reviewer",
+        "review_date",
+        "treatment_version_id",
+        "headline_eligibility_reason",
+    ]
+    assert len(registry) == 1
+    assert registry.loc[0, "overlap_severity"] == "high"
+    assert bool(registry.loc[0, "financing_need_news_flag"]) is True
+    assert registry.loc[0, "headline_eligibility_reason"] == "eligible_pending_shock_checks"

@@ -121,3 +121,47 @@ def test_capture_summary_required_fields_and_distributions(tmp_path: Path) -> No
     assert capture["document_type_counts"]["missing"] == 1
     assert capture["qa_status_counts"]["manual_official_capture"] == 2
     assert capture["qa_status_counts"]["missing"] == 1
+
+
+def test_capture_summary_handles_known_episode_quarters(tmp_path: Path) -> None:
+    capture_path = tmp_path / "official_quarterly_refunding_capture_template.csv"
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2022Q3",
+                "qra_release_date": "2022-05-04",
+                "market_pricing_marker_minus_1d": "2022-05-03",
+                "total_financing_need_bn": 137.088,
+                "net_bill_issuance_bn": 42.0,
+                "source_url": "https://example.com/doc1",
+                "source_doc_local": "doc1.pdf",
+                "source_doc_type": "pdf",
+                "qa_status": "manual_official_capture",
+                "gross_coupon_schedule_bn": 1.0,
+                "net_coupon_issuance_bn": 1.0,
+            },
+            {
+                "quarter": "2022Q4",
+                "qra_release_date": "2022-08-03",
+                "market_pricing_marker_minus_1d": "2022-08-02",
+                "total_financing_need_bn": 73.149,
+                "net_bill_issuance_bn": 20.0,
+                "source_url": "https://example.com/doc2",
+                "source_doc_local": "doc2.pdf",
+                "source_doc_type": "pdf",
+                "qa_status": "manual_official_capture",
+                "gross_coupon_schedule_bn": 1.0,
+                "net_coupon_issuance_bn": 1.0,
+            },
+        ]
+    ).to_csv(capture_path, index=False)
+
+    result = qra_quality_report.build_qra_quality_report(
+        downloads_path=tmp_path / "downloads.csv",
+        capture_path=capture_path,
+    )
+
+    official_capture = result["official_capture"]
+    assert official_capture["status"] == "ok"
+    assert official_capture["rows"] == 2
+    assert official_capture["quarter_coverage"]["filled"] == 2

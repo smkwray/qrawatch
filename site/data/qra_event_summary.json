@@ -2,6 +2,8 @@
   "title": "QRA Event Summary",
   "rows": [
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "headline_bucket": "control_hold",
       "DGS10_d1": 0.0216666666666666,
       "DGS10_d3": 0.0033333333333331,
@@ -21,6 +23,8 @@
       "slope_30y_2y_d3": -0.0599999999999999
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "headline_bucket": "easing",
       "DGS10_d1": -0.0425,
       "DGS10_d3": -0.0750000000000001,
@@ -40,6 +44,8 @@
       "slope_30y_2y_d3": 0.0174999999999999
     },
     {
+      "spec_id": "spec_qra_event_v2",
+      "treatment_variant": "event_window_deltas_v1",
       "headline_bucket": "tightening",
       "DGS10_d1": -0.025,
       "DGS10_d3": -0.0049999999999998,

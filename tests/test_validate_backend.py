@@ -194,6 +194,32 @@ def _build_publish_artifacts(
     (path / "index.json").write_text(json.dumps(index_payload), encoding="utf-8")
 
 
+def _add_publish_artifact(
+    publish_path: Path,
+    csv_name: str,
+    frame: pd.DataFrame,
+) -> None:
+    csv_path = publish_path / csv_name
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    frame.to_csv(csv_path, index=False)
+    (csv_path.with_suffix(".json")).write_text(
+        json.dumps({"title": csv_path.stem, "rows": []}),
+        encoding="utf-8",
+    )
+    (csv_path.with_suffix(".md")).write_text(
+        f"# {csv_path.stem}\n",
+        encoding="utf-8",
+    )
+
+    index_payload = json.loads((publish_path / "index.json").read_text(encoding="utf-8"))
+    artifact_names = {csv_path.name, csv_path.with_suffix(".json").name, csv_path.with_suffix(".md").name}
+    for item in artifact_names:
+        if item not in index_payload["artifacts"]:
+            index_payload["artifacts"].append(item)
+    index_payload["artifact_count"] = len(index_payload["artifacts"])
+    (publish_path / "index.json").write_text(json.dumps(index_payload), encoding="utf-8")
+
+
 def _build_valid_official_capture_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
     capture = pd.DataFrame(
         [
@@ -830,3 +856,294 @@ def test_validate_backend_detects_extension_headline_semantics_violation(tmp_pat
 
     assert "dataset_status_extension_marked_headline:extension_investor_allotments" in result.errors
     assert "extension_status_marked_headline:investor_allotments" in result.errors
+
+
+def test_validate_backend_enforces_qra_event_registry_v2_required_schema(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+
+    registry_row = {
+        "event_id": "qra_2022_05",
+        "quarter": "2022Q3",
+        "release_bundle_type": "explicit_multi_stage_release",
+        "policy_statement_url": "https://example.com/qra_2022_05",
+        "financing_estimates_url": "https://example.com/qra_2022_05/estimates",
+        "timing_quality": "timestamped",
+        "overlap_severity": "none",
+        "overlap_label": "none",
+        "financing_need_news_flag": True,
+        "composition_news_flag": False,
+        "forward_guidance_flag": False,
+        "reviewer": "qa_engine",
+        "review_date": "2026-01-01",
+        "treatment_version_id": "spec_duration_v1",
+        "headline_eligibility_reason": "notional_gap",
+    }
+    # Intentionally omit release_timestamp_et to trigger required-schema failure.
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="qra_event_registry_v2.csv",
+        frame=pd.DataFrame([registry_row]),
+    )
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    assert "publish_artifact_missing_columns:qra_event_registry_v2.csv:release_timestamp_et" in result.errors
+
+
+def test_validate_backend_flags_shock_drift_for_known_events(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+
+    event_ids = ["qra_2022_05", "qra_2023_05", "qra_2023_08", "qra_2024_01", "qra_2024_07", "qra_2024_10"]
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="qra_shock_crosswalk_v1.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "event_id": event_id,
+                    "event_date_type": "official_release_date",
+                    "canonical_shock_id": "manual_v1",
+                    "shock_bn": 0.0,
+                    "schedule_diff_10y_eq_bn": 120.0,
+                    "schedule_diff_dynamic_10y_eq_bn": 125.0,
+                    "schedule_diff_dv01_usd": 5_000_000.0,
+                    "shock_source": "schedule_diff",
+                    "manual_override_reason": "bounded_validation_test",
+                    "shock_review_status": "reviewed",
+                }
+                for event_id in event_ids
+            ]
+        ),
+    )
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    for event_id in event_ids:
+        assert any(f":{event_id}:" in message for message in result.warnings), f"missing drift warning for {event_id}"
+
+
+def test_validate_backend_checks_readme_coverage_consistency(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path, official_quarter="2022Q3")
+
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2022Q3",
+                "readiness_tier": "headline_ready",
+                "source_quality": "exact_official",
+                "headline_ready": True,
+                "fallback_only": False,
+                "missing_critical_fields": "",
+                "provenance_summary": "test",
+            },
+            {
+                "quarter": "2022Q4",
+                "readiness_tier": "headline_ready",
+                "source_quality": "exact_official",
+                "headline_ready": True,
+                "fallback_only": False,
+                "missing_critical_fields": "",
+                "provenance_summary": "test",
+            },
+            {
+                "quarter": "2023Q3",
+                "readiness_tier": "headline_ready",
+                "source_quality": "exact_official",
+                "headline_ready": True,
+                "fallback_only": False,
+                "missing_critical_fields": "",
+                "provenance_summary": "test",
+            },
+        ]
+    ).to_csv(publish_path / "official_capture_readiness.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2022Q3",
+                "completion_tier": "exact_official_numeric",
+                "qa_status": "manual_official_capture",
+                "uses_seed_source": False,
+                "net_bill_issuance_bn": 1.0,
+                "reconstructed_net_bill_issuance_bn": 1.0,
+                "reconstruction_status_bill": "complete",
+                "is_headline_ready": True,
+            },
+            {
+                "quarter": "2022Q4",
+                "completion_tier": "exact_official_numeric",
+                "qa_status": "manual_official_capture",
+                "uses_seed_source": False,
+                "net_bill_issuance_bn": 1.0,
+                "reconstructed_net_bill_issuance_bn": 1.0,
+                "reconstruction_status_bill": "complete",
+                "is_headline_ready": True,
+            },
+            {
+                "quarter": "2023Q3",
+                "completion_tier": "exact_official_numeric",
+                "qa_status": "manual_official_capture",
+                "uses_seed_source": False,
+                "net_bill_issuance_bn": 1.0,
+                "reconstructed_net_bill_issuance_bn": 1.0,
+                "reconstruction_status_bill": "complete",
+                "is_headline_ready": True,
+            },
+        ]
+    ).to_csv(publish_path / "official_capture_completion.csv", index=False)
+
+    readme_path = tmp_path / "README.md"
+    readme_path.write_text(
+        "# test\nExact official quarter coverage currently spans `2023Q4` through `2025Q4`.\n",
+        encoding="utf-8",
+    )
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+        readme_path=readme_path,
+    )
+
+    assert any(msg.startswith("readme_official_coverage_mismatch:") for msg in result.warnings)
+    assert "official_coverage_statement_contiguous_while_data_noncontiguous" in result.warnings
+
+
+def test_validate_backend_validates_optional_event_and_absorption_artifacts(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="treatment_comparison_table.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "spec_id": "spec_duration_treatment_v1",
+                    "event_date_type": "official_release_date",
+                    "series": "DGS10",
+                    "window": "d3",
+                    "treatment_variant": "canonical_shock_bn",
+                    "comparison_family": "bp_per_100bn",
+                    "comparison_family_label": "bp-per-100bn family",
+                    "elasticity_units": "bp_per_100bn",
+                    "n_rows": 2,
+                    "n_events": 2,
+                    "n_headline_eligible_events": 2,
+                    "headline_eligible_share": 1.0,
+                    "mean_elasticity_value": 12.0,
+                    "median_elasticity_value": 12.0,
+                    "std_elasticity_value": 1.0,
+                    "min_elasticity_value": 11.0,
+                    "max_elasticity_value": 13.0,
+                    "mean_abs_elasticity_value": 12.0,
+                    "family_reference_variant": "canonical_shock_bn",
+                    "family_reference_mean_elasticity_value": 12.0,
+                    "delta_vs_family_reference_mean_elasticity_value": 0.0,
+                    "bp_family_spread_elasticity_value": 2.0,
+                    "headline_recommendation_status": "retain_canonical_contract",
+                    "headline_recommendation_reason": "comparison_fallback_loaded",
+                    "primary_treatment_variant": "canonical_shock_bn",
+                    "primary_treatment_reason": "canonical_shock_bn remains the headline contract; fixed, dynamic, and DV01 variants are comparison diagnostics.",
+                }
+            ]
+        ),
+    )
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="event_usability_table.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "headline_bucket": "tightening",
+                    "event_date_type": "official_release_date",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "overlap_severity": "none",
+                    "headline_usable_count": 1,
+                    "event_count": 3,
+                }
+            ]
+        ),
+    )
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="leave_one_event_out_table.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "left_out_event_id": "qra_2022_05",
+                    "event_date_type": "official_release_date",
+                    "headline_bucket": "tightening",
+                    "series": "DGS10",
+                    "window": "d3",
+                    "estimate": 1.2,
+                    "p_value": 0.31,
+                    "n_events": 4,
+                }
+            ]
+        ),
+    )
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="auction_absorption_table.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "qra_event_id": "qra_2022_05",
+                    "quarter": "2022Q3",
+                    "auction_date": "2022-05-03",
+                    "security_family": "bill",
+                    "investor_class": "money_market",
+                    "measure": "tail",
+                    "value": 1.5,
+                    "units": "bps",
+                    "source_quality": "summary_ready",
+                    "provenance_summary": "bounded_validation_pack",
+                }
+            ]
+        ),
+    )
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    for artifact in (
+        "treatment_comparison_table",
+        "event_usability_table",
+        "leave_one_event_out_table",
+        "auction_absorption_table",
+    ):
+        assert not any(
+            message.startswith(f"publish_artifact_missing_columns:{artifact}.csv:")
+            for message in result.errors
+        )

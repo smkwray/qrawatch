@@ -1,0 +1,15 @@
+event_date_type,headline_bucket,classification_review_status,shock_review_status,overlap_severity,usable_for_headline,usable_for_headline_reason,event_count,n_rows,n_events,spec_id,treatment_variant
+market_pricing_marker_minus_1d,control_hold,reviewed,reviewed,none,False,non_official_event_date_type,3,3,3,spec_qra_event_v2,shock_bn
+market_pricing_marker_minus_1d,easing,provisional,provisional,none,False,non_official_event_date_type,1,1,1,spec_qra_event_v2,shock_bn
+market_pricing_marker_minus_1d,easing,reviewed,reviewed,none,False,non_official_event_date_type,1,1,1,spec_qra_event_v2,shock_bn
+market_pricing_marker_minus_1d,exclude,provisional,provisional,none,False,non_official_event_date_type,1,1,1,spec_qra_event_v2,shock_bn
+market_pricing_marker_minus_1d,exclude,reviewed,reviewed,none,False,non_official_event_date_type,1,1,1,spec_qra_event_v2,shock_bn
+market_pricing_marker_minus_1d,pending,pending,provisional,none,False,non_official_event_date_type,5,5,5,spec_qra_event_v2,shock_bn
+market_pricing_marker_minus_1d,tightening,reviewed,reviewed,none,False,non_official_event_date_type,2,2,2,spec_qra_event_v2,shock_bn
+official_release_date,control_hold,reviewed,reviewed,none,False,small_denominator,3,3,3,spec_qra_event_v2,shock_bn
+official_release_date,easing,provisional,provisional,none,False,classification_not_reviewed,1,1,1,spec_qra_event_v2,shock_bn
+official_release_date,easing,reviewed,reviewed,none,True,usable,1,1,1,spec_qra_event_v2,shock_bn
+official_release_date,exclude,provisional,provisional,none,False,small_denominator,1,1,1,spec_qra_event_v2,shock_bn
+official_release_date,exclude,reviewed,reviewed,none,False,small_denominator,1,1,1,spec_qra_event_v2,shock_bn
+official_release_date,pending,pending,provisional,none,False,small_denominator,5,5,5,spec_qra_event_v2,shock_bn
+official_release_date,tightening,reviewed,reviewed,none,True,usable,2,2,2,spec_qra_event_v2,shock_bn

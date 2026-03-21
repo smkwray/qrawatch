@@ -31,6 +31,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": false,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "usable",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": true
     },
     {
@@ -63,6 +67,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": true,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -95,6 +103,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": true,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -127,6 +139,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -159,6 +175,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": false,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "usable",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": true
     },
     {
@@ -191,6 +211,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": false,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "usable",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": true
     },
     {
@@ -223,6 +247,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": false,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "classification_not_reviewed",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -255,6 +283,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -287,6 +319,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": true,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -319,6 +355,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -351,6 +391,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -383,6 +427,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -415,6 +463,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": false,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     },
     {
@@ -447,6 +499,10 @@
       "shock_missing_flag": false,
       "small_denominator_flag": true,
       "sign_flip_flag": true,
+      "spec_id": "spec_duration_treatment_v1",
+      "treatment_variant": "canonical_shock_bn",
+      "usable_for_headline_reason": "small_denominator",
+      "review_maturity": "provisional_supporting",
       "usable_for_headline": false
     }
   ]

@@ -7,6 +7,10 @@ import pandas as pd
 
 from .qra_classification import is_summary_headline_bucket
 
+SPEC_QRA_EVENT_V2 = "spec_qra_event_v2"
+DEFAULT_EVENT_TREATMENT_VARIANT = "event_window_deltas_v1"
+DEFAULT_TREATMENT_VERSION_ID = "spec_duration_treatment_v1"
+
 
 def _value_bases_from_panel(panel: pd.DataFrame) -> list[str]:
     value_bases: list[str] = []
@@ -87,6 +91,124 @@ def _normalize_text(series: pd.Series) -> pd.Series:
     return series.fillna("").astype(str).str.strip()
 
 
+def _normalize_scalar_text(value: object) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, float) and pd.isna(value):
+        return ""
+    return str(value).strip()
+
+
+def _first_non_empty_series_value(series: pd.Series | None, default: str) -> str:
+    if series is None:
+        return default
+    cleaned = series.dropna().astype(str).str.strip()
+    cleaned = cleaned.loc[cleaned.ne("")]
+    if cleaned.empty:
+        return default
+    return cleaned.iloc[0]
+
+
+def _overlap_severity(row: pd.Series) -> str:
+    overlap_flag = str(row.get("overlap_flag", "")).strip().lower() in {"1", "true", "t", "yes", "y"}
+    if not overlap_flag:
+        return "none"
+    label = _normalize_scalar_text(row.get("overlap_label")).lower()
+    if any(token in label for token in ("fomc", "cpi", "payroll", "auction", "treasury")):
+        return "high"
+    if label:
+        return "medium"
+    return "low"
+
+
+def _headline_registry_reason(row: pd.Series) -> str:
+    classification_review_status = _normalize_scalar_text(row.get("classification_review_status")).lower()
+    headline_bucket = _normalize_scalar_text(row.get("headline_bucket")).lower()
+    if classification_review_status != "reviewed":
+        return "classification_not_reviewed"
+    if headline_bucket not in {"tightening", "easing", "control_hold"}:
+        return "non_headline_bucket"
+    return "eligible_pending_shock_checks"
+
+
+def _bool_from_non_empty(value: object) -> bool:
+    text = _normalize_scalar_text(value)
+    return bool(text)
+
+
+def build_qra_event_registry_v2(
+    panel: pd.DataFrame,
+    treatment_version_id: str = DEFAULT_TREATMENT_VERSION_ID,
+) -> pd.DataFrame:
+    required = {"event_id", "event_date_type"}
+    missing = sorted(required - set(panel.columns))
+    if missing:
+        raise KeyError(f"Event panel missing required registry column(s): {missing}")
+
+    if panel.empty:
+        return pd.DataFrame(
+            columns=[
+                "event_id",
+                "quarter",
+                "release_timestamp_et",
+                "release_bundle_type",
+                "policy_statement_url",
+                "financing_estimates_url",
+                "timing_quality",
+                "overlap_severity",
+                "overlap_label",
+                "financing_need_news_flag",
+                "composition_news_flag",
+                "forward_guidance_flag",
+                "reviewer",
+                "review_date",
+                "treatment_version_id",
+                "headline_eligibility_reason",
+            ]
+        )
+
+    working = panel.copy()
+    event_order = pd.CategoricalDtype(
+        ["official_release_date", "market_pricing_marker_minus_1d"],
+        ordered=True,
+    )
+    working["event_date_type"] = working["event_date_type"].astype(event_order)
+    working = working.sort_values(["event_id", "event_date_type"], kind="stable")
+    deduped = working.drop_duplicates(subset=["event_id"], keep="first").reset_index(drop=True)
+
+    rows: list[dict[str, object]] = []
+    for _, row in deduped.iterrows():
+        reviewer = row.get("reviewer", row.get("classification_reviewer", pd.NA))
+        review_date = row.get("review_date", row.get("classification_review_date", pd.NA))
+        rows.append(
+            {
+                "event_id": row.get("event_id", pd.NA),
+                "quarter": row.get("quarter", pd.NA),
+                "release_timestamp_et": row.get("release_timestamp_et", row.get("official_release_timestamp_et", pd.NA)),
+                "release_bundle_type": row.get("timing_quality", pd.NA),
+                "policy_statement_url": row.get("policy_statement_url", pd.NA),
+                "financing_estimates_url": row.get("financing_estimates_url", pd.NA),
+                "timing_quality": row.get("timing_quality", pd.NA),
+                "overlap_severity": _overlap_severity(row),
+                "overlap_label": row.get("overlap_label", pd.NA),
+                "financing_need_news_flag": _bool_from_non_empty(row.get("financing_estimates_url")),
+                "composition_news_flag": _normalize_scalar_text(row.get("current_quarter_action")).lower() in {
+                    "tightening",
+                    "easing",
+                    "hold",
+                    "mixed",
+                },
+                "forward_guidance_flag": _normalize_scalar_text(row.get("forward_guidance_bias")).lower() in {"hawkish", "dovish"},
+                "reviewer": reviewer if _normalize_scalar_text(reviewer) else pd.NA,
+                "review_date": review_date if _normalize_scalar_text(review_date) else pd.NA,
+                "treatment_version_id": treatment_version_id,
+                "headline_eligibility_reason": _headline_registry_reason(row),
+            }
+        )
+    out = pd.DataFrame(rows)
+    return out.sort_values(["event_id"], kind="stable").reset_index(drop=True)
+
+
 def _summary_group_column(panel: pd.DataFrame) -> str:
     if "headline_bucket" in panel.columns:
         return "headline_bucket"
@@ -108,6 +230,8 @@ def build_event_panel(
     value_columns: Sequence[str],
     event_date_column: str = "official_release_date",
     overlap_annotations: pd.DataFrame | None = None,
+    spec_id: str = SPEC_QRA_EVENT_V2,
+    treatment_variant: str = DEFAULT_EVENT_TREATMENT_VARIANT,
 ) -> pd.DataFrame:
     outcomes = series_df.copy()
     outcomes["date"] = pd.to_datetime(outcomes["date"])
@@ -144,6 +268,8 @@ def build_event_panel(
         record["event_date_requested"] = event_date
         record["event_date_aligned"] = aligned
         record["event_date_type"] = event_date_column
+        record["spec_id"] = spec_id
+        record["treatment_variant"] = treatment_variant
         if overlap_annotations is not None:
             record["overlap_flag"] = bool(event.get("overlap_flag", False))
             record["overlap_label"] = event.get("overlap_label", "")
@@ -170,10 +296,63 @@ def summarize_event_panel(panel: pd.DataFrame) -> pd.DataFrame:
     working[group_column] = _normalize_text(working[group_column])
     working = working.loc[_summary_mask(working, group_column)].copy()
     if working.empty:
-        return pd.DataFrame(columns=[group_column, *value_cols])
+        return pd.DataFrame(columns=["spec_id", "treatment_variant", group_column, *value_cols])
     summary = working.groupby(group_column, sort=True)[value_cols].mean(numeric_only=True)
     summary = summary.reset_index()
-    return summary[[group_column, *value_cols]]
+    summary.insert(
+        0,
+        "treatment_variant",
+        _first_non_empty_series_value(working.get("treatment_variant"), DEFAULT_EVENT_TREATMENT_VARIANT),
+    )
+    summary.insert(
+        0,
+        "spec_id",
+        _first_non_empty_series_value(working.get("spec_id"), SPEC_QRA_EVENT_V2),
+    )
+    return summary[["spec_id", "treatment_variant", group_column, *value_cols]]
+
+
+def build_overlap_exclusion_audit_note(panel: pd.DataFrame, robustness: pd.DataFrame) -> str:
+    if panel.empty:
+        return "No event rows available for overlap exclusion checks."
+    overlap_count = int(panel.get("overlap_flag", pd.Series(dtype=bool)).fillna(False).astype(bool).sum())
+    if overlap_count == 0:
+        return "overlap_excluded is identical to all_events because no overlap-annotated events were flagged."
+    if robustness.empty:
+        return f"overlap_excluded removed {overlap_count} overlap-annotated event(s), but no robustness rows were produced."
+
+    value_cols = [col for col in robustness.columns if col.endswith("_d1") or col.endswith("_d3")]
+    key_cols = [col for col in ("event_date_type", "headline_bucket") if col in robustness.columns]
+    if not value_cols or not key_cols:
+        return f"overlap_excluded removed {overlap_count} overlap-annotated event(s)."
+
+    all_events = robustness.loc[robustness["sample_variant"] == "all_events", [*key_cols, *value_cols]].copy()
+    overlap_excluded = robustness.loc[robustness["sample_variant"] == "overlap_excluded", [*key_cols, *value_cols]].copy()
+    if all_events.empty or overlap_excluded.empty:
+        return f"overlap_excluded removed {overlap_count} overlap-annotated event(s)."
+
+    merged = all_events.merge(
+        overlap_excluded,
+        on=key_cols,
+        how="outer",
+        suffixes=("_all", "_overlap"),
+        indicator=True,
+    )
+    identical = True
+    for col in value_cols:
+        left = pd.to_numeric(merged[f"{col}_all"], errors="coerce")
+        right = pd.to_numeric(merged[f"{col}_overlap"], errors="coerce")
+        both_missing = left.isna() & right.isna()
+        same = both_missing | np.isclose(left.fillna(0.0), right.fillna(0.0))
+        if not bool(same.all()):
+            identical = False
+            break
+    if identical and bool((merged["_merge"] == "both").all()):
+        return (
+            f"overlap_excluded is numerically identical to all_events even though {overlap_count} "
+            "overlap-annotated event(s) were flagged."
+        )
+    return f"overlap_excluded removed {overlap_count} overlap-annotated event(s)."
 
 
 def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
@@ -193,7 +372,18 @@ def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
     working[group_column] = _normalize_text(working[group_column])
     working = working.loc[_summary_mask(working, group_column)].copy()
     if working.empty:
-        return pd.DataFrame(columns=["sample_variant", "event_date_type", group_column, "n_events", *value_cols])
+        return pd.DataFrame(
+            columns=[
+                "spec_id",
+                "treatment_variant",
+                "sample_variant",
+                "event_date_type",
+                group_column,
+                "n_events",
+                "overlap_exclusion_note",
+                *value_cols,
+            ]
+        )
 
     date_type_order = pd.CategoricalDtype(
         ["official_release_date", "market_pricing_marker_minus_1d"],
@@ -213,10 +403,33 @@ def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
         counts = grouped.size().reset_index(name="n_events")
         summary = summary.merge(counts, on=["event_date_type", group_column], how="left")
         summary.insert(0, "sample_variant", sample_variant)
-        summaries.append(summary[["sample_variant", "event_date_type", group_column, "n_events", *value_cols]])
+        summary.insert(
+            0,
+            "treatment_variant",
+            _first_non_empty_series_value(subset.get("treatment_variant"), DEFAULT_EVENT_TREATMENT_VARIANT),
+        )
+        summary.insert(
+            0,
+            "spec_id",
+            _first_non_empty_series_value(subset.get("spec_id"), SPEC_QRA_EVENT_V2),
+        )
+        summaries.append(
+            summary[["spec_id", "treatment_variant", "sample_variant", "event_date_type", group_column, "n_events", *value_cols]]
+        )
 
     if not summaries:
-        return pd.DataFrame(columns=["sample_variant", "event_date_type", group_column, "n_events", *value_cols])
+        return pd.DataFrame(
+            columns=[
+                "spec_id",
+                "treatment_variant",
+                "sample_variant",
+                "event_date_type",
+                group_column,
+                "n_events",
+                "overlap_exclusion_note",
+                *value_cols,
+            ]
+        )
 
     output = pd.concat(summaries, ignore_index=True)
     output["sample_variant"] = pd.Categorical(
@@ -227,4 +440,6 @@ def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
     output = output.sort_values(["sample_variant", "event_date_type", group_column], kind="stable")
     output["sample_variant"] = output["sample_variant"].astype(str)
     output["event_date_type"] = output["event_date_type"].astype(str)
+    audit_note = build_overlap_exclusion_audit_note(working, output)
+    output["overlap_exclusion_note"] = audit_note
     return output.reset_index(drop=True)

@@ -106,3 +106,32 @@ def test_build_qra_manifest_uses_source_context_for_quarter_labeled_links():
     assert "https://home.treasury.gov/news/press-releases/sb0007" in set(manifest["href"])
     assert "https://home.treasury.gov/news/press-releases/sb0418" not in set(manifest["href"])
     assert by_href.loc["https://home.treasury.gov/news/press-releases/sb0007", "doc_type"] == "quarterly_refunding_press_release"
+
+
+def test_build_qra_manifest_recognizes_known_qra_release_text():
+    links = pd.DataFrame(
+        [
+            {
+                "source_page": "https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding",
+                "text": "Quarterly Refunding Statement for 2022 May",
+                "href": "https://home.treasury.gov/news/press-releases/jy0908",
+            },
+            {
+                "source_page": "https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding/quarterly-refunding-archives/quarterly-refunding-financing-estimates-by-calendar-year",
+                "text": "quarterly-refunding-financing-estimates-by-calendar-year",
+                "href": "https://home.treasury.gov/news/press-releases/jy0755",
+            },
+            {
+                "source_page": "https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding",
+                "text": "Some Policy Speech",
+                "href": "https://home.treasury.gov/news/press-releases/sb7777",
+            },
+        ]
+    )
+
+    manifest = build_qra_manifest(links, min_relevance_score=5)
+    by_href = manifest.set_index("href")
+
+    assert "https://home.treasury.gov/news/press-releases/jy0908" in set(manifest["href"])
+    assert "https://home.treasury.gov/news/press-releases/sb7777" not in set(manifest["href"])
+    assert by_href.loc["https://home.treasury.gov/news/press-releases/jy0908", "doc_type"] == "quarterly_refunding_press_release"

@@ -4,8 +4,12 @@ import pandas as pd
 
 from ati_shadow_policy.research.qra_elasticity import (
     autofill_qra_shock_template_from_capture,
+    build_event_usability_table,
+    build_leave_one_event_out_table,
     build_qra_event_elasticity,
+    build_qra_shock_crosswalk_v1,
     build_qra_shock_template,
+    build_treatment_comparison_table,
 )
 
 
@@ -215,13 +219,17 @@ def test_build_qra_event_elasticity_uses_curated_schema_for_headline_flags() -> 
         & (output["event_date_type"] == "official_release_date")
         & (output["series"] == "DGS10")
         & (output["window"] == "d1")
+        & (output["treatment_variant"] == "canonical_shock_bn")
     ].iloc[0]
     assert e1_official["quarter"] == "2024Q3"
+    assert e1_official["spec_id"] == "spec_duration_treatment_v1"
+    assert e1_official["elasticity_value"] == 10.0
     assert e1_official["elasticity_bp_per_100bn"] == 10.0
     assert e1_official["schedule_diff_10y_eq_bn"] == 50.0
     assert e1_official["schedule_diff_dynamic_10y_eq_bn"] == 47.5
     assert e1_official["schedule_diff_dv01_usd"] == 4750000.0
     assert e1_official["shock_construction"] == "schedule_diff_primary"
+    assert e1_official["usable_for_headline_reason"] == "usable"
     assert bool(e1_official["usable_for_headline"]) is True
 
     e1_tminus1 = output.loc[
@@ -229,17 +237,41 @@ def test_build_qra_event_elasticity_uses_curated_schema_for_headline_flags() -> 
         & (output["event_date_type"] == "market_pricing_marker_minus_1d")
         & (output["series"] == "DGS10")
         & (output["window"] == "d1")
+        & (output["treatment_variant"] == "canonical_shock_bn")
     ].iloc[0]
     assert bool(e1_tminus1["usable_for_headline"]) is False
+    assert e1_tminus1["usable_for_headline_reason"] == "non_official_event_date_type"
 
     e2_official = output.loc[
         (output["event_id"] == "e2")
         & (output["event_date_type"] == "official_release_date")
         & (output["series"] == "DGS10")
         & (output["window"] == "d1")
+        & (output["treatment_variant"] == "canonical_shock_bn")
     ].iloc[0]
     assert bool(e2_official["usable_for_headline"]) is False
+    assert e2_official["usable_for_headline_reason"] == "small_denominator"
     assert e2_official["shock_review_status"] == "provisional"
+
+    fixed_variant = output.loc[
+        (output["event_id"] == "e1")
+        & (output["event_date_type"] == "official_release_date")
+        & (output["series"] == "DGS10")
+        & (output["window"] == "d1")
+        & (output["treatment_variant"] == "fixed_10y_eq_bn")
+    ].iloc[0]
+    assert fixed_variant["elasticity_value"] == 10.0
+    assert fixed_variant["usable_for_headline_reason"] == "non_canonical_treatment_variant"
+
+    dv01_variant = output.loc[
+        (output["event_id"] == "e1")
+        & (output["event_date_type"] == "official_release_date")
+        & (output["series"] == "DGS10")
+        & (output["window"] == "d1")
+        & (output["treatment_variant"] == "dv01_usd")
+    ].iloc[0]
+    assert dv01_variant["elasticity_units"] == "bp_per_1mm_dv01"
+    assert dv01_variant["elasticity_value"] > 0
 
 
 def test_build_qra_shock_template_prefers_schedule_diff_autofill_before_parser() -> None:
@@ -308,3 +340,133 @@ def test_build_qra_shock_template_prefers_schedule_diff_autofill_before_parser()
     assert row["schedule_diff_dv01_usd"] == 2400000.0
     assert row["shock_construction"] == "schedule_diff_primary"
     assert "Schedule diff quarterly totals" in row["shock_notes"]
+
+
+def test_build_qra_shock_crosswalk_v1_emits_required_columns() -> None:
+    template = pd.DataFrame(
+        {
+            "event_id": ["e1"],
+            "event_date_type": ["official_release_date"],
+            "shock_bn": [25.0],
+            "schedule_diff_10y_eq_bn": [24.0],
+            "schedule_diff_dynamic_10y_eq_bn": [23.0],
+            "schedule_diff_dv01_usd": [2100000.0],
+            "gross_notional_delta_bn": [30.0],
+            "shock_source": ["manual_override"],
+            "shock_review_status": ["reviewed"],
+            "shock_construction": ["manual_override_with_schedule_context"],
+        }
+    )
+    crosswalk = build_qra_shock_crosswalk_v1(template)
+    assert list(crosswalk.columns) == [
+        "spec_id",
+        "treatment_variant",
+        "event_id",
+        "event_date_type",
+        "canonical_shock_id",
+        "shock_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "gross_notional_delta_bn",
+        "shock_source",
+        "manual_override_reason",
+        "shock_review_status",
+    ]
+    assert crosswalk.loc[0, "manual_override_reason"] == "manual_override_with_schedule_context"
+
+
+def test_build_event_usability_table_uses_canonical_variant_only() -> None:
+    elasticity = pd.DataFrame(
+        {
+            "spec_id": ["spec_duration_treatment_v1", "spec_duration_treatment_v1"],
+            "event_id": ["e1", "e1"],
+            "event_date_type": ["official_release_date", "official_release_date"],
+            "treatment_variant": ["canonical_shock_bn", "fixed_10y_eq_bn"],
+            "headline_bucket": ["tightening", "tightening"],
+            "classification_review_status": ["reviewed", "reviewed"],
+            "shock_review_status": ["reviewed", "reviewed"],
+            "overlap_severity": ["none", "none"],
+            "usable_for_headline": [True, False],
+            "usable_for_headline_reason": ["usable", "non_canonical_treatment_variant"],
+        }
+    )
+    usability = build_event_usability_table(elasticity)
+    assert len(usability) == 1
+    assert usability.loc[0, "treatment_variant"] == "canonical_shock_bn"
+    assert bool(usability.loc[0, "usable_for_headline"]) is True
+    assert usability.loc[0, "n_events"] == 1
+
+
+def test_build_leave_one_event_out_table_recomputes_by_treatment_variant() -> None:
+    elasticity = pd.DataFrame(
+        {
+            "spec_id": ["spec_duration_treatment_v1"] * 3,
+            "event_id": ["e1", "e2", "e3"],
+            "series": ["DGS10", "DGS10", "DGS10"],
+            "window": ["d1", "d1", "d1"],
+            "treatment_variant": ["canonical_shock_bn", "canonical_shock_bn", "canonical_shock_bn"],
+            "elasticity_units": ["bp_per_100bn"] * 3,
+            "elasticity_value": [10.0, 20.0, 30.0],
+            "usable_for_headline": [True, True, True],
+        }
+    )
+    leave_one_out = build_leave_one_event_out_table(elasticity)
+    baseline = leave_one_out.loc[leave_one_out["dropped_event_id"] == "__none__"].iloc[0]
+    assert baseline["mean_elasticity"] == 20.0
+    drop_e1 = leave_one_out.loc[leave_one_out["dropped_event_id"] == "e1"].iloc[0]
+    assert drop_e1["n_events"] == 2
+    assert drop_e1["mean_elasticity"] == 25.0
+
+
+def test_build_treatment_comparison_table_tracks_family_diagnostics() -> None:
+    elasticity = pd.DataFrame(
+        {
+            "spec_id": ["spec_duration_treatment_v1"] * 8,
+            "event_id": ["e1", "e1", "e1", "e1", "e2", "e2", "e2", "e2"],
+            "event_date_type": ["official_release_date"] * 8,
+            "series": ["DGS10"] * 8,
+            "window": ["d3"] * 8,
+            "treatment_variant": [
+                "canonical_shock_bn",
+                "fixed_10y_eq_bn",
+                "dynamic_10y_eq_bn",
+                "dv01_usd",
+                "canonical_shock_bn",
+                "fixed_10y_eq_bn",
+                "dynamic_10y_eq_bn",
+                "dv01_usd",
+            ],
+            "elasticity_units": [
+                "bp_per_100bn",
+                "bp_per_100bn",
+                "bp_per_100bn",
+                "bp_per_1mm_dv01",
+                "bp_per_100bn",
+                "bp_per_100bn",
+                "bp_per_100bn",
+                "bp_per_1mm_dv01",
+            ],
+            "elasticity_value": [10.0, 11.0, 12.0, 20.0, 14.0, 15.0, 16.0, 24.0],
+            "usable_for_headline": [True, False, False, False, True, False, False, False],
+        }
+    )
+
+    out = build_treatment_comparison_table(elasticity)
+    assert list(out["treatment_variant"]) == [
+        "canonical_shock_bn",
+        "fixed_10y_eq_bn",
+        "dynamic_10y_eq_bn",
+        "dv01_usd",
+    ]
+    canonical = out.loc[out["treatment_variant"] == "canonical_shock_bn"].iloc[0]
+    fixed = out.loc[out["treatment_variant"] == "fixed_10y_eq_bn"].iloc[0]
+    dv01 = out.loc[out["treatment_variant"] == "dv01_usd"].iloc[0]
+
+    assert canonical["headline_recommendation_status"] == "retain_canonical_contract"
+    assert canonical["n_headline_eligible_events"] == 2
+    assert canonical["headline_eligible_share"] == 1.0
+    assert fixed["delta_vs_family_reference_mean_elasticity_value"] == 1.0
+    assert fixed["bp_family_spread_elasticity_value"] == 2.0
+    assert dv01["comparison_family"] == "dv01_equivalent"
+    assert dv01["primary_treatment_variant"] == "canonical_shock_bn"

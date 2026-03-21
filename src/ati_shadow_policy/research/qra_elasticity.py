@@ -25,6 +25,20 @@ DEFAULT_METRICS = (
     "slope_10y_2y_d3",
 )
 SHOCK_TEMPLATE_KEYS = ("event_id", "event_date_type")
+SPEC_DURATION_TREATMENT_V1 = "spec_duration_treatment_v1"
+SPEC_QRA_EVENT_V2 = "spec_qra_event_v2"
+CANONICAL_TREATMENT_VARIANT = "canonical_shock_bn"
+FIXED_10Y_EQ_TREATMENT_VARIANT = "fixed_10y_eq_bn"
+DYNAMIC_10Y_EQ_TREATMENT_VARIANT = "dynamic_10y_eq_bn"
+DV01_TREATMENT_VARIANT = "dv01_usd"
+DV01_SCALE_USD = 1_000_000.0
+_TREATMENT_VARIANTS = (
+    (CANONICAL_TREATMENT_VARIANT, "shock_bn", "USD billions", "bp_per_100bn", 100.0),
+    (FIXED_10Y_EQ_TREATMENT_VARIANT, "schedule_diff_10y_eq_bn", "USD billions", "bp_per_100bn", 100.0),
+    (DYNAMIC_10Y_EQ_TREATMENT_VARIANT, "schedule_diff_dynamic_10y_eq_bn", "USD billions", "bp_per_100bn", 100.0),
+    (DV01_TREATMENT_VARIANT, "schedule_diff_dv01_usd", "USD", "bp_per_1mm_dv01", DV01_SCALE_USD),
+)
+_TREATMENT_VARIANT_ORDER = {variant[0]: idx for idx, variant in enumerate(_TREATMENT_VARIANTS)}
 SHOCK_TEMPLATE_MANUAL_COLUMNS = (
     "shock_bn",
     "shock_source",
@@ -111,6 +125,94 @@ def _dedupe_on_keys(
                 row[column] = _last_non_missing(group[column])
         rows.append(row)
     return pd.DataFrame(rows)
+
+
+def _first_non_empty_value(row: pd.Series, columns: Iterable[str]) -> object:
+    for column in columns:
+        if column not in row.index:
+            continue
+        value = row[column]
+        if not _is_missing(value):
+            return value
+    return pd.NA
+
+
+def _comparison_family_for_variant(treatment_variant: object) -> str:
+    if normalize_lower(treatment_variant) == DV01_TREATMENT_VARIANT:
+        return "dv01_equivalent"
+    return "bp_per_100bn"
+
+
+def _comparison_family_reference_variant(comparison_family: str) -> str:
+    if comparison_family == "dv01_equivalent":
+        return DV01_TREATMENT_VARIANT
+    return CANONICAL_TREATMENT_VARIANT
+
+
+def _comparison_family_label(comparison_family: str) -> str:
+    if comparison_family == "dv01_equivalent":
+        return "DV01-equivalent family"
+    return "bp-per-100bn family"
+
+
+def _headline_eligibility_reason(
+    event_date_type: object,
+    treatment_variant: str,
+    shock_missing: bool,
+    small_denominator: bool,
+    headline_bucket: str,
+    classification_review_status: str,
+    shock_review_status: str,
+) -> str:
+    if treatment_variant != CANONICAL_TREATMENT_VARIANT:
+        return "non_canonical_treatment_variant"
+    if str(event_date_type) != "official_release_date":
+        return "non_official_event_date_type"
+    if shock_missing:
+        return "shock_missing"
+    if small_denominator:
+        return "small_denominator"
+    if headline_bucket not in SUMMARY_HEADLINE_BUCKETS:
+        return "non_headline_bucket"
+    if classification_review_status != "reviewed":
+        return "classification_not_reviewed"
+    if shock_review_status != "reviewed":
+        return "shock_not_reviewed"
+    return "usable"
+
+
+def _small_denominator_flag(
+    treatment_variant: str,
+    shock_value: float,
+    small_denominator_threshold_bn: float,
+) -> bool:
+    if treatment_variant == DV01_TREATMENT_VARIANT:
+        threshold_dv01 = float(small_denominator_threshold_bn) * 100000.0
+        return abs(float(shock_value)) < threshold_dv01
+    return abs(float(shock_value)) < float(small_denominator_threshold_bn)
+
+
+def _as_bool(value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    if isinstance(value, float) and pd.isna(value):
+        return False
+    return str(value).strip().lower() in {"1", "true", "t", "yes", "y"}
+
+
+def _overlap_severity_from_row(row: pd.Series) -> str:
+    direct = normalize_text(row.get("overlap_severity"))
+    if direct:
+        return direct
+    overlap_flag = _as_bool(row.get("overlap_flag"))
+    if not overlap_flag:
+        return "none"
+    overlap_label = normalize_text(row.get("overlap_label")).lower()
+    if overlap_label:
+        return "high"
+    return "low"
 
 
 def _contains_no_change_signal(text: str) -> bool:
@@ -473,6 +575,15 @@ def build_qra_event_elasticity(
         raise KeyError(f"Shock template missing required column(s): {missing_template}")
 
     panel_deduped = _dedupe_on_keys(panel.copy(), key_columns=SHOCK_TEMPLATE_KEYS)
+    if shock_column != "shock_bn":
+        treatment_variants = tuple(
+            item
+            for item in _TREATMENT_VARIANTS
+            if item[0] == CANONICAL_TREATMENT_VARIANT
+        )
+    else:
+        treatment_variants = _TREATMENT_VARIANTS
+
     shock_context_columns = [
         column
         for column in (
@@ -495,86 +606,118 @@ def build_qra_event_elasticity(
         key_columns=SHOCK_TEMPLATE_KEYS,
     )
     merged = panel_deduped.merge(shocks, on=list(SHOCK_TEMPLATE_KEYS), how="left")
-    merged[shock_column] = pd.to_numeric(merged[shock_column], errors="coerce")
+    for col in {
+        shock_column,
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+    }:
+        if col in merged.columns:
+            merged[col] = pd.to_numeric(merged[col], errors="coerce")
 
     metric_columns = [column for column in metrics if column in merged.columns]
     records: list[dict[str, object]] = []
 
     for _, row in merged.iterrows():
-        shock_bn = row[shock_column]
-        shock_missing = bool(pd.isna(shock_bn))
-        small_denominator = bool((not shock_missing) and (abs(float(shock_bn)) < small_denominator_threshold_bn))
-        shock_scale = np.nan
-        if not shock_missing and float(shock_bn) != 0.0:
-            shock_scale = float(shock_bn) / 100.0
-
         headline_bucket = normalize_lower(row.get("headline_bucket"))
         classification_review_status = normalize_lower(row.get("classification_review_status"))
         shock_review_status = normalize_lower(row.get("shock_review_status"))
         expected_direction = normalize_text(row.get("expected_direction"))
-        usable_for_headline = (
-            row["event_date_type"] == "official_release_date"
-            and
-            (not shock_missing)
-            and (not small_denominator)
-            and headline_bucket in SUMMARY_HEADLINE_BUCKETS
-            and classification_review_status == "reviewed"
-            and shock_review_status == "reviewed"
-        )
 
         for delta_column in metric_columns:
             delta_pp = pd.to_numeric(pd.Series([row[delta_column]]), errors="coerce").iloc[0]
             delta_bp = np.nan if pd.isna(delta_pp) else float(delta_pp) * 100.0
-            elasticity_bp_per_100bn = np.nan
-            if not pd.isna(delta_bp) and not pd.isna(shock_scale):
-                elasticity_bp_per_100bn = float(delta_bp) / float(shock_scale)
-
             series_name, window = delta_column.rsplit("_", 1)
-            records.append(
-                {
-                    "quarter": row.get("quarter", pd.NA),
-                    "event_id": row["event_id"],
-                    "event_label": row.get("event_label", pd.NA),
-                    "event_date_requested": row.get("event_date_requested", pd.NA),
-                    "event_date_aligned": row.get("event_date_aligned", pd.NA),
-                    "event_date_type": row["event_date_type"],
-                    "policy_statement_url": row.get("policy_statement_url", pd.NA),
-                    "financing_estimates_url": row.get("financing_estimates_url", pd.NA),
-                    "timing_quality": row.get("timing_quality", pd.NA),
-                    "expected_direction": expected_direction,
-                    "current_quarter_action": row.get("current_quarter_action", pd.NA),
-                    "forward_guidance_bias": row.get("forward_guidance_bias", pd.NA),
-                    "headline_bucket": row.get("headline_bucket", pd.NA),
-                    "shock_sign_curated": row.get("shock_sign_curated", pd.NA),
-                    "classification_confidence": row.get("classification_confidence", pd.NA),
-                    "classification_review_status": row.get("classification_review_status", pd.NA),
-                    "series": series_name,
-                    "window": window,
-                    "delta_pp": delta_pp,
-                    "delta_bp": delta_bp,
-                    shock_column: shock_bn,
-                    "shock_source": row.get("shock_source", pd.NA),
-                    "shock_notes": row.get("shock_notes", pd.NA),
-                    "shock_review_status": row.get("shock_review_status", pd.NA),
-                    "previous_event_id": row.get("previous_event_id", pd.NA),
-                    "previous_quarter": row.get("previous_quarter", pd.NA),
-                    "gross_notional_delta_bn": row.get("gross_notional_delta_bn", pd.NA),
-                    "schedule_diff_10y_eq_bn": row.get("schedule_diff_10y_eq_bn", pd.NA),
-                    "schedule_diff_dynamic_10y_eq_bn": row.get("schedule_diff_dynamic_10y_eq_bn", pd.NA),
-                    "schedule_diff_dv01_usd": row.get("schedule_diff_dv01_usd", pd.NA),
-                    "shock_construction": row.get("shock_construction", pd.NA),
-                    "shock_missing_flag": shock_missing,
-                    "small_denominator_flag": small_denominator,
-                    "elasticity_bp_per_100bn": elasticity_bp_per_100bn,
-                    "usable_for_headline": usable_for_headline,
-                }
-            )
+            for treatment_variant, treatment_column, treatment_shock_units, elasticity_units, scale_denominator in treatment_variants:
+                treatment_value_raw = row.get(treatment_column, pd.NA)
+                treatment_value = pd.to_numeric(pd.Series([treatment_value_raw]), errors="coerce").iloc[0]
+                shock_missing = bool(pd.isna(treatment_value))
+                small_denominator = False
+                if not shock_missing:
+                    small_denominator = _small_denominator_flag(
+                        treatment_variant=treatment_variant,
+                        shock_value=float(treatment_value),
+                        small_denominator_threshold_bn=float(small_denominator_threshold_bn),
+                    )
+
+                shock_scale = np.nan
+                if not shock_missing and float(treatment_value) != 0.0:
+                    shock_scale = float(treatment_value) / float(scale_denominator)
+
+                elasticity_value = np.nan
+                if not pd.isna(delta_bp) and not pd.isna(shock_scale):
+                    elasticity_value = float(delta_bp) / float(shock_scale)
+
+                usable_for_headline_reason = _headline_eligibility_reason(
+                    event_date_type=row["event_date_type"],
+                    treatment_variant=treatment_variant,
+                    shock_missing=shock_missing,
+                    small_denominator=small_denominator,
+                    headline_bucket=headline_bucket,
+                    classification_review_status=classification_review_status,
+                    shock_review_status=shock_review_status,
+                )
+                usable_for_headline = usable_for_headline_reason == "usable"
+                elasticity_bp_per_100bn = elasticity_value if treatment_shock_units == "USD billions" else np.nan
+                records.append(
+                    {
+                        "spec_id": SPEC_DURATION_TREATMENT_V1,
+                        "event_spec_id": SPEC_QRA_EVENT_V2,
+                        "treatment_variant": treatment_variant,
+                        "canonical_shock_id": shock_column,
+                        "treatment_shock_column": treatment_column,
+                        "treatment_shock_units": treatment_shock_units,
+                        "elasticity_units": elasticity_units,
+                        "quarter": row.get("quarter", pd.NA),
+                        "event_id": row["event_id"],
+                        "event_label": row.get("event_label", pd.NA),
+                        "event_date_requested": row.get("event_date_requested", pd.NA),
+                        "event_date_aligned": row.get("event_date_aligned", pd.NA),
+                        "event_date_type": row["event_date_type"],
+                        "policy_statement_url": row.get("policy_statement_url", pd.NA),
+                        "financing_estimates_url": row.get("financing_estimates_url", pd.NA),
+                        "timing_quality": row.get("timing_quality", pd.NA),
+                        "overlap_flag": _as_bool(row.get("overlap_flag", False)),
+                        "overlap_label": row.get("overlap_label", pd.NA),
+                        "overlap_note": row.get("overlap_note", pd.NA),
+                        "overlap_severity": _overlap_severity_from_row(row),
+                        "expected_direction": expected_direction,
+                        "current_quarter_action": row.get("current_quarter_action", pd.NA),
+                        "forward_guidance_bias": row.get("forward_guidance_bias", pd.NA),
+                        "headline_bucket": row.get("headline_bucket", pd.NA),
+                        "shock_sign_curated": row.get("shock_sign_curated", pd.NA),
+                        "classification_confidence": row.get("classification_confidence", pd.NA),
+                        "classification_review_status": row.get("classification_review_status", pd.NA),
+                        "series": series_name,
+                        "window": window,
+                        "delta_pp": delta_pp,
+                        "delta_bp": delta_bp,
+                        shock_column: row.get(shock_column, pd.NA),
+                        "treatment_shock_value": treatment_value,
+                        "shock_source": row.get("shock_source", pd.NA),
+                        "shock_notes": row.get("shock_notes", pd.NA),
+                        "shock_review_status": row.get("shock_review_status", pd.NA),
+                        "previous_event_id": row.get("previous_event_id", pd.NA),
+                        "previous_quarter": row.get("previous_quarter", pd.NA),
+                        "gross_notional_delta_bn": row.get("gross_notional_delta_bn", pd.NA),
+                        "schedule_diff_10y_eq_bn": row.get("schedule_diff_10y_eq_bn", pd.NA),
+                        "schedule_diff_dynamic_10y_eq_bn": row.get("schedule_diff_dynamic_10y_eq_bn", pd.NA),
+                        "schedule_diff_dv01_usd": row.get("schedule_diff_dv01_usd", pd.NA),
+                        "shock_construction": row.get("shock_construction", pd.NA),
+                        "shock_missing_flag": shock_missing,
+                        "small_denominator_flag": small_denominator,
+                        "elasticity_value": elasticity_value,
+                        "elasticity_bp_per_100bn": elasticity_bp_per_100bn,
+                        "usable_for_headline": usable_for_headline,
+                        "usable_for_headline_reason": usable_for_headline_reason,
+                    }
+                )
 
     output = pd.DataFrame(records)
     if output.empty:
         return output
     output["sign_flip_flag"] = False
-    for _, group in output.groupby(["event_id", "series", "window"], sort=False, dropna=False):
+    for _, group in output.groupby(["event_id", "series", "window", "treatment_variant"], sort=False, dropna=False):
         if len(group) < 2:
             continue
         signs = {
@@ -584,5 +727,402 @@ def build_qra_event_elasticity(
         }
         if len(signs) > 1:
             output.loc[group.index, "sign_flip_flag"] = True
-    output = output.sort_values(["event_id", "event_date_type", "series", "window"], kind="stable").reset_index(drop=True)
+    output = output.sort_values(
+        ["event_id", "event_date_type", "series", "window", "treatment_variant"],
+        kind="stable",
+    ).reset_index(drop=True)
     return output
+
+
+def build_qra_shock_crosswalk_v1(
+    shock_template: pd.DataFrame,
+    canonical_shock_id: str = "shock_bn",
+) -> pd.DataFrame:
+    required = [*SHOCK_TEMPLATE_KEYS, canonical_shock_id]
+    missing = [column for column in required if column not in shock_template.columns]
+    if missing:
+        raise KeyError(f"Shock template missing required crosswalk column(s): {missing}")
+
+    deduped = _dedupe_on_keys(shock_template.copy(), key_columns=SHOCK_TEMPLATE_KEYS)
+    rows: list[dict[str, object]] = []
+    for _, row in deduped.iterrows():
+        shock_source = row.get("shock_source", pd.NA)
+        manual_override_reason = pd.NA
+        normalized_source = normalize_lower(shock_source)
+        normalized_construction = normalize_lower(row.get("shock_construction", ""))
+        if normalized_construction.startswith("manual_override"):
+            manual_override_reason = "manual_override_with_schedule_context"
+        elif normalized_source and normalized_source not in {"schedule_diff_10y_eq_v1", "auto_tenor_parser_v1"}:
+            manual_override_reason = "manual_source_override"
+
+        rows.append(
+            {
+                "spec_id": SPEC_DURATION_TREATMENT_V1,
+                "treatment_variant": CANONICAL_TREATMENT_VARIANT,
+                "event_id": row.get("event_id", pd.NA),
+                "event_date_type": row.get("event_date_type", pd.NA),
+                "canonical_shock_id": canonical_shock_id,
+                "shock_bn": row.get(canonical_shock_id, pd.NA),
+                "schedule_diff_10y_eq_bn": row.get("schedule_diff_10y_eq_bn", pd.NA),
+                "schedule_diff_dynamic_10y_eq_bn": row.get("schedule_diff_dynamic_10y_eq_bn", pd.NA),
+                "schedule_diff_dv01_usd": row.get("schedule_diff_dv01_usd", pd.NA),
+                "gross_notional_delta_bn": row.get("gross_notional_delta_bn", pd.NA),
+                "shock_source": shock_source,
+                "manual_override_reason": manual_override_reason,
+                "shock_review_status": row.get("shock_review_status", pd.NA),
+            }
+        )
+    return pd.DataFrame(rows).sort_values(["event_id", "event_date_type"], kind="stable").reset_index(drop=True)
+
+
+def build_event_usability_table(elasticity: pd.DataFrame) -> pd.DataFrame:
+    if elasticity.empty:
+        return pd.DataFrame(
+            columns=[
+                "spec_id",
+                "treatment_variant",
+                "headline_bucket",
+                "classification_review_status",
+                "shock_review_status",
+                "event_date_type",
+                "overlap_severity",
+                "usable_for_headline",
+                "usable_for_headline_reason",
+                "n_events",
+            ]
+        )
+
+    working = elasticity.copy()
+    if "treatment_variant" in working.columns:
+        canonical = working.loc[working["treatment_variant"] == CANONICAL_TREATMENT_VARIANT].copy()
+        if not canonical.empty:
+            working = canonical
+    dedupe_keys = [
+        column
+        for column in (
+            "event_id",
+            "event_date_type",
+            "treatment_variant",
+            "headline_bucket",
+            "classification_review_status",
+            "shock_review_status",
+            "overlap_severity",
+            "usable_for_headline",
+            "usable_for_headline_reason",
+            "spec_id",
+        )
+        if column in working.columns
+    ]
+    if dedupe_keys:
+        working = working.drop_duplicates(subset=dedupe_keys, keep="first").copy()
+
+    if "overlap_severity" not in working.columns:
+        working["overlap_severity"] = "none"
+    grouped = (
+        working.groupby(
+            [
+                "spec_id",
+                "treatment_variant",
+                "headline_bucket",
+                "classification_review_status",
+                "shock_review_status",
+                "event_date_type",
+                "overlap_severity",
+                "usable_for_headline",
+                "usable_for_headline_reason",
+            ],
+            dropna=False,
+            observed=True,
+        )
+        .size()
+        .reset_index(name="n_events")
+    )
+    return grouped.sort_values(
+        [
+            "event_date_type",
+            "headline_bucket",
+            "classification_review_status",
+            "shock_review_status",
+            "usable_for_headline",
+            "usable_for_headline_reason",
+        ],
+        kind="stable",
+    ).reset_index(drop=True)
+
+
+def build_leave_one_event_out_table(elasticity: pd.DataFrame) -> pd.DataFrame:
+    columns = [
+        "spec_id",
+        "treatment_variant",
+        "series",
+        "window",
+        "dropped_event_id",
+        "left_out_event_id",
+        "n_events",
+        "mean_elasticity",
+        "estimate",
+        "elasticity_units",
+    ]
+    if elasticity.empty:
+        return pd.DataFrame(columns=columns)
+
+    required = {"event_id", "series", "window", "treatment_variant", "elasticity_value"}
+    missing = sorted(required - set(elasticity.columns))
+    if missing:
+        raise KeyError(f"Elasticity frame missing required leave-one-out column(s): {missing}")
+
+    working = elasticity.copy()
+    if "usable_for_headline" in working.columns:
+        working = working.loc[working["usable_for_headline"]].copy()
+    if working.empty:
+        return pd.DataFrame(columns=columns)
+
+    rows: list[dict[str, object]] = []
+    for (spec_id, treatment_variant, series, window), group in working.groupby(
+        ["spec_id", "treatment_variant", "series", "window"],
+        sort=True,
+        dropna=False,
+    ):
+        all_values = pd.to_numeric(group["elasticity_value"], errors="coerce")
+        rows.append(
+            {
+                "spec_id": spec_id,
+                "treatment_variant": treatment_variant,
+                "series": series,
+                "window": window,
+                "dropped_event_id": "__none__",
+                "left_out_event_id": "__none__",
+                "n_events": int(all_values.notna().sum()),
+                "mean_elasticity": all_values.mean(),
+                "estimate": all_values.mean(),
+                "elasticity_units": _first_non_empty_value(group.iloc[0], ("elasticity_units",)),
+            }
+        )
+        for event_id in sorted(group["event_id"].dropna().astype(str).unique()):
+            subset = group.loc[group["event_id"].astype(str) != event_id]
+            subset_values = pd.to_numeric(subset["elasticity_value"], errors="coerce")
+            rows.append(
+                {
+                    "spec_id": spec_id,
+                    "treatment_variant": treatment_variant,
+                "series": series,
+                "window": window,
+                "dropped_event_id": event_id,
+                "left_out_event_id": event_id,
+                "n_events": int(subset_values.notna().sum()),
+                "mean_elasticity": subset_values.mean(),
+                "estimate": subset_values.mean(),
+                "elasticity_units": _first_non_empty_value(group.iloc[0], ("elasticity_units",)),
+            }
+        )
+    return pd.DataFrame(rows, columns=columns).sort_values(
+        ["treatment_variant", "series", "window", "dropped_event_id"],
+        kind="stable",
+    ).reset_index(drop=True)
+
+
+def build_treatment_comparison_table(elasticity: pd.DataFrame) -> pd.DataFrame:
+    columns = [
+        "spec_id",
+        "event_date_type",
+        "series",
+        "window",
+        "treatment_variant",
+        "comparison_family",
+        "comparison_family_label",
+        "elasticity_units",
+        "n_rows",
+        "n_events",
+        "n_headline_eligible_events",
+        "headline_eligible_share",
+        "mean_elasticity_value",
+        "median_elasticity_value",
+        "std_elasticity_value",
+        "min_elasticity_value",
+        "max_elasticity_value",
+        "mean_abs_elasticity_value",
+        "family_reference_variant",
+        "family_reference_mean_elasticity_value",
+        "delta_vs_family_reference_mean_elasticity_value",
+        "bp_family_spread_elasticity_value",
+        "headline_recommendation_status",
+        "headline_recommendation_reason",
+        "primary_treatment_variant",
+        "primary_treatment_reason",
+    ]
+    if elasticity.empty:
+        return pd.DataFrame(columns=columns)
+
+    working = elasticity.copy()
+    if "event_date_type" in working.columns:
+        working = working.loc[working["event_date_type"].astype(str) == "official_release_date"].copy()
+    if working.empty:
+        return pd.DataFrame(columns=columns)
+    if "spec_id" not in working.columns:
+        working["spec_id"] = SPEC_DURATION_TREATMENT_V1
+    if "usable_for_headline" not in working.columns:
+        working["usable_for_headline"] = working.apply(_headline_eligibility_reason, axis=1) == "usable"
+    if "comparison_family" not in working.columns:
+        working["comparison_family"] = working.get("treatment_variant", pd.Series(index=working.index, dtype=object)).map(
+            _comparison_family_for_variant
+        )
+    if "elasticity_units" not in working.columns:
+        working["elasticity_units"] = pd.NA
+    if "elasticity_value" not in working.columns:
+        if "elasticity_bp_per_100bn" in working.columns:
+            working["elasticity_value"] = working["elasticity_bp_per_100bn"]
+            if working["elasticity_units"].isna().all():
+                working["elasticity_units"] = "bp_per_100bn"
+        elif "elasticity" in working.columns:
+            working["elasticity_value"] = working["elasticity"]
+        else:
+            return pd.DataFrame(columns=columns)
+
+    rows: list[dict[str, object]] = []
+    group_columns = ["spec_id", "event_date_type", "series", "window", "treatment_variant"]
+    for (spec_id, event_date_type, series, window, treatment_variant), group in working.groupby(
+        group_columns,
+        sort=False,
+        dropna=False,
+    ):
+        values = pd.to_numeric(group["elasticity_value"], errors="coerce")
+        headline_flags = group.get("usable_for_headline", pd.Series(False, index=group.index)).fillna(False).astype(bool)
+        comparison_family = _comparison_family_for_variant(treatment_variant)
+        rows.append(
+            {
+                "spec_id": spec_id,
+                "event_date_type": event_date_type,
+                "series": series,
+                "window": window,
+                "treatment_variant": treatment_variant,
+                "comparison_family": comparison_family,
+                "comparison_family_label": _comparison_family_label(comparison_family),
+                "elasticity_units": _first_non_empty_value(group.iloc[0], ("elasticity_units",)),
+                "n_rows": int(len(group)),
+                "n_events": int(group["event_id"].dropna().astype(str).nunique()),
+                "n_headline_eligible_events": int(group.loc[headline_flags, "event_id"].dropna().astype(str).nunique()),
+                "headline_eligible_share": float(
+                    group.loc[headline_flags, "event_id"].dropna().astype(str).nunique()
+                )
+                / float(group["event_id"].dropna().astype(str).nunique())
+                if group["event_id"].dropna().astype(str).nunique()
+                else np.nan,
+                "mean_elasticity_value": values.mean(),
+                "median_elasticity_value": values.median(),
+                "std_elasticity_value": values.std(),
+                "min_elasticity_value": values.min(),
+                "max_elasticity_value": values.max(),
+                "mean_abs_elasticity_value": values.abs().mean(),
+                "family_reference_variant": _comparison_family_reference_variant(comparison_family),
+            }
+        )
+
+    summary = pd.DataFrame(rows)
+    if summary.empty:
+        return pd.DataFrame(columns=columns)
+
+    family_reference_rows = (
+        summary.loc[
+            summary["treatment_variant"].astype(str)
+            == summary["family_reference_variant"].astype(str)
+        ]
+        .rename(columns={"mean_elasticity_value": "family_reference_mean_elasticity_value"})
+        [
+            [
+                "spec_id",
+                "event_date_type",
+                "series",
+                "window",
+                "comparison_family",
+                "family_reference_variant",
+                "family_reference_mean_elasticity_value",
+            ]
+        ]
+        .drop_duplicates(
+            subset=["spec_id", "event_date_type", "series", "window", "comparison_family", "family_reference_variant"],
+            keep="first",
+        )
+    )
+    summary = summary.merge(
+        family_reference_rows,
+        on=[
+            "spec_id",
+            "event_date_type",
+            "series",
+            "window",
+            "comparison_family",
+            "family_reference_variant",
+        ],
+        how="left",
+    )
+    summary["delta_vs_family_reference_mean_elasticity_value"] = (
+        summary["mean_elasticity_value"] - summary["family_reference_mean_elasticity_value"]
+    )
+
+    headline_rows: list[dict[str, object]] = []
+    for (spec_id, event_date_type, series, window), group in summary.groupby(
+        ["spec_id", "event_date_type", "series", "window"],
+        dropna=False,
+        sort=False,
+    ):
+        bp_group = group.loc[group["comparison_family"].astype(str) == "bp_per_100bn"].copy()
+        canonical = bp_group.loc[bp_group["treatment_variant"].astype(str) == CANONICAL_TREATMENT_VARIANT].copy()
+        canonical_eligible = int(canonical["n_headline_eligible_events"].fillna(0).sum()) if not canonical.empty else 0
+        bp_spread = (
+            float(bp_group["mean_elasticity_value"].max() - bp_group["mean_elasticity_value"].min())
+            if not bp_group.empty and bp_group["mean_elasticity_value"].notna().any()
+            else np.nan
+        )
+        bp_spread_text = f"{bp_spread:.3f}" if pd.notna(bp_spread) else "nan"
+        if canonical_eligible > 0:
+            status = "retain_canonical_contract"
+            reason = (
+                "canonical_headline_contract_has_eligible_rows;"
+                f"bp_family_spread={bp_spread_text};"
+                "comparison_families_published_for_audit"
+            )
+        else:
+            status = "review_canonical_contract"
+            reason = "canonical_headline_contract_has_no_eligible_rows;comparison_families_published_for_audit"
+        headline_rows.append(
+            {
+                "spec_id": spec_id,
+                "event_date_type": event_date_type,
+                "series": series,
+                "window": window,
+                "headline_recommendation_status": status,
+                "headline_recommendation_reason": reason,
+                "primary_treatment_variant": CANONICAL_TREATMENT_VARIANT,
+                "primary_treatment_reason": "canonical_shock_bn remains the headline contract; fixed, dynamic, and DV01 variants are comparison diagnostics.",
+                "bp_family_spread_elasticity_value": bp_spread,
+            }
+        )
+
+    headline = pd.DataFrame(headline_rows)
+    summary = summary.merge(
+        headline,
+        on=["spec_id", "event_date_type", "series", "window"],
+        how="left",
+    )
+
+    for column in (
+        "headline_recommendation_status",
+        "headline_recommendation_reason",
+        "primary_treatment_variant",
+        "primary_treatment_reason",
+    ):
+        if column not in summary.columns:
+            summary[column] = pd.NA
+
+    return summary[columns].sort_values(
+        [
+            "series",
+            "window",
+            "comparison_family",
+            "treatment_variant",
+        ],
+        key=lambda s: s.map(lambda value: _TREATMENT_VARIANT_ORDER.get(str(value), len(_TREATMENT_VARIANT_ORDER)))
+        if s.name == "treatment_variant"
+        else s,
+        kind="stable",
+    ).reset_index(drop=True)

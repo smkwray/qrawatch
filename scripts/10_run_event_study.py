@@ -12,7 +12,17 @@ import pandas as pd
 
 from ati_shadow_policy.io_utils import write_df
 from ati_shadow_policy.paths import MANUAL_DIR, PROCESSED_DIR, TABLES_DIR, ensure_project_dirs
-from ati_shadow_policy.research.event_study import summarize_event_panel, summarize_event_panel_robustness
+from ati_shadow_policy.research.event_study import (
+    build_overlap_exclusion_audit_note,
+    summarize_event_panel,
+    summarize_event_panel_robustness,
+)
+from ati_shadow_policy.research.qra_elasticity import (
+    build_event_usability_table,
+    build_leave_one_event_out_table,
+    build_treatment_comparison_table,
+    build_qra_shock_crosswalk_v1,
+)
 
 def main() -> None:
     ensure_project_dirs()
@@ -33,16 +43,28 @@ def main() -> None:
 
     robustness = summarize_event_panel_robustness(panel)
     write_df(robustness, TABLES_DIR / "qra_event_summary_robustness.csv")
+    audit_note = build_overlap_exclusion_audit_note(panel, robustness)
     robustness_lines = ["# QRA Event Summary Robustness", ""]
-    if "overlap_flag" in panel.columns and bool(panel["overlap_flag"].any()):
-        overlap_events = int(panel["overlap_flag"].sum())
-        robustness_lines.append(f"Overlap-annotated events excluded in the sensitivity check: {overlap_events}.")
-        robustness_lines.append("")
-    else:
-        robustness_lines.append("No overlap annotations are currently marked for exclusion.")
-        robustness_lines.append("")
+    robustness_lines.append(audit_note)
+    robustness_lines.append("")
     robustness_lines.append(robustness.to_markdown(index=False))
     (TABLES_DIR / "qra_event_summary_robustness.md").write_text("\n".join(robustness_lines) + "\n", encoding="utf-8")
+
+    shock_template_path = MANUAL_DIR / "qra_event_shock_template.csv"
+    if shock_template_path.exists():
+        shock_template = pd.read_csv(shock_template_path)
+        crosswalk = build_qra_shock_crosswalk_v1(shock_template)
+        write_df(crosswalk, TABLES_DIR / "qra_shock_crosswalk_v1.csv")
+
+    elasticity_path = TABLES_DIR / "qra_event_elasticity.csv"
+    if elasticity_path.exists():
+        elasticity = pd.read_csv(elasticity_path)
+        treatment_comparison = build_treatment_comparison_table(elasticity)
+        write_df(treatment_comparison, TABLES_DIR / "treatment_comparison_table.csv")
+        usability = build_event_usability_table(elasticity)
+        leave_one_out = build_leave_one_event_out_table(elasticity)
+        write_df(usability, TABLES_DIR / "event_usability_table.csv")
+        write_df(leave_one_out, TABLES_DIR / "leave_one_event_out_table.csv")
     print(f"Saved event summary with {len(summary):,} rows")
 
 if __name__ == "__main__":

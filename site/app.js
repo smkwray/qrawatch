@@ -71,6 +71,7 @@
   }
 
   function fmtSci(v, d) {
+    v = toNumber(v);
     if (v == null) return dash();
     d = d != null ? d : 3;
     if (v === 0) return '0.000';
@@ -109,9 +110,17 @@
     supporting: 'Supporting',
     summary_ready: 'Summary',
     headline_ready: 'Headline',
+    supporting_ready: 'Supporting Ready',
+    provisional_supporting: 'Provisional Supporting',
     not_started: 'Not started',
     manual_official_capture: 'Official capture',
     official_matched: 'Matched',
+    date_proxy: 'Date Proxy',
+    derived_event_ledger: 'Derived Event Ledger',
+    derived_shock_crosswalk: 'Derived Shock Crosswalk',
+    derived_qra_usability: 'Derived Usability',
+    derived_qra_robustness: 'Derived Robustness',
+    derived_absorption_bridge: 'Derived Absorption Bridge',
     hybrid_exact_nonbill_net_plus_qt_proxy: 'Exact net + QT proxy',
     fallback_gross_coupon_proxy_plus_qt_proxy: 'Gross coupon + QT proxy',
     headline_exact_net_with_labeled_fallbacks: 'Exact net',
@@ -146,6 +155,8 @@
     var labels = {
       headline_ready: 'Headline Ready',
       summary_ready: 'Summary Ready',
+      supporting_ready: 'Supporting Ready',
+      provisional_supporting: 'Provisional Supporting',
       not_started: 'Not Started'
     };
     return el('span', {
@@ -181,6 +192,33 @@
 
   function quarterCompare(a, b) {
     return String(a).localeCompare(String(b));
+  }
+
+  function quarterRank(q) {
+    var match = String(q || '').match(/^(\d{4})Q([1-4])$/);
+    if (!match) return null;
+    return (parseInt(match[1], 10) * 4) + parseInt(match[2], 10);
+  }
+
+  function formatQuarterSpans(quarters) {
+    if (!quarters.length) return '';
+    var spans = [];
+    var current = { start: quarters[0], end: quarters[0], rank: quarterRank(quarters[0]) };
+    for (var i = 1; i < quarters.length; i++) {
+      var q = quarters[i];
+      var rank = quarterRank(q);
+      if (current.rank != null && rank != null && rank === current.rank + 1) {
+        current.end = q;
+        current.rank = rank;
+      } else {
+        spans.push(current);
+        current = { start: q, end: q, rank: rank };
+      }
+    }
+    spans.push(current);
+    return spans.map(function (span) {
+      return span.start === span.end ? span.start : span.start + ' through ' + span.end;
+    }).join(', ');
   }
 
   function sortRowsByQuarter(rows) {
@@ -297,10 +335,11 @@
 
   function formatCoverage(rows) {
     if (!rows || !rows.length) return 'Official exact coverage unavailable.';
-    var sorted = rows.map(function (row) { return String(row.quarter); }).sort(quarterCompare);
-    var first = sorted[0];
-    var last = sorted[sorted.length - 1];
-    return 'Current exact official quarter coverage spans ' + first + ' through ' + last + ' (' + sorted.length + ' quarters).';
+    var sorted = rows
+      .map(function (row) { return String(row.quarter); })
+      .filter(function (q) { return quarterRank(q) != null; })
+      .sort(function (a, b) { return quarterRank(a) - quarterRank(b); });
+    return 'Current exact official quarter coverage includes ' + formatQuarterSpans(sorted) + ' (' + sorted.length + ' quarters).';
   }
 
   function robustnessNote(rows) {
@@ -412,6 +451,7 @@
         el('div', { class: 'card-value' }, [statusBadge(row.readiness_tier)]),
         el('div', { class: 'card-meta' }, [el('span', { class: 'card-inline-label', text: 'Public role: ' }), rolePill(publicRole)]),
         el('div', { class: 'card-meta', text: 'Source: ' + fmtSnake(row.source_quality) }),
+        row.review_maturity ? el('div', { class: 'card-meta', text: 'Review: ' + fmtLabel(row.review_maturity) }) : null,
         el('div', { class: 'card-meta', text: 'Updated: ' + relTime(row.last_regenerated_utc) })
       ]));
     }
@@ -606,6 +646,225 @@
 
     if (!summary && !events) {
       sectionError(container, 'Event study data unavailable.');
+    }
+  }
+
+  async function renderMethods() {
+    var container = $('#methods-content');
+    var results = await Promise.all([
+      fetchJSON('qra_event_registry_v2.json'),
+      fetchJSON('qra_shock_crosswalk_v1.json'),
+      fetchJSON('treatment_comparison_table.json'),
+      fetchJSON('event_usability_table.json'),
+      fetchJSON('leave_one_event_out_table.json'),
+      fetchJSON('auction_absorption_table.json'),
+      fetchJSON('qra_event_shock_summary.json'),
+      fetchJSON('qra_event_elasticity.json'),
+      fetchJSON('qra_event_robustness.json'),
+      fetchJSON('dataset_status.json')
+    ]);
+    var registry = results[0], crosswalk = results[1], treatmentComparison = results[2], usability = results[3], leaveOne = results[4], absorption = results[5];
+    var shockSummary = results[6], elasticity = results[7], robustness = results[8], dsStatus = results[9];
+
+    if (registry || shockSummary) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Event Ledger' }));
+      var ledgerRows = registry && registry.rows && registry.rows.length ? registry.rows : (shockSummary ? shockSummary.rows : []);
+      if (ledgerRows.length) {
+        var normalizedLedger = ledgerRows.map(function (row) {
+          return {
+            event_id: row.event_id,
+            quarter: row.quarter,
+            release_timestamp_et: row.release_timestamp_et,
+            release_timestamp_kind: row.release_timestamp_kind || row.release_timestamp_precision || '',
+            release_bundle_type: row.release_bundle_type || row.timing_quality || '',
+            policy_statement_url: row.policy_statement_url,
+            financing_estimates_url: row.financing_estimates_url,
+            headline_eligibility_reason: row.headline_eligibility_reason || row.usable_for_headline_reason || '',
+            treatment_version_id: row.treatment_version_id || row.canonical_shock_id || row.shock_construction || ''
+          };
+        });
+        container.appendChild(el('p', { class: 'section-desc',
+          text: 'Reviewed event rows with bundle type, treatment version, and the current headline eligibility reason. Exact timestamps are surfaced when available; otherwise the current release uses a date proxy.'
+        }));
+        container.appendChild(buildTable([
+          { key: 'event_id', label: 'Event' },
+          { key: 'quarter', label: 'Quarter' },
+          { key: 'release_timestamp_et', label: 'Release ET', format: fmtTimestamp },
+          { key: 'release_timestamp_kind', label: 'Timestamp Kind', format: fmtLabel },
+          { key: 'release_bundle_type', label: 'Bundle', format: fmtLabel },
+          { key: 'headline_eligibility_reason', label: 'Eligibility', format: fmtLabel },
+          { key: 'treatment_version_id', label: 'Treatment', format: fmtSnake }
+        ], normalizedLedger.slice(0, 12)));
+      }
+    }
+
+    if (crosswalk || elasticity) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Shock Crosswalk' }));
+      var crossRows = crosswalk && crosswalk.rows && crosswalk.rows.length ? crosswalk.rows : (elasticity ? elasticity.rows : []);
+      if (crossRows.length) {
+        container.appendChild(buildTable([
+          { key: 'event_id', label: 'Event' },
+          { key: 'event_date_type', label: 'Date Type', format: fmtSnake },
+          { key: 'canonical_shock_id', label: 'Canonical Shock', format: fmtSnake },
+          { key: 'shock_bn', label: 'Shock ($B)', numeric: true, colorSign: true, format: fmtBn },
+          { key: 'schedule_diff_10y_eq_bn', label: '10Y-eq ($B)', numeric: true, colorSign: true, format: fmtBn },
+          { key: 'schedule_diff_dynamic_10y_eq_bn', label: 'Dyn. 10Y-eq ($B)', numeric: true, colorSign: true, format: fmtBn },
+          { key: 'shock_review_status', label: 'Review', format: fmtLabel }
+        ], crossRows.slice(0, 12)));
+      }
+    }
+
+    if (treatmentComparison) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Treatment Comparison' }));
+      var comparisonRows = treatmentComparison.rows && treatmentComparison.rows.length ? treatmentComparison.rows : [];
+      if (comparisonRows.length) {
+        var normalizedComparison = comparisonRows.map(function (row) {
+          return {
+            event_date_type: row.event_date_type || 'official_release_date',
+            series: row.series,
+            window: row.window,
+            treatment_variant: row.treatment_variant,
+            comparison_family_label: row.comparison_family_label || row.comparison_family || '',
+            n_events: row.n_events,
+            n_headline_eligible_events: row.n_headline_eligible_events,
+            mean_elasticity_value: row.mean_elasticity_value,
+            delta_vs_family_reference_mean_elasticity_value: row.delta_vs_family_reference_mean_elasticity_value,
+            bp_family_spread_elasticity_value: row.bp_family_spread_elasticity_value,
+            headline_recommendation_status: row.headline_recommendation_status,
+            primary_treatment_reason: row.primary_treatment_reason || '',
+          };
+        });
+        container.appendChild(el('p', { class: 'section-desc',
+          text: 'Canonical shock stays the headline contract. Fixed 10Y-equivalent, dynamic 10Y-equivalent, and DV01 variants are published as comparison diagnostics by series and window.'
+        }));
+        container.appendChild(buildTable([
+          { key: 'event_date_type', label: 'Date Type', format: fmtSnake },
+          { key: 'series', label: 'Series' },
+          { key: 'window', label: 'Window' },
+          { key: 'treatment_variant', label: 'Treatment', format: fmtSnake },
+          { key: 'comparison_family_label', label: 'Family', format: fmtLabel },
+          { key: 'n_events', label: 'Events', numeric: true },
+          { key: 'n_headline_eligible_events', label: 'Headline Eligible', numeric: true },
+          { key: 'mean_elasticity_value', label: 'Mean', numeric: true, colorSign: true, format: function (v) { return fmtNum(v, 3); } },
+          { key: 'delta_vs_family_reference_mean_elasticity_value', label: 'Delta vs Family Ref', numeric: true, colorSign: true, format: function (v) { return fmtNum(v, 3); } },
+          { key: 'bp_family_spread_elasticity_value', label: 'BP Family Spread', numeric: true, colorSign: true, format: function (v) { return fmtNum(v, 3); } },
+          { key: 'headline_recommendation_status', label: 'Status', format: fmtLabel }
+        ], normalizedComparison.slice(0, 16)));
+        var primaryReason = normalizedComparison[0] && normalizedComparison[0].primary_treatment_reason;
+        if (primaryReason) {
+          container.appendChild(el('p', { class: 'supporting-note', text: primaryReason }));
+        }
+      }
+    }
+
+    if (usability || robustness) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Event Usability' }));
+      var usabilityRows = usability && usability.rows && usability.rows.length ? usability.rows : [];
+      if (usabilityRows.length) {
+        var normalizedUsability = usabilityRows.map(function (row) {
+          var count = row.n_rows != null ? row.n_rows : (row.n_events != null ? row.n_events : row.event_count);
+          return {
+            event_date_type: row.event_date_type,
+            headline_bucket: row.headline_bucket,
+            classification_review_status: row.classification_review_status,
+            shock_review_status: row.shock_review_status,
+            overlap_severity: row.overlap_severity,
+            usable_for_headline: row.usable_for_headline,
+            n_rows: count,
+            n_events: row.n_events != null ? row.n_events : count
+          };
+        });
+        container.appendChild(buildTable([
+          { key: 'event_date_type', label: 'Date Type', format: fmtSnake },
+          { key: 'headline_bucket', label: 'Bucket', format: fmtDirection },
+          { key: 'classification_review_status', label: 'Class Review', format: fmtLabel },
+          { key: 'shock_review_status', label: 'Shock Review', format: fmtLabel },
+          { key: 'overlap_severity', label: 'Overlap', format: fmtLabel },
+          { key: 'usable_for_headline', label: 'Headline?', format: checkMark },
+          { key: 'n_rows', label: 'Rows', numeric: true },
+          { key: 'n_events', label: 'Events', numeric: true }
+        ], normalizedUsability.slice(0, 12)));
+      } else if (robustness && robustness.rows && robustness.rows.length) {
+        container.appendChild(el('p', { class: 'supporting-note',
+          text: 'Event usability counts are not yet published in this snapshot; the event robustness grid remains available as a descriptive fallback.'
+        }));
+        container.appendChild(buildTable([
+          { key: 'sample_variant', label: 'Sample' },
+          { key: 'event_date_type', label: 'Date Type', format: fmtSnake },
+          { key: 'headline_bucket', label: 'Bucket', format: fmtDirection },
+          { key: 'n_events', label: 'Events', numeric: true }
+        ], robustness.rows.slice(0, 12)));
+      }
+    }
+
+    container.appendChild(el('h3', { class: 'section-subtitle', text: 'Absorption Bridge' }));
+    if (absorption && absorption.rows && absorption.rows.length) {
+      var normalizedAbsorption = absorption.rows.map(function (row) {
+        return {
+          qra_event_id: row.qra_event_id,
+          quarter: row.quarter,
+          auction_date: row.auction_date || row.date || row.as_of_date || '',
+          security_family: row.security_family,
+          investor_class: row.investor_class,
+          measure: row.measure,
+          value: row.value,
+          units: row.units,
+          source_family: row.source_family || row.view_type || '',
+          provenance_summary: row.provenance_summary || row.source_quality || ''
+        };
+      });
+      container.appendChild(el('p', { class: 'section-desc',
+        text: 'Quarter-keyed bridge from QRA event rows into Treasury investor allotments and Treasury coupon/TIPS dealer subsets.'
+      }));
+      container.appendChild(buildTable([
+        { key: 'qra_event_id', label: 'Event' },
+        { key: 'quarter', label: 'Quarter' },
+        { key: 'auction_date', label: 'Auction Date' },
+        { key: 'security_family', label: 'Security', format: fmtSnake },
+        { key: 'investor_class', label: 'Investor Class', format: fmtSnake },
+        { key: 'measure', label: 'Measure', format: fmtSnake },
+        { key: 'value', label: 'Value', numeric: true, format: function (v) { return v != null ? fmtNum(v, 2) : dash(); } },
+        { key: 'source_family', label: 'Source', format: fmtSnake }
+      ], normalizedAbsorption.slice(0, 12)));
+    }
+
+    if (leaveOne && leaveOne.rows && leaveOne.rows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Leave-One-Out Robustness' }));
+      var normalizedLeaveOne = leaveOne.rows.map(function (row) {
+        return {
+          event_id: row.event_id || row.dropped_event_id || '',
+          event_date_type: row.event_date_type || '',
+          series: row.series,
+          window: row.window,
+          leave_one_out_coefficient: row.leave_one_out_coefficient != null ? row.leave_one_out_coefficient : (row.mean_elasticity != null ? row.mean_elasticity : row.mean_elasticity_value),
+          leave_one_out_std_err: row.leave_one_out_std_err != null ? row.leave_one_out_std_err : row.std_err,
+          leave_one_out_delta: row.leave_one_out_delta != null ? row.leave_one_out_delta : '',
+          n_observations: row.n_observations != null ? row.n_observations : row.n_events
+        };
+      });
+      container.appendChild(buildTable([
+        { key: 'event_id', label: 'Event' },
+        { key: 'event_date_type', label: 'Date Type', format: fmtSnake },
+        { key: 'series', label: 'Series' },
+        { key: 'window', label: 'Window' },
+        { key: 'leave_one_out_coefficient', label: 'Coef', numeric: true, format: fmtSci },
+        { key: 'leave_one_out_std_err', label: 'SE', numeric: true, format: fmtSci },
+        { key: 'leave_one_out_delta', label: 'Delta', numeric: true, format: fmtSci },
+        { key: 'n_observations', label: 'N', numeric: true }
+      ], normalizedLeaveOne.slice(0, 12)));
+    } else {
+      container.appendChild(el('p', { class: 'supporting-note',
+        text: 'Leave-one-out results are not yet published in this snapshot; the table is wired for future output files.'
+      }));
+    }
+
+    if (dsStatus) {
+      var qraRow = dsStatus.rows.find(function (row) { return row.dataset === 'qra_event_elasticity'; });
+      if (qraRow) {
+        container.appendChild(el('p', { class: 'supporting-note',
+          text: 'QRA elasticity is currently marked as ' + fmtLabel(qraRow.review_maturity || qraRow.readiness_tier) + ' with source quality ' + fmtSnake(qraRow.source_quality) + '.'
+        }));
+      }
     }
   }
 
@@ -901,21 +1160,47 @@
       fetchJSON('dataset_status.json'),
       fetchJSON('extension_status.json'),
       fetchJSON('series_metadata_catalog.json'),
-      fetchJSON('data_sources_summary.json')
+      fetchJSON('data_sources_summary.json'),
+      fetchJSON('official_capture_readiness.json'),
+      fetchJSON('official_capture_completion.json')
     ]);
-    var dsStatus = results[0], extStatus = results[1], catalog = results[2], sources = results[3];
+    var dsStatus = results[0], extStatus = results[1], catalog = results[2], sources = results[3], captureReadiness = results[4], captureCompletion = results[5];
 
     if (dsStatus) {
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Dataset Readiness' }));
       container.appendChild(buildTable([
         { key: 'dataset', label: 'Dataset', format: fmtSnake },
         { key: 'readiness_tier', label: 'Readiness', format: function (v) { return statusBadge(v); } },
+        { key: 'review_maturity', label: 'Review Maturity', format: function (v) { return v ? statusBadge(v) : dash(); } },
         { key: 'public_role', label: 'Public Role', format: function (v, row) { return rolePill(publicRoleForDataset(row.dataset, v)); } },
         { key: 'source_quality', label: 'Source Quality', format: fmtLabel },
         { key: 'headline_ready', label: 'Headline', format: function (v, row) { return publicRoleForDataset(row.dataset, row.public_role) === 'supporting' ? 'No' : checkMark(v); } },
         { key: 'fallback_only', label: 'Fallback Only', format: function (v) { return v ? 'Yes' : 'No'; } },
         { key: 'last_regenerated_utc', label: 'Last Regenerated', format: fmtTimestamp }
       ], dsStatus.rows));
+    }
+
+    if (captureReadiness) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Official Capture Readiness' }));
+      container.appendChild(buildTable([
+        { key: 'quarter', label: 'Quarter' },
+        { key: 'readiness_tier', label: 'Readiness', format: function (v) { return statusBadge(v); } },
+        { key: 'source_quality', label: 'Source Quality', format: fmtLabel },
+        { key: 'headline_ready', label: 'Headline', format: checkMark },
+        { key: 'fallback_only', label: 'Fallback', format: checkMark },
+        { key: 'missing_critical_fields', label: 'Missing Fields', format: function (v) { return v || dash(); } }
+      ], captureReadiness.rows.slice(0, 16)));
+    }
+
+    if (captureCompletion) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Official Capture Completion' }));
+      container.appendChild(buildTable([
+        { key: 'quarter', label: 'Quarter' },
+        { key: 'completion_tier', label: 'Completion', format: fmtLabel },
+        { key: 'qa_status', label: 'QA Status', format: fmtLabel },
+        { key: 'is_headline_ready', label: 'Headline', format: checkMark },
+        { key: 'uses_seed_source', label: 'Uses Seed', format: checkMark }
+      ], captureCompletion.rows.slice(0, 16)));
     }
 
     if (extStatus) {
@@ -1002,6 +1287,7 @@
       renderOverview(),
       renderCapture(),
       renderEvents(),
+      renderMethods(),
       renderPlumbing(),
       renderDuration(),
       renderExtensions(),

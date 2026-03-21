@@ -2,7 +2,7 @@ PYTHON ?= $(HOME)/venvs/qrawatch/bin/python
 SHELL := /bin/zsh
 RUN = source .env && "$(PYTHON)"
 
-.PHONY: bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity test download-core qra investor primary sec event plumbing duration publish qra-quality backend-validate regenerate site
+.PHONY: bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity identification absorption test download-core qra investor primary sec event plumbing duration publish qra-quality backend-validate regenerate site
 
 bootstrap:
 	$(RUN) scripts/00_bootstrap.py
@@ -27,6 +27,12 @@ shock-template:
 
 elasticity:
 	$(RUN) scripts/24_build_qra_event_elasticity.py
+
+identification:
+	$(RUN) scripts/25_build_qra_identification_tables.py
+
+absorption:
+	$(RUN) scripts/26_build_auction_absorption.py
 
 test:
 	$(RUN) -B -m pytest -q
@@ -70,7 +76,7 @@ qra-quality:
 backend-validate:
 	$(RUN) scripts/21_validate_backend.py
 
-regenerate: download-core qra qra-enrich official-capture official-ati investor primary sec seed event plumbing duration publish qra-quality backend-validate
+regenerate: download-core qra qra-enrich official-capture official-ati investor primary sec seed event shock-template elasticity identification absorption plumbing duration publish qra-quality backend-validate
 
 site: publish
 	@echo "Copying publish artifacts to site/data/..."

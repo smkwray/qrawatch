@@ -12,7 +12,10 @@ import pandas as pd
 
 from ati_shadow_policy.io_utils import write_df
 from ati_shadow_policy.paths import MANUAL_DIR, PROCESSED_DIR, RAW_DIR, ensure_project_dirs
-from ati_shadow_policy.research.event_study import build_event_panel
+from ati_shadow_policy.research.event_study import (
+    build_event_panel,
+    build_qra_event_registry_v2,
+)
 from ati_shadow_policy.research.qra_classification import derive_legacy_expected_direction
 
 VALUE_COLUMNS = ["THREEFYTP10", "DGS10", "DGS2", "DGS30", "SP500", "VIXCLS"]
@@ -73,17 +76,24 @@ def main() -> None:
     base_cols = [col for col in VALUE_COLUMNS if col in fred.columns]
     base_cols.extend([c for c in ["slope_10y_2y", "slope_30y_2y"] if c in fred.columns])
 
+    overlap_annotations = None
+    overlap_annotations_path = MANUAL_DIR / "qra_event_overlap_annotations.csv"
+    if overlap_annotations_path.exists():
+        overlap_annotations = pd.read_csv(overlap_annotations_path)
+
     panel_official = build_event_panel(
         fred,
         events,
         base_cols,
         event_date_column="official_release_date",
+        overlap_annotations=overlap_annotations,
     )
     panel_tminus1 = build_event_panel(
         fred,
         events,
         base_cols,
         event_date_column="market_pricing_marker_minus_1d",
+        overlap_annotations=overlap_annotations,
     )
     panel = pd.concat([panel_official, panel_tminus1], ignore_index=True)
     event_type_order = pd.CategoricalDtype(
@@ -94,7 +104,10 @@ def main() -> None:
     panel = panel.sort_values(["event_id", "event_date_type"]).reset_index(drop=True)
     panel["event_date_type"] = panel["event_date_type"].astype(str)
     write_df(panel, PROCESSED_DIR / "qra_event_panel.csv")
+    registry = build_qra_event_registry_v2(panel)
+    write_df(registry, PROCESSED_DIR / "qra_event_registry_v2.csv")
     print(f"Saved QRA event panel with {len(panel):,} rows")
+    print(f"Saved QRA event registry v2 with {len(registry):,} rows")
 
 if __name__ == "__main__":
     main()

@@ -37,6 +37,7 @@ OFFICIAL_REQUIRED_FIELDS = (
 )
 
 QUARTER_PATTERN = re.compile(r"^\d{4}Q[1-4]$")
+UNANCHORED_QUARTER_PATTERN = r"\d{4}Q[1-4]"
 
 REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
     "ati_quarter_table.csv": [
@@ -257,6 +258,103 @@ OPTIONAL_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "contribution_10y_eq_bn",
     ],
 }
+QRA_EVENT_REGISTRY_V2_COLUMNS = [
+    "event_id",
+    "quarter",
+    "release_timestamp_et",
+    "release_bundle_type",
+    "policy_statement_url",
+    "financing_estimates_url",
+    "timing_quality",
+    "overlap_severity",
+    "overlap_label",
+    "financing_need_news_flag",
+    "composition_news_flag",
+    "forward_guidance_flag",
+    "reviewer",
+    "review_date",
+    "treatment_version_id",
+    "headline_eligibility_reason",
+]
+
+QRA_SHOCK_CROSSWALK_V1_COLUMNS = [
+    "event_id",
+    "event_date_type",
+    "canonical_shock_id",
+    "shock_bn",
+    "schedule_diff_10y_eq_bn",
+    "schedule_diff_dynamic_10y_eq_bn",
+    "schedule_diff_dv01_usd",
+    "shock_source",
+    "manual_override_reason",
+    "shock_review_status",
+]
+
+EVENT_USABILITY_TABLE_REQUIRED_GROUPS = [
+    {"headline_bucket", "bucket"},
+    {"classification_review_status", "event_classification_review_status"},
+    {"shock_review_status", "shock_status"},
+    {"event_date_type", "date_type"},
+    {"overlap_severity", "overlap_level"},
+    {"headline_usable_count", "headline_usable", "usable_events"},
+    {"event_count", "total_events", "n_events"},
+]
+
+LEAVE_ONE_EVENT_OUT_TABLE_REQUIRED_GROUPS = [
+    {"left_out_event_id", "dropped_event_id", "excluded_event_id", "excluded_event"},
+    {"event_date_type", "date_type"},
+    {"headline_bucket", "bucket"},
+    {"series", "dependent_variable"},
+    {"window", "term"},
+    {"estimate", "coef", "elasticity_bp_per_100bn"},
+    {"p_value", "pval"},
+    {"n_obs", "n_events", "sample_size"},
+]
+
+OPTIONAL_PUBLISH_SCHEMAS.update(
+    {
+        "qra_event_registry_v2.csv": QRA_EVENT_REGISTRY_V2_COLUMNS,
+        "qra_shock_crosswalk_v1.csv": QRA_SHOCK_CROSSWALK_V1_COLUMNS,
+        "treatment_comparison_table.csv": [
+            "spec_id",
+            "event_date_type",
+            "series",
+            "window",
+            "treatment_variant",
+            "comparison_family",
+            "n_events",
+            "mean_elasticity_value",
+            "headline_recommendation_status",
+            "primary_treatment_variant",
+        ],
+        "event_usability_table.csv": ["headline_bucket", "event_date_type", "event_count"],
+        "leave_one_event_out_table.csv": ["left_out_event_id", "series", "window", "estimate"],
+        "auction_absorption_table.csv": [
+            "qra_event_id",
+            "quarter",
+            "auction_date",
+            "security_family",
+            "investor_class",
+            "measure",
+            "value",
+            "units",
+            "source_quality",
+            "provenance_summary",
+        ],
+    }
+)
+
+QRA_EVENT_SHOCK_DRIFT_THRESHOLD_BN = 10.0
+QRA_README_COVERAGE_PATTERNS = (
+    re.compile(
+        r"Exact official quarter coverage\s+currently\s+spans\s+(.+)\.",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"exact official quarter history is still short and currently covers(?:\s+only)?\s+(.+)\.",
+        re.IGNORECASE,
+    ),
+)
 REQUIRED_EXTENSION_SUMMARY_READY = ("investor_allotments", "primary_dealer", "sec_nmfp")
 PUBLIC_HYGIENE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"/Users/", "absolute_local_path"),
@@ -317,6 +415,326 @@ def _coerce_bool(value: object) -> bool:
     if isinstance(value, float) and pd.isna(value):
         return False
     return str(value).strip().lower() in {"true", "1", "yes", "y"}
+
+
+def _coerce_float(value: object) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, (float, int)):
+        return float(value)
+    text = str(value).strip()
+    if not text or text.lower() in {"nan", "none", "null"}:
+        return None
+    try:
+        return float(text)
+    except Exception:
+        return None
+
+
+def _coerce_int(value: object) -> int | None:
+    float_value = _coerce_float(value)
+    if float_value is None:
+        return None
+    if pd.isna(float_value):
+        return None
+    try:
+        return int(float_value)
+    except Exception:
+        return None
+
+
+def _parse_coverage_range(start: str, end: str) -> set[str]:
+    start_int = _quarter_to_int(start)
+    end_int = _quarter_to_int(end)
+    if start_int is None or end_int is None:
+        return set()
+    if end_int < start_int:
+        return set()
+
+    quarters: set[str] = set()
+    for value in range(start_int, end_int + 1):
+        year = value // 4
+        q = value % 4
+        if q == 0:
+            year -= 1
+            q = 4
+        quarters.add(f"{year}Q{q}")
+    return quarters
+
+
+def _quarter_to_int(quarter: object) -> int | None:
+    text = str(quarter).strip()
+    if not re.match(QUARTER_PATTERN, text):
+        return None
+    year = int(text[:4])
+    q = int(text[5])
+    return year * 4 + q
+
+
+def _normalize_quarter(quarter: object) -> str:
+    value = str(quarter or "").strip()
+    if value.lower() in {"", "nan", "none", "null"}:
+        return ""
+    return value
+
+
+def _quarters_to_ranges(quarters: set[str]) -> list[str]:
+    if not quarters:
+        return []
+    ordered = sorted(
+        q for q in quarters if re.match(QUARTER_PATTERN, str(q).strip())
+    )
+    if not ordered:
+        return []
+
+    ordinals = [_quarter_to_int(q) for q in ordered if _quarter_to_int(q) is not None]
+    ordinals = sorted(set(int(v) for v in ordinals))
+    if not ordinals:
+        return []
+
+    ranges: list[str] = []
+    start = ordinals[0]
+    end = ordinals[0]
+    for value in ordinals[1:]:
+        if value == end + 1:
+            end = value
+            continue
+        ranges.append((start, end))
+        start = value
+        end = value
+    ranges.append((start, end))
+    rendered = []
+    for left, right in ranges:
+        left_year = left // 4
+        right_year = right // 4
+        left_q = left % 4
+        if left_q == 0:
+            left_year -= 1
+            left_q = 4
+        right_q = right % 4
+        if right_q == 0:
+            right_year -= 1
+            right_q = 4
+        left_q_label = f"{left_year}Q{left_q}"
+        right_q_label = f"{right_year}Q{right_q}"
+        if left == right:
+            rendered.append(left_q_label)
+        else:
+            rendered.append(f"{left_q_label} through {right_q_label}")
+    return rendered
+
+
+def _extract_readme_coverage_claim(readme_text: str) -> str | None:
+    for pattern in QRA_README_COVERAGE_PATTERNS:
+        match = pattern.search(readme_text)
+        if match:
+            return match.group(1).strip()
+    return None
+
+
+def _parse_exact_coverage_statement(statement: str) -> set[str]:
+    if not statement:
+        return set()
+    cleaned = str(statement).replace("`", "")
+
+    declared = set()
+    for statement_start, statement_end in re.findall(
+        rf"({UNANCHORED_QUARTER_PATTERN})\s+through\s+({UNANCHORED_QUARTER_PATTERN})",
+        cleaned,
+        flags=re.IGNORECASE,
+    ):
+        declared |= _parse_coverage_range(statement_start, statement_end)
+
+    declared |= set(re.findall(UNANCHORED_QUARTER_PATTERN, cleaned))
+
+    return {quarter for quarter in declared if QUARTER_PATTERN.match(quarter)}
+
+
+def _validate_exact_coverages(
+    readiness_frame: pd.DataFrame | None,
+    completion_frame: pd.DataFrame | None,
+) -> tuple[set[str], set[str]]:
+    if readiness_frame is None:
+        readiness = pd.DataFrame()
+    else:
+        readiness = readiness_frame
+    if completion_frame is None:
+        completion = pd.DataFrame()
+    else:
+        completion = completion_frame
+
+    if readiness.empty:
+        readiness_exact = set()
+    else:
+        readiness_tier = readiness.get("readiness_tier", pd.Series(dtype=str)).astype(str).str.strip()
+        source_quality = readiness.get("source_quality", pd.Series(dtype=str)).astype(str).str.strip()
+        readiness_exact = set(
+            _normalize_quarter(value)
+            for value in readiness.loc[
+                readiness_tier.str.contains("exact_official", na=False)
+                | source_quality.str.contains("exact_official", na=False),
+                "quarter",
+            ]
+            if QUARTER_PATTERN.match(_normalize_quarter(value))
+        )
+
+    if completion.empty:
+        completion_exact = set()
+    else:
+        completion_tier = completion.get("completion_tier", pd.Series(dtype=str)).astype(str).str.strip()
+        completion_exact = set(
+            _normalize_quarter(value)
+            for value in completion.loc[
+                completion_tier.str.contains("exact_official", na=False),
+                "quarter",
+            ]
+            if QUARTER_PATTERN.match(_normalize_quarter(value))
+        )
+
+    return readiness_exact, completion_exact
+
+
+def _validate_alias_required_columns(
+    frame: pd.DataFrame,
+    alias_groups: list[set[str]],
+) -> list[str]:
+    missing: list[str] = []
+    for aliases in alias_groups:
+        if not any(alias in frame.columns for alias in aliases):
+            missing.append(f"missing_any:{{{','.join(sorted(aliases))}}}")
+    return missing
+
+
+def _validate_alias_compatibility(csv_name: str, frame: pd.DataFrame, *, errors: list[str]) -> None:
+    if csv_name == "event_usability_table.csv":
+        missing = _validate_alias_required_columns(frame, EVENT_USABILITY_TABLE_REQUIRED_GROUPS)
+        for item in missing:
+            errors.append(f"publish_artifact_missing_columns:{csv_name}:{item}")
+    elif csv_name == "leave_one_event_out_table.csv":
+        missing = _validate_alias_required_columns(frame, LEAVE_ONE_EVENT_OUT_TABLE_REQUIRED_GROUPS)
+        for item in missing:
+            errors.append(f"publish_artifact_missing_columns:{csv_name}:{item}")
+
+
+def _validate_shock_drift_alerts(
+    csv_name: str,
+    frame: pd.DataFrame,
+    *,
+    warnings: list[str],
+) -> None:
+    if frame.empty or csv_name not in {"qra_event_shock_summary.csv", "qra_shock_crosswalk_v1.csv", "qra_event_elasticity.csv"}:
+        return
+
+    for source_key in ("schedule_diff_10y_eq_bn", "schedule_diff_dynamic_10y_eq_bn"):
+        if source_key not in frame.columns:
+            continue
+        for _, row in frame.iterrows():
+            event_id = str(row.get("event_id", "")).strip()
+            if not event_id:
+                continue
+            if _coerce_bool(row.get("ignore_drift_alert", False)):
+                continue
+            schedule = _coerce_float(row.get(source_key))
+            if schedule is None or abs(schedule) < QRA_EVENT_SHOCK_DRIFT_THRESHOLD_BN:
+                continue
+            shock = _coerce_float(row.get("shock_bn"))
+            reviewed = str(row.get("shock_review_status", "")).strip().lower()
+            if shock is None or abs(shock) <= 1e-9 or reviewed == "pending":
+                warnings.append(
+                    "qra_publish_shock_drift_alert:"
+                    f"{csv_name}:{event_id}:{source_key}:{schedule}:{reviewed or 'missing_review_status'}"
+                )
+                continue
+
+
+def _validate_overlap_excluded_noop(
+    csv_name: str,
+    frame: pd.DataFrame,
+    *,
+    warnings: list[str],
+) -> None:
+    if csv_name != "qra_event_robustness.csv":
+        return
+
+    if frame.empty or not {"sample_variant", "headline_bucket", "event_date_type", "n_events"}.issubset(frame.columns):
+        return
+
+    required = {"all_events", "overlap_excluded"}
+    variants = set(frame["sample_variant"].dropna().astype(str))
+    if not required.issubset(variants):
+        return
+
+    filtered = frame.copy()
+    filtered["headline_bucket"] = filtered["headline_bucket"].astype(str).str.strip()
+    filtered["sample_variant"] = filtered["sample_variant"].astype(str).str.strip()
+    filtered["event_date_type"] = filtered["event_date_type"].astype(str).str.strip()
+    filtered["n_events"] = pd.to_numeric(filtered["n_events"], errors="coerce")
+
+    grouped = (
+        filtered
+        .loc[filtered["sample_variant"].isin(required)]
+        .pivot_table(
+            index=["event_date_type", "headline_bucket"],
+            columns="sample_variant",
+            values="n_events",
+            aggfunc="sum",
+        )
+    )
+    if grouped.empty or "all_events" not in grouped.columns or "overlap_excluded" not in grouped.columns:
+        return
+
+    for (event_date_type, headline_bucket), row in grouped.iterrows():
+        all_events = row.get("all_events")
+        overlap_excluded = row.get("overlap_excluded")
+        if pd.isna(all_events) or pd.isna(overlap_excluded):
+            continue
+        try:
+            if float(all_events) == float(overlap_excluded):
+                warnings.append(
+                    "qra_publish_overlap_excluded_noop:"
+                    f"{event_date_type}:{headline_bucket}:{all_events}"
+                )
+        except Exception:
+            continue
+
+
+def _validate_readme_exact_coverage_consistency(
+    readme_path: Path,
+    readiness_exact: set[str],
+    completion_exact: set[str],
+    *,
+    errors: list[str],
+    warnings: list[str],
+) -> None:
+    if not readme_path.exists():
+        warnings.append(f"validation_readme_missing:{readme_path}")
+        return
+
+    readme_text = readme_path.read_text(encoding="utf-8", errors="replace")
+    statement = _extract_readme_coverage_claim(readme_text)
+    if not statement:
+        errors.append("readme_missing_exact_official_coverage_claim")
+        return
+
+    statement_quarters = _parse_exact_coverage_statement(statement)
+    statement_ranges = _quarters_to_ranges(statement_quarters)
+
+    if statement_quarters and readiness_exact != statement_quarters:
+        warnings.append(
+            "readme_official_coverage_mismatch:"
+            f"statement={','.join(sorted(statement_quarters))}:"
+            f"readiness={','.join(sorted(readiness_exact))}"
+        )
+    if readiness_exact != completion_exact and readiness_exact and completion_exact:
+        warnings.append(
+            "official_coverage_exact_source_mismatch:"
+            f"readiness={','.join(sorted(readiness_exact))}:"
+            f"completion={','.join(sorted(completion_exact))}"
+        )
+    if readiness_exact and len(_quarters_to_ranges(readiness_exact)) > 1:
+        # Non-contiguous coverage can’t be represented by a single-through span.
+        if "through" in statement.lower() and len(statement_ranges) == 1:
+            warnings.append("official_coverage_statement_contiguous_while_data_noncontiguous")
 
 
 def _has_seed_dependency(*values: object) -> bool:
@@ -519,6 +937,22 @@ def _validate_qra_publish_frame(csv_name: str, frame: pd.DataFrame) -> list[str]
     if frame.empty:
         return errors
 
+    if csv_name == "qra_event_registry_v2.csv":
+        for _, row in frame.iterrows():
+            event_id = str(row.get("event_id", "")).strip()
+            if not event_id:
+                errors.append("qra_publish_missing_columns:qra_event_registry_v2.csv:event_id")
+            if "release_timestamp_et" in frame.columns:
+                if _coerce_timestamp(row.get("release_timestamp_et")) is None:
+                    errors.append(f"qra_publish_invalid_timestamp:qra_event_registry_v2.csv:{event_id}")
+        if "headline_eligibility_reason" not in frame.columns:
+            errors.append("qra_publish_missing_columns:qra_event_registry_v2.csv:headline_eligibility_reason")
+
+    if csv_name == "qra_shock_crosswalk_v1.csv":
+        for required in ("canonical_shock_id", "shock_source"):
+            if required not in frame.columns:
+                errors.append(f"qra_publish_missing_columns:qra_shock_crosswalk_v1.csv:{required}")
+
     if "quarter" in frame.columns and frame["quarter"].fillna("").astype(str).str.strip().eq("").any():
         errors.append(f"qra_publish_null_quarter:{csv_name}")
 
@@ -534,8 +968,11 @@ def _validate_qra_publish_frame(csv_name: str, frame: pd.DataFrame) -> list[str]
         if invalid:
             errors.append(f"qra_publish_invalid_enum:{csv_name}:{column}:{','.join(invalid)}")
 
-    if {"event_id", "event_date_type", "series", "window"}.issubset(frame.columns):
-        if frame.duplicated(subset=["event_id", "event_date_type", "series", "window"]).any():
+    duplicate_key = ["event_id", "event_date_type", "series", "window"]
+    if "treatment_variant" in frame.columns:
+        duplicate_key.append("treatment_variant")
+    if set(duplicate_key).issubset(frame.columns):
+        if frame.duplicated(subset=duplicate_key).any():
             errors.append(f"qra_publish_duplicate_event_series_window:{csv_name}")
 
     if csv_name == "qra_event_elasticity.csv":
@@ -561,12 +998,32 @@ def _validate_qra_publish_frame(csv_name: str, frame: pd.DataFrame) -> list[str]
             if not invalid.empty:
                 errors.append(f"qra_publish_invalid_headline_semantics:{csv_name}")
 
+    _validate_alias_compatibility(csv_name, frame, errors=errors)
+
     return errors
 
 
-def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str], dict[str, int]]:
+def _validate_overlap_excluded_for_file(
+    csv_name: str,
+    csv_frame: pd.DataFrame,
+    *,
+    warnings: list[str],
+) -> None:
+    if csv_name == "qra_event_robustness.csv":
+        _validate_overlap_excluded_noop(csv_name, csv_frame, warnings=warnings)
+
+
+def validate_publish_artifacts(
+    publish_dir: Path,
+    readme_path: Path | None = None,
+) -> tuple[list[str], list[str], dict[str, int]]:
     errors: list[str] = []
     warnings: list[str] = []
+    if readme_path is None:
+        readme_path = ROOT / "README.md"
+
+    readiness_frame: pd.DataFrame | None = None
+    completion_frame: pd.DataFrame | None = None
 
     if not publish_dir.exists():
         errors.append(f"publish_dir_missing:{publish_dir}")
@@ -595,6 +1052,14 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
             )
         if csv_name.startswith("qra_event_"):
             errors.extend(_validate_qra_publish_frame(csv_name, csv_frame))
+        if csv_name in {"qra_event_shock_summary.csv", "qra_event_elasticity.csv", "qra_shock_crosswalk_v1.csv"}:
+            _validate_shock_drift_alerts(csv_name, csv_frame, warnings=warnings)
+        if csv_name.startswith("qra_event_"):
+            _validate_overlap_excluded_for_file(csv_name, csv_frame, warnings=warnings)
+        if csv_name == "official_capture_readiness.csv":
+            readiness_frame = csv_frame
+        if csv_name == "official_capture_completion.csv":
+            completion_frame = csv_frame
 
     optional_required = set()
     for csv_name, required_columns in OPTIONAL_PUBLISH_SCHEMAS.items():
@@ -621,6 +1086,14 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
             )
         if csv_name.startswith("qra_event_"):
             errors.extend(_validate_qra_publish_frame(csv_name, csv_frame))
+        if csv_name in {"qra_event_shock_summary.csv", "qra_shock_crosswalk_v1.csv", "qra_event_elasticity.csv"}:
+            _validate_shock_drift_alerts(csv_name, csv_frame, warnings=warnings)
+        if csv_name.startswith("qra_event_"):
+            _validate_overlap_excluded_for_file(csv_name, csv_frame, warnings=warnings)
+        if csv_name == "official_capture_readiness.csv":
+            readiness_frame = csv_frame
+        if csv_name == "official_capture_completion.csv":
+            completion_frame = csv_frame
 
     index_path = publish_dir / "index.json"
     if not index_path.exists():
@@ -710,6 +1183,15 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
                 invalid_public_role = match.loc[match["public_role"].astype(str).str.strip() != "supporting"]
                 if not invalid_public_role.empty:
                     errors.append(f"series_metadata_extension_public_role_invalid:{name}")
+
+    readiness_exact, completion_exact = _validate_exact_coverages(readiness_frame, completion_frame)
+    _validate_readme_exact_coverage_consistency(
+        readme_path=readme_path,
+        readiness_exact=readiness_exact,
+        completion_exact=completion_exact,
+        errors=errors,
+        warnings=warnings,
+    )
 
     return errors, warnings, {"missing_files": missing_files, "index_artifacts": len(artifacts)}
 
@@ -855,6 +1337,7 @@ def validate_backend(
     official_ati_path: Path,
     manual_capture_path: Path,
     publish_dir: Path,
+    readme_path: Path | None = None,
 ) -> BackendValidationResult:
     errors: list[str] = []
     warnings: list[str] = []
@@ -891,7 +1374,12 @@ def validate_backend(
             errors.append("official_ati_contains_seed_contaminated_exact_rows")
     summaries["official_ati"] = ati_summary
 
-    publish_errors, publish_warnings, publish_summary = validate_publish_artifacts(publish_dir)
+    if readme_path is None:
+        readme_path = ROOT / "README.md"
+    publish_errors, publish_warnings, publish_summary = validate_publish_artifacts(
+        publish_dir,
+        readme_path=readme_path,
+    )
     errors.extend(publish_errors)
     warnings.extend(publish_warnings)
     summaries["publish"] = publish_summary
