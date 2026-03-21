@@ -43,6 +43,17 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "quarter",
         "financing_need_bn",
         "ati_baseline_bn",
+        "source_quality",
+        "public_role",
+    ],
+    "ati_seed_forecast_table.csv": [
+        "quarter",
+        "financing_need_bn",
+        "ati_baseline_bn",
+        "seed_source",
+        "seed_quality",
+        "non_headline_reason",
+        "public_role",
     ],
     "official_qra_capture.csv": [
         "quarter",
@@ -124,10 +135,12 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
     "extension_status.csv": [
         "extension",
         "backend_status",
+        "headline_ready",
         "raw_dir_exists",
         "manifest_exists",
         "downloads_exists",
         "processed_exists",
+        "public_role",
     ],
     "investor_allotments_summary.csv": [
         "summary_type",
@@ -156,6 +169,7 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "source_quality",
         "headline_ready",
         "fallback_only",
+        "public_role",
     ],
     "series_metadata_catalog.csv": [
         "dataset",
@@ -164,9 +178,16 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "value_units",
         "source_quality",
         "series_role",
+        "public_role",
     ],
 }
 REQUIRED_EXTENSION_SUMMARY_READY = ("investor_allotments", "primary_dealer", "sec_nmfp")
+PUBLIC_HYGIENE_PATTERNS: tuple[tuple[str, str], ...] = (
+    (r"/Users/", "absolute_local_path"),
+    (r"\b(?:orca|dairy|tandy|subagent)\b|\bagent[_ -]?id\b", "internal_agent_reference"),
+    (r"\b(?:memory-system\.md|handoff\.md|todo\.md|dontdo\.md|changes\.md)\b", "internal_workflow_reference"),
+    (r"data/manual/", "manual_data_reference"),
+)
 
 
 def _coerce_timestamp(value: object) -> datetime | None:
@@ -205,6 +226,16 @@ def _is_missing(value: object) -> bool:
 
 def _normalize_qa_status(value: object) -> str:
     return str(value or "").strip()
+
+
+def _coerce_bool(value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    if isinstance(value, float) and pd.isna(value):
+        return False
+    return str(value).strip().lower() in {"true", "1", "yes", "y"}
 
 
 def _has_seed_dependency(*values: object) -> bool:
@@ -442,6 +473,7 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
 
     dataset_status_path = publish_dir / "dataset_status.csv"
     extension_status_path = publish_dir / "extension_status.csv"
+    series_catalog_path = publish_dir / "series_metadata_catalog.csv"
     if dataset_status_path.exists():
         try:
             dataset_status = pd.read_csv(dataset_status_path)
@@ -457,6 +489,11 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
             readiness = str(match.iloc[0].get("readiness_tier", "")).strip()
             if readiness != "summary_ready":
                 errors.append(f"dataset_status_not_summary_ready:{dataset_name}:{readiness}")
+            if _coerce_bool(match.iloc[0].get("headline_ready")):
+                errors.append(f"dataset_status_extension_marked_headline:{dataset_name}")
+            public_role = str(match.iloc[0].get("public_role", "")).strip()
+            if public_role != "supporting":
+                errors.append(f"dataset_status_extension_public_role_invalid:{dataset_name}:{public_role}")
     if extension_status_path.exists():
         try:
             extension_status = pd.read_csv(extension_status_path)
@@ -471,8 +508,171 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
             readiness = str(match.iloc[0].get("readiness_tier", "")).strip()
             if readiness != "summary_ready":
                 errors.append(f"extension_status_not_summary_ready:{name}:{readiness}")
+            if _coerce_bool(match.iloc[0].get("headline_ready")):
+                errors.append(f"extension_status_marked_headline:{name}")
+            public_role = str(match.iloc[0].get("public_role", "")).strip()
+            if public_role != "supporting":
+                errors.append(f"extension_status_public_role_invalid:{name}:{public_role}")
+    if series_catalog_path.exists():
+        try:
+            series_catalog = pd.read_csv(series_catalog_path)
+        except Exception as exc:
+            errors.append(f"publish_artifact_read_error:series_metadata_catalog.csv:{exc}")
+            series_catalog = pd.DataFrame()
+        if "series_role" not in series_catalog.columns:
+            errors.append("publish_artifact_missing_columns:series_metadata_catalog.csv:series_role")
+        if "public_role" not in series_catalog.columns:
+            errors.append("publish_artifact_missing_columns:series_metadata_catalog.csv:public_role")
+        for name in REQUIRED_EXTENSION_SUMMARY_READY:
+            match = series_catalog.loc[series_catalog.get("dataset", pd.Series(dtype=str)) == name]
+            if match.empty:
+                errors.append(f"series_metadata_missing_extension:{name}")
+                continue
+            if "series_role" in match.columns:
+                invalid_role = match.loc[match["series_role"].astype(str).str.strip() != "supporting"]
+                if not invalid_role.empty:
+                    errors.append(f"series_metadata_extension_role_invalid:{name}")
+            if "public_role" in match.columns:
+                invalid_public_role = match.loc[match["public_role"].astype(str).str.strip() != "supporting"]
+                if not invalid_public_role.empty:
+                    errors.append(f"series_metadata_extension_public_role_invalid:{name}")
 
     return errors, warnings, {"missing_files": missing_files, "index_artifacts": len(artifacts)}
+
+
+def validate_publish_contract_against_official_ati(
+    publish_dir: Path,
+    official_ati_path: Path,
+) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    official_ati_frame, status = _safe_read_csv(official_ati_path)
+    if status is not None or official_ati_frame.empty:
+        return errors, warnings
+
+    ati_quarter_table, ati_status = _safe_read_csv(publish_dir / "ati_quarter_table.csv")
+    if ati_status is not None:
+        errors.append(f"publish_artifact_{ati_status.replace(':', '_')}:ati_quarter_table.csv")
+        return errors, warnings
+    ati_seed_forecast, seed_status = _safe_read_csv(publish_dir / "ati_seed_forecast_table.csv")
+    if seed_status is not None:
+        errors.append(f"publish_artifact_{seed_status.replace(':', '_')}:ati_seed_forecast_table.csv")
+        return errors, warnings
+
+    official = official_ati_frame.copy()
+    official["quarter"] = official.get("quarter", pd.Series(dtype=str)).astype(str).str.strip()
+    official = official.loc[official["quarter"].str.match(QUARTER_PATTERN)]
+    if "qa_status" in official.columns:
+        official = official.loc[official["qa_status"].astype(str).str.strip().isin(OFFICIAL_QA_STATUSES)]
+    if not official.empty:
+        official = official.loc[
+            ~official.apply(
+                lambda row: _has_seed_dependency(row.get("source_doc_type", ""), row.get("source_doc_local", "")),
+                axis=1,
+            )
+        ].copy()
+    if official.empty:
+        return errors, warnings
+
+    official_quarters = set(official["quarter"])
+    official_by_quarter = official.drop_duplicates(subset=["quarter"], keep="first").set_index("quarter")
+
+    published = ati_quarter_table.copy()
+    published["quarter"] = published.get("quarter", pd.Series(dtype=str)).astype(str).str.strip()
+    nonempty_quarter = published["quarter"].astype(str).str.len() > 0
+    published = published.loc[nonempty_quarter].copy()
+    invalid_quarters = sorted(set(published.loc[~published["quarter"].str.match(QUARTER_PATTERN), "quarter"]))
+    if invalid_quarters:
+        errors.append("ati_quarter_table_invalid_quarters:" + ",".join(invalid_quarters))
+    published = published.loc[published["quarter"].str.match(QUARTER_PATTERN)].copy()
+    published_quarters = set(published["quarter"])
+    if published_quarters != official_quarters:
+        errors.append(
+            "ati_quarter_table_quarter_mismatch:"
+            f"published={','.join(sorted(published_quarters))}:official={','.join(sorted(official_quarters))}"
+        )
+
+    if "source_quality" in published.columns:
+        invalid_quality = published.loc[
+            published["source_quality"].astype(str).str.strip() != "exact_official_numeric"
+        ]
+        if not invalid_quality.empty:
+            errors.append("ati_quarter_table_source_quality_invalid")
+
+    seed_cols = [col for col in ("seed_source", "seed_quality") if col in published.columns]
+    for col in seed_cols:
+        has_seed_value = published[col].fillna("").astype(str).str.strip().ne("").any()
+        if has_seed_value:
+            errors.append(f"ati_quarter_table_contains_seed_values:{col}")
+
+    compare_cols = [
+        col
+        for col in ("financing_need_bn", "net_bills_bn", "bill_share", "ati_baseline_bn")
+        if col in official_by_quarter.columns and col in published.columns
+    ]
+    merged = published.merge(
+        official_by_quarter[compare_cols].reset_index(),
+        on="quarter",
+        how="outer",
+        suffixes=("_published", "_official"),
+        indicator=True,
+    )
+    for _, row in merged.iterrows():
+        quarter = str(row.get("quarter", "")).strip()
+        if row["_merge"] != "both":
+            continue
+        for col in compare_cols:
+            left = row.get(f"{col}_published")
+            right = row.get(f"{col}_official")
+            if _is_missing(left) or _is_missing(right):
+                errors.append(f"ati_quarter_table_missing_value:{quarter}:{col}")
+                continue
+            try:
+                left_num = float(left)
+                right_num = float(right)
+            except Exception:
+                errors.append(f"ati_quarter_table_non_numeric_value:{quarter}:{col}")
+                continue
+            if abs(left_num - right_num) > 1e-9:
+                errors.append(f"ati_quarter_table_value_mismatch:{quarter}:{col}")
+
+    if "public_role" in published.columns:
+        invalid_public_role = published.loc[published["public_role"].astype(str).str.strip() != "headline"]
+        if not invalid_public_role.empty:
+            errors.append("ati_quarter_table_public_role_invalid")
+
+    if not ati_seed_forecast.empty:
+        seed_frame = ati_seed_forecast.copy()
+        seed_frame["quarter"] = seed_frame.get("quarter", pd.Series(dtype=str)).astype(str).str.strip()
+        seed_frame = seed_frame.loc[seed_frame["quarter"].str.len() > 0].copy()
+        seed_quarters = set(seed_frame["quarter"].dropna().astype(str))
+        overlap = sorted(seed_quarters & official_quarters)
+        if overlap:
+            errors.append("ati_seed_forecast_contains_official_quarters:" + ",".join(overlap))
+        if "public_role" in seed_frame.columns:
+            invalid_public_role = seed_frame.loc[
+                seed_frame["public_role"].astype(str).str.strip() != "supporting"
+            ]
+            if not invalid_public_role.empty:
+                errors.append("ati_seed_forecast_public_role_invalid")
+        if "headline_ready" in seed_frame.columns:
+            if seed_frame["headline_ready"].apply(_coerce_bool).any():
+                errors.append("ati_seed_forecast_marked_headline")
+
+    for artifact in sorted(publish_dir.glob("*")):
+        if not artifact.is_file():
+            continue
+        try:
+            text = artifact.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        for pattern, label in PUBLIC_HYGIENE_PATTERNS:
+            if re.search(pattern, text, flags=re.IGNORECASE):
+                errors.append(f"publish_hygiene_violation:{label}:{artifact.name}")
+                break
+
+    return errors, warnings
 
 
 def validate_backend(
@@ -521,6 +721,12 @@ def validate_backend(
     errors.extend(publish_errors)
     warnings.extend(publish_warnings)
     summaries["publish"] = publish_summary
+    contract_errors, contract_warnings = validate_publish_contract_against_official_ati(
+        publish_dir,
+        official_ati_path,
+    )
+    errors.extend(contract_errors)
+    warnings.extend(contract_warnings)
 
     return BackendValidationResult(errors=errors, warnings=warnings, summaries=summaries)
 

@@ -3,3 +3,8 @@ quarter,completion_tier,qa_status,uses_seed_source,net_bill_issuance_bn,reconstr
 2024Q1,exact_official_numeric,manual_official_capture,False,409.117,409.117,complete,True
 2024Q2,exact_official_numeric,manual_official_capture,False,-296.523,-296.523,complete,True
 2024Q3,exact_official_numeric,manual_official_capture,False,239.382,239.382,complete,True
+2024Q4,exact_official_numeric,manual_official_capture,False,182.504,182.504,complete,True
+2025Q1,exact_official_numeric,manual_official_capture,False,-30.595,-30.595,complete,True
+2025Q2,exact_official_numeric,manual_official_capture,False,-371.653,-371.653,complete,True
+2025Q3,exact_official_numeric,manual_official_capture,False,613.383,613.383,complete,True
+2025Q4,exact_official_numeric,manual_official_capture,False,150.478,150.478,complete,True

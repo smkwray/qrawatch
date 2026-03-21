@@ -83,6 +83,26 @@ def test_seed_capture_rows_from_local_sources_maps_known_quarters() -> None:
                 "official_release_date": "2024-05-01",
                 "market_pricing_marker_minus_1d": "2024-04-30",
             },
+            {
+                "official_release_date": "2024-07-31",
+                "market_pricing_marker_minus_1d": "2024-07-30",
+            },
+            {
+                "official_release_date": "2024-10-30",
+                "market_pricing_marker_minus_1d": "2024-10-29",
+            },
+            {
+                "official_release_date": "2025-02-05",
+                "market_pricing_marker_minus_1d": "2025-02-04",
+            },
+            {
+                "official_release_date": "2025-04-30",
+                "market_pricing_marker_minus_1d": "2025-04-29",
+            },
+            {
+                "official_release_date": "2025-07-30",
+                "market_pricing_marker_minus_1d": "2025-07-29",
+            },
         ]
     )
     quarterly_seed = pd.DataFrame(
@@ -90,15 +110,29 @@ def test_seed_capture_rows_from_local_sources_maps_known_quarters() -> None:
             {"quarter": "2023Q4", "financing_need_bn": "852.0", "net_bills_bn": "513.0"},
             {"quarter": "2024Q1", "financing_need_bn": "816.0", "net_bills_bn": "468.0"},
             {"quarter": "2024Q3", "financing_need_bn": "847.0", "net_bills_bn": "285.0"},
+            {"quarter": "2024Q4", "financing_need_bn": "565.0", "net_bills_bn": "183.0"},
+            {"quarter": "2025Q1", "financing_need_bn": "823.0", "net_bills_bn": "-31.0"},
         ]
     )
     seeded = seed_capture_rows_from_local_sources(qra_events, quarterly_seed)
 
-    assert seeded["quarter"].tolist() == ["2023Q4", "2024Q1", "2024Q2", "2024Q3"]
+    assert seeded["quarter"].tolist() == [
+        "2023Q4",
+        "2024Q1",
+        "2024Q2",
+        "2024Q3",
+        "2024Q4",
+        "2025Q1",
+        "2025Q2",
+        "2025Q3",
+        "2025Q4",
+    ]
     assert set(seeded["qa_status"].tolist()) == {"seed_only"}
     row_q2 = seeded.loc[seeded["quarter"] == "2024Q2"].iloc[0]
     assert row_q2["total_financing_need_bn"] == ""
     assert row_q2["source_doc_type"] == "seed_csv"
+    row_2025q2 = seeded.loc[seeded["quarter"] == "2025Q2"].iloc[0]
+    assert row_2025q2["total_financing_need_bn"] == ""
 
 
 def test_build_official_capture_can_seed_missing_quarters() -> None:
@@ -238,6 +272,57 @@ def test_build_refunding_statement_manifest_maps_archive_links(tmp_path) -> None
     assert manifest.loc[0, "doc_type"] == "official_quarterly_refunding_statement"
 
 
+def test_build_refunding_statement_manifest_infers_year_from_table_headers(tmp_path) -> None:
+    archive = tmp_path / "official-remarks-on-quarterly-refunding-by-calendar-year_demo.html"
+    archive.write_text(
+        """
+        <html><body>
+        <table aria-label="Official Remarks on Quarterly Refunding by Calendar Year">
+          <tr><th id="2025">2025</th></tr>
+          <tr>
+            <th><a href="/news/press-releases/sb0305">4th Quarter</a></th>
+            <th><a href="/news/press-releases/sb0212">3rd Quarter</a></th>
+          </tr>
+        </table>
+        </body></html>
+        """,
+        encoding="utf-8",
+    )
+    capture = _empty_capture_df()
+    capture.loc[0] = {"quarter": "2025Q3"}
+    capture.loc[1] = {"quarter": "2025Q4"}
+
+    manifest = build_refunding_statement_manifest(capture, [archive])
+
+    assert manifest["quarter"].tolist() == ["2025Q3", "2025Q4"]
+    assert manifest.loc[0, "href"] == "https://home.treasury.gov/news/press-releases/sb0212"
+    assert manifest.loc[1, "href"] == "https://home.treasury.gov/news/press-releases/sb0305"
+
+
+def test_build_refunding_statement_manifest_maps_repo_forward_quarters() -> None:
+    archive_paths = sorted(
+        (RAW_DIR / "qra" / "files").glob("official-remarks-on-quarterly-refunding-by-calendar-year_*.html")
+    )
+    if not archive_paths:
+        pytest.skip("official remarks archive HTML files are not available in this environment")
+
+    capture = _empty_capture_df()
+    capture.loc[0] = {"quarter": "2024Q4"}
+    capture.loc[1] = {"quarter": "2025Q1"}
+    capture.loc[2] = {"quarter": "2025Q2"}
+    capture.loc[3] = {"quarter": "2025Q3"}
+    capture.loc[4] = {"quarter": "2025Q4"}
+
+    manifest = build_refunding_statement_manifest(capture, archive_paths)
+    by_quarter = manifest.set_index("quarter")
+
+    assert by_quarter.loc["2024Q4", "href"] == "https://home.treasury.gov/news/press-releases/jy2697"
+    assert by_quarter.loc["2025Q1", "href"] == "https://home.treasury.gov/news/press-releases/sb0010"
+    assert by_quarter.loc["2025Q2", "href"] == "https://home.treasury.gov/news/press-releases/sb0120"
+    assert by_quarter.loc["2025Q3", "href"] == "https://home.treasury.gov/news/press-releases/sb0212"
+    assert by_quarter.loc["2025Q4", "href"] == "https://home.treasury.gov/news/press-releases/sb0305"
+
+
 def test_build_refunding_statement_source_map_extracts_guidance(tmp_path) -> None:
     html_path = tmp_path / "jy2315_demo.html"
     html_path.write_text(
@@ -350,8 +435,8 @@ def test_enrich_capture_with_auction_reconstruction_promotes_rows() -> None:
         "market_pricing_marker_minus_1d": "2024-01-30",
         "total_financing_need_bn": "202",
         "source_url": "https://home.treasury.gov/news/press-releases/jy2054",
-        "source_doc_local": "/tmp/jy2054.html",
-        "source_doc_type": "quarterly_refunding_press_release",
+        "source_doc_local": "/tmp/jy2315.html|/tmp/jy2054.html",
+        "source_doc_type": "official_quarterly_refunding_statement|quarterly_refunding_press_release",
         "qa_status": "semi_automated_capture",
         "notes": "Seeded placeholder.",
     }
@@ -410,6 +495,40 @@ def test_enrich_capture_with_auction_reconstruction_promotes_rows() -> None:
     assert pd.isna(row["frn_issuance_bn"])
 
 
+def test_enrich_capture_with_auction_reconstruction_does_not_promote_without_statement_provenance() -> None:
+    capture = _empty_capture_df()
+    capture.loc[0] = {
+        "quarter": "2024Q2",
+        "qra_release_date": "2024-01-31",
+        "market_pricing_marker_minus_1d": "2024-01-30",
+        "total_financing_need_bn": "202",
+        "source_url": "https://home.treasury.gov/news/press-releases/jy2054",
+        "source_doc_local": "/tmp/jy2054.html",
+        "source_doc_type": "quarterly_refunding_press_release",
+        "qa_status": "semi_automated_capture",
+    }
+    reconstruction = pd.DataFrame(
+        [
+            {
+                "quarter": "2024Q2",
+                "bucket": "bill_like",
+                "gross_offering_bn": 5513.0,
+                "maturing_estimate_bn": 5809.523,
+                "net_issuance_bn": -296.523,
+                "issue_dates": 26,
+                "issue_dates_missing_maturing_estimate": 0,
+                "reconstruction_status": "complete",
+            }
+        ]
+    )
+
+    enriched = enrich_capture_with_auction_reconstruction(capture, reconstruction)
+    row = enriched.iloc[0]
+
+    assert row["qa_status"] == "semi_automated_capture"
+    assert "official_auction_reconstruction" in row["source_doc_type"]
+
+
 def test_enrich_capture_with_auction_reconstruction_strips_seed_provenance_on_promotion() -> None:
     capture = _empty_capture_df()
     capture.loc[0] = {
@@ -418,8 +537,8 @@ def test_enrich_capture_with_auction_reconstruction_strips_seed_provenance_on_pr
         "market_pricing_marker_minus_1d": "2023-10-31",
         "total_financing_need_bn": "816",
         "source_url": "https://home.treasury.gov/news/press-releases/jy1662",
-        "source_doc_local": "/tmp/jy1662.html|data/manual/qra_event_seed.csv|data/manual/quarterly_refunding_seed.csv",
-        "source_doc_type": "quarterly_refunding_press_release|seed_csv",
+        "source_doc_local": "/tmp/jy2062.html|/tmp/jy1662.html|data/manual/qra_event_seed.csv|data/manual/quarterly_refunding_seed.csv",
+        "source_doc_type": "official_quarterly_refunding_statement|quarterly_refunding_press_release|seed_csv",
         "qa_status": "semi_automated_capture",
     }
     reconstruction = pd.DataFrame(
@@ -454,7 +573,7 @@ def test_build_capture_completion_status_distinguishes_tiers() -> None:
         "market_pricing_marker_minus_1d": "2023-10-31",
         "total_financing_need_bn": "816",
         "net_bill_issuance_bn": "409.117",
-        "source_doc_type": "official_auction_reconstruction|quarterly_refunding_press_release",
+        "source_doc_type": "official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release",
         "source_doc_local": "data/raw/fiscaldata/auctions_query.csv",
         "qa_status": "manual_official_capture",
     }

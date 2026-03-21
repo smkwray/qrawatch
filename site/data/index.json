@@ -1,11 +1,14 @@
 {
   "title": "qrawatch publish artifacts",
-  "generated_at_utc": "2026-03-21T11:19:22.272955+00:00",
-  "artifact_count": 58,
+  "generated_at_utc": "2026-03-21T12:32:30.558726+00:00",
+  "artifact_count": 61,
   "artifacts": [
     "ati_quarter_table.csv",
     "ati_quarter_table.json",
     "ati_quarter_table.md",
+    "ati_seed_forecast_table.csv",
+    "ati_seed_forecast_table.json",
+    "ati_seed_forecast_table.md",
     "ati_seed_vs_official.csv",
     "ati_seed_vs_official.json",
     "ati_seed_vs_official.md",

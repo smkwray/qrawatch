@@ -105,6 +105,8 @@
     exact_official: 'Official',
     exact_official_numeric: 'Official',
     exact_official_net: 'Official net',
+    headline: 'Headline',
+    supporting: 'Supporting',
     summary_ready: 'Summary',
     headline_ready: 'Headline',
     not_started: 'Not started',
@@ -171,6 +173,150 @@
 
   function checkMark(v) { return v ? '\u2713' : '\u2717'; }
 
+  function toNumber(value) {
+    if (value === null || value === undefined || value === '') return null;
+    var n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function quarterCompare(a, b) {
+    return String(a).localeCompare(String(b));
+  }
+
+  function sortRowsByQuarter(rows) {
+    return rows.slice().sort(function (a, b) {
+      return quarterCompare(a.quarter, b.quarter);
+    });
+  }
+
+  function hasSeedAtiColumns(rows) {
+    return !!(rows && rows.length && (
+      Object.prototype.hasOwnProperty.call(rows[0], 'seed_source') ||
+      Object.prototype.hasOwnProperty.call(rows[0], 'seed_quality')
+    ));
+  }
+
+  function normalizeAtiRow(row, opts) {
+    opts = opts || {};
+    return {
+      quarter: row.quarter,
+      financing_need_bn: toNumber(row.financing_need_bn),
+      net_bills_bn: toNumber(row.net_bills_bn),
+      bill_share: toNumber(row.bill_share),
+      missing_coupons_15_bn: toNumber(row.missing_coupons_15_bn),
+      missing_coupons_18_bn: toNumber(row.missing_coupons_18_bn),
+      missing_coupons_20_bn: toNumber(row.missing_coupons_20_bn),
+      ati_baseline_bn: toNumber(row.ati_baseline_bn),
+      readiness_tier: row.readiness_tier || opts.readiness_tier || '',
+      public_role: row.public_role || opts.public_role || ''
+    };
+  }
+
+  function buildOfficialAtiFromCapture(captureRows) {
+    var rows = [];
+    for (var i = 0; i < captureRows.length; i++) {
+      var row = captureRows[i];
+      var financingNeed = toNumber(row.total_financing_need_bn);
+      var netBills = toNumber(row.net_bill_issuance_bn);
+      if (financingNeed == null || netBills == null) continue;
+      rows.push({
+        quarter: row.quarter,
+        financing_need_bn: financingNeed,
+        net_bills_bn: netBills,
+        bill_share: financingNeed === 0 ? null : netBills / financingNeed,
+        missing_coupons_15_bn: netBills - financingNeed * 0.15,
+        missing_coupons_18_bn: netBills - financingNeed * 0.18,
+        missing_coupons_20_bn: netBills - financingNeed * 0.20,
+        ati_baseline_bn: netBills - financingNeed * 0.18,
+        readiness_tier: row.readiness_tier || 'headline_ready',
+        public_role: 'headline'
+      });
+    }
+    return sortRowsByQuarter(rows);
+  }
+
+  function buildOfficialAtiFromQuarterTable(rows) {
+    var official = [];
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      official.push(normalizeAtiRow(row, { readiness_tier: 'headline_ready', public_role: 'headline' }));
+    }
+    return sortRowsByQuarter(official);
+  }
+
+  function buildSeedForecastRows(seedRows, officialQuarters) {
+    var officialMap = {};
+    for (var i = 0; i < officialQuarters.length; i++) {
+      officialMap[String(officialQuarters[i])] = true;
+    }
+
+    var rows = [];
+    for (var j = 0; j < seedRows.length; j++) {
+      var row = seedRows[j];
+      if (officialMap[String(row.quarter)]) continue;
+      rows.push({
+        quarter: row.quarter,
+        financing_need_bn: toNumber(row.financing_need_bn),
+        net_bills_bn: toNumber(row.net_bills_bn),
+        bill_share: toNumber(row.bill_share),
+        missing_coupons_15_bn: toNumber(row.missing_coupons_15_bn),
+        missing_coupons_18_bn: toNumber(row.missing_coupons_18_bn),
+        missing_coupons_20_bn: toNumber(row.missing_coupons_20_bn),
+        ati_baseline_bn: toNumber(row.ati_baseline_bn),
+        seed_source: row.seed_source || row.source_label || row.comparison_status || 'Seed / forecast',
+        seed_quality: row.seed_quality || row.comparison_status || '',
+        public_role: 'supporting'
+      });
+    }
+    return sortRowsByQuarter(rows);
+  }
+
+  function normalizePublicRole(value) {
+    return value === 'headline' ? 'headline' : 'supporting';
+  }
+
+  function publicRoleForDataset(dataset, fallback) {
+    var headline = {
+      official_ati: true,
+      plumbing: true,
+      duration: true
+    };
+    if (headline[dataset]) return 'headline';
+    if (fallback === 'supporting') return 'supporting';
+    if (fallback === 'headline') return 'supporting';
+    return 'supporting';
+  }
+
+  function rolePill(role) {
+    var normalized = normalizePublicRole(role);
+    return el('span', {
+      class: 'role-pill role-' + normalized,
+      text: normalized === 'headline' ? 'Headline' : 'Supporting'
+    });
+  }
+
+  function formatCoverage(rows) {
+    if (!rows || !rows.length) return 'Official exact coverage unavailable.';
+    var sorted = rows.map(function (row) { return String(row.quarter); }).sort(quarterCompare);
+    var first = sorted[0];
+    var last = sorted[sorted.length - 1];
+    return 'Current exact official quarter coverage spans ' + first + ' through ' + last + ' (' + sorted.length + ' quarters).';
+  }
+
+  function robustnessNote(rows) {
+    if (!rows || !rows.length) return 'Robustness evidence unavailable.';
+    var allSingle = rows.every(function (row) { return toNumber(row.n_events) === 1; });
+    if (allSingle) {
+      return 'Robustness rows are all n=1. Treat this grid as descriptive single-event summary work, not inferential evidence.';
+    }
+    var counts = rows
+      .map(function (row) { return toNumber(row.n_events); })
+      .filter(function (value) { return value != null; });
+    var minN = Math.min.apply(Math, counts);
+    var maxN = Math.max.apply(Math, counts);
+    return 'Robustness sample sizes range from n=' + minN + ' to n=' + maxN + '. Results remain descriptive unless the sample expands further.';
+  }
+
   // ── Table Builder ──
 
   function buildTable(columns, rows, opts) {
@@ -228,22 +374,43 @@
 
   async function renderOverview() {
     var container = $('#overview-content');
-    var data = await fetchJSON('dataset_status.json');
+    var results = await Promise.all([
+      fetchJSON('dataset_status.json'),
+      fetchJSON('official_qra_capture.json'),
+      fetchJSON('ati_quarter_table.json')
+    ]);
+    var data = results[0], capture = results[1], ati = results[2];
     if (!data) { sectionError(container, 'Dataset status unavailable.'); return; }
+
+    var officialRows = [];
+    if (ati && ati.rows && ati.rows.length && !hasSeedAtiColumns(ati.rows)) {
+      officialRows = buildOfficialAtiFromQuarterTable(ati.rows);
+    } else if (capture && capture.rows) {
+      officialRows = buildOfficialAtiFromCapture(capture.rows);
+    }
+
+    var coverageCopy = $('#overview-coverage');
+    if (coverageCopy) {
+      coverageCopy.textContent = officialRows.length
+        ? formatCoverage(officialRows)
+        : 'Official exact coverage unavailable.';
+    }
 
     container.appendChild(el('div', { class: 'card' }, [
       el('div', { class: 'card-title', text: 'Current Coverage' }),
-      el('div', { class: 'card-value', text: '2023Q4 to 2024Q3' }),
-      el('div', { class: 'card-meta', text: 'Exact official quarter coverage in the current public release' })
+      el('div', { class: 'card-value', text: officialRows.length ? (officialRows[0].quarter + ' to ' + officialRows[officialRows.length - 1].quarter) : 'Unavailable' }),
+      el('div', { class: 'card-meta', text: formatCoverage(officialRows) })
     ]));
 
     var grid = el('div', { class: 'card-grid' });
     for (var i = 0; i < data.rows.length; i++) {
       var row = data.rows[i];
+      var publicRole = publicRoleForDataset(row.dataset, row.public_role);
       var name = row.dataset.replace(/^extension_/, '').replace(/_/g, ' ');
       grid.appendChild(el('div', { class: 'card' }, [
         el('div', { class: 'card-title', text: name }),
         el('div', { class: 'card-value' }, [statusBadge(row.readiness_tier)]),
+        el('div', { class: 'card-meta' }, [el('span', { class: 'card-inline-label', text: 'Public role: ' }), rolePill(publicRole)]),
         el('div', { class: 'card-meta', text: 'Source: ' + fmtSnake(row.source_quality) }),
         el('div', { class: 'card-meta', text: 'Updated: ' + relTime(row.last_regenerated_utc) })
       ]));
@@ -253,16 +420,36 @@
 
   async function renderCapture() {
     var container = $('#capture-content');
+    var index = await fetchJSON('index.json');
     var results = await Promise.all([
       fetchJSON('official_qra_capture.json'),
       fetchJSON('ati_quarter_table.json'),
       fetchJSON('ati_seed_vs_official.json')
     ]);
     var capture = results[0], ati = results[1], seedVs = results[2];
+    var atiSeedStyle = !!(ati && ati.rows && ati.rows.length && hasSeedAtiColumns(ati.rows));
+    var forecast = null;
+    if (!atiSeedStyle && index && index.artifacts && index.artifacts.indexOf('ati_seed_forecast_table.json') >= 0) {
+      forecast = await fetchJSON('ati_seed_forecast_table.json');
+    }
+
+    var officialAtiRows = [];
+    if (ati && ati.rows && ati.rows.length && !hasSeedAtiColumns(ati.rows)) {
+      officialAtiRows = buildOfficialAtiFromQuarterTable(ati.rows);
+    } else if (capture && capture.rows) {
+      officialAtiRows = buildOfficialAtiFromCapture(capture.rows);
+    }
+
+    var seedForecastRows = [];
+    if (forecast && forecast.rows && forecast.rows.length) {
+      seedForecastRows = buildSeedForecastRows(forecast.rows, officialAtiRows.map(function (row) { return row.quarter; }));
+    } else if (atiSeedStyle && ati && ati.rows && ati.rows.length) {
+      seedForecastRows = buildSeedForecastRows(ati.rows, officialAtiRows.map(function (row) { return row.quarter; }));
+    }
 
     if (capture) {
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Official Quarterly Refunding Capture' }));
-      container.appendChild(el('p', { class: 'card-meta', text: 'Current exact official quarter span: 2023Q4 through 2024Q3.' }));
+      container.appendChild(el('p', { class: 'card-meta', text: formatCoverage(officialAtiRows) }));
       container.appendChild(buildTable([
         { key: 'quarter', label: 'Quarter' },
         { key: 'qra_release_date', label: 'Release' },
@@ -272,10 +459,27 @@
       ], capture.rows));
     }
 
-    if (ati) {
-      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Coupon Shortfall by Quarter' }));
+    if (officialAtiRows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Treasury Maturity Composition' }));
       container.appendChild(el('p', { class: 'section-desc',
-        text: 'Coupon shortfall relative to 18% bill baseline \u2014 how much coupon issuance falls below what the baseline bill share would imply. Higher values mean more bill-heavy financing.'
+        text: 'Headline official quarter panel. Coupon shortfall is measured relative to an 18% bill baseline, and higher values mean more bill-heavy financing.'
+      }));
+      container.appendChild(buildTable([
+        { key: 'quarter', label: 'Quarter' },
+        { key: 'financing_need_bn', label: 'Need ($B)', numeric: true, format: fmtBn },
+        { key: 'net_bills_bn', label: 'Net Bills ($B)', numeric: true, format: fmtBn },
+        { key: 'bill_share', label: 'Bill Share', numeric: true, format: fmtPct },
+        { key: 'missing_coupons_15_bn', label: 'Shortfall @15% ($B)', numeric: true, format: fmtBn, colorSign: true },
+        { key: 'ati_baseline_bn', label: 'Shortfall ($B)', numeric: true, format: fmtBn, colorSign: true },
+        { key: 'missing_coupons_20_bn', label: 'Shortfall @20% ($B)', numeric: true, format: fmtBn, colorSign: true },
+        { key: 'readiness_tier', label: 'Status', format: function (v) { return statusBadge(v); } }
+      ], officialAtiRows));
+    }
+
+    if (seedForecastRows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Seed / Forecast Rows' }));
+      container.appendChild(el('p', { class: 'section-desc',
+        text: 'Non-headline context only. These rows remain seed or forecast values and should not be read as the official quarter panel.'
       }));
       container.appendChild(buildTable([
         { key: 'quarter', label: 'Quarter' },
@@ -283,8 +487,9 @@
         { key: 'net_bills_bn', label: 'Net Bills ($B)', numeric: true, format: fmtBn },
         { key: 'bill_share', label: 'Bill Share', numeric: true, format: fmtPct },
         { key: 'ati_baseline_bn', label: 'Shortfall ($B)', numeric: true, format: fmtBn, colorSign: true },
-        { key: 'seed_source', label: 'Source', format: fmtLabel }
-      ], ati.rows));
+        { key: 'seed_source', label: 'Source', format: fmtLabel },
+        { key: 'seed_quality', label: 'Seed Quality', format: fmtLabel }
+      ], seedForecastRows));
     }
 
     if (seedVs) {
@@ -298,7 +503,7 @@
       ], seedVs.rows));
     }
 
-    if (!capture && !ati && !seedVs) {
+    if (!capture && !officialAtiRows.length && !seedForecastRows.length && !seedVs) {
       sectionError(container, 'QRA capture data unavailable.');
     }
   }
@@ -383,6 +588,7 @@
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Robustness: All Events by Date Type' }));
       var robRows = robustness.rows.filter(function (r) { return r.sample_variant === 'all_events'; });
       if (robRows.length) {
+        container.appendChild(el('p', { class: 'supporting-note', text: robustnessNote(robRows) }));
         container.appendChild(buildTable([
           { key: 'event_date_type', label: 'Date Type', format: fmtSnake },
           { key: 'expected_direction', label: 'Direction', format: fmtDirection },
@@ -392,6 +598,10 @@
           { key: 'THREEFYTP10_d3', label: 'TP d3', numeric: true, colorSign: true, format: function (v) { return fmtNum(v, 4); } }
         ], robRows));
       }
+    }
+
+    if (robustness && !robustness.rows.filter(function (r) { return r.sample_variant === 'all_events'; }).length) {
+      container.appendChild(el('p', { class: 'supporting-note', text: robustnessNote(robustness.rows) }));
     }
 
     if (!summary && !events) {
@@ -598,9 +808,11 @@
       for (var i = 0; i < extStatus.rows.length; i++) {
         var row = extStatus.rows[i];
         var name = row.extension.replace(/_/g, ' ');
+        var publicRole = publicRoleForDataset('extension_' + row.extension, row.public_role);
         grid.appendChild(el('div', { class: 'card' }, [
           el('div', { class: 'card-title', text: name }),
           el('div', { class: 'card-value' }, [statusBadge(row.readiness_tier)]),
+          el('div', { class: 'card-meta' }, [el('span', { class: 'card-inline-label', text: 'Public role: ' }), rolePill(publicRole)]),
           el('div', { class: 'card-meta', text: row.panel_exists ? row.panel_rows.toLocaleString() + ' panel rows' : 'No panel data' }),
           el('div', { class: 'card-meta', text: 'Backend: ' + fmtSnake(row.backend_status) })
         ]));
@@ -698,8 +910,9 @@
       container.appendChild(buildTable([
         { key: 'dataset', label: 'Dataset', format: fmtSnake },
         { key: 'readiness_tier', label: 'Readiness', format: function (v) { return statusBadge(v); } },
+        { key: 'public_role', label: 'Public Role', format: function (v, row) { return rolePill(publicRoleForDataset(row.dataset, v)); } },
         { key: 'source_quality', label: 'Source Quality', format: fmtLabel },
-        { key: 'headline_ready', label: 'Headline', format: checkMark },
+        { key: 'headline_ready', label: 'Headline', format: function (v, row) { return publicRoleForDataset(row.dataset, row.public_role) === 'supporting' ? 'No' : checkMark(v); } },
         { key: 'fallback_only', label: 'Fallback Only', format: function (v) { return v ? 'Yes' : 'No'; } },
         { key: 'last_regenerated_utc', label: 'Last Regenerated', format: fmtTimestamp }
       ], dsStatus.rows));
@@ -710,6 +923,7 @@
       container.appendChild(buildTable([
         { key: 'extension', label: 'Extension', format: fmtSnake },
         { key: 'readiness_tier', label: 'Readiness', format: function (v) { return statusBadge(v); } },
+        { key: 'public_role', label: 'Public Role', format: function (v, row) { return rolePill(publicRoleForDataset('extension_' + row.extension, v)); } },
         { key: 'raw_dir_exists', label: 'Raw', format: checkMark },
         { key: 'manifest_exists', label: 'Manifest', format: checkMark },
         { key: 'processed_exists', label: 'Processed', format: checkMark },
@@ -721,7 +935,7 @@
 
     if (catalog) {
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Series Metadata Catalog' }));
-      container.appendChild(el('p', { class: 'section-desc', text: 'Every published series with its units, sign convention, and quality tier.' }));
+      container.appendChild(el('p', { class: 'section-desc', text: 'Every published series with its units, sign convention, quality tier, and public role.' }));
       container.appendChild(buildTable([
         { key: 'dataset', label: 'Dataset' },
         { key: 'series_id', label: 'Series', format: fmtSnake },
@@ -729,7 +943,7 @@
         { key: 'value_units', label: 'Units' },
         { key: 'sign_convention', label: 'Sign Convention' },
         { key: 'source_quality', label: 'Quality', format: fmtLabel },
-        { key: 'series_role', label: 'Role' }
+        { key: 'public_role', label: 'Public Role', format: function (v, row) { return rolePill(publicRoleForDataset(row.dataset, v || row.series_role)); } }
       ], catalog.rows));
     }
 

@@ -13,7 +13,8 @@
       "publish_exists": true,
       "backend_status": "summary_ready",
       "readiness_tier": "summary_ready",
-      "headline_ready": true
+      "headline_ready": false,
+      "public_role": "supporting"
     },
     {
       "extension": "primary_dealer",
@@ -27,7 +28,8 @@
       "publish_exists": true,
       "backend_status": "summary_ready",
       "readiness_tier": "summary_ready",
-      "headline_ready": true
+      "headline_ready": false,
+      "public_role": "supporting"
     },
     {
       "extension": "sec_nmfp",
@@ -41,7 +43,8 @@
       "publish_exists": true,
       "backend_status": "summary_ready",
       "readiness_tier": "summary_ready",
-      "headline_ready": true
+      "headline_ready": false,
+      "public_role": "supporting"
     },
     {
       "extension": "tic",
@@ -55,7 +58,8 @@
       "publish_exists": false,
       "backend_status": "not_started",
       "readiness_tier": "not_started",
-      "headline_ready": false
+      "headline_ready": false,
+      "public_role": "supporting"
     }
   ]
 }

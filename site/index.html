@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QRA Watch &mdash; In-Progress Treasury Maturity Composition Research</title>
   <meta name="description" content="In-progress public research project tracking Treasury maturity composition, QRA announcements, duration supply, and market plumbing using public data.">
+  <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -26,7 +27,7 @@
 <nav id="main-nav">
   <div class="container">
     <a href="#overview" class="active">Overview</a>
-    <a href="#capture">QRA Capture / TMC</a>
+    <a href="#capture">Treasury Maturity Composition</a>
     <a href="#events">Events</a>
     <a href="#plumbing">Plumbing</a>
     <a href="#duration">Duration</a>
@@ -47,11 +48,7 @@
         Treasury issuance inside a broader public-duration-supply framework. All data is sourced from public APIs and filings:
         FiscalData, FRED, Treasury QRA documents, and SEC EDGAR.
       </p>
-      <p class="section-desc">
-        Current exact official quarter coverage spans <strong>2023Q4 through 2024Q3</strong>. This is an
-        in-progress public release: the core quarter panel is exact over that span, while the broader
-        historical buildout is still underway.
-      </p>
+      <p class="section-desc" id="overview-coverage">Loading exact official quarter coverage&hellip;</p>
       <h3 class="section-subtitle">Dataset Readiness</h3>
       <div id="overview-content">
         <p class="loading">Loading status&hellip;</p>
@@ -61,13 +58,12 @@
 
   <section id="capture">
     <div class="container">
-      <h2 class="section-title">Official QRA Capture &amp; Treasury Maturity Composition</h2>
+      <h2 class="section-title">Treasury Maturity Composition</h2>
       <p class="section-desc">
-        The coupon shortfall measure captures how much coupon issuance falls below what a given
-        bill-share baseline would imply. Official quarterly refunding data is reconstructed from
-        Treasury auction settlements and QRA documents. Three robustness baselines (15%, 18%, 20%
-        bill share) are computed for each quarter. Related to the literature on Treasury issuance
-        strategy, but presented here as a neutral measurement construct.
+        The headline table is official-first and shows the exact official quarter panel.
+        Seed and forecast rows are kept separate as non-headline context. Official quarterly refunding
+        data is reconstructed from Treasury auction settlements and QRA documents. Three robustness
+        baselines (15%, 18%, 20% bill share) are computed for each quarter.
       </p>
       <div id="capture-content">
         <p class="loading">Loading data&hellip;</p>

@@ -162,7 +162,59 @@ def _provenance_summary(row: pd.Series) -> str:
 
 
 def build_ati_publish_table() -> pd.DataFrame:
-    df = _read_processed_csv(PROCESSED_DIR / "ati_index_seed.csv")
+    return _official_ati_headline_table()
+
+
+def build_ati_seed_forecast_table() -> pd.DataFrame:
+    seed = _read_processed_csv(PROCESSED_DIR / "ati_index_seed.csv")
+    if seed.empty:
+        return pd.DataFrame(
+            columns=[
+                "quarter",
+                "financing_need_bn",
+                "net_bills_bn",
+                "bill_share",
+                "missing_coupons_15_bn",
+                "missing_coupons_18_bn",
+                "missing_coupons_20_bn",
+                "ati_baseline_bn",
+                "seed_source",
+                "seed_quality",
+                "headline_ready",
+                "non_headline_reason",
+                "public_role",
+            ]
+        )
+    official = _official_ati_headline_table()
+    official_quarters = set(official.get("quarter", pd.Series(dtype=str)).dropna().astype(str))
+    seed = seed.loc[~seed["quarter"].astype(str).isin(official_quarters)].copy()
+    if seed.empty:
+        return pd.DataFrame(
+            columns=[
+                "quarter",
+                "financing_need_bn",
+                "net_bills_bn",
+                "bill_share",
+                "missing_coupons_15_bn",
+                "missing_coupons_18_bn",
+                "missing_coupons_20_bn",
+                "ati_baseline_bn",
+                "seed_source",
+                "seed_quality",
+                "headline_ready",
+                "non_headline_reason",
+                "public_role",
+            ]
+        )
+    seed["headline_ready"] = False
+    seed["non_headline_reason"] = seed["seed_quality"].apply(
+        lambda value: (
+            "seed_forecast_without_official_capture"
+            if "forecast" in str(value or "")
+            else "seed_estimate_without_official_capture"
+        )
+    )
+    seed["public_role"] = "supporting"
     keep = [
         "quarter",
         "financing_need_bn",
@@ -174,8 +226,11 @@ def build_ati_publish_table() -> pd.DataFrame:
         "ati_baseline_bn",
         "seed_source",
         "seed_quality",
+        "headline_ready",
+        "non_headline_reason",
+        "public_role",
     ]
-    return df[keep].copy()
+    return seed[keep].sort_values("quarter").reset_index(drop=True)
 
 
 def build_official_capture_publish_table() -> pd.DataFrame:
@@ -284,6 +339,46 @@ def _official_capture_with_status_columns() -> pd.DataFrame:
         )
     df = pd.read_csv(path)
     return _add_official_capture_status_columns(df)
+
+
+def _official_ati_headline_table() -> pd.DataFrame:
+    columns = [
+        "quarter",
+        "financing_need_bn",
+        "net_bills_bn",
+        "bill_share",
+        "missing_coupons_15_bn",
+        "missing_coupons_18_bn",
+        "missing_coupons_20_bn",
+        "ati_baseline_bn",
+    ]
+    path = PROCESSED_DIR / "ati_index_official_capture.csv"
+    if not path.exists():
+        return pd.DataFrame(columns=columns + ["source_quality", "public_role"])
+    official = pd.read_csv(path)
+    if official.empty:
+        return pd.DataFrame(columns=columns + ["source_quality", "public_role"])
+
+    qa_status = official.get("qa_status")
+    if qa_status is None:
+        quality_mask = pd.Series(True, index=official.index, dtype=bool)
+    else:
+        quality_mask = qa_status.astype(str).str.strip().isin(OFFICIAL_QA_STATUSES)
+
+    seed_mask = official.apply(
+        lambda row: _has_seed_dependency(row.get("source_doc_type", ""), row.get("source_doc_local", "")),
+        axis=1,
+    )
+    headline = official.loc[quality_mask & ~seed_mask].copy()
+    if headline.empty:
+        return pd.DataFrame(columns=columns + ["source_quality", "public_role"])
+
+    for col in columns:
+        if col not in headline.columns:
+            headline[col] = pd.NA
+    headline["source_quality"] = "exact_official_numeric"
+    headline["public_role"] = "headline"
+    return headline[columns + ["source_quality", "public_role"]].sort_values("quarter").reset_index(drop=True)
 
 
 def build_ati_seed_vs_official_comparison() -> pd.DataFrame:
@@ -504,7 +599,8 @@ def build_extension_status_table() -> pd.DataFrame:
                 "publish_exists": publish_exists,
                 "backend_status": backend_status,
                 "readiness_tier": readiness_tier,
-                "headline_ready": backend_status == "summary_ready",
+                "headline_ready": False,
+                "public_role": "supporting",
             }
         )
     return pd.DataFrame(rows)
@@ -711,6 +807,7 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "sign_convention": "Positive values imply bill issuance above the 18% baseline share.",
             "source_quality": "exact_official_numeric",
             "series_role": "headline",
+            "public_role": "headline",
         },
         {
             "dataset": "plumbing",
@@ -720,6 +817,7 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "sign_convention": "Positive values imply more bill supply to the public.",
             "source_quality": "exact_official_net",
             "series_role": "headline",
+            "public_role": "headline",
         },
         {
             "dataset": "plumbing",
@@ -729,6 +827,7 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "sign_convention": "Positive values imply more combined non-bill supply to the public.",
             "source_quality": "exact_official_net",
             "series_role": "headline",
+            "public_role": "headline",
         },
         {
             "dataset": "duration",
@@ -738,6 +837,7 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "sign_convention": "Positive values imply more duration supply to the public.",
             "source_quality": "hybrid_exact_nonbill_net_plus_qt_proxy",
             "series_role": "headline",
+            "public_role": "headline",
         },
         {
             "dataset": "duration",
@@ -747,6 +847,7 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "sign_convention": "Positive values imply more duration supply to the public.",
             "source_quality": "fallback_gross_coupon_proxy_plus_qt_proxy",
             "series_role": "fallback",
+            "public_role": "supporting",
         },
         {
             "dataset": "investor_allotments",
@@ -755,7 +856,8 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "value_units": "reported Treasury allotment units",
             "sign_convention": "Shares and amounts follow Treasury investor allotment source files.",
             "source_quality": "summary_ready",
-            "series_role": "headline",
+            "series_role": "supporting",
+            "public_role": "supporting",
         },
         {
             "dataset": "primary_dealer",
@@ -764,7 +866,8 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "value_units": "reported New York Fed units",
             "sign_convention": "Values follow the canonical dealer export source for each summary row.",
             "source_quality": "summary_ready",
-            "series_role": "headline",
+            "series_role": "supporting",
+            "public_role": "supporting",
         },
         {
             "dataset": "sec_nmfp",
@@ -773,7 +876,8 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "value_units": "counts / availability flags",
             "sign_convention": "Positive counts indicate greater archive and field coverage.",
             "source_quality": "summary_ready",
-            "series_role": "headline",
+            "series_role": "supporting",
+            "public_role": "supporting",
         },
     ]
     return pd.DataFrame(rows)
@@ -788,6 +892,8 @@ def _artifact_mtime(path: Path) -> str:
 def build_dataset_status_table() -> pd.DataFrame:
     official_capture = build_official_capture_readiness_table()
     extension_status = build_extension_status_table()
+    official_ati_headline = _official_ati_headline_table()
+    official_ati_headline_ready = not official_ati_headline.empty
     rows = [
         {
             "dataset": "official_capture",
@@ -809,15 +915,17 @@ def build_dataset_status_table() -> pd.DataFrame:
                 else "|".join(sorted({value for value in official_capture["missing_critical_fields"] if str(value).strip()}))
             ),
             "last_regenerated_utc": _artifact_mtime(PROCESSED_DIR / "official_quarterly_refunding_capture.csv"),
+            "public_role": "supporting",
         },
         {
             "dataset": "official_ati",
-            "readiness_tier": "headline_ready" if (PROCESSED_DIR / "ati_index_official_capture.csv").exists() else "missing",
+            "readiness_tier": "headline_ready" if official_ati_headline_ready else "missing",
             "source_quality": "exact_official_numeric",
-            "headline_ready": (PROCESSED_DIR / "ati_index_official_capture.csv").exists(),
-            "fallback_only": False,
+            "headline_ready": official_ati_headline_ready,
+            "fallback_only": not official_ati_headline_ready,
             "missing_critical_fields": "",
             "last_regenerated_utc": _artifact_mtime(PROCESSED_DIR / "ati_index_official_capture.csv"),
+            "public_role": "headline",
         },
         {
             "dataset": "plumbing",
@@ -827,6 +935,7 @@ def build_dataset_status_table() -> pd.DataFrame:
             "fallback_only": False,
             "missing_critical_fields": "",
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "plumbing_regressions.csv"),
+            "public_role": "headline",
         },
         {
             "dataset": "duration",
@@ -836,6 +945,7 @@ def build_dataset_status_table() -> pd.DataFrame:
             "fallback_only": False,
             "missing_critical_fields": "",
             "last_regenerated_utc": _artifact_mtime(PROCESSED_DIR / "public_duration_supply.csv"),
+            "public_role": "headline",
         },
     ]
     for _, row in extension_status.iterrows():
@@ -849,10 +959,11 @@ def build_dataset_status_table() -> pd.DataFrame:
                 "dataset": f"extension_{extension_name}",
                 "readiness_tier": row["readiness_tier"],
                 "source_quality": row["backend_status"],
-                "headline_ready": bool(row["backend_status"] == "summary_ready"),
-                "fallback_only": not bool(row["backend_status"] == "summary_ready"),
+                "headline_ready": False,
+                "fallback_only": bool(row["backend_status"] not in {"summary_ready", "processed", "raw_only"}),
                 "missing_critical_fields": "",
                 "last_regenerated_utc": _artifact_mtime(freshness_path),
+                "public_role": "supporting",
             }
         )
     return pd.DataFrame(rows)
@@ -873,6 +984,7 @@ def build_publish_artifacts() -> None:
     publish_dir = get_publish_dir()
     ensure_dir(publish_dir)
     publish_table("ati_quarter_table", "ATI Quarter Table", build_ati_publish_table())
+    publish_table("ati_seed_forecast_table", "ATI Seed Forecast Table", build_ati_seed_forecast_table())
     publish_table("official_qra_capture", "Official QRA Capture", build_official_capture_publish_table())
     publish_table("official_capture_readiness", "Official Capture Readiness", build_official_capture_readiness_table())
     publish_table("official_capture_completion", "Official Capture Completion", build_official_capture_completion_publish_table())

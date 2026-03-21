@@ -1,5 +1,10 @@
 event_id,event_label,official_release_date,market_pricing_marker_minus_1d,expected_direction,notes,seed_source
-qra_2023_08,2023 Aug QRA,2023-08-02,2023-08-01,tightening_duration_supply,QRA signaled larger coupon supply / gradual terming out from debt-limit bills.,user_note_qra_dates
+qra_2023_08,2023 Aug QRA,2023-08-02,2023-08-01,tightening_duration_supply,QRA signaled larger coupon supply and gradual terming out from debt-limit bills.,user_note_qra_dates
 qra_2023_11,2023 Nov QRA,2023-11-01,2023-10-31,easing_coupon_restraint,QRA indicated coupon supply would remain roughly constant and not rise dramatically.,user_note_qra_dates
 qra_2024_01,2024 Jan QRA,2024-01-31,2024-01-30,mixed_modest_tightening,Modest coupon increase tilted toward shorter-duration coupons.,user_note_qra_dates
 qra_2024_05,2024 May QRA,2024-05-01,2024-04-30,easing_hold_duration_constant,Treasury did not increase coupon sizes again and reaffirmed guidance against increases for several quarters.,user_note_qra_dates
+qra_2024_07,2024 Jul QRA,2024-07-31,2024-07-30,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+qra_2024_10,2024 Oct QRA,2024-10-30,2024-10-29,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+qra_2025_02,2025 Feb QRA,2025-02-05,2025-02-04,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+qra_2025_04,2025 Apr QRA,2025-04-30,2025-04-29,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+qra_2025_07,2025 Jul QRA,2025-07-30,2025-07-29,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release

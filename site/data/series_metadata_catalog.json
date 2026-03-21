@@ -8,7 +8,8 @@
       "value_units": "USD billions",
       "sign_convention": "Positive values imply bill issuance above the 18% baseline share.",
       "source_quality": "exact_official_numeric",
-      "series_role": "headline"
+      "series_role": "headline",
+      "public_role": "headline"
     },
     {
       "dataset": "plumbing",
@@ -17,7 +18,8 @@
       "value_units": "USD notional (weekly sum)",
       "sign_convention": "Positive values imply more bill supply to the public.",
       "source_quality": "exact_official_net",
-      "series_role": "headline"
+      "series_role": "headline",
+      "public_role": "headline"
     },
     {
       "dataset": "plumbing",
@@ -26,7 +28,8 @@
       "value_units": "USD notional (weekly sum)",
       "sign_convention": "Positive values imply more combined non-bill supply to the public.",
       "source_quality": "exact_official_net",
-      "series_role": "headline"
+      "series_role": "headline",
+      "public_role": "headline"
     },
     {
       "dataset": "duration",
@@ -35,7 +38,8 @@
       "value_units": "USD notional (weekly sum)",
       "sign_convention": "Positive values imply more duration supply to the public.",
       "source_quality": "hybrid_exact_nonbill_net_plus_qt_proxy",
-      "series_role": "headline"
+      "series_role": "headline",
+      "public_role": "headline"
     },
     {
       "dataset": "duration",
@@ -44,7 +48,8 @@
       "value_units": "USD notional (weekly sum)",
       "sign_convention": "Positive values imply more duration supply to the public.",
       "source_quality": "fallback_gross_coupon_proxy_plus_qt_proxy",
-      "series_role": "fallback"
+      "series_role": "fallback",
+      "public_role": "supporting"
     },
     {
       "dataset": "investor_allotments",
@@ -53,7 +58,8 @@
       "value_units": "reported Treasury allotment units",
       "sign_convention": "Shares and amounts follow Treasury investor allotment source files.",
       "source_quality": "summary_ready",
-      "series_role": "headline"
+      "series_role": "supporting",
+      "public_role": "supporting"
     },
     {
       "dataset": "primary_dealer",
@@ -62,7 +68,8 @@
       "value_units": "reported New York Fed units",
       "sign_convention": "Values follow the canonical dealer export source for each summary row.",
       "source_quality": "summary_ready",
-      "series_role": "headline"
+      "series_role": "supporting",
+      "public_role": "supporting"
     },
     {
       "dataset": "sec_nmfp",
@@ -71,7 +78,8 @@
       "value_units": "counts / availability flags",
       "sign_convention": "Positive counts indicate greater archive and field coverage.",
       "source_quality": "summary_ready",
-      "series_role": "headline"
+      "series_role": "supporting",
+      "public_role": "supporting"
     }
   ]
 }

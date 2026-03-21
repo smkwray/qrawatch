@@ -100,6 +100,19 @@ def test_summarize_event_panel_is_stable():
     assert summary.loc[summary["expected_direction"] == "alpha", "x_d1"].iloc[0] == 3.0
 
 
+def test_summarize_event_panel_ignores_unclassified_rows():
+    panel = pd.DataFrame({
+        "expected_direction": ["tightening", "", None],
+        "x_d1": [1.0, 5.0, 9.0],
+        "x_d3": [2.0, 6.0, 10.0],
+    })
+
+    summary = summarize_event_panel(panel)
+
+    assert list(summary["expected_direction"]) == ["tightening"]
+    assert summary.loc[0, "x_d1"] == 1.0
+
+
 def test_summarize_event_panel_robustness_separates_overlap_exclusion():
     series = pd.DataFrame({
         "date": pd.date_range("2024-01-01", periods=6, freq="D"),
@@ -132,3 +145,18 @@ def test_summarize_event_panel_robustness_separates_overlap_exclusion():
     assert list(summary["n_events"]) == [2, 1]
     assert summary.loc[summary["sample_variant"] == "all_events", "x_d1"].iloc[0] == 2.5
     assert summary.loc[summary["sample_variant"] == "overlap_excluded", "x_d1"].iloc[0] == 2.0
+
+
+def test_summarize_event_panel_robustness_ignores_unclassified_rows():
+    panel = pd.DataFrame({
+        "event_date_type": ["official_release_date", "official_release_date"],
+        "expected_direction": ["tightening", ""],
+        "overlap_flag": [False, False],
+        "x_d1": [2.0, 20.0],
+        "x_d3": [3.0, 30.0],
+    })
+
+    summary = summarize_event_panel_robustness(panel)
+
+    assert list(summary["expected_direction"]) == ["tightening", "tightening"]
+    assert list(summary["n_events"]) == [1, 1]

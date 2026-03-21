@@ -148,7 +148,12 @@ def summarize_event_panel(panel: pd.DataFrame) -> pd.DataFrame:
     value_cols = [f"{base}_{suffix}" for base in value_bases for suffix in ("d1", "d3")]
     if not value_cols:
         return pd.DataFrame()
-    summary = panel.groupby("expected_direction", sort=True)[value_cols].mean(numeric_only=True)
+    working = panel.copy()
+    working["expected_direction"] = working["expected_direction"].fillna("").astype(str).str.strip()
+    working = working.loc[working["expected_direction"] != ""].copy()
+    if working.empty:
+        return pd.DataFrame(columns=["expected_direction", *value_cols])
+    summary = working.groupby("expected_direction", sort=True)[value_cols].mean(numeric_only=True)
     summary = summary.reset_index()
     return summary[["expected_direction", *value_cols]]
 
@@ -166,6 +171,10 @@ def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
         working["overlap_flag"] = False
     else:
         working["overlap_flag"] = working["overlap_flag"].fillna(False).astype(bool)
+    working["expected_direction"] = working["expected_direction"].fillna("").astype(str).str.strip()
+    working = working.loc[working["expected_direction"] != ""].copy()
+    if working.empty:
+        return pd.DataFrame(columns=["sample_variant", "event_date_type", "expected_direction", "n_events", *value_cols])
 
     date_type_order = pd.CategoricalDtype(
         ["official_release_date", "market_pricing_marker_minus_1d"],

@@ -16,6 +16,8 @@ def test_build_extension_status_table_defaults_to_not_started(tmp_path, monkeypa
 
     assert list(table["extension"]) == ["investor_allotments", "primary_dealer", "sec_nmfp", "tic"]
     assert set(table["backend_status"]) == {"not_started"}
+    assert not bool(table["headline_ready"].any())
+    assert set(table["public_role"]) == {"supporting"}
 
 
 def test_build_data_sources_publish_table_reports_existing_files(tmp_path, monkeypatch):
@@ -58,6 +60,89 @@ def test_build_duration_publish_table_returns_latest_window(tmp_path, monkeypatc
     assert len(latest) == 12
     assert latest.iloc[0]["date"] == "2024-02-28"
     assert latest.iloc[-1]["date"] == "2024-05-15"
+
+
+def test_build_ati_publish_table_prefers_official_rows(tmp_path, monkeypatch):
+    processed_dir = tmp_path / "processed"
+    processed_dir.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "quarter": ["2024Q1", "2024Q2", "2024Q3"],
+            "financing_need_bn": [816.0, 202.0, 847.0],
+            "net_bills_bn": [409.117, -296.523, 239.382],
+            "bill_share": [0.5, -1.46, 0.28],
+            "missing_coupons_15_bn": [286.717, -326.823, 112.332],
+            "missing_coupons_18_bn": [262.237, -332.883, 86.922],
+            "missing_coupons_20_bn": [245.917, -336.923, 69.982],
+            "ati_baseline_bn": [262.237, -332.883, 86.922],
+            "qa_status": ["manual_official_capture", "manual_official_capture", "manual_official_capture"],
+            "source_doc_local": ["/tmp/doc1.pdf", "/tmp/doc2.pdf", "seed_csv|/tmp/doc3.pdf"],
+            "source_doc_type": [
+                "official_quarterly_refunding_statement",
+                "official_quarterly_refunding_statement",
+                "official_quarterly_refunding_statement|seed_csv",
+            ],
+        }
+    ).to_csv(processed_dir / "ati_index_official_capture.csv", index=False)
+    pd.DataFrame(
+        {
+            "quarter": ["2024Q1", "2024Q3"],
+            "ati_baseline_bn": [321.12, 132.54],
+            "seed_source": ["user_note_table_2", "user_note_table_2_adjusted"],
+            "seed_quality": ["note_estimate", "note_estimate_adjusted"],
+        }
+    ).to_csv(processed_dir / "ati_index_seed.csv", index=False)
+    monkeypatch.setattr(publish, "PROCESSED_DIR", processed_dir)
+
+    table = publish.build_ati_publish_table()
+
+    assert list(table["quarter"]) == ["2024Q1", "2024Q2"]
+    assert "seed_source" not in table.columns
+    assert set(table["source_quality"]) == {"exact_official_numeric"}
+    assert set(table["public_role"]) == {"headline"}
+    assert table.loc[table["quarter"] == "2024Q2", "ati_baseline_bn"].iloc[0] == -332.883
+
+
+def test_build_ati_seed_forecast_table_excludes_official_overlap(tmp_path, monkeypatch):
+    processed_dir = tmp_path / "processed"
+    processed_dir.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "quarter": ["2024Q1"],
+            "financing_need_bn": [816.0],
+            "net_bills_bn": [409.117],
+            "bill_share": [0.5],
+            "missing_coupons_15_bn": [286.717],
+            "missing_coupons_18_bn": [262.237],
+            "missing_coupons_20_bn": [245.917],
+            "ati_baseline_bn": [262.237],
+            "qa_status": ["manual_official_capture"],
+            "source_doc_local": ["/tmp/doc1.pdf"],
+            "source_doc_type": ["official_quarterly_refunding_statement"],
+        }
+    ).to_csv(processed_dir / "ati_index_official_capture.csv", index=False)
+    pd.DataFrame(
+        {
+            "quarter": ["2024Q1", "2024Q4", "2025Q1"],
+            "financing_need_bn": [816.0, 665.0, 770.0],
+            "net_bills_bn": [468.0, 208.0, 200.0],
+            "bill_share": [0.57, 0.31, 0.26],
+            "missing_coupons_15_bn": [345.6, 108.25, 84.5],
+            "missing_coupons_18_bn": [321.12, 88.3, 61.4],
+            "missing_coupons_20_bn": [304.8, 75.0, 46.0],
+            "ati_baseline_bn": [321.12, 88.3, 61.4],
+            "seed_source": ["user_note_table_2", "user_note_table_3_forecast", "user_note_table_3_forecast"],
+            "seed_quality": ["note_estimate", "note_forecast", "note_forecast"],
+        }
+    ).to_csv(processed_dir / "ati_index_seed.csv", index=False)
+    monkeypatch.setattr(publish, "PROCESSED_DIR", processed_dir)
+
+    table = publish.build_ati_seed_forecast_table()
+
+    assert list(table["quarter"]) == ["2024Q4", "2025Q1"]
+    assert set(table["public_role"]) == {"supporting"}
+    assert not bool(table["headline_ready"].any())
+    assert set(table["non_headline_reason"]) == {"seed_forecast_without_official_capture"}
 
 
 def test_build_ati_seed_vs_official_comparison_merges_rows(tmp_path, monkeypatch):
@@ -202,10 +287,12 @@ def test_extension_status_promotes_ready_tier_to_summary_when_summaries_present(
 
     assert investor["backend_status"] == "summary_ready"
     assert investor["readiness_tier"] == "summary_ready"
-    assert bool(investor["headline_ready"])
+    assert not bool(investor["headline_ready"])
+    assert investor["public_role"] == "supporting"
     assert primary["backend_status"] == "summary_ready"
     assert primary["readiness_tier"] == "summary_ready"
-    assert bool(primary["headline_ready"])
+    assert not bool(primary["headline_ready"])
+    assert primary["public_role"] == "supporting"
 
 
 def test_dataset_status_derives_summary_ready_from_extension_status_rows(monkeypatch, tmp_path) -> None:
@@ -215,21 +302,29 @@ def test_dataset_status_derives_summary_ready_from_extension_status_rows(monkeyp
                 "extension": "investor_allotments",
                 "backend_status": "summary_ready",
                 "readiness_tier": "summary_ready",
+                "headline_ready": False,
+                "public_role": "supporting",
             },
             {
                 "extension": "primary_dealer",
                 "backend_status": "summary_ready",
                 "readiness_tier": "summary_ready",
+                "headline_ready": False,
+                "public_role": "supporting",
             },
             {
                 "extension": "sec_nmfp",
                 "backend_status": "processed",
                 "readiness_tier": "inventory_ready",
+                "headline_ready": False,
+                "public_role": "supporting",
             },
             {
                 "extension": "tic",
                 "backend_status": "not_started",
                 "readiness_tier": "not_started",
+                "headline_ready": False,
+                "public_role": "supporting",
             },
         ]
     )
@@ -258,14 +353,30 @@ def test_dataset_status_derives_summary_ready_from_extension_status_rows(monkeyp
 
     table = publish.build_dataset_status_table()
 
+    official_capture = table.loc[table["dataset"] == "official_capture"].iloc[0]
     investor = table.loc[table["dataset"] == "extension_investor_allotments"].iloc[0]
     primary = table.loc[table["dataset"] == "extension_primary_dealer"].iloc[0]
 
+    assert not bool(official_capture["headline_ready"])
+    assert official_capture["public_role"] == "supporting"
     assert investor["readiness_tier"] == "summary_ready"
     assert primary["readiness_tier"] == "summary_ready"
     assert investor["source_quality"] == "summary_ready"
     assert primary["source_quality"] == "summary_ready"
-    assert bool(investor["headline_ready"])
-    assert bool(primary["headline_ready"])
+    assert not bool(investor["headline_ready"])
+    assert not bool(primary["headline_ready"])
     assert not bool(investor["fallback_only"])
     assert not bool(primary["fallback_only"])
+    assert investor["public_role"] == "supporting"
+    assert primary["public_role"] == "supporting"
+
+
+def test_series_metadata_catalog_marks_extensions_supporting() -> None:
+    catalog = publish.build_series_metadata_catalog()
+
+    extensions = catalog.loc[
+        catalog["dataset"].isin(["investor_allotments", "primary_dealer", "sec_nmfp"])
+    ].copy()
+    assert not extensions.empty
+    assert set(extensions["series_role"]) == {"supporting"}
+    assert set(extensions["public_role"]) == {"supporting"}

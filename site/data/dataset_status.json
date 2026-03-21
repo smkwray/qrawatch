@@ -8,7 +8,8 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-20T23:08:28.763187+00:00"
+      "last_regenerated_utc": "2026-03-21T12:29:57.901407+00:00",
+      "public_role": "supporting"
     },
     {
       "dataset": "official_ati",
@@ -17,7 +18,8 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T10:03:07.056437+00:00"
+      "last_regenerated_utc": "2026-03-21T12:30:14.856169+00:00",
+      "public_role": "headline"
     },
     {
       "dataset": "plumbing",
@@ -26,7 +28,8 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-20T23:08:40.924595+00:00"
+      "last_regenerated_utc": "2026-03-20T23:08:40.924595+00:00",
+      "public_role": "headline"
     },
     {
       "dataset": "duration",
@@ -35,34 +38,38 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-20T23:08:42.669359+00:00"
+      "last_regenerated_utc": "2026-03-20T23:08:42.669359+00:00",
+      "public_role": "headline"
     },
     {
       "dataset": "extension_investor_allotments",
       "readiness_tier": "summary_ready",
       "source_quality": "summary_ready",
-      "headline_ready": true,
+      "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-20T23:08:31.389494+00:00"
+      "last_regenerated_utc": "2026-03-20T23:08:31.389494+00:00",
+      "public_role": "supporting"
     },
     {
       "dataset": "extension_primary_dealer",
       "readiness_tier": "summary_ready",
       "source_quality": "summary_ready",
-      "headline_ready": true,
+      "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-20T23:08:33.595202+00:00"
+      "last_regenerated_utc": "2026-03-20T23:08:33.595202+00:00",
+      "public_role": "supporting"
     },
     {
       "dataset": "extension_sec_nmfp",
       "readiness_tier": "summary_ready",
       "source_quality": "summary_ready",
-      "headline_ready": true,
+      "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-20T23:08:36.355040+00:00"
+      "last_regenerated_utc": "2026-03-20T23:08:36.355040+00:00",
+      "public_role": "supporting"
     },
     {
       "dataset": "extension_tic",
@@ -71,7 +78,8 @@
       "headline_ready": false,
       "fallback_only": true,
       "missing_critical_fields": "",
-      "last_regenerated_utc": ""
+      "last_regenerated_utc": "",
+      "public_role": "supporting"
     }
   ]
 }

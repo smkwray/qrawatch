@@ -19,6 +19,9 @@ VALUE_COLUMNS = ["THREEFYTP10", "DGS10", "DGS2", "DGS30", "SP500", "VIXCLS"]
 def main() -> None:
     ensure_project_dirs()
     events = pd.read_csv(MANUAL_DIR / "qra_event_seed.csv")
+    events = events.loc[
+        events["expected_direction"].fillna("").astype(str).str.strip().ne("")
+    ].copy()
     fred = pd.read_csv(RAW_DIR / "fred" / "core_wide.csv")
     fred["date"] = pd.to_datetime(fred["date"])
 

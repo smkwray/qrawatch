@@ -72,6 +72,10 @@ _QUARTER_LABEL_RE = re.compile(
     r"(?P<year>\d{4})\s+(?P<quarter>[1-4])(?:st|nd|rd|th)\s+Quarter",
     flags=re.IGNORECASE,
 )
+_QUARTER_ONLY_LABEL_RE = re.compile(
+    r"(?P<quarter>[1-4])(?:st|nd|rd|th)\s+Quarter",
+    flags=re.IGNORECASE,
+)
 _REFUNDING_RANGE_RE = re.compile(
     r"anticipated auction sizes for the (?P<range>[A-Za-z]+\s+to\s+[A-Za-z]+\s+\d{4}) quarter",
     flags=re.IGNORECASE,
@@ -596,7 +600,11 @@ def enrich_capture_with_auction_reconstruction(
             _AUCTION_RECON_SOURCE_DOC_TYPE, existing_type
         )
 
-        if has_complete_bill_reconstruction and _has_official_financing_provenance(capture.loc[idx]):
+        if (
+            has_complete_bill_reconstruction
+            and _has_official_financing_provenance(capture.loc[idx])
+            and _has_official_refunding_statement_provenance(capture.loc[idx])
+        ):
             capture.at[idx, "source_doc_local"] = _drop_seed_provenance(
                 _string_or_empty(capture.at[idx, "source_doc_local"])
             )
@@ -940,10 +948,46 @@ def _human_date(timestamp: pd.Timestamp) -> str:
 
 
 def _parse_quarter_archive_links(archive_html_path: Path) -> dict[str, tuple[str, str, str]]:
-    from bs4 import BeautifulSoup
-
-    soup = BeautifulSoup(archive_html_path.read_text(encoding="utf-8", errors="ignore"), "lxml")
+    soup = _parse_html_document(
+        archive_html_path.read_text(encoding="utf-8", errors="ignore")
+    )
     links: dict[str, tuple[str, str, str]] = {}
+    table = soup.find(
+        "table",
+        attrs={
+            "aria-label": re.compile(
+                r"Official Remarks on Quarterly Refunding", flags=re.IGNORECASE
+            )
+        },
+    )
+    rows = table.find_all("tr") if table is not None else soup.find_all("tr")
+    current_year = ""
+    for row in rows:
+        for header in row.find_all(["th", "td"]):
+            header_id = _string_or_empty(header.get("id"))
+            if re.fullmatch(r"\d{4}", header_id):
+                current_year = header_id
+                break
+            header_text = _string_or_empty(header.get_text(" ", strip=True))
+            if re.fullmatch(r"\d{4}", header_text):
+                current_year = header_text
+                break
+
+        for anchor in row.find_all("a", href=True):
+            label = _string_or_empty(anchor.get("aria-label")) or " ".join(
+                anchor.get_text(" ", strip=True).split()
+            )
+            quarter = _quarter_from_label(label)
+            if not quarter:
+                quarter = _quarter_from_quarter_only_label(label, current_year)
+            if not quarter or quarter in links:
+                continue
+            href = urljoin("https://home.treasury.gov", anchor["href"])
+            links[quarter] = (quarter, href, label)
+
+    if links:
+        return links
+
     for anchor in soup.find_all("a", href=True):
         label = _string_or_empty(anchor.get("aria-label")) or " ".join(
             anchor.get_text(" ", strip=True).split()
@@ -963,12 +1007,30 @@ def _quarter_from_label(label: str) -> str:
     return f"{match.group('year')}Q{match.group('quarter')}"
 
 
-def _extract_html_text(path: Path) -> str:
-    from bs4 import BeautifulSoup
+def _quarter_from_quarter_only_label(label: str, year: str) -> str:
+    if not year or re.fullmatch(r"\d{4}", year) is None:
+        return ""
+    normalized = label.replace("\u200b", "").replace("\ufeff", "")
+    match = _QUARTER_ONLY_LABEL_RE.search(normalized)
+    if match is None:
+        return ""
+    return f"{year}Q{match.group('quarter')}"
 
-    soup = BeautifulSoup(path.read_text(encoding="utf-8", errors="ignore"), "lxml")
+
+def _extract_html_text(path: Path) -> str:
+    soup = _parse_html_document(path.read_text(encoding="utf-8", errors="ignore"))
     text = " ".join(soup.get_text(" ", strip=True).split())
     return text.replace("\xa0", " ")
+
+
+def _parse_html_document(markup: str):
+    from bs4 import BeautifulSoup
+    from bs4 import FeatureNotFound
+
+    try:
+        return BeautifulSoup(markup, "lxml")
+    except FeatureNotFound:
+        return BeautifulSoup(markup, "html.parser")
 
 
 def _extract_named_section(text: str, heading: str, end_headings: tuple[str, ...]) -> str:
@@ -1234,16 +1296,25 @@ def _completion_tier_for_row(row: pd.Series) -> str:
     uses_seed = _uses_seed_source(row)
     has_auction_reconstruction = _AUCTION_RECON_SOURCE_DOC_TYPE in source_doc_type
     has_official_financing = _has_official_financing_provenance(row)
+    has_official_refunding_statement = _has_official_refunding_statement_provenance(row)
     if (
         qa_status in OFFICIAL_QA_STATUSES
         and has_financing
         and has_net_bill
         and has_auction_reconstruction
         and has_official_financing
+        and has_official_refunding_statement
         and not uses_seed
     ):
         return _AUCTION_COMPLETION_EXACT
-    if qa_status in OFFICIAL_QA_STATUSES and has_financing and has_net_bill and not uses_seed:
+    if (
+        qa_status in OFFICIAL_QA_STATUSES
+        and has_financing
+        and has_net_bill
+        and has_official_financing
+        and has_official_refunding_statement
+        and not uses_seed
+    ):
         return _AUCTION_COMPLETION_PROMOTED
     if qa_status == "semi_automated_capture":
         return _AUCTION_COMPLETION_SEMI
@@ -1255,6 +1326,11 @@ def _completion_tier_for_row(row: pd.Series) -> str:
 def _has_official_financing_provenance(row: pd.Series) -> bool:
     source_doc_type = _string_or_empty(row.get("source_doc_type")).lower()
     return "quarterly_refunding_press_release" in source_doc_type
+
+
+def _has_official_refunding_statement_provenance(row: pd.Series) -> bool:
+    source_doc_type = _string_or_empty(row.get("source_doc_type")).lower()
+    return "official_quarterly_refunding_statement" in source_doc_type
 
 
 def _drop_seed_provenance(value: str) -> str:
