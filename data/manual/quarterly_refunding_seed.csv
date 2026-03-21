@@ -1,0 +1,6 @@
+quarter,financing_need_bn,net_bills_bn,seed_source,seed_quality,comments
+2023Q4,852.0,513.0,user_note_table_2,note_estimate,From note table on estimated missing coupons; net issuance concept.
+2024Q1,816.0,468.0,user_note_table_2,note_estimate,From note table on estimated missing coupons.
+2024Q3,847.0,285.0,user_note_table_2_adjusted,note_estimate_adjusted,Adjusted in the note to reflect revised Fed SOMA reduction path.
+2024Q4,665.0,208.0,user_note_table_3_forecast,note_forecast,Forward-looking forecast row from the note.
+2025Q1,770.0,200.0,user_note_table_3_forecast,note_forecast,Forward-looking forecast row from the note.

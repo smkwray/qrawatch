@@ -1,0 +1,86 @@
+[
+  {
+    "series_id": "THREEFYTP10",
+    "description": "10-year Kim-Wright term premium",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "DGS2",
+    "description": "2-year Treasury yield",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "DGS10",
+    "description": "10-year Treasury yield",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "DGS30",
+    "description": "30-year Treasury yield",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "SP500",
+    "description": "S&P 500 index",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "VIXCLS",
+    "description": "CBOE VIX",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "DFF",
+    "description": "Effective federal funds rate",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "WRESBAL",
+    "description": "Reserve balances, week average",
+    "frequency": "weekly",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "WDTGAL",
+    "description": "Treasury General Account, Wednesday level",
+    "frequency": "weekly",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "WTREGEN",
+    "description": "Treasury General Account, week average",
+    "frequency": "weekly",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "RRPONTSYD",
+    "description": "ON RRP Treasury securities sold",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "WLRRAL",
+    "description": "Reverse repo liabilities, Wednesday level",
+    "frequency": "weekly",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "TREAST",
+    "description": "Fed Treasury holdings, Wednesday level",
+    "frequency": "weekly",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "WALCL",
+    "description": "Fed total assets",
+    "frequency": "weekly",
+    "source_family": "FRED"
+  }
+]

@@ -1,0 +1,66 @@
+{
+  "auctions_query": {
+    "endpoint": "v1/accounting/od/auctions_query",
+    "default_params": {
+      "sort": "-auction_date",
+      "page[size]": "10000"
+    },
+    "description": "Treasury Securities Auctions Data"
+  },
+  "mspd_table_1": {
+    "endpoint": "v1/debt/mspd/mspd_table_1",
+    "default_params": {
+      "sort": "-record_date",
+      "page[size]": "10000"
+    },
+    "description": "Monthly Statement of the Public Debt summary table"
+  },
+  "mspd_table_3_market": {
+    "endpoint": "v1/debt/mspd/mspd_table_3_market",
+    "default_params": {
+      "sort": "-record_date",
+      "page[size]": "10000"
+    },
+    "description": "Detail of marketable Treasury securities outstanding"
+  },
+  "buybacks_operations": {
+    "endpoint": "v1/accounting/od/buybacks_operations",
+    "default_params": {
+      "sort": "-operation_date",
+      "page[size]": "10000"
+    },
+    "description": "Treasury buyback operations"
+  },
+  "avg_interest_rates": {
+    "endpoint": "v2/accounting/od/avg_interest_rates",
+    "default_params": {
+      "sort": "-record_date",
+      "page[size]": "10000"
+    },
+    "description": "Average interest rates on U.S. Treasury securities"
+  },
+  "debt_outstanding": {
+    "endpoint": "v2/accounting/od/debt_outstanding",
+    "default_params": {
+      "sort": "-record_date",
+      "page[size]": "10000"
+    },
+    "description": "Historical debt outstanding"
+  },
+  "operating_cash_balance": {
+    "endpoint": "v1/accounting/dts/operating_cash_balance",
+    "default_params": {
+      "sort": "-record_date",
+      "page[size]": "10000"
+    },
+    "description": "Daily Treasury Statement operating cash balance"
+  },
+  "mts_table_1": {
+    "endpoint": "v1/accounting/mts/mts_table_1",
+    "default_params": {
+      "sort": "-record_date",
+      "page[size]": "10000"
+    },
+    "description": "Monthly Treasury Statement summary"
+  }
+}
