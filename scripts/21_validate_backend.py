@@ -181,6 +181,16 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "public_role",
     ],
 }
+OPTIONAL_PUBLISH_SCHEMAS: dict[str, list[str]] = {
+    "qra_event_elasticity.csv": [
+        "event_id",
+        "event_date_type",
+        "series",
+        "window",
+        "shock_bn",
+        "elasticity_bp_per_100bn",
+    ],
+}
 REQUIRED_EXTENSION_SUMMARY_READY = ("investor_allotments", "primary_dealer", "sec_nmfp")
 PUBLIC_HYGIENE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"/Users/", "absolute_local_path"),
@@ -451,6 +461,30 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
                 f"publish_artifact_missing_columns:{csv_name}:{','.join(missing_cols)}"
             )
 
+    optional_required = set()
+    for csv_name, required_columns in OPTIONAL_PUBLISH_SCHEMAS.items():
+        siblings = [publish_dir / f"{Path(csv_name).stem}{ext}" for ext in (".csv", ".json", ".md")]
+        if not any(path.exists() for path in siblings):
+            continue
+        optional_required.add(csv_name)
+        for artifact in siblings:
+            if not artifact.exists():
+                errors.append(f"publish_artifact_missing:{artifact.name}")
+                missing_files += 1
+        csv_path = publish_dir / csv_name
+        if not csv_path.exists():
+            continue
+        try:
+            csv_frame = pd.read_csv(csv_path)
+        except Exception as exc:
+            errors.append(f"publish_artifact_read_error:{csv_name}:{exc}")
+            continue
+        missing_cols = [c for c in required_columns if c not in csv_frame.columns]
+        if missing_cols:
+            errors.append(
+                f"publish_artifact_missing_columns:{csv_name}:{','.join(missing_cols)}"
+            )
+
     index_path = publish_dir / "index.json"
     if not index_path.exists():
         errors.append("publish_index_missing:index.json")
@@ -466,6 +500,9 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
     required = set(REQUIRED_PUBLISH_SCHEMAS)
     required.update(name.replace(".csv", ".json") for name in REQUIRED_PUBLISH_SCHEMAS)
     required.update(name.replace(".csv", ".md") for name in REQUIRED_PUBLISH_SCHEMAS)
+    required.update(optional_required)
+    required.update(name.replace(".csv", ".json") for name in optional_required)
+    required.update(name.replace(".csv", ".md") for name in optional_required)
     required.add("index.json")
     missing_from_index = sorted(required - set(artifacts))
     if missing_from_index:

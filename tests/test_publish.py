@@ -231,6 +231,49 @@ def test_build_official_capture_readiness_table_distinguishes_exact_and_hybrid(t
     assert "net_bill_issuance_bn" in hybrid["missing_critical_fields"]
 
 
+def test_build_qra_event_elasticity_publish_table_is_optional(tmp_path, monkeypatch):
+    tables_dir = tmp_path / "tables"
+    tables_dir.mkdir(parents=True)
+    monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
+
+    empty = publish.build_qra_event_elasticity_publish_table()
+    assert list(empty.columns) == [
+        "quarter",
+        "event_id",
+        "series",
+        "window",
+        "event_date_type",
+        "expected_direction",
+        "shock_bn",
+        "elasticity_bp_per_100bn",
+        "sign_flip_flag",
+        "small_denominator_flag",
+        "usable_for_headline",
+    ]
+
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2024Q4",
+                "event_id": "qra_2024_07",
+                "series": "DGS10",
+                "window": "d3",
+                "event_date_type": "official_release_date",
+                "expected_direction": "classification_pending",
+                "shock_bn": 25.0,
+                "elasticity_bp_per_100bn": 12.0,
+                "sign_flip_flag": False,
+                "small_denominator_flag": False,
+                "usable_for_headline": False,
+            }
+        ]
+    ).to_csv(tables_dir / "qra_event_elasticity.csv", index=False)
+
+    populated = publish.build_qra_event_elasticity_publish_table()
+    assert populated.loc[0, "series"] == "DGS10"
+    assert populated.loc[0, "elasticity_bp_per_100bn"] == 12.0
+
+
 def _write_extension_summary_publish_file(path: Path, stem: str) -> None:
     (path / f"{stem}.csv").write_text(
         "extension,readiness_tier,source_quality,rows\n"

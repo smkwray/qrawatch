@@ -1,6 +1,7 @@
 dataset,readiness_tier,source_quality,headline_ready,fallback_only,missing_critical_fields,last_regenerated_utc,public_role
-official_capture,headline_ready,exact_official,True,False,,2026-03-21T12:29:57.901407+00:00,supporting
-official_ati,headline_ready,exact_official_numeric,True,False,,2026-03-21T12:30:14.856169+00:00,headline
+official_capture,fallback_only,mixed,False,True,,2026-03-21T14:52:18.164435+00:00,supporting
+official_ati,headline_ready,exact_official_numeric,True,False,,2026-03-21T14:52:18.590614+00:00,headline
+qra_event_elasticity,supporting_ready,manual_qra_shock_template_plus_event_panel,False,False,,2026-03-21T15:18:51.208926+00:00,supporting
 plumbing,headline_ready,headline_exact_net_with_labeled_fallbacks,True,False,,2026-03-20T23:08:40.924595+00:00,headline
 duration,headline_ready,headline_hybrid_exact_with_labeled_fallbacks,True,False,,2026-03-20T23:08:42.669359+00:00,headline
 extension_investor_allotments,summary_ready,summary_ready,False,False,,2026-03-20T23:08:31.389494+00:00,supporting

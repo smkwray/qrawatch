@@ -4,6 +4,7 @@ plumbing,bill_net_exact,weekly (W-WED),USD notional (weekly sum),Positive values
 plumbing,nonbill_net_exact,weekly (W-WED),USD notional (weekly sum),Positive values imply more combined non-bill supply to the public.,exact_official_net,headline,headline
 duration,headline_public_duration_supply,weekly (W-WED),USD notional (weekly sum),Positive values imply more duration supply to the public.,hybrid_exact_nonbill_net_plus_qt_proxy,headline,headline
 duration,provisional_public_duration_supply,weekly (W-WED),USD notional (weekly sum),Positive values imply more duration supply to the public.,fallback_gross_coupon_proxy_plus_qt_proxy,fallback,supporting
+qra_event_elasticity,elasticity_bp_per_100bn,QRA event window,basis points per $100bn 10y-equivalent duration shock,Positive values imply higher yields per positive announced duration shock.,manual_qra_shock_template_plus_event_panel,supporting,supporting
 investor_allotments,investor_allotments_summary,auction-event,reported Treasury allotment units,Shares and amounts follow Treasury investor allotment source files.,summary_ready,supporting,supporting
 primary_dealer,primary_dealer_summary,mixed,reported New York Fed units,Values follow the canonical dealer export source for each summary row.,summary_ready,supporting,supporting
 sec_nmfp,sec_nmfp_summary,mixed,counts / availability flags,Positive counts indicate greater archive and field coverage.,summary_ready,supporting,supporting

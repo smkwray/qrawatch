@@ -446,6 +446,27 @@ def build_qra_robustness_publish_table() -> pd.DataFrame:
     return pd.read_csv(path)
 
 
+def build_qra_event_elasticity_publish_table() -> pd.DataFrame:
+    path = TABLES_DIR / "qra_event_elasticity.csv"
+    if not path.exists():
+        return pd.DataFrame(
+            columns=[
+                "quarter",
+                "event_id",
+                "series",
+                "window",
+                "event_date_type",
+                "expected_direction",
+                "shock_bn",
+                "elasticity_bp_per_100bn",
+                "sign_flip_flag",
+                "small_denominator_flag",
+                "usable_for_headline",
+            ]
+        )
+    return pd.read_csv(path)
+
+
 def build_plumbing_publish_table() -> pd.DataFrame:
     df = pd.read_csv(TABLES_DIR / "plumbing_regressions.csv")
     keep = [
@@ -850,6 +871,16 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "public_role": "supporting",
         },
         {
+            "dataset": "qra_event_elasticity",
+            "series_id": "elasticity_bp_per_100bn",
+            "frequency": "QRA event window",
+            "value_units": "basis points per $100bn 10y-equivalent duration shock",
+            "sign_convention": "Positive values imply higher yields per positive announced duration shock.",
+            "source_quality": "manual_qra_shock_template_plus_event_panel",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
             "dataset": "investor_allotments",
             "series_id": "investor_allotments_summary",
             "frequency": "auction-event",
@@ -928,6 +959,18 @@ def build_dataset_status_table() -> pd.DataFrame:
             "public_role": "headline",
         },
         {
+            "dataset": "qra_event_elasticity",
+            "readiness_tier": (
+                "supporting_ready" if (TABLES_DIR / "qra_event_elasticity.csv").exists() else "not_started"
+            ),
+            "source_quality": "manual_qra_shock_template_plus_event_panel",
+            "headline_ready": False,
+            "fallback_only": not (TABLES_DIR / "qra_event_elasticity.csv").exists(),
+            "missing_critical_fields": "",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_event_elasticity.csv"),
+            "public_role": "supporting",
+        },
+        {
             "dataset": "plumbing",
             "readiness_tier": "headline_ready" if (TABLES_DIR / "plumbing_regressions.csv").exists() else "missing",
             "source_quality": "headline_exact_net_with_labeled_fallbacks",
@@ -992,6 +1035,8 @@ def build_publish_artifacts() -> None:
     publish_table("qra_event_table", "QRA Event Table", build_qra_event_publish_table())
     publish_table("qra_event_summary", "QRA Event Summary", build_qra_summary_publish_table())
     publish_table("qra_event_robustness", "QRA Event Robustness", build_qra_robustness_publish_table())
+    if (TABLES_DIR / "qra_event_elasticity.csv").exists():
+        publish_table("qra_event_elasticity", "QRA Event Elasticity", build_qra_event_elasticity_publish_table())
     publish_table("plumbing_regression_summary", "Plumbing Regression Summary", build_plumbing_publish_table())
     publish_table("plumbing_robustness", "Plumbing Robustness", build_plumbing_robustness_publish_table())
     publish_table("duration_supply_summary", "Duration Supply Summary", build_duration_publish_table())

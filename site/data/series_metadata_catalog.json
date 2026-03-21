@@ -52,6 +52,16 @@
       "public_role": "supporting"
     },
     {
+      "dataset": "qra_event_elasticity",
+      "series_id": "elasticity_bp_per_100bn",
+      "frequency": "QRA event window",
+      "value_units": "basis points per $100bn 10y-equivalent duration shock",
+      "sign_convention": "Positive values imply higher yields per positive announced duration shock.",
+      "source_quality": "manual_qra_shock_template_plus_event_panel",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
       "dataset": "investor_allotments",
       "series_id": "investor_allotments_summary",
       "frequency": "auction-event",

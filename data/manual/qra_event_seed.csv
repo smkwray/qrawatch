@@ -1,4 +1,9 @@
 event_id,event_label,official_release_date,market_pricing_marker_minus_1d,expected_direction,notes,seed_source
+qra_2022_05,2022 May QRA,2022-05-04,2022-05-03,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
+qra_2022_08,2022 Aug QRA,2022-08-03,2022-08-02,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
+qra_2022_11,2022 Nov QRA,2022-11-02,2022-11-01,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
+qra_2023_02,2023 Feb QRA,2023-02-01,2023-01-31,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
+qra_2023_05,2023 May QRA,2023-05-03,2023-05-02,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
 qra_2023_08,2023 Aug QRA,2023-08-02,2023-08-01,tightening_duration_supply,QRA signaled larger coupon supply and gradual terming out from debt-limit bills.,user_note_qra_dates
 qra_2023_11,2023 Nov QRA,2023-11-01,2023-10-31,easing_coupon_restraint,QRA indicated coupon supply would remain roughly constant and not rise dramatically.,user_note_qra_dates
 qra_2024_01,2024 Jan QRA,2024-01-31,2024-01-30,mixed_modest_tightening,Modest coupon increase tilted toward shorter-duration coupons.,user_note_qra_dates

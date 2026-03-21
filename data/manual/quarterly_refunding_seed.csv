@@ -1,4 +1,9 @@
 quarter,financing_need_bn,net_bills_bn,seed_source,seed_quality,comments
+2022Q3,182.0,,official_treasury_release,official_historical_financing_estimate,Historical official financing estimate from May 2 2022 marketable borrowing release; net bill reconstruction deferred to official capture.
+2022Q4,400.0,,official_treasury_release,official_historical_financing_estimate,Historical official financing estimate from August 1 2022 marketable borrowing release; net bill reconstruction deferred to official capture.
+2023Q1,578.0,,official_treasury_release,official_historical_financing_estimate,Historical official financing estimate from October 31 2022 marketable borrowing release; net bill reconstruction deferred to official capture.
+2023Q2,278.0,,official_treasury_release,official_historical_financing_estimate,Historical official financing estimate from January 30 2023 marketable borrowing release; net bill reconstruction deferred to official capture.
+2023Q3,733.0,,official_treasury_release,official_historical_financing_estimate,Historical official financing estimate from May 1 2023 marketable borrowing release; net bill reconstruction deferred to official capture.
 2023Q4,852.0,513.0,user_note_table_2,note_estimate,From note table on estimated missing coupons; net issuance concept.
 2024Q1,816.0,468.0,user_note_table_2,note_estimate,From note table on estimated missing coupons.
 2024Q3,847.0,285.0,user_note_table_2_adjusted,note_estimate_adjusted,Adjusted in the note to reflect revised Fed SOMA reduction path.

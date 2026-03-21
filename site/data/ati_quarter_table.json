@@ -2,6 +2,42 @@
   "title": "ATI Quarter Table",
   "rows": [
     {
+      "quarter": "2022Q3",
+      "financing_need_bn": 182,
+      "net_bills_bn": 137.088,
+      "bill_share": 0.7532307692307691,
+      "missing_coupons_15_bn": 109.788,
+      "missing_coupons_18_bn": 104.328,
+      "missing_coupons_20_bn": 100.688,
+      "ati_baseline_bn": 104.328,
+      "source_quality": "exact_official_numeric",
+      "public_role": "headline"
+    },
+    {
+      "quarter": "2022Q4",
+      "financing_need_bn": 400,
+      "net_bills_bn": 73.149,
+      "bill_share": 0.1828725,
+      "missing_coupons_15_bn": 13.149,
+      "missing_coupons_18_bn": 1.149000000000001,
+      "missing_coupons_20_bn": -6.850999999999999,
+      "ati_baseline_bn": 1.149000000000001,
+      "source_quality": "exact_official_numeric",
+      "public_role": "headline"
+    },
+    {
+      "quarter": "2023Q3",
+      "financing_need_bn": 733,
+      "net_bills_bn": 824.9,
+      "bill_share": 1.12537517053206,
+      "missing_coupons_15_bn": 714.9499999999999,
+      "missing_coupons_18_bn": 692.96,
+      "missing_coupons_20_bn": 678.3,
+      "ati_baseline_bn": 692.96,
+      "source_quality": "exact_official_numeric",
+      "public_role": "headline"
+    },
+    {
       "quarter": "2023Q4",
       "financing_need_bn": 852,
       "net_bills_bn": 437.423,

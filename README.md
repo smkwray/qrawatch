@@ -57,11 +57,14 @@ source .env
 "$HOME/venvs/qrawatch/bin/python" scripts/02_download_fred.py --preset core
 "$HOME/venvs/qrawatch/bin/python" scripts/03_download_qra_materials.py --download-files
 "$HOME/venvs/qrawatch/bin/python" scripts/04_extract_qra_text.py
+"$HOME/venvs/qrawatch/bin/python" scripts/22_seed_forward_official_quarters.py --direction backward
 "$HOME/venvs/qrawatch/bin/python" scripts/20_enrich_official_qra_capture.py
 "$HOME/venvs/qrawatch/bin/python" scripts/13_build_official_qra_capture.py
 "$HOME/venvs/qrawatch/bin/python" scripts/17_build_official_ati.py
 "$HOME/venvs/qrawatch/bin/python" scripts/09_build_qra_event_panel.py
 "$HOME/venvs/qrawatch/bin/python" scripts/10_run_event_study.py
+"$HOME/venvs/qrawatch/bin/python" scripts/23_seed_qra_shock_template.py
+"$HOME/venvs/qrawatch/bin/python" scripts/24_build_qra_event_elasticity.py
 "$HOME/venvs/qrawatch/bin/python" scripts/11_run_plumbing_regressions.py
 "$HOME/venvs/qrawatch/bin/python" scripts/12_build_public_duration_supply.py
 "$HOME/venvs/qrawatch/bin/python" scripts/16_build_investor_allotments_inventory.py
@@ -132,6 +135,7 @@ The backend now emits a publish-ready layer under `output/publish/`, derived fro
 - official QRA quarter capture tables
 - seed-vs-official shortfall comparisons
 - QRA event tables, baseline summaries, and robustness summaries
+- optional QRA event elasticity tables built from the manual shock template plus the event panel
 - plumbing baseline summaries and robustness summaries
 - duration-supply summaries and construction comparisons
 - data-source and extension-status inventories
@@ -145,6 +149,9 @@ source .env
 "$HOME/venvs/qrawatch/bin/python" scripts/14_qra_quality_report.py
 "$HOME/venvs/qrawatch/bin/python" scripts/15_build_publish_artifacts.py
 "$HOME/venvs/qrawatch/bin/python" scripts/20_enrich_official_qra_capture.py
+"$HOME/venvs/qrawatch/bin/python" scripts/22_seed_forward_official_quarters.py --direction backward
+"$HOME/venvs/qrawatch/bin/python" scripts/23_seed_qra_shock_template.py
+"$HOME/venvs/qrawatch/bin/python" scripts/24_build_qra_event_elasticity.py
 "$HOME/venvs/qrawatch/bin/python" scripts/16_build_investor_allotments_inventory.py
 "$HOME/venvs/qrawatch/bin/python" scripts/18_build_primary_dealer_inventory.py
 "$HOME/venvs/qrawatch/bin/python" scripts/19_build_sec_nmfp_inventory.py
@@ -159,6 +166,7 @@ Public site consumers should read only from `output/publish/`. The key site-faci
 - `output/publish/investor_allotments_summary.{csv,json,md}`
 - `output/publish/primary_dealer_summary.{csv,json,md}`
 - `output/publish/sec_nmfp_summary.{csv,json,md}`
+- `output/publish/qra_event_elasticity.{csv,json,md}` when manual shock inputs have been filled
 
 If `FRED_API_KEY` is set in `.env`, the FRED downloader uses the official API to avoid flaky public CSV fetches for larger series.
 

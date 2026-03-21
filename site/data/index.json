@@ -1,7 +1,7 @@
 {
   "title": "qrawatch publish artifacts",
-  "generated_at_utc": "2026-03-21T12:32:30.558726+00:00",
-  "artifact_count": 61,
+  "generated_at_utc": "2026-03-21T15:19:01.453736+00:00",
+  "artifact_count": 64,
   "artifacts": [
     "ati_quarter_table.csv",
     "ati_quarter_table.json",
@@ -49,6 +49,9 @@
     "primary_dealer_summary.csv",
     "primary_dealer_summary.json",
     "primary_dealer_summary.md",
+    "qra_event_elasticity.csv",
+    "qra_event_elasticity.json",
+    "qra_event_elasticity.md",
     "qra_event_robustness.csv",
     "qra_event_robustness.json",
     "qra_event_robustness.md",

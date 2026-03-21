@@ -1,4 +1,9 @@
 quarter,completion_tier,qa_status,uses_seed_source,net_bill_issuance_bn,reconstructed_net_bill_issuance_bn,reconstruction_status_bill,is_headline_ready
+2022Q3,exact_official_numeric,manual_official_capture,False,137.088,137.088,complete,True
+2022Q4,exact_official_numeric,manual_official_capture,False,73.149,73.149,complete,True
+2023Q1,semi_automated_guidance_only,semi_automated_capture,True,335.198,335.198,partial,False
+2023Q2,semi_automated_guidance_only,semi_automated_capture,True,360.307,360.307,partial,False
+2023Q3,exact_official_numeric,manual_official_capture,False,824.9,824.9,complete,True
 2023Q4,exact_official_numeric,manual_official_capture,False,437.423,437.423,complete,True
 2024Q1,exact_official_numeric,manual_official_capture,False,409.117,409.117,complete,True
 2024Q2,exact_official_numeric,manual_official_capture,False,-296.523,-296.523,complete,True

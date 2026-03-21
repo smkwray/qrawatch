@@ -469,6 +469,72 @@ def test_validate_backend_accepts_extension_summary_artifacts_when_present(tmp_p
     )
 
 
+def test_validate_backend_treats_qra_event_elasticity_as_optional(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    assert not any(
+        message.startswith("publish_artifact_missing:qra_event_elasticity")
+        for message in result.errors
+    )
+
+
+def test_validate_backend_validates_qra_event_elasticity_when_present(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+    pd.DataFrame(
+        [
+            {
+                "event_id": "qra_2024_07",
+                "event_date_type": "official_release_date",
+                "series": "DGS10",
+                "window": "d3",
+                "shock_bn": 25.0,
+                "elasticity_bp_per_100bn": 12.0,
+            }
+        ]
+    ).to_csv(publish_path / "qra_event_elasticity.csv", index=False)
+    (publish_path / "qra_event_elasticity.json").write_text(
+        json.dumps({"title": "qra_event_elasticity", "rows": []}),
+        encoding="utf-8",
+    )
+    (publish_path / "qra_event_elasticity.md").write_text(
+        "# qra_event_elasticity\n",
+        encoding="utf-8",
+    )
+    index_payload = json.loads((publish_path / "index.json").read_text(encoding="utf-8"))
+    index_payload["artifacts"].extend(
+        ["qra_event_elasticity.csv", "qra_event_elasticity.json", "qra_event_elasticity.md"]
+    )
+    index_payload["artifact_count"] = len(index_payload["artifacts"])
+    (publish_path / "index.json").write_text(json.dumps(index_payload), encoding="utf-8")
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    assert not any(
+        message.startswith("publish_artifact_missing:qra_event_elasticity")
+        for message in result.errors
+    )
+
+
 def test_validate_backend_detects_official_ati_publish_mismatch(tmp_path: Path) -> None:
     capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(tmp_path)
     publish_path = tmp_path / "publish"

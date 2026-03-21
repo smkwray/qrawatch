@@ -5,6 +5,8 @@ from typing import Sequence
 import numpy as np
 import pandas as pd
 
+_PLACEHOLDER_EXPECTED_DIRECTIONS = {"classification_pending", "pending", "unclassified", "tbd", "todo"}
+
 
 def _value_bases_from_panel(panel: pd.DataFrame) -> list[str]:
     value_bases: list[str] = []
@@ -81,6 +83,15 @@ def _normalize_overlap_annotations(overlap_annotations: pd.DataFrame | None) -> 
     return annotations
 
 
+def _normalize_expected_direction(series: pd.Series) -> pd.Series:
+    return series.fillna("").astype(str).str.strip()
+
+
+def _is_headline_expected_direction(series: pd.Series) -> pd.Series:
+    normalized = _normalize_expected_direction(series).str.lower()
+    return (normalized != "") & ~normalized.isin(_PLACEHOLDER_EXPECTED_DIRECTIONS)
+
+
 def build_event_panel(
     series_df: pd.DataFrame,
     events_df: pd.DataFrame,
@@ -149,8 +160,8 @@ def summarize_event_panel(panel: pd.DataFrame) -> pd.DataFrame:
     if not value_cols:
         return pd.DataFrame()
     working = panel.copy()
-    working["expected_direction"] = working["expected_direction"].fillna("").astype(str).str.strip()
-    working = working.loc[working["expected_direction"] != ""].copy()
+    working["expected_direction"] = _normalize_expected_direction(working["expected_direction"])
+    working = working.loc[_is_headline_expected_direction(working["expected_direction"])].copy()
     if working.empty:
         return pd.DataFrame(columns=["expected_direction", *value_cols])
     summary = working.groupby("expected_direction", sort=True)[value_cols].mean(numeric_only=True)
@@ -171,8 +182,8 @@ def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
         working["overlap_flag"] = False
     else:
         working["overlap_flag"] = working["overlap_flag"].fillna(False).astype(bool)
-    working["expected_direction"] = working["expected_direction"].fillna("").astype(str).str.strip()
-    working = working.loc[working["expected_direction"] != ""].copy()
+    working["expected_direction"] = _normalize_expected_direction(working["expected_direction"])
+    working = working.loc[_is_headline_expected_direction(working["expected_direction"])].copy()
     if working.empty:
         return pd.DataFrame(columns=["sample_variant", "event_date_type", "expected_direction", "n_events", *value_cols])
 

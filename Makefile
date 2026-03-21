@@ -2,7 +2,7 @@ PYTHON ?= $(HOME)/venvs/qrawatch/bin/python
 SHELL := /bin/zsh
 RUN = source .env && "$(PYTHON)"
 
-.PHONY: bootstrap seed qra-enrich official-capture official-ati test download-core qra investor primary sec event plumbing duration publish qra-quality backend-validate regenerate site
+.PHONY: bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity test download-core qra investor primary sec event plumbing duration publish qra-quality backend-validate regenerate site
 
 bootstrap:
 	$(RUN) scripts/00_bootstrap.py
@@ -18,6 +18,15 @@ official-capture:
 
 official-ati:
 	$(RUN) scripts/17_build_official_ati.py
+
+historical-seed:
+	$(RUN) scripts/22_seed_forward_official_quarters.py --direction backward
+
+shock-template:
+	$(RUN) scripts/23_seed_qra_shock_template.py
+
+elasticity:
+	$(RUN) scripts/24_build_qra_event_elasticity.py
 
 test:
 	$(RUN) -B -m pytest -q
