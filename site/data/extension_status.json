@@ -1,0 +1,61 @@
+{
+  "title": "Extension Backend Status",
+  "rows": [
+    {
+      "extension": "investor_allotments",
+      "raw_dir_exists": true,
+      "manifest_exists": true,
+      "downloads_exists": true,
+      "processed_exists": true,
+      "processed_rows": 5,
+      "panel_exists": true,
+      "panel_rows": 63180,
+      "publish_exists": true,
+      "backend_status": "summary_ready",
+      "readiness_tier": "summary_ready",
+      "headline_ready": true
+    },
+    {
+      "extension": "primary_dealer",
+      "raw_dir_exists": true,
+      "manifest_exists": true,
+      "downloads_exists": true,
+      "processed_exists": true,
+      "processed_rows": 10,
+      "panel_exists": true,
+      "panel_rows": 2765,
+      "publish_exists": true,
+      "backend_status": "summary_ready",
+      "readiness_tier": "summary_ready",
+      "headline_ready": true
+    },
+    {
+      "extension": "sec_nmfp",
+      "raw_dir_exists": true,
+      "manifest_exists": true,
+      "downloads_exists": true,
+      "processed_exists": true,
+      "processed_rows": 94,
+      "panel_exists": true,
+      "panel_rows": 1858,
+      "publish_exists": true,
+      "backend_status": "summary_ready",
+      "readiness_tier": "summary_ready",
+      "headline_ready": true
+    },
+    {
+      "extension": "tic",
+      "raw_dir_exists": false,
+      "manifest_exists": false,
+      "downloads_exists": false,
+      "processed_exists": false,
+      "processed_rows": 0,
+      "panel_exists": false,
+      "panel_rows": 0,
+      "publish_exists": false,
+      "backend_status": "not_started",
+      "readiness_tier": "not_started",
+      "headline_ready": false
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "title": "Official QRA Capture",
+  "rows": [
+    {
+      "quarter": "2023Q4",
+      "qra_release_date": "2023-08-02",
+      "market_pricing_marker_minus_1d": "2023-08-01",
+      "total_financing_need_bn": 852,
+      "net_bill_issuance_bn": 437.423,
+      "source_url": "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query|https://home.treasury.gov/news/press-releases/jy1864|https://home.treasury.gov/news/press-releases/jy1662",
+      "source_doc_type": "official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release",
+      "qa_status": "manual_official_capture",
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release; qa=manual_official_capture"
+    },
+    {
+      "quarter": "2024Q1",
+      "qra_release_date": "2023-11-01",
+      "market_pricing_marker_minus_1d": "2023-10-31",
+      "total_financing_need_bn": 816,
+      "net_bill_issuance_bn": 409.117,
+      "source_url": "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query|https://home.treasury.gov/news/press-releases/jy2062|https://home.treasury.gov/news/press-releases/jy1851",
+      "source_doc_type": "official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release",
+      "qa_status": "manual_official_capture",
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release; qa=manual_official_capture"
+    },
+    {
+      "quarter": "2024Q2",
+      "qra_release_date": "2024-01-31",
+      "market_pricing_marker_minus_1d": "2024-01-30",
+      "total_financing_need_bn": 202,
+      "net_bill_issuance_bn": -296.523,
+      "source_url": "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query|https://home.treasury.gov/news/press-releases/jy2315|https://home.treasury.gov/news/press-releases/jy2054",
+      "source_doc_type": "official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release",
+      "qa_status": "manual_official_capture",
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release; qa=manual_official_capture"
+    },
+    {
+      "quarter": "2024Q3",
+      "qra_release_date": "2024-05-01",
+      "market_pricing_marker_minus_1d": "2024-04-30",
+      "total_financing_need_bn": 847,
+      "net_bill_issuance_bn": 239.382,
+      "source_url": "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query|https://home.treasury.gov/news/press-releases/jy2512|https://home.treasury.gov/news/press-releases/jy2304",
+      "source_doc_type": "official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release",
+      "qa_status": "manual_official_capture",
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release; qa=manual_official_capture"
+    }
+  ]
+}

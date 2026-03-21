@@ -1,0 +1,17 @@
+summary_type,security_family,investor_class,measure,value,units,as_of_date,source_quality,source_file
+coverage,bill,all,auction_rows,40633.0,count,2026-02-26,summary_ready,investor_allotments_panel.csv
+coverage,frn,all,auction_rows,1184.0,count,2026-02-27,summary_ready,investor_allotments_panel.csv
+coverage,nominal_coupon,all,auction_rows,12378.0,count,2026-03-02,summary_ready,investor_allotments_panel.csv
+coverage,tips,all,auction_rows,1552.0,count,2026-02-27,summary_ready,investor_allotments_panel.csv
+latest_snapshot,nominal_coupon,dealers_and_brokers,allotment_amount,25.5218861,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+latest_snapshot,nominal_coupon,depository_institutions,allotment_amount,0.0,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+latest_snapshot,nominal_coupon,foreign_and_international,allotment_amount,38.895,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+latest_snapshot,nominal_coupon,individuals,allotment_amount,0.5012479,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+latest_snapshot,nominal_coupon,investment_funds,allotment_amount,134.00231259999998,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+latest_snapshot,nominal_coupon,other,allotment_amount,0.030400000000000003,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+latest_snapshot,nominal_coupon,pension_and_retirement_funds,allotment_amount,0.049,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+latest_snapshot,nominal_coupon,soma_federal_reserve_banks,allotment_amount,23.839123,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+bill_vs_coupon_split,bill,all,total_issue_amount,215318.6000635,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+bill_vs_coupon_split,frn,all,total_issue_amount,3047.115765,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+bill_vs_coupon_split,nominal_coupon,all,total_issue_amount,52581.2978577,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv
+bill_vs_coupon_split,tips,all,total_issue_amount,2674.1682477,USD billions,2026-03-02,summary_ready,investor_allotments_panel.csv

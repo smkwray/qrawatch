@@ -1,0 +1,77 @@
+{
+  "title": "Series Metadata Catalog",
+  "rows": [
+    {
+      "dataset": "official_ati",
+      "series_id": "ati_baseline_bn",
+      "frequency": "quarterly",
+      "value_units": "USD billions",
+      "sign_convention": "Positive values imply bill issuance above the 18% baseline share.",
+      "source_quality": "exact_official_numeric",
+      "series_role": "headline"
+    },
+    {
+      "dataset": "plumbing",
+      "series_id": "bill_net_exact",
+      "frequency": "weekly (W-WED)",
+      "value_units": "USD notional (weekly sum)",
+      "sign_convention": "Positive values imply more bill supply to the public.",
+      "source_quality": "exact_official_net",
+      "series_role": "headline"
+    },
+    {
+      "dataset": "plumbing",
+      "series_id": "nonbill_net_exact",
+      "frequency": "weekly (W-WED)",
+      "value_units": "USD notional (weekly sum)",
+      "sign_convention": "Positive values imply more combined non-bill supply to the public.",
+      "source_quality": "exact_official_net",
+      "series_role": "headline"
+    },
+    {
+      "dataset": "duration",
+      "series_id": "headline_public_duration_supply",
+      "frequency": "weekly (W-WED)",
+      "value_units": "USD notional (weekly sum)",
+      "sign_convention": "Positive values imply more duration supply to the public.",
+      "source_quality": "hybrid_exact_nonbill_net_plus_qt_proxy",
+      "series_role": "headline"
+    },
+    {
+      "dataset": "duration",
+      "series_id": "provisional_public_duration_supply",
+      "frequency": "weekly (W-WED)",
+      "value_units": "USD notional (weekly sum)",
+      "sign_convention": "Positive values imply more duration supply to the public.",
+      "source_quality": "fallback_gross_coupon_proxy_plus_qt_proxy",
+      "series_role": "fallback"
+    },
+    {
+      "dataset": "investor_allotments",
+      "series_id": "investor_allotments_summary",
+      "frequency": "auction-event",
+      "value_units": "reported Treasury allotment units",
+      "sign_convention": "Shares and amounts follow Treasury investor allotment source files.",
+      "source_quality": "summary_ready",
+      "series_role": "headline"
+    },
+    {
+      "dataset": "primary_dealer",
+      "series_id": "primary_dealer_summary",
+      "frequency": "mixed",
+      "value_units": "reported New York Fed units",
+      "sign_convention": "Values follow the canonical dealer export source for each summary row.",
+      "source_quality": "summary_ready",
+      "series_role": "headline"
+    },
+    {
+      "dataset": "sec_nmfp",
+      "series_id": "sec_nmfp_summary",
+      "frequency": "mixed",
+      "value_units": "counts / availability flags",
+      "sign_convention": "Positive counts indicate greater archive and field coverage.",
+      "source_quality": "summary_ready",
+      "series_role": "headline"
+    }
+  ]
+}

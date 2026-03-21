@@ -1,0 +1,181 @@
+{
+  "title": "Investor Allotments Summary",
+  "rows": [
+    {
+      "summary_type": "coverage",
+      "security_family": "bill",
+      "investor_class": "all",
+      "measure": "auction_rows",
+      "value": 40633.0,
+      "units": "count",
+      "as_of_date": "2026-02-26",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "coverage",
+      "security_family": "frn",
+      "investor_class": "all",
+      "measure": "auction_rows",
+      "value": 1184.0,
+      "units": "count",
+      "as_of_date": "2026-02-27",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "coverage",
+      "security_family": "nominal_coupon",
+      "investor_class": "all",
+      "measure": "auction_rows",
+      "value": 12378.0,
+      "units": "count",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "coverage",
+      "security_family": "tips",
+      "investor_class": "all",
+      "measure": "auction_rows",
+      "value": 1552.0,
+      "units": "count",
+      "as_of_date": "2026-02-27",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "latest_snapshot",
+      "security_family": "nominal_coupon",
+      "investor_class": "dealers_and_brokers",
+      "measure": "allotment_amount",
+      "value": 25.5218861,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "latest_snapshot",
+      "security_family": "nominal_coupon",
+      "investor_class": "depository_institutions",
+      "measure": "allotment_amount",
+      "value": 0.0,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "latest_snapshot",
+      "security_family": "nominal_coupon",
+      "investor_class": "foreign_and_international",
+      "measure": "allotment_amount",
+      "value": 38.895,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "latest_snapshot",
+      "security_family": "nominal_coupon",
+      "investor_class": "individuals",
+      "measure": "allotment_amount",
+      "value": 0.5012479,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "latest_snapshot",
+      "security_family": "nominal_coupon",
+      "investor_class": "investment_funds",
+      "measure": "allotment_amount",
+      "value": 134.00231259999998,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "latest_snapshot",
+      "security_family": "nominal_coupon",
+      "investor_class": "other",
+      "measure": "allotment_amount",
+      "value": 0.030400000000000003,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "latest_snapshot",
+      "security_family": "nominal_coupon",
+      "investor_class": "pension_and_retirement_funds",
+      "measure": "allotment_amount",
+      "value": 0.049,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "latest_snapshot",
+      "security_family": "nominal_coupon",
+      "investor_class": "soma_federal_reserve_banks",
+      "measure": "allotment_amount",
+      "value": 23.839123,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "bill_vs_coupon_split",
+      "security_family": "bill",
+      "investor_class": "all",
+      "measure": "total_issue_amount",
+      "value": 215318.6000635,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "bill_vs_coupon_split",
+      "security_family": "frn",
+      "investor_class": "all",
+      "measure": "total_issue_amount",
+      "value": 3047.115765,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "bill_vs_coupon_split",
+      "security_family": "nominal_coupon",
+      "investor_class": "all",
+      "measure": "total_issue_amount",
+      "value": 52581.2978577,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    },
+    {
+      "summary_type": "bill_vs_coupon_split",
+      "security_family": "tips",
+      "investor_class": "all",
+      "measure": "total_issue_amount",
+      "value": 2674.1682477,
+      "units": "USD billions",
+      "as_of_date": "2026-03-02",
+      "source_quality": "summary_ready",
+      "source_file": "investor_allotments_panel.csv"
+    }
+  ]
+}

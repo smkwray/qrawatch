@@ -1,0 +1,47 @@
+{
+  "title": "Data Sources Summary",
+  "rows": [
+    {
+      "source_family": "fiscaldata",
+      "raw_dir_exists": true,
+      "file_count": 16,
+      "manifest_exists": false,
+      "downloads_exists": false
+    },
+    {
+      "source_family": "fred",
+      "raw_dir_exists": true,
+      "file_count": 16,
+      "manifest_exists": false,
+      "downloads_exists": false
+    },
+    {
+      "source_family": "qra",
+      "raw_dir_exists": true,
+      "file_count": 267,
+      "manifest_exists": true,
+      "downloads_exists": true
+    },
+    {
+      "source_family": "investor_allotments",
+      "raw_dir_exists": true,
+      "file_count": 12,
+      "manifest_exists": true,
+      "downloads_exists": true
+    },
+    {
+      "source_family": "primary_dealer",
+      "raw_dir_exists": true,
+      "file_count": 13,
+      "manifest_exists": true,
+      "downloads_exists": true
+    },
+    {
+      "source_family": "sec_nmfp",
+      "raw_dir_exists": true,
+      "file_count": 97,
+      "manifest_exists": true,
+      "downloads_exists": true
+    }
+  ]
+}

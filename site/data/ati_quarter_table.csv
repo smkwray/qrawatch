@@ -1,0 +1,6 @@
+quarter,financing_need_bn,net_bills_bn,bill_share,missing_coupons_15_bn,missing_coupons_18_bn,missing_coupons_20_bn,ati_baseline_bn,seed_source,seed_quality
+2023Q4,852.0,513.0,0.602112676056338,385.2,359.64,342.6,359.64,user_note_table_2,note_estimate
+2024Q1,816.0,468.0,0.5735294117647058,345.6,321.12,304.79999999999995,321.12,user_note_table_2,note_estimate
+2024Q3,847.0,285.0,0.3364817001180638,157.95,132.54,115.6,132.54,user_note_table_2_adjusted,note_estimate_adjusted
+2024Q4,665.0,208.0,0.312781954887218,108.25,88.30000000000001,75.0,88.30000000000001,user_note_table_3_forecast,note_forecast
+2025Q1,770.0,200.0,0.2597402597402597,84.5,61.400000000000006,46.0,61.400000000000006,user_note_table_3_forecast,note_forecast

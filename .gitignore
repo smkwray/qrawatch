@@ -27,4 +27,3 @@ logs/**
 !output/README.md
 !logs/README.md
 !data/manual/**
-site/data/

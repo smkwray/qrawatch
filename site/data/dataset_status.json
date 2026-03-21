@@ -1,0 +1,77 @@
+{
+  "title": "Dataset Status",
+  "rows": [
+    {
+      "dataset": "official_capture",
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-20T23:08:28.763187+00:00"
+    },
+    {
+      "dataset": "official_ati",
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official_numeric",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-21T10:03:07.056437+00:00"
+    },
+    {
+      "dataset": "plumbing",
+      "readiness_tier": "headline_ready",
+      "source_quality": "headline_exact_net_with_labeled_fallbacks",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-20T23:08:40.924595+00:00"
+    },
+    {
+      "dataset": "duration",
+      "readiness_tier": "headline_ready",
+      "source_quality": "headline_hybrid_exact_with_labeled_fallbacks",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-20T23:08:42.669359+00:00"
+    },
+    {
+      "dataset": "extension_investor_allotments",
+      "readiness_tier": "summary_ready",
+      "source_quality": "summary_ready",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-20T23:08:31.389494+00:00"
+    },
+    {
+      "dataset": "extension_primary_dealer",
+      "readiness_tier": "summary_ready",
+      "source_quality": "summary_ready",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-20T23:08:33.595202+00:00"
+    },
+    {
+      "dataset": "extension_sec_nmfp",
+      "readiness_tier": "summary_ready",
+      "source_quality": "summary_ready",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-20T23:08:36.355040+00:00"
+    },
+    {
+      "dataset": "extension_tic",
+      "readiness_tier": "not_started",
+      "source_quality": "not_started",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": ""
+    }
+  ]
+}

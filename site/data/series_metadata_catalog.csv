@@ -1,0 +1,9 @@
+dataset,series_id,frequency,value_units,sign_convention,source_quality,series_role
+official_ati,ati_baseline_bn,quarterly,USD billions,Positive values imply bill issuance above the 18% baseline share.,exact_official_numeric,headline
+plumbing,bill_net_exact,weekly (W-WED),USD notional (weekly sum),Positive values imply more bill supply to the public.,exact_official_net,headline
+plumbing,nonbill_net_exact,weekly (W-WED),USD notional (weekly sum),Positive values imply more combined non-bill supply to the public.,exact_official_net,headline
+duration,headline_public_duration_supply,weekly (W-WED),USD notional (weekly sum),Positive values imply more duration supply to the public.,hybrid_exact_nonbill_net_plus_qt_proxy,headline
+duration,provisional_public_duration_supply,weekly (W-WED),USD notional (weekly sum),Positive values imply more duration supply to the public.,fallback_gross_coupon_proxy_plus_qt_proxy,fallback
+investor_allotments,investor_allotments_summary,auction-event,reported Treasury allotment units,Shares and amounts follow Treasury investor allotment source files.,summary_ready,headline
+primary_dealer,primary_dealer_summary,mixed,reported New York Fed units,Values follow the canonical dealer export source for each summary row.,summary_ready,headline
+sec_nmfp,sec_nmfp_summary,mixed,counts / availability flags,Positive counts indicate greater archive and field coverage.,summary_ready,headline
