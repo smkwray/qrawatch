@@ -84,20 +84,26 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "comparison_status",
     ],
     "qra_event_table.csv": [
+        "quarter",
         "event_id",
         "event_label",
         "event_date_aligned",
-        "expected_direction",
+        "policy_statement_url",
+        "current_quarter_action",
+        "forward_guidance_bias",
+        "headline_bucket",
+        "classification_confidence",
+        "classification_review_status",
     ],
     "qra_event_summary.csv": [
-        "expected_direction",
+        "headline_bucket",
         "DGS10_d1",
         "DGS10_d3",
     ],
     "qra_event_robustness.csv": [
         "sample_variant",
         "event_date_type",
-        "expected_direction",
+        "headline_bucket",
         "n_events",
     ],
     "plumbing_regression_summary.csv": [
@@ -183,12 +189,72 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
 }
 OPTIONAL_PUBLISH_SCHEMAS: dict[str, list[str]] = {
     "qra_event_elasticity.csv": [
+        "quarter",
         "event_id",
         "event_date_type",
+        "headline_bucket",
+        "classification_review_status",
+        "shock_review_status",
         "series",
         "window",
         "shock_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "shock_construction",
         "elasticity_bp_per_100bn",
+    ],
+    "qra_event_elasticity_diagnostic.csv": [
+        "quarter",
+        "event_id",
+        "event_date_type",
+        "headline_bucket",
+        "classification_review_status",
+        "shock_review_status",
+        "series",
+        "window",
+        "shock_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "shock_construction",
+        "elasticity_bp_per_100bn",
+    ],
+    "qra_event_shock_summary.csv": [
+        "quarter",
+        "event_id",
+        "event_date_type",
+        "headline_bucket",
+        "classification_review_status",
+        "shock_review_status",
+        "shock_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "shock_construction",
+        "usable_for_headline",
+    ],
+    "qra_event_shock_components.csv": [
+        "event_id",
+        "quarter",
+        "previous_event_id",
+        "previous_quarter",
+        "tenor",
+        "issue_type",
+        "current_total_bn",
+        "previous_total_bn",
+        "delta_bn",
+        "yield_date",
+        "yield_curve_source",
+        "tenor_yield_pct",
+        "tenor_modified_duration",
+        "duration_factor_source",
+        "dynamic_10y_eq_weight",
+        "contribution_dynamic_10y_eq_bn",
+        "dv01_per_1bn_usd",
+        "dv01_contribution_usd",
+        "tenor_weight_10y_eq",
+        "contribution_10y_eq_bn",
     ],
 }
 REQUIRED_EXTENSION_SUMMARY_READY = ("investor_allotments", "primary_dealer", "sec_nmfp")
@@ -198,6 +264,11 @@ PUBLIC_HYGIENE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"\b(?:memory-system\.md|handoff\.md|todo\.md|dontdo\.md|changes\.md)\b", "internal_workflow_reference"),
     (r"data/manual/", "manual_data_reference"),
 )
+QRA_ACTION_VALUES = {"tightening", "easing", "hold", "mixed", "pending"}
+QRA_GUIDANCE_VALUES = {"hawkish", "neutral", "dovish", "pending"}
+QRA_HEADLINE_BUCKET_VALUES = {"tightening", "easing", "control_hold", "exclude", "pending"}
+QRA_CONFIDENCE_VALUES = {"exact_statement", "table_diff", "hybrid", "heuristic", "pending"}
+QRA_REVIEW_VALUES = {"reviewed", "provisional", "pending"}
 
 
 def _coerce_timestamp(value: object) -> datetime | None:
@@ -257,6 +328,18 @@ def _has_seed_dependency(*values: object) -> bool:
             if part.strip() == "seed_csv":
                 return True
     return False
+
+
+def _invalid_enum_values(frame: pd.DataFrame, column: str, allowed: set[str]) -> list[str]:
+    if column not in frame.columns:
+        return []
+    return sorted(
+        {
+            str(value).strip()
+            for value in frame[column].dropna().astype(str)
+            if str(value).strip() and str(value).strip() not in allowed
+        }
+    )
 
 
 def _quarter_coverage(frame: pd.DataFrame) -> dict[str, int | float]:
@@ -431,6 +514,56 @@ def validate_official_ati_path(path: Path) -> tuple[list[str], list[str], dict[s
     }
 
 
+def _validate_qra_publish_frame(csv_name: str, frame: pd.DataFrame) -> list[str]:
+    errors: list[str] = []
+    if frame.empty:
+        return errors
+
+    if "quarter" in frame.columns and frame["quarter"].fillna("").astype(str).str.strip().eq("").any():
+        errors.append(f"qra_publish_null_quarter:{csv_name}")
+
+    for column, allowed in (
+        ("current_quarter_action", QRA_ACTION_VALUES),
+        ("forward_guidance_bias", QRA_GUIDANCE_VALUES),
+        ("headline_bucket", QRA_HEADLINE_BUCKET_VALUES),
+        ("classification_confidence", QRA_CONFIDENCE_VALUES),
+        ("classification_review_status", QRA_REVIEW_VALUES),
+        ("shock_review_status", QRA_REVIEW_VALUES),
+    ):
+        invalid = _invalid_enum_values(frame, column, allowed)
+        if invalid:
+            errors.append(f"qra_publish_invalid_enum:{csv_name}:{column}:{','.join(invalid)}")
+
+    if {"event_id", "event_date_type", "series", "window"}.issubset(frame.columns):
+        if frame.duplicated(subset=["event_id", "event_date_type", "series", "window"]).any():
+            errors.append(f"qra_publish_duplicate_event_series_window:{csv_name}")
+
+    if csv_name == "qra_event_elasticity.csv":
+        invalid_date_type = frame.loc[frame["event_date_type"].astype(str).str.strip() != "official_release_date"]
+        if not invalid_date_type.empty:
+            errors.append("qra_publish_noncanonical_date_type:qra_event_elasticity.csv")
+    if csv_name == "qra_event_shock_summary.csv":
+        invalid_date_type = frame.loc[frame["event_date_type"].astype(str).str.strip() != "official_release_date"]
+        if not invalid_date_type.empty:
+            errors.append("qra_publish_noncanonical_date_type:qra_event_shock_summary.csv")
+        if frame.duplicated(subset=["event_id", "event_date_type"]).any():
+            errors.append("qra_publish_duplicate_event_summary:qra_event_shock_summary.csv")
+
+    if {"usable_for_headline", "event_date_type", "headline_bucket", "classification_review_status", "shock_review_status"}.issubset(frame.columns):
+        flagged = frame.loc[frame["usable_for_headline"].map(_coerce_bool)]
+        if not flagged.empty:
+            invalid = flagged.loc[
+                (flagged["event_date_type"].astype(str).str.strip() != "official_release_date")
+                | (~flagged["headline_bucket"].astype(str).str.strip().isin({"tightening", "easing", "control_hold"}))
+                | (flagged["classification_review_status"].astype(str).str.strip() != "reviewed")
+                | (flagged["shock_review_status"].astype(str).str.strip() != "reviewed")
+            ]
+            if not invalid.empty:
+                errors.append(f"qra_publish_invalid_headline_semantics:{csv_name}")
+
+    return errors
+
+
 def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str], dict[str, int]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -460,6 +593,8 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
             errors.append(
                 f"publish_artifact_missing_columns:{csv_name}:{','.join(missing_cols)}"
             )
+        if csv_name.startswith("qra_event_"):
+            errors.extend(_validate_qra_publish_frame(csv_name, csv_frame))
 
     optional_required = set()
     for csv_name, required_columns in OPTIONAL_PUBLISH_SCHEMAS.items():
@@ -484,6 +619,8 @@ def validate_publish_artifacts(publish_dir: Path) -> tuple[list[str], list[str],
             errors.append(
                 f"publish_artifact_missing_columns:{csv_name}:{','.join(missing_cols)}"
             )
+        if csv_name.startswith("qra_event_"):
+            errors.extend(_validate_qra_publish_frame(csv_name, csv_frame))
 
     index_path = publish_dir / "index.json"
     if not index_path.exists():

@@ -156,3 +156,36 @@ def test_build_seed_rows_both_combines_backward_and_forward_sources() -> None:
     row_2024q2 = combined.loc[combined["quarter"] == "2024Q2"].iloc[0]
     assert row_2024q2["total_financing_need_bn"] == "202.0"
     assert row_2024q2["net_bill_issuance_bn"] == "-296.523"
+
+
+def test_build_seed_rows_prefers_exact_rows_over_richer_hybrid_rows() -> None:
+    historical_seed = _capture_frame(
+        [
+            {
+                "quarter": "2024Q1",
+                "qra_release_date": "2023-11-01",
+                "market_pricing_marker_minus_1d": "2023-10-31",
+                "source_doc_local": "/tmp/exact.html",
+                "source_doc_type": "official_quarterly_refunding_statement",
+                "qa_status": "manual_official_capture",
+                "notes": "exact",
+            },
+            {
+                "quarter": "2024Q1",
+                "qra_release_date": "2023-11-01",
+                "market_pricing_marker_minus_1d": "2023-10-31",
+                "total_financing_need_bn": "999",
+                "net_bill_issuance_bn": "111",
+                "source_doc_local": "data/manual/official_quarterly_refunding_historical_seed.csv",
+                "source_doc_type": "seed_csv",
+                "qa_status": "semi_automated_capture",
+                "notes": "hybrid",
+            },
+        ]
+    )
+
+    combined = build_seed_rows(direction="backward", historical_seed_df=historical_seed)
+
+    row = combined.iloc[0]
+    assert row["qa_status"] == "manual_official_capture"
+    assert row["notes"] == "exact"

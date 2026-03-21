@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from ati_shadow_policy.qra_capture import CAPTURE_COLUMNS, seed_capture_rows_from_local_sources
+from ati_shadow_policy.qra_capture import CAPTURE_COLUMNS, OFFICIAL_QA_STATUSES, seed_capture_rows_from_local_sources
 
 
 _STRING_MISSING = {"", "nan", "none"}
@@ -163,7 +163,7 @@ def _dedupe_by_quarter_richness(df: pd.DataFrame) -> pd.DataFrame:
         if len(group) == 1:
             deduped_rows.append(group.iloc[0])
             continue
-        selected = max(group.iterrows(), key=lambda item: _richness_score(item[1]))[1]
+        selected = max(group.iterrows(), key=lambda item: (_source_priority(item[1]), _richness_score(item[1])))[1]
         deduped_rows.append(selected)
     return _sort_capture_rows(pd.DataFrame(deduped_rows, columns=list(CAPTURE_COLUMNS)))
 
@@ -175,6 +175,27 @@ def _richness_score(row: pd.Series) -> int:
         if value:
             score += 1
     return score
+
+
+def _has_seed_dependency(row: pd.Series) -> bool:
+    text = "|".join(
+        [
+            _clean(row.get("source_doc_type", "")),
+            _clean(row.get("source_doc_local", "")),
+        ]
+    ).lower()
+    return "seed_csv" in text
+
+
+def _source_priority(row: pd.Series) -> int:
+    qa_status = _clean(row.get("qa_status", ""))
+    if qa_status in OFFICIAL_QA_STATUSES and not _has_seed_dependency(row):
+        return 3
+    if qa_status == "semi_automated_capture":
+        return 2
+    if qa_status == "seed_only":
+        return 1
+    return 0
 
 
 def _sort_capture_rows(df: pd.DataFrame) -> pd.DataFrame:

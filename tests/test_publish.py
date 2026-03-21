@@ -240,14 +240,38 @@ def test_build_qra_event_elasticity_publish_table_is_optional(tmp_path, monkeypa
     assert list(empty.columns) == [
         "quarter",
         "event_id",
+        "event_label",
+        "event_date_requested",
+        "event_date_aligned",
+        "event_date_type",
+        "policy_statement_url",
+        "financing_estimates_url",
+        "timing_quality",
+        "current_quarter_action",
+        "forward_guidance_bias",
+        "headline_bucket",
+        "shock_sign_curated",
+        "classification_confidence",
+        "classification_review_status",
         "series",
         "window",
-        "event_date_type",
-        "expected_direction",
+        "delta_pp",
+        "delta_bp",
         "shock_bn",
+        "previous_event_id",
+        "previous_quarter",
+        "gross_notional_delta_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "shock_construction",
+        "shock_source",
+        "shock_notes",
+        "shock_review_status",
+        "shock_missing_flag",
+        "small_denominator_flag",
         "elasticity_bp_per_100bn",
         "sign_flip_flag",
-        "small_denominator_flag",
         "usable_for_headline",
     ]
 
@@ -256,11 +280,35 @@ def test_build_qra_event_elasticity_publish_table_is_optional(tmp_path, monkeypa
             {
                 "quarter": "2024Q4",
                 "event_id": "qra_2024_07",
+                "event_label": "2024 Jul QRA",
+                "event_date_requested": "2024-07-31",
+                "event_date_aligned": "2024-07-31",
                 "series": "DGS10",
                 "window": "d3",
                 "event_date_type": "official_release_date",
-                "expected_direction": "classification_pending",
+                "policy_statement_url": "https://example.com/policy",
+                "financing_estimates_url": "https://example.com/financing",
+                "timing_quality": "same_day_release_bundle",
+                "current_quarter_action": "pending",
+                "forward_guidance_bias": "pending",
+                "headline_bucket": "pending",
+                "shock_sign_curated": "",
+                "classification_confidence": "pending",
+                "classification_review_status": "pending",
+                "delta_pp": 0.12,
+                "delta_bp": 12.0,
                 "shock_bn": 25.0,
+                "previous_event_id": "qra_2024_05",
+                "previous_quarter": "2024Q3",
+                "gross_notional_delta_bn": 40.0,
+                "schedule_diff_10y_eq_bn": 25.0,
+                "schedule_diff_dynamic_10y_eq_bn": 27.0,
+                "schedule_diff_dv01_usd": 2400000.0,
+                "shock_construction": "schedule_diff_primary",
+                "shock_source": "manual",
+                "shock_notes": "",
+                "shock_review_status": "provisional",
+                "shock_missing_flag": False,
                 "elasticity_bp_per_100bn": 12.0,
                 "sign_flip_flag": False,
                 "small_denominator_flag": False,
@@ -272,6 +320,184 @@ def test_build_qra_event_elasticity_publish_table_is_optional(tmp_path, monkeypa
     populated = publish.build_qra_event_elasticity_publish_table()
     assert populated.loc[0, "series"] == "DGS10"
     assert populated.loc[0, "elasticity_bp_per_100bn"] == 12.0
+    assert populated.loc[0, "schedule_diff_10y_eq_bn"] == 25.0
+
+    diagnostic = publish.build_qra_event_elasticity_diagnostic_publish_table()
+    assert diagnostic.loc[0, "event_date_type"] == "official_release_date"
+
+
+def test_build_qra_event_shock_components_publish_table_is_optional(tmp_path, monkeypatch):
+    tables_dir = tmp_path / "tables"
+    tables_dir.mkdir(parents=True)
+    monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
+
+    empty = publish.build_qra_event_shock_components_publish_table()
+    assert "contribution_10y_eq_bn" in empty.columns
+
+    pd.DataFrame(
+        [
+            {
+                "event_id": "qra_2023_05",
+                "quarter": "2023Q3",
+                "previous_event_id": "qra_2023_02",
+                "previous_quarter": "2023Q2",
+                "tenor": "10Y",
+                "issue_type": "nominal_coupon",
+                "current_total_bn": 9.0,
+                "previous_total_bn": 6.0,
+                "delta_bn": 3.0,
+                "yield_date": "2023-06-30",
+                "yield_curve_source": "fred_constant_maturity_prior_business_day",
+                "tenor_yield_pct": 4.1,
+                "tenor_modified_duration": 5.4,
+                "duration_factor_source": "fred_exact",
+                "dynamic_10y_eq_weight": 0.54,
+                "contribution_dynamic_10y_eq_bn": 1.62,
+                "dv01_per_1bn_usd": 540000.0,
+                "dv01_contribution_usd": 1620000.0,
+                "tenor_weight_10y_eq": 1.0,
+                "contribution_10y_eq_bn": 3.0,
+            }
+        ]
+    ).to_csv(tables_dir / "qra_event_shock_components.csv", index=False)
+
+    populated = publish.build_qra_event_shock_components_publish_table()
+    assert populated.loc[0, "tenor"] == "10Y"
+    assert populated.loc[0, "yield_curve_source"] == "fred_constant_maturity_prior_business_day"
+    assert populated.loc[0, "duration_factor_source"] == "fred_exact"
+
+
+def test_build_qra_event_shock_summary_publish_table_is_canonical(tmp_path, monkeypatch):
+    tables_dir = tmp_path / "tables"
+    tables_dir.mkdir(parents=True)
+    monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
+
+    empty = publish.build_qra_event_shock_summary_publish_table()
+    assert "usable_for_headline" in empty.columns
+
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2024Q3",
+                "event_id": "qra_2024_07",
+                "event_label": "2024 Jul QRA",
+                "event_date_requested": "2024-07-31",
+                "event_date_aligned": "2024-07-31",
+                "event_date_type": "official_release_date",
+                "policy_statement_url": "https://example.com/policy",
+                "financing_estimates_url": "https://example.com/financing",
+                "timing_quality": "same_day_release_bundle",
+                "current_quarter_action": "tightening",
+                "forward_guidance_bias": "neutral",
+                "headline_bucket": "tightening",
+                "shock_sign_curated": "1",
+                "classification_confidence": "exact_statement",
+                "classification_review_status": "reviewed",
+                "series": "DGS10",
+                "window": "d1",
+                "delta_pp": 0.10,
+                "delta_bp": 10.0,
+                "shock_bn": 25.0,
+                "previous_event_id": "qra_2024_05",
+                "previous_quarter": "2024Q2",
+                "gross_notional_delta_bn": 40.0,
+                "schedule_diff_10y_eq_bn": 25.0,
+                "schedule_diff_dynamic_10y_eq_bn": 30.0,
+                "schedule_diff_dv01_usd": 2600000.0,
+                "shock_construction": "schedule_diff_primary",
+                "shock_source": "manual",
+                "shock_notes": "",
+                "shock_review_status": "reviewed",
+                "shock_missing_flag": False,
+                "small_denominator_flag": False,
+                "elasticity_bp_per_100bn": 40.0,
+                "sign_flip_flag": False,
+                "usable_for_headline": True,
+            },
+            {
+                "quarter": "2024Q3",
+                "event_id": "qra_2024_07",
+                "event_label": "2024 Jul QRA",
+                "event_date_requested": "2024-07-31",
+                "event_date_aligned": "2024-07-31",
+                "event_date_type": "official_release_date",
+                "policy_statement_url": "https://example.com/policy",
+                "financing_estimates_url": "https://example.com/financing",
+                "timing_quality": "same_day_release_bundle",
+                "current_quarter_action": "tightening",
+                "forward_guidance_bias": "neutral",
+                "headline_bucket": "tightening",
+                "shock_sign_curated": "1",
+                "classification_confidence": "exact_statement",
+                "classification_review_status": "reviewed",
+                "series": "DGS10",
+                "window": "d3",
+                "delta_pp": 0.12,
+                "delta_bp": 12.0,
+                "shock_bn": 25.0,
+                "previous_event_id": "qra_2024_05",
+                "previous_quarter": "2024Q2",
+                "gross_notional_delta_bn": 40.0,
+                "schedule_diff_10y_eq_bn": 25.0,
+                "schedule_diff_dynamic_10y_eq_bn": 30.0,
+                "schedule_diff_dv01_usd": 2600000.0,
+                "shock_construction": "schedule_diff_primary",
+                "shock_source": "manual",
+                "shock_notes": "",
+                "shock_review_status": "reviewed",
+                "shock_missing_flag": False,
+                "small_denominator_flag": False,
+                "elasticity_bp_per_100bn": 48.0,
+                "sign_flip_flag": False,
+                "usable_for_headline": True,
+            },
+            {
+                "quarter": "2024Q3",
+                "event_id": "qra_2024_07",
+                "event_label": "2024 Jul QRA",
+                "event_date_requested": "2024-07-30",
+                "event_date_aligned": "2024-07-30",
+                "event_date_type": "market_pricing_marker_minus_1d",
+                "policy_statement_url": "https://example.com/policy",
+                "financing_estimates_url": "https://example.com/financing",
+                "timing_quality": "same_day_release_bundle",
+                "current_quarter_action": "tightening",
+                "forward_guidance_bias": "neutral",
+                "headline_bucket": "tightening",
+                "shock_sign_curated": "1",
+                "classification_confidence": "exact_statement",
+                "classification_review_status": "reviewed",
+                "series": "DGS10",
+                "window": "d1",
+                "delta_pp": 0.10,
+                "delta_bp": 10.0,
+                "shock_bn": 25.0,
+                "previous_event_id": "qra_2024_05",
+                "previous_quarter": "2024Q2",
+                "gross_notional_delta_bn": 40.0,
+                "schedule_diff_10y_eq_bn": 25.0,
+                "schedule_diff_dynamic_10y_eq_bn": 30.0,
+                "schedule_diff_dv01_usd": 2600000.0,
+                "shock_construction": "schedule_diff_primary",
+                "shock_source": "manual",
+                "shock_notes": "",
+                "shock_review_status": "reviewed",
+                "shock_missing_flag": False,
+                "small_denominator_flag": False,
+                "elasticity_bp_per_100bn": 40.0,
+                "sign_flip_flag": False,
+                "usable_for_headline": False,
+            },
+        ]
+    ).to_csv(tables_dir / "qra_event_elasticity.csv", index=False)
+
+    summary = publish.build_qra_event_shock_summary_publish_table()
+    assert len(summary) == 1
+    assert summary.loc[0, "event_date_type"] == "official_release_date"
+    assert summary.loc[0, "schedule_diff_10y_eq_bn"] == 25.0
+    assert summary.loc[0, "schedule_diff_dynamic_10y_eq_bn"] == 30.0
+    assert summary.loc[0, "schedule_diff_dv01_usd"] == 2600000.0
+    assert summary.loc[0, "usable_for_headline"]
 
 
 def _write_extension_summary_publish_file(path: Path, stem: str) -> None:
@@ -397,11 +623,13 @@ def test_dataset_status_derives_summary_ready_from_extension_status_rows(monkeyp
     table = publish.build_dataset_status_table()
 
     official_capture = table.loc[table["dataset"] == "official_capture"].iloc[0]
+    qra_elasticity = table.loc[table["dataset"] == "qra_event_elasticity"].iloc[0]
     investor = table.loc[table["dataset"] == "extension_investor_allotments"].iloc[0]
     primary = table.loc[table["dataset"] == "extension_primary_dealer"].iloc[0]
 
     assert not bool(official_capture["headline_ready"])
     assert official_capture["public_role"] == "supporting"
+    assert qra_elasticity["readiness_tier"] == "not_started"
     assert investor["readiness_tier"] == "summary_ready"
     assert primary["readiness_tier"] == "summary_ready"
     assert investor["source_quality"] == "summary_ready"

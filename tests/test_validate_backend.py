@@ -498,12 +498,21 @@ def test_validate_backend_validates_qra_event_elasticity_when_present(tmp_path: 
     pd.DataFrame(
         [
             {
+                "quarter": "2024Q4",
                 "event_id": "qra_2024_07",
                 "event_date_type": "official_release_date",
+                "headline_bucket": "tightening",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
                 "series": "DGS10",
                 "window": "d3",
                 "shock_bn": 25.0,
+                "schedule_diff_10y_eq_bn": 25.0,
+                "schedule_diff_dynamic_10y_eq_bn": 27.0,
+                "schedule_diff_dv01_usd": 2400000.0,
+                "shock_construction": "schedule_diff_primary",
                 "elasticity_bp_per_100bn": 12.0,
+                "usable_for_headline": True,
             }
         ]
     ).to_csv(publish_path / "qra_event_elasticity.csv", index=False)
@@ -515,9 +524,45 @@ def test_validate_backend_validates_qra_event_elasticity_when_present(tmp_path: 
         "# qra_event_elasticity\n",
         encoding="utf-8",
     )
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2024Q4",
+                "event_id": "qra_2024_07",
+                "event_date_type": "official_release_date",
+                "headline_bucket": "tightening",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
+                "series": "DGS10",
+                "window": "d3",
+                "shock_bn": 25.0,
+                "schedule_diff_10y_eq_bn": 25.0,
+                "schedule_diff_dynamic_10y_eq_bn": 27.0,
+                "schedule_diff_dv01_usd": 2400000.0,
+                "shock_construction": "schedule_diff_primary",
+                "elasticity_bp_per_100bn": 12.0,
+                "usable_for_headline": True,
+            }
+        ]
+    ).to_csv(publish_path / "qra_event_elasticity_diagnostic.csv", index=False)
+    (publish_path / "qra_event_elasticity_diagnostic.json").write_text(
+        json.dumps({"title": "qra_event_elasticity_diagnostic", "rows": []}),
+        encoding="utf-8",
+    )
+    (publish_path / "qra_event_elasticity_diagnostic.md").write_text(
+        "# qra_event_elasticity_diagnostic\n",
+        encoding="utf-8",
+    )
     index_payload = json.loads((publish_path / "index.json").read_text(encoding="utf-8"))
     index_payload["artifacts"].extend(
-        ["qra_event_elasticity.csv", "qra_event_elasticity.json", "qra_event_elasticity.md"]
+        [
+            "qra_event_elasticity.csv",
+            "qra_event_elasticity.json",
+            "qra_event_elasticity.md",
+            "qra_event_elasticity_diagnostic.csv",
+            "qra_event_elasticity_diagnostic.json",
+            "qra_event_elasticity_diagnostic.md",
+        ]
     )
     index_payload["artifact_count"] = len(index_payload["artifacts"])
     (publish_path / "index.json").write_text(json.dumps(index_payload), encoding="utf-8")
@@ -608,6 +653,155 @@ def test_validate_backend_detects_seed_forecast_overlap_with_official(tmp_path: 
     )
 
     assert "ati_seed_forecast_contains_official_quarters:2026Q1" in result.errors
+
+
+def test_validate_backend_detects_noncanonical_qra_elasticity_rows(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(tmp_path)
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2024Q4",
+                "event_id": "qra_2024_07",
+                "event_date_type": "market_pricing_marker_minus_1d",
+                "headline_bucket": "tightening",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
+                "series": "DGS10",
+                "window": "d3",
+                "shock_bn": 25.0,
+                "schedule_diff_10y_eq_bn": 25.0,
+                "schedule_diff_dynamic_10y_eq_bn": 27.0,
+                "schedule_diff_dv01_usd": 2400000.0,
+                "shock_construction": "schedule_diff_primary",
+                "elasticity_bp_per_100bn": 12.0,
+                "usable_for_headline": True,
+            }
+        ]
+    ).to_csv(publish_path / "qra_event_elasticity.csv", index=False)
+    (publish_path / "qra_event_elasticity.json").write_text(
+        json.dumps({"title": "qra_event_elasticity", "rows": []}),
+        encoding="utf-8",
+    )
+    (publish_path / "qra_event_elasticity.md").write_text("# qra_event_elasticity\n", encoding="utf-8")
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2024Q4",
+                "event_id": "qra_2024_07",
+                "event_date_type": "market_pricing_marker_minus_1d",
+                "headline_bucket": "tightening",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
+                "series": "DGS10",
+                "window": "d3",
+                "shock_bn": 25.0,
+                "schedule_diff_10y_eq_bn": 25.0,
+                "schedule_diff_dynamic_10y_eq_bn": 27.0,
+                "schedule_diff_dv01_usd": 2400000.0,
+                "shock_construction": "schedule_diff_primary",
+                "elasticity_bp_per_100bn": 12.0,
+                "usable_for_headline": True,
+            }
+        ]
+    ).to_csv(publish_path / "qra_event_elasticity_diagnostic.csv", index=False)
+    (publish_path / "qra_event_elasticity_diagnostic.json").write_text(
+        json.dumps({"title": "qra_event_elasticity_diagnostic", "rows": []}),
+        encoding="utf-8",
+    )
+    (publish_path / "qra_event_elasticity_diagnostic.md").write_text(
+        "# qra_event_elasticity_diagnostic\n",
+        encoding="utf-8",
+    )
+    index_payload = json.loads((publish_path / "index.json").read_text(encoding="utf-8"))
+    index_payload["artifacts"].extend(
+        [
+            "qra_event_elasticity.csv",
+            "qra_event_elasticity.json",
+            "qra_event_elasticity.md",
+            "qra_event_elasticity_diagnostic.csv",
+            "qra_event_elasticity_diagnostic.json",
+            "qra_event_elasticity_diagnostic.md",
+        ]
+    )
+    index_payload["artifact_count"] = len(index_payload["artifacts"])
+    (publish_path / "index.json").write_text(json.dumps(index_payload), encoding="utf-8")
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    assert "qra_publish_noncanonical_date_type:qra_event_elasticity.csv" in result.errors
+
+
+def test_validate_backend_validates_qra_event_shock_components_schema_when_present(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(tmp_path)
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+    pd.DataFrame(
+        [
+            {
+                "event_id": "qra_2024_07",
+                "quarter": "2024Q3",
+                "previous_event_id": "qra_2024_05",
+                "previous_quarter": "2024Q2",
+                "tenor": "10Y",
+                "issue_type": "nominal_coupon",
+                "current_total_bn": 9.0,
+                "previous_total_bn": 6.0,
+                "delta_bn": 3.0,
+                "yield_date": "2024-07-01",
+                "yield_curve_source": "fred_constant_maturity_prior_business_day",
+                "tenor_yield_pct": 4.0,
+                "tenor_modified_duration": 5.4,
+                "duration_factor_source": "fred_exact",
+                "dynamic_10y_eq_weight": 0.54,
+                "contribution_dynamic_10y_eq_bn": 1.62,
+                "dv01_per_1bn_usd": 540000.0,
+                "dv01_contribution_usd": 1620000.0,
+                "tenor_weight_10y_eq": 1.0,
+                "contribution_10y_eq_bn": 3.0,
+            }
+        ]
+    ).to_csv(publish_path / "qra_event_shock_components.csv", index=False)
+    (publish_path / "qra_event_shock_components.json").write_text(
+        json.dumps({"title": "qra_event_shock_components", "rows": []}),
+        encoding="utf-8",
+    )
+    (publish_path / "qra_event_shock_components.md").write_text(
+        "# qra_event_shock_components\n",
+        encoding="utf-8",
+    )
+    index_payload = json.loads((publish_path / "index.json").read_text(encoding="utf-8"))
+    index_payload["artifacts"].extend(
+        [
+            "qra_event_shock_components.csv",
+            "qra_event_shock_components.json",
+            "qra_event_shock_components.md",
+        ]
+    )
+    index_payload["artifact_count"] = len(index_payload["artifacts"])
+    (publish_path / "index.json").write_text(json.dumps(index_payload), encoding="utf-8")
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    assert not any(
+        message.startswith("publish_artifact_missing_columns:qra_event_shock_components.csv")
+        for message in result.errors
+    )
+    assert not any(
+        message.startswith("publish_artifact_missing:qra_event_shock_components")
+        for message in result.errors
+    )
 
 
 def test_validate_backend_detects_extension_headline_semantics_violation(tmp_path: Path) -> None:

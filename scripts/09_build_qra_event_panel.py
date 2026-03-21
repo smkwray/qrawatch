@@ -13,15 +13,57 @@ import pandas as pd
 from ati_shadow_policy.io_utils import write_df
 from ati_shadow_policy.paths import MANUAL_DIR, PROCESSED_DIR, RAW_DIR, ensure_project_dirs
 from ati_shadow_policy.research.event_study import build_event_panel
+from ati_shadow_policy.research.qra_classification import derive_legacy_expected_direction
 
 VALUE_COLUMNS = ["THREEFYTP10", "DGS10", "DGS2", "DGS30", "SP500", "VIXCLS"]
 
+
+def _coalesce(left: pd.Series, right: pd.Series) -> pd.Series:
+    return left.where(left.notna() & left.astype(str).str.strip().ne(""), right)
+
+
+def _load_qra_events() -> pd.DataFrame:
+    events = pd.read_csv(MANUAL_DIR / "qra_event_seed.csv")
+    calendar_path = MANUAL_DIR / "qra_release_calendar_seed.csv"
+    if calendar_path.exists():
+        calendar = pd.read_csv(calendar_path).rename(
+            columns={
+                "notes": "calendar_notes",
+                "seed_source": "calendar_seed_source",
+                "event_label": "calendar_event_label",
+                "market_pricing_marker_minus_1d": "calendar_market_pricing_marker_minus_1d",
+            }
+        )
+        events = events.merge(calendar, on="event_id", how="left")
+        for left_col, right_col in (
+            ("event_label", "calendar_event_label"),
+            ("market_pricing_marker_minus_1d", "calendar_market_pricing_marker_minus_1d"),
+        ):
+            if right_col in events.columns:
+                events[left_col] = _coalesce(events[left_col], events[right_col])
+        if "policy_statement_release_date" in events.columns:
+            events["official_release_date"] = _coalesce(
+                events["official_release_date"],
+                events["policy_statement_release_date"],
+            )
+
+    derived = events.apply(derive_legacy_expected_direction, axis=1)
+    if "expected_direction" not in events.columns:
+        events["expected_direction"] = derived
+    else:
+        events["expected_direction"] = events["expected_direction"].where(
+            events["expected_direction"].fillna("").astype(str).str.strip().ne(""),
+            derived,
+        )
+    return events
+
 def main() -> None:
     ensure_project_dirs()
-    events = pd.read_csv(MANUAL_DIR / "qra_event_seed.csv")
-    events = events.loc[
-        events["expected_direction"].fillna("").astype(str).str.strip().ne("")
-    ].copy()
+    events = _load_qra_events()
+    if "classification_review_status" in events.columns:
+        events = events.loc[
+            events["classification_review_status"].fillna("").astype(str).str.strip().ne("")
+        ].copy()
     fred = pd.read_csv(RAW_DIR / "fred" / "core_wide.csv")
     fred["date"] = pd.to_datetime(fred["date"])
 

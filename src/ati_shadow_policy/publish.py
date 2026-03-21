@@ -423,15 +423,28 @@ def build_ati_seed_vs_official_comparison() -> pd.DataFrame:
 def build_qra_event_publish_table() -> pd.DataFrame:
     df = pd.read_csv(PROCESSED_DIR / "qra_event_panel.csv")
     id_cols = [
+        "quarter",
         "event_id",
         "event_label",
+        "official_release_date",
+        "market_pricing_marker_minus_1d",
         "event_date_requested",
         "event_date_aligned",
         "event_date_type",
+        "policy_statement_url",
+        "financing_estimates_url",
+        "timing_quality",
         "expected_direction",
+        "current_quarter_action",
+        "forward_guidance_bias",
+        "headline_bucket",
+        "shock_sign_curated",
+        "classification_confidence",
+        "classification_review_status",
     ]
     metric_cols = [c for c in df.columns if c.endswith("_d1") or c.endswith("_d3")]
-    return df[id_cols + sorted(metric_cols)].copy()
+    keep = [c for c in id_cols if c in df.columns]
+    return df[keep + sorted(metric_cols)].copy()
 
 
 def build_qra_summary_publish_table() -> pd.DataFrame:
@@ -441,27 +454,155 @@ def build_qra_robustness_publish_table() -> pd.DataFrame:
     path = TABLES_DIR / "qra_event_summary_robustness.csv"
     if not path.exists():
         return pd.DataFrame(
-            columns=["sample_variant", "event_date_type", "expected_direction", "n_events"]
+            columns=["sample_variant", "event_date_type", "headline_bucket", "n_events"]
         )
     return pd.read_csv(path)
+
+
+def _qra_elasticity_publish_columns() -> list[str]:
+    return [
+        "quarter",
+        "event_id",
+        "event_label",
+        "event_date_requested",
+        "event_date_aligned",
+        "event_date_type",
+        "policy_statement_url",
+        "financing_estimates_url",
+        "timing_quality",
+        "current_quarter_action",
+        "forward_guidance_bias",
+        "headline_bucket",
+        "shock_sign_curated",
+        "classification_confidence",
+        "classification_review_status",
+        "series",
+        "window",
+        "delta_pp",
+        "delta_bp",
+        "shock_bn",
+        "previous_event_id",
+        "previous_quarter",
+        "gross_notional_delta_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "shock_construction",
+        "shock_source",
+        "shock_notes",
+        "shock_review_status",
+        "shock_missing_flag",
+        "small_denominator_flag",
+        "elasticity_bp_per_100bn",
+        "sign_flip_flag",
+        "usable_for_headline",
+    ]
+
+
+def _empty_qra_elasticity_publish_frame() -> pd.DataFrame:
+    return pd.DataFrame(columns=_qra_elasticity_publish_columns())
+
+
+def _qra_event_shock_summary_publish_columns() -> list[str]:
+    return [
+        "quarter",
+        "event_id",
+        "event_label",
+        "event_date_requested",
+        "event_date_aligned",
+        "event_date_type",
+        "policy_statement_url",
+        "financing_estimates_url",
+        "timing_quality",
+        "current_quarter_action",
+        "forward_guidance_bias",
+        "headline_bucket",
+        "shock_sign_curated",
+        "classification_confidence",
+        "classification_review_status",
+        "shock_bn",
+        "previous_event_id",
+        "previous_quarter",
+        "gross_notional_delta_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "shock_construction",
+        "shock_source",
+        "shock_notes",
+        "shock_review_status",
+        "shock_missing_flag",
+        "small_denominator_flag",
+        "sign_flip_flag",
+        "usable_for_headline",
+    ]
+
+
+def _empty_qra_event_shock_summary_publish_frame() -> pd.DataFrame:
+    return pd.DataFrame(columns=_qra_event_shock_summary_publish_columns())
 
 
 def build_qra_event_elasticity_publish_table() -> pd.DataFrame:
     path = TABLES_DIR / "qra_event_elasticity.csv"
     if not path.exists():
+        return _empty_qra_elasticity_publish_frame()
+    df = pd.read_csv(path)
+    df = df.loc[df.get("event_date_type", pd.Series(dtype=str)).astype(str) == "official_release_date"].copy()
+    keep = [column for column in _qra_elasticity_publish_columns() if column in df.columns]
+    return df[keep].reset_index(drop=True)
+
+
+def build_qra_event_elasticity_diagnostic_publish_table() -> pd.DataFrame:
+    path = TABLES_DIR / "qra_event_elasticity.csv"
+    if not path.exists():
+        return _empty_qra_elasticity_publish_frame()
+    df = pd.read_csv(path)
+    keep = [column for column in _qra_elasticity_publish_columns() if column in df.columns]
+    return df[keep].copy()
+
+
+def build_qra_event_shock_summary_publish_table() -> pd.DataFrame:
+    path = TABLES_DIR / "qra_event_elasticity.csv"
+    if not path.exists():
+        return _empty_qra_event_shock_summary_publish_frame()
+    df = pd.read_csv(path)
+    df = df.loc[df.get("event_date_type", pd.Series(dtype=str)).astype(str) == "official_release_date"].copy()
+    if df.empty:
+        return _empty_qra_event_shock_summary_publish_frame()
+    keep = [column for column in _qra_event_shock_summary_publish_columns() if column in df.columns]
+    return (
+        df[keep]
+        .drop_duplicates(subset=["event_id", "event_date_type"], keep="first")
+        .sort_values(["event_date_requested", "event_id"], kind="stable")
+        .reset_index(drop=True)
+    )
+
+
+def build_qra_event_shock_components_publish_table() -> pd.DataFrame:
+    path = TABLES_DIR / "qra_event_shock_components.csv"
+    if not path.exists():
         return pd.DataFrame(
             columns=[
-                "quarter",
                 "event_id",
-                "series",
-                "window",
-                "event_date_type",
-                "expected_direction",
-                "shock_bn",
-                "elasticity_bp_per_100bn",
-                "sign_flip_flag",
-                "small_denominator_flag",
-                "usable_for_headline",
+                "quarter",
+                "previous_event_id",
+                "previous_quarter",
+                "tenor",
+                "issue_type",
+                "current_total_bn",
+                "previous_total_bn",
+                "delta_bn",
+                "yield_date",
+                "yield_curve_source",
+                "tenor_yield_pct",
+                "tenor_modified_duration",
+                "duration_factor_source",
+                "dynamic_10y_eq_weight",
+                "contribution_dynamic_10y_eq_bn",
+                "dv01_per_1bn_usd",
+                "dv01_contribution_usd",
+                "tenor_weight_10y_eq",
+                "contribution_10y_eq_bn",
             ]
         )
     return pd.read_csv(path)
@@ -920,11 +1061,78 @@ def _artifact_mtime(path: Path) -> str:
     return datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).isoformat()
 
 
+def _qra_elasticity_readiness(path: Path) -> dict[str, object]:
+    if not path.exists():
+        return {
+            "readiness_tier": "not_started",
+            "fallback_only": True,
+            "missing_critical_fields": "",
+        }
+    try:
+        df = pd.read_csv(path)
+    except Exception:
+        return {
+            "readiness_tier": "schema_incomplete",
+            "fallback_only": True,
+            "missing_critical_fields": "read_error",
+        }
+
+    missing: list[str] = []
+    required_columns = {
+        "quarter",
+        "event_id",
+        "event_date_type",
+        "series",
+        "window",
+        "headline_bucket",
+        "classification_review_status",
+        "shock_review_status",
+        "usable_for_headline",
+        "elasticity_bp_per_100bn",
+    }
+    for column in required_columns:
+        if column not in df.columns:
+            missing.append(f"missing_column:{column}")
+    if "quarter" in df.columns and df["quarter"].fillna("").astype(str).str.strip().eq("").any():
+        missing.append("null_quarter")
+    if {"event_id", "event_date_type", "series", "window"}.issubset(df.columns):
+        if df.duplicated(subset=["event_id", "event_date_type", "series", "window"]).any():
+            missing.append("duplicate_event_series_window")
+    if "shock_review_status" in df.columns:
+        invalid = sorted(
+            {
+                str(value)
+                for value in df["shock_review_status"].dropna().astype(str)
+                if str(value).strip() and str(value).strip() not in {"reviewed", "provisional", "pending"}
+            }
+        )
+        if invalid:
+            missing.append("invalid_shock_review_status")
+    if "classification_review_status" in df.columns:
+        invalid = sorted(
+            {
+                str(value)
+                for value in df["classification_review_status"].dropna().astype(str)
+                if str(value).strip() and str(value).strip() not in {"reviewed", "provisional", "pending"}
+            }
+        )
+        if invalid:
+            missing.append("invalid_classification_review_status")
+
+    readiness_tier = "supporting_ready" if not missing else "supporting_provisional"
+    return {
+        "readiness_tier": readiness_tier,
+        "fallback_only": readiness_tier != "supporting_ready",
+        "missing_critical_fields": "|".join(missing),
+    }
+
+
 def build_dataset_status_table() -> pd.DataFrame:
     official_capture = build_official_capture_readiness_table()
     extension_status = build_extension_status_table()
     official_ati_headline = _official_ati_headline_table()
     official_ati_headline_ready = not official_ati_headline.empty
+    qra_elasticity_readiness = _qra_elasticity_readiness(TABLES_DIR / "qra_event_elasticity.csv")
     rows = [
         {
             "dataset": "official_capture",
@@ -960,13 +1168,11 @@ def build_dataset_status_table() -> pd.DataFrame:
         },
         {
             "dataset": "qra_event_elasticity",
-            "readiness_tier": (
-                "supporting_ready" if (TABLES_DIR / "qra_event_elasticity.csv").exists() else "not_started"
-            ),
+            "readiness_tier": str(qra_elasticity_readiness["readiness_tier"]),
             "source_quality": "manual_qra_shock_template_plus_event_panel",
             "headline_ready": False,
-            "fallback_only": not (TABLES_DIR / "qra_event_elasticity.csv").exists(),
-            "missing_critical_fields": "",
+            "fallback_only": bool(qra_elasticity_readiness["fallback_only"]),
+            "missing_critical_fields": str(qra_elasticity_readiness["missing_critical_fields"]),
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_event_elasticity.csv"),
             "public_role": "supporting",
         },
@@ -1037,6 +1243,22 @@ def build_publish_artifacts() -> None:
     publish_table("qra_event_robustness", "QRA Event Robustness", build_qra_robustness_publish_table())
     if (TABLES_DIR / "qra_event_elasticity.csv").exists():
         publish_table("qra_event_elasticity", "QRA Event Elasticity", build_qra_event_elasticity_publish_table())
+        publish_table(
+            "qra_event_elasticity_diagnostic",
+            "QRA Event Elasticity Diagnostic",
+            build_qra_event_elasticity_diagnostic_publish_table(),
+        )
+        publish_table(
+            "qra_event_shock_summary",
+            "QRA Event Shock Summary",
+            build_qra_event_shock_summary_publish_table(),
+        )
+    if (TABLES_DIR / "qra_event_shock_components.csv").exists():
+        publish_table(
+            "qra_event_shock_components",
+            "QRA Event Shock Components",
+            build_qra_event_shock_components_publish_table(),
+        )
     publish_table("plumbing_regression_summary", "Plumbing Regression Summary", build_plumbing_publish_table())
     publish_table("plumbing_robustness", "Plumbing Robustness", build_plumbing_robustness_publish_table())
     publish_table("duration_supply_summary", "Duration Supply Summary", build_duration_publish_table())

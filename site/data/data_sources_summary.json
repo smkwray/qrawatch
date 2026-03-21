@@ -11,14 +11,14 @@
     {
       "source_family": "fred",
       "raw_dir_exists": true,
-      "file_count": 16,
+      "file_count": 20,
       "manifest_exists": false,
       "downloads_exists": false
     },
     {
       "source_family": "qra",
       "raw_dir_exists": true,
-      "file_count": 277,
+      "file_count": 278,
       "manifest_exists": true,
       "downloads_exists": true
     },

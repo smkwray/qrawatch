@@ -12,8 +12,32 @@
     "source_family": "FRED"
   },
   {
+    "series_id": "DGS3",
+    "description": "3-year Treasury yield",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "DGS5",
+    "description": "5-year Treasury yield",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "DGS7",
+    "description": "7-year Treasury yield",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
     "series_id": "DGS10",
     "description": "10-year Treasury yield",
+    "frequency": "daily",
+    "source_family": "FRED"
+  },
+  {
+    "series_id": "DGS20",
+    "description": "20-year Treasury yield",
     "frequency": "daily",
     "source_family": "FRED"
   },

@@ -1,15 +1,15 @@
-event_id,event_label,official_release_date,market_pricing_marker_minus_1d,expected_direction,notes,seed_source
-qra_2022_05,2022 May QRA,2022-05-04,2022-05-03,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
-qra_2022_08,2022 Aug QRA,2022-08-03,2022-08-02,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
-qra_2022_11,2022 Nov QRA,2022-11-02,2022-11-01,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
-qra_2023_02,2023 Feb QRA,2023-02-01,2023-01-31,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
-qra_2023_05,2023 May QRA,2023-05-03,2023-05-02,classification_pending,Historical backfill scaffold from official Treasury QRA release dates.,official_treasury_release
-qra_2023_08,2023 Aug QRA,2023-08-02,2023-08-01,tightening_duration_supply,QRA signaled larger coupon supply and gradual terming out from debt-limit bills.,user_note_qra_dates
-qra_2023_11,2023 Nov QRA,2023-11-01,2023-10-31,easing_coupon_restraint,QRA indicated coupon supply would remain roughly constant and not rise dramatically.,user_note_qra_dates
-qra_2024_01,2024 Jan QRA,2024-01-31,2024-01-30,mixed_modest_tightening,Modest coupon increase tilted toward shorter-duration coupons.,user_note_qra_dates
-qra_2024_05,2024 May QRA,2024-05-01,2024-04-30,easing_hold_duration_constant,Treasury did not increase coupon sizes again and reaffirmed guidance against increases for several quarters.,user_note_qra_dates
-qra_2024_07,2024 Jul QRA,2024-07-31,2024-07-30,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
-qra_2024_10,2024 Oct QRA,2024-10-30,2024-10-29,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
-qra_2025_02,2025 Feb QRA,2025-02-05,2025-02-04,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
-qra_2025_04,2025 Apr QRA,2025-04-30,2025-04-29,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
-qra_2025_07,2025 Jul QRA,2025-07-30,2025-07-29,classification_pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+event_id,event_label,official_release_date,market_pricing_marker_minus_1d,expected_direction,current_quarter_action,forward_guidance_bias,headline_bucket,shock_sign_curated,classification_confidence,classification_review_status,notes,seed_source
+qra_2022_05,2022 May QRA,2022-05-04,2022-05-03,easing,easing,neutral,easing,-1,exact_statement,reviewed,Reviewed easing quarter from official schedule change.,official_treasury_release
+qra_2022_08,2022 Aug QRA,2022-08-03,2022-08-02,hold,hold,neutral,control_hold,0,exact_statement,reviewed,Reviewed control hold quarter from official statement.,official_treasury_release
+qra_2022_11,2022 Nov QRA,2022-11-02,2022-11-01,hold,hold,neutral,control_hold,0,exact_statement,reviewed,Reviewed control hold quarter from official statement.,official_treasury_release
+qra_2023_02,2023 Feb QRA,2023-02-01,2023-01-31,hold_hawkish_guidance,hold,hawkish,exclude,0,exact_statement,reviewed,Reviewed hold quarter with hawkish forward guidance.,official_treasury_release
+qra_2023_05,2023 May QRA,2023-05-03,2023-05-02,tightening,tightening,neutral,tightening,1,exact_statement,reviewed,Reviewed explicit increase quarter from official statement.,official_treasury_release
+qra_2023_08,2023 Aug QRA,2023-08-02,2023-08-01,tightening,tightening,neutral,tightening,1,exact_statement,reviewed,Explicit tightening quarter from official statement.,user_note_qra_dates
+qra_2023_11,2023 Nov QRA,2023-11-01,2023-10-31,easing,easing,dovish,easing,-1,heuristic,provisional,Legacy easing classification kept provisional pending schedule-diff layer.,user_note_qra_dates
+qra_2024_01,2024 Jan QRA,2024-01-31,2024-01-30,mixed,mixed,neutral,exclude,,heuristic,provisional,Mixed quarter excluded from headline buckets pending richer shock framework.,user_note_qra_dates
+qra_2024_05,2024 May QRA,2024-05-01,2024-04-30,hold,hold,dovish,control_hold,0,hybrid,reviewed,Reviewed hold quarter with dovish forward guidance.,user_note_qra_dates
+qra_2024_07,2024 Jul QRA,2024-07-31,2024-07-30,classification_pending,pending,pending,pending,,pending,pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+qra_2024_10,2024 Oct QRA,2024-10-30,2024-10-29,classification_pending,pending,pending,pending,,pending,pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+qra_2025_02,2025 Feb QRA,2025-02-05,2025-02-04,classification_pending,pending,pending,pending,,pending,pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+qra_2025_04,2025 Apr QRA,2025-04-30,2025-04-29,classification_pending,pending,pending,pending,,pending,pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release
+qra_2025_07,2025 Jul QRA,2025-07-30,2025-07-29,classification_pending,pending,pending,pending,,pending,pending,Release date captured for forward official-quarter reconstruction.,official_treasury_release

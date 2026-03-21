@@ -5,7 +5,7 @@ from typing import Sequence
 import numpy as np
 import pandas as pd
 
-_PLACEHOLDER_EXPECTED_DIRECTIONS = {"classification_pending", "pending", "unclassified", "tbd", "todo"}
+from .qra_classification import is_summary_headline_bucket
 
 
 def _value_bases_from_panel(panel: pd.DataFrame) -> list[str]:
@@ -83,13 +83,23 @@ def _normalize_overlap_annotations(overlap_annotations: pd.DataFrame | None) -> 
     return annotations
 
 
-def _normalize_expected_direction(series: pd.Series) -> pd.Series:
+def _normalize_text(series: pd.Series) -> pd.Series:
     return series.fillna("").astype(str).str.strip()
 
 
-def _is_headline_expected_direction(series: pd.Series) -> pd.Series:
-    normalized = _normalize_expected_direction(series).str.lower()
-    return (normalized != "") & ~normalized.isin(_PLACEHOLDER_EXPECTED_DIRECTIONS)
+def _summary_group_column(panel: pd.DataFrame) -> str:
+    if "headline_bucket" in panel.columns:
+        return "headline_bucket"
+    if "expected_direction" in panel.columns:
+        return "expected_direction"
+    raise KeyError("Event panel must include headline_bucket or expected_direction")
+
+
+def _summary_mask(panel: pd.DataFrame, group_column: str) -> pd.Series:
+    if group_column == "headline_bucket":
+        return is_summary_headline_bucket(panel[group_column])
+    normalized = _normalize_text(panel[group_column]).str.lower()
+    return normalized.ne("") & ~normalized.isin({"classification_pending", "pending", "unclassified", "tbd", "todo"})
 
 
 def build_event_panel(
@@ -130,14 +140,10 @@ def build_event_panel(
                 "to an available market-data date"
             )
 
-        record = {
-            "event_id": event.get("event_id"),
-            "event_label": event.get("event_label"),
-            "event_date_requested": event_date,
-            "event_date_aligned": aligned,
-            "event_date_type": event_date_column,
-            "expected_direction": event.get("expected_direction"),
-        }
+        record = event.to_dict()
+        record["event_date_requested"] = event_date
+        record["event_date_aligned"] = aligned
+        record["event_date_type"] = event_date_column
         if overlap_annotations is not None:
             record["overlap_flag"] = bool(event.get("overlap_flag", False))
             record["overlap_label"] = event.get("overlap_label", "")
@@ -160,13 +166,14 @@ def summarize_event_panel(panel: pd.DataFrame) -> pd.DataFrame:
     if not value_cols:
         return pd.DataFrame()
     working = panel.copy()
-    working["expected_direction"] = _normalize_expected_direction(working["expected_direction"])
-    working = working.loc[_is_headline_expected_direction(working["expected_direction"])].copy()
+    group_column = _summary_group_column(working)
+    working[group_column] = _normalize_text(working[group_column])
+    working = working.loc[_summary_mask(working, group_column)].copy()
     if working.empty:
-        return pd.DataFrame(columns=["expected_direction", *value_cols])
-    summary = working.groupby("expected_direction", sort=True)[value_cols].mean(numeric_only=True)
+        return pd.DataFrame(columns=[group_column, *value_cols])
+    summary = working.groupby(group_column, sort=True)[value_cols].mean(numeric_only=True)
     summary = summary.reset_index()
-    return summary[["expected_direction", *value_cols]]
+    return summary[[group_column, *value_cols]]
 
 
 def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
@@ -182,10 +189,11 @@ def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
         working["overlap_flag"] = False
     else:
         working["overlap_flag"] = working["overlap_flag"].fillna(False).astype(bool)
-    working["expected_direction"] = _normalize_expected_direction(working["expected_direction"])
-    working = working.loc[_is_headline_expected_direction(working["expected_direction"])].copy()
+    group_column = _summary_group_column(working)
+    working[group_column] = _normalize_text(working[group_column])
+    working = working.loc[_summary_mask(working, group_column)].copy()
     if working.empty:
-        return pd.DataFrame(columns=["sample_variant", "event_date_type", "expected_direction", "n_events", *value_cols])
+        return pd.DataFrame(columns=["sample_variant", "event_date_type", group_column, "n_events", *value_cols])
 
     date_type_order = pd.CategoricalDtype(
         ["official_release_date", "market_pricing_marker_minus_1d"],
@@ -200,15 +208,15 @@ def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
     ):
         if subset.empty:
             continue
-        grouped = subset.groupby(["event_date_type", "expected_direction"], sort=True)
+        grouped = subset.groupby(["event_date_type", group_column], sort=True, observed=True)
         summary = grouped[value_cols].mean(numeric_only=True).reset_index()
         counts = grouped.size().reset_index(name="n_events")
-        summary = summary.merge(counts, on=["event_date_type", "expected_direction"], how="left")
+        summary = summary.merge(counts, on=["event_date_type", group_column], how="left")
         summary.insert(0, "sample_variant", sample_variant)
-        summaries.append(summary[["sample_variant", "event_date_type", "expected_direction", "n_events", *value_cols]])
+        summaries.append(summary[["sample_variant", "event_date_type", group_column, "n_events", *value_cols]])
 
     if not summaries:
-        return pd.DataFrame(columns=["sample_variant", "event_date_type", "expected_direction", "n_events", *value_cols])
+        return pd.DataFrame(columns=["sample_variant", "event_date_type", group_column, "n_events", *value_cols])
 
     output = pd.concat(summaries, ignore_index=True)
     output["sample_variant"] = pd.Categorical(
@@ -216,7 +224,7 @@ def summarize_event_panel_robustness(panel: pd.DataFrame) -> pd.DataFrame:
         categories=["all_events", "overlap_excluded"],
         ordered=True,
     )
-    output = output.sort_values(["sample_variant", "event_date_type", "expected_direction"], kind="stable")
+    output = output.sort_values(["sample_variant", "event_date_type", group_column], kind="stable")
     output["sample_variant"] = output["sample_variant"].astype(str)
     output["event_date_type"] = output["event_date_type"].astype(str)
     return output.reset_index(drop=True)
