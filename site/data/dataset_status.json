@@ -3,13 +3,13 @@
   "rows": [
     {
       "dataset": "official_capture",
-      "readiness_tier": "fallback_only",
-      "source_quality": "mixed",
-      "headline_ready": false,
-      "fallback_only": true,
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T14:52:18.164435+00:00",
-      "review_maturity": "provisional_supporting",
+      "last_regenerated_utc": "2026-03-21T22:41:14.202576+00:00",
+      "review_maturity": "headline_ready",
       "public_role": "supporting"
     },
     {
@@ -19,18 +19,18 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T14:52:18.590614+00:00",
+      "last_regenerated_utc": "2026-03-21T22:41:14.747858+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
     },
     {
       "dataset": "qra_event_elasticity",
-      "readiness_tier": "supporting_provisional",
+      "readiness_tier": "supporting_ready",
       "source_quality": "manual_qra_shock_template_plus_event_panel",
       "headline_ready": false,
-      "fallback_only": true,
-      "missing_critical_fields": "duplicate_event_series_window",
-      "last_regenerated_utc": "2026-03-21T19:22:51.166103+00:00",
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-21T22:42:46.364275+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -41,7 +41,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T19:42:51.428727+00:00",
+      "last_regenerated_utc": "2026-03-21T22:42:47.109943+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -52,7 +52,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T19:42:51.431531+00:00",
+      "last_regenerated_utc": "2026-03-21T22:42:47.116201+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -74,7 +74,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T19:42:51.439620+00:00",
+      "last_regenerated_utc": "2026-03-21T22:42:47.123493+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -85,7 +85,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T19:42:51.709626+00:00",
+      "last_regenerated_utc": "2026-03-21T22:42:47.399804+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -96,7 +96,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T19:43:01.227664+00:00",
+      "last_regenerated_utc": "2026-03-21T22:29:44.083247+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -107,7 +107,7 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-20T23:08:40.924595+00:00",
+      "last_regenerated_utc": "2026-03-21T22:29:47.101963+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
     },
@@ -118,7 +118,7 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-20T23:08:42.669359+00:00",
+      "last_regenerated_utc": "2026-03-21T22:29:48.896755+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
     },

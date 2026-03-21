@@ -42,6 +42,10 @@ def _normalize_lower(value: object) -> str:
     return _normalize_text(value).lower()
 
 
+def _normalize_overlap_severity(value: object) -> str:
+    return _normalize_lower(value)
+
+
 def _coerce_bool(value: object) -> bool:
     if isinstance(value, bool):
         return value
@@ -63,7 +67,11 @@ def _coerce_timestamp_et(value: object) -> object:
     return ts.isoformat()
 
 
-def _overlap_severity(flag: object, label: object, note: object) -> str:
+def _overlap_severity(flag: object, severity: object, label: object, note: object) -> str:
+    manual = _normalize_overlap_severity(severity)
+    if manual:
+        return manual
+
     if not _coerce_bool(flag):
         return "none"
     combined = " ".join(
@@ -108,6 +116,37 @@ def _review_date_from_text(value: object) -> object:
     if not match:
         return pd.NA
     return match.group(1)
+
+
+def _alternative_treatment_status(row: pd.Series) -> tuple[bool, str, str]:
+    fields = (
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "gross_notional_delta_bn",
+    )
+    missing_fields = [
+        field
+        for field in fields
+        if pd.isna(pd.to_numeric(pd.Series([row.get(field)]), errors="coerce").iloc[0])
+    ]
+    if not missing_fields:
+        return True, "", ""
+
+    review_status = _normalize_lower(row.get("shock_review_status"))
+    shock_source = _normalize_lower(row.get("shock_source"))
+    construction = _normalize_lower(row.get("shock_construction"))
+    if "manual_statement_review" in shock_source:
+        reason = "manual_statement_primary_only_pending_alt_treatments"
+    elif "manual_schedule_diff" in shock_source:
+        reason = "manual_schedule_diff_missing_alternative_fields"
+    elif construction.startswith("manual_override"):
+        reason = "manual_override_missing_alternative_fields"
+    elif review_status == "reviewed":
+        reason = "reviewed_event_missing_alternative_treatment_fields"
+    else:
+        reason = "alternative_treatment_fields_not_populated"
+    return False, "|".join(missing_fields), reason
 
 
 def _timestamp_has_clock(value: object) -> bool:
@@ -290,7 +329,11 @@ def build_qra_event_registry_v2(
 
     if overlap_annotations is not None and not overlap_annotations.empty:
         overlap = overlap_annotations.copy()
-        keep = [column for column in ("event_id", "overlap_flag", "overlap_label", "overlap_note") if column in overlap.columns]
+        keep = [
+            column
+            for column in ("event_id", "overlap_flag", "overlap_label", "overlap_note", "overlap_severity")
+            if column in overlap.columns
+        ]
         event_rows = event_rows.merge(overlap[keep], on="event_id", how="left")
 
     for column, default in (
@@ -302,6 +345,7 @@ def build_qra_event_registry_v2(
         ("overlap_flag", False),
         ("overlap_label", ""),
         ("overlap_note", ""),
+        ("overlap_severity", ""),
     ):
         if column not in event_rows.columns:
             event_rows[column] = default
@@ -417,6 +461,7 @@ def build_qra_event_registry_v2(
     event_rows["overlap_severity"] = event_rows.apply(
         lambda row: _overlap_severity(
             row.get("overlap_flag", False),
+            row.get("overlap_severity", ""),
             row.get("overlap_label", ""),
             row.get("overlap_note", ""),
         ),
@@ -428,6 +473,7 @@ def build_qra_event_registry_v2(
             _coerce_bool(row.get("overlap_flag"))
             or bool(_normalize_text(row.get("overlap_label")))
             or bool(_normalize_text(row.get("overlap_note")))
+            or bool(_normalize_text(row.get("overlap_severity")))
         ),
         axis=1,
     )
@@ -581,6 +627,9 @@ def build_qra_shock_crosswalk_v1(elasticity: pd.DataFrame) -> pd.DataFrame:
                 "gross_notional_delta_bn",
                 "shock_source",
                 "manual_override_reason",
+                "alternative_treatment_complete",
+                "alternative_treatment_missing_fields",
+                "alternative_treatment_missing_reason",
                 "shock_review_status",
                 "spec_id",
             ]
@@ -610,6 +659,13 @@ def build_qra_shock_crosswalk_v1(elasticity: pd.DataFrame) -> pd.DataFrame:
         ),
         axis=1,
     )
+    alt_status = frame.apply(_alternative_treatment_status, axis=1, result_type="expand")
+    alt_status.columns = [
+        "alternative_treatment_complete",
+        "alternative_treatment_missing_fields",
+        "alternative_treatment_missing_reason",
+    ]
+    frame = pd.concat([frame, alt_status], axis=1)
     frame["spec_id"] = SPEC_DURATION_TREATMENT_V1
     keep_out = [
         "event_id",
@@ -622,6 +678,9 @@ def build_qra_shock_crosswalk_v1(elasticity: pd.DataFrame) -> pd.DataFrame:
         "gross_notional_delta_bn",
         "shock_source",
         "manual_override_reason",
+        "alternative_treatment_complete",
+        "alternative_treatment_missing_fields",
+        "alternative_treatment_missing_reason",
         "shock_review_status",
         "spec_id",
     ]
@@ -689,6 +748,7 @@ def build_event_usability_table(
     frame["overlap_severity"] = frame.apply(
         lambda row: _overlap_severity(
             row.get("overlap_flag", False),
+            row.get("overlap_severity", ""),
             row.get("overlap_label", ""),
             row.get("overlap_note", ""),
         ),

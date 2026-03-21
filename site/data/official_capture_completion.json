@@ -23,23 +23,23 @@
     },
     {
       "quarter": "2023Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
-      "uses_seed_source": true,
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
+      "uses_seed_source": false,
       "net_bill_issuance_bn": 335.198,
       "reconstructed_net_bill_issuance_bn": 335.198,
-      "reconstruction_status_bill": "partial",
-      "is_headline_ready": false
+      "reconstruction_status_bill": "complete",
+      "is_headline_ready": true
     },
     {
       "quarter": "2023Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
-      "uses_seed_source": true,
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
+      "uses_seed_source": false,
       "net_bill_issuance_bn": 360.307,
       "reconstructed_net_bill_issuance_bn": 360.307,
-      "reconstruction_status_bill": "partial",
-      "is_headline_ready": false
+      "reconstruction_status_bill": "complete",
+      "is_headline_ready": true
     },
     {
       "quarter": "2023Q3",

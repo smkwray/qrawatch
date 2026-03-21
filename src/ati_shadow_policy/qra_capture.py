@@ -80,6 +80,11 @@ _REFUNDING_RANGE_RE = re.compile(
     r"anticipated auction sizes for the (?P<range>[A-Za-z]+\s+to\s+[A-Za-z]+\s+\d{4}) quarter",
     flags=re.IGNORECASE,
 )
+_REFUNDING_RANGE_WITH_YEARS_RE = re.compile(
+    r"anticipated auction sizes(?: in billions of dollars)? for the "
+    r"(?P<range>[A-Za-z]+\s+\d{4}\s*[–-]\s*[A-Za-z]+\s+\d{4}) quarter",
+    flags=re.IGNORECASE,
+)
 _MONTH_ROW_RE = re.compile(
     r"(?P<month>(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\d{2})\s+"
     r"(?P<two>\d+)\s+(?P<three>\d+)\s+(?P<five>\d+)\s+(?P<seven>\d+)\s+"
@@ -416,11 +421,14 @@ def build_refunding_statement_source_map(statement_downloads_df: pd.DataFrame) -
             continue
 
         text = _extract_html_text(Path(local_path))
+        projected_financing_section = _extract_projected_financing_section(text)
         nominal_section = _extract_named_section(
             text,
             "NOMINAL COUPON AND FRN FINANCING",
             ("TIPS FINANCING", "BILL ISSUANCE", "BUYBACKS"),
         )
+        if not nominal_section:
+            nominal_section = projected_financing_section
         bill_section = _extract_named_section(
             text,
             "BILL ISSUANCE",
@@ -439,7 +447,19 @@ def build_refunding_statement_source_map(statement_downloads_df: pd.DataFrame) -
             text,
             "BUYBACKS",
             ("LARGE POSITION REPORT (LPR) CALL", "Please send comments or suggestions"),
+        ) or _extract_named_section(
+            text,
+            "BUYBACK OUTREACH",
+            ("ADDITIONAL PUBLIC TRANSPARENCY", "SMALL-VALUE BUYBACK OPERATION", "Please send comments or suggestions"),
         )
+        bill_guidance = _merge_note(
+            _clean_section_text(bill_section),
+            _clean_section_text(six_week_section),
+        )
+        if not bill_guidance and projected_financing_section:
+            bill_guidance = _extract_bill_guidance(projected_financing_section)
+        if "regular bill auction sizes" not in bill_guidance.lower():
+            bill_guidance = _merge_note(bill_guidance, _extract_bill_guidance(text))
 
         rows.append(
             {
@@ -451,10 +471,7 @@ def build_refunding_statement_source_map(statement_downloads_df: pd.DataFrame) -
                 "guidance_nominal_coupons": _extract_nominal_coupon_guidance(nominal_section),
                 "guidance_frns": _extract_frn_guidance(nominal_section),
                 "guidance_buybacks": _clean_section_text(buybacks_section),
-                "bill_guidance": _merge_note(
-                    _clean_section_text(bill_section),
-                    _clean_section_text(six_week_section),
-                ),
+                "bill_guidance": bill_guidance,
                 "match_status": "matched",
             }
         )
@@ -508,6 +525,7 @@ def build_quarter_net_issuance_from_auctions(
         .agg(
             offering_amt=("offering_amt", "sum"),
             est_pub_held_mat_by_type_amt=("est_pub_held_mat_by_type_amt", "min"),
+            cmb_only_issue_date=("cash_management_bill_cmb", lambda series: bool(series.fillna("").eq("Yes").all())),
         )
         .sort_values(["quarter", "bucket", "issue_date"], kind="stable")
     )
@@ -530,12 +548,32 @@ def build_quarter_net_issuance_from_auctions(
         )
         .sort_values(["quarter", "bucket"], kind="stable")
     )
+    cmb_only_missing = (
+        by_date.loc[~by_date["issue_date_has_maturity_estimate"]]
+        .groupby(["quarter", "bucket"], as_index=False)
+        .agg(
+            issue_dates_cmb_only_missing_maturity=(
+                "cmb_only_issue_date",
+                lambda series: int(series.fillna(False).sum()),
+            )
+        )
+    )
+    quarter_bucket = quarter_bucket.merge(cmb_only_missing, on=["quarter", "bucket"], how="left")
+    quarter_bucket["issue_dates_cmb_only_missing_maturity"] = (
+        quarter_bucket["issue_dates_cmb_only_missing_maturity"].fillna(0).astype(int)
+    )
     quarter_bucket["gross_offering_bn"] = quarter_bucket["gross_offering_amt"] / 1e9
     quarter_bucket["maturing_estimate_bn"] = quarter_bucket["maturing_estimate_amt"] / 1e9
     quarter_bucket["net_issuance_bn"] = quarter_bucket["net_issuance_amt"] / 1e9
-    quarter_bucket["reconstruction_status"] = quarter_bucket[
-        "issue_dates_missing_maturing_estimate"
-    ].map(lambda count: "complete" if int(count) == 0 else "partial")
+    quarter_bucket["reconstruction_status"] = quarter_bucket.apply(
+        lambda row: (
+            "complete"
+            if int(row["issue_dates_missing_maturing_estimate"])
+            == int(row["issue_dates_cmb_only_missing_maturity"])
+            else "partial"
+        ),
+        axis=1,
+    )
 
     return quarter_bucket[
         [
@@ -546,6 +584,7 @@ def build_quarter_net_issuance_from_auctions(
             "net_issuance_bn",
             "issue_dates",
             "issue_dates_missing_maturing_estimate",
+            "issue_dates_cmb_only_missing_maturity",
             "reconstruction_status",
         ]
     ].reset_index(drop=True)
@@ -568,11 +607,18 @@ def enrich_capture_with_auction_reconstruction(
         )
 
     pivot = quarter_net_df.copy()
+    if "issue_dates_cmb_only_missing_maturity" not in pivot.columns:
+        pivot["issue_dates_cmb_only_missing_maturity"] = 0
     pivot["quarter"] = pivot["quarter"].astype(str)
     pivot = pivot.pivot_table(
         index="quarter",
         columns="bucket",
-        values=["net_issuance_bn", "gross_offering_bn", "reconstruction_status"],
+        values=[
+            "net_issuance_bn",
+            "gross_offering_bn",
+            "reconstruction_status",
+            "issue_dates_cmb_only_missing_maturity",
+        ],
         aggfunc="first",
     )
     pivot.columns = ["__".join(str(part) for part in col) for col in pivot.columns]
@@ -619,6 +665,16 @@ def enrich_capture_with_auction_reconstruction(
             "Non-bill auction buckets remain support-only because maturity estimates are not "
             "bucket-separable at the quarter level."
         )
+        cmb_only_missing = pd.to_numeric(
+            pd.Series([source.get("issue_dates_cmb_only_missing_maturity__bill_like")]),
+            errors="coerce",
+        ).iloc[0]
+        if pd.notna(cmb_only_missing) and int(cmb_only_missing) > 0:
+            note = _merge_note(
+                note,
+                "CMB-only issue dates without same-day maturity estimates in the auctions feed are "
+                "treated as non-blocking for quarter-level bill reconstruction.",
+            )
         capture.at[idx, "notes"] = _merge_note(_string_or_empty(capture.at[idx, "notes"]), note)
     return capture
 
@@ -639,6 +695,7 @@ def build_capture_completion_status(
                 "maturing_estimate_bn",
                 "net_issuance_bn",
                 "issue_dates_missing_maturing_estimate",
+                "issue_dates_cmb_only_missing_maturity",
                 "reconstruction_status",
             ]
         )
@@ -646,12 +703,15 @@ def build_capture_completion_status(
         recon_bill = recon.loc[recon["bucket"] == "bill_like"].copy()
     else:
         recon_bill = pd.DataFrame(columns=recon.columns)
+    if "issue_dates_cmb_only_missing_maturity" not in recon_bill.columns:
+        recon_bill["issue_dates_cmb_only_missing_maturity"] = 0
     recon_bill = recon_bill.drop_duplicates(subset=["quarter"], keep="first")
     recon_bill = recon_bill.rename(
         columns={
             "net_issuance_bn": "reconstructed_net_bill_issuance_bn",
             "reconstruction_status": "reconstruction_status_bill",
             "issue_dates_missing_maturing_estimate": "issue_dates_missing_maturity_bill",
+            "issue_dates_cmb_only_missing_maturity": "issue_dates_cmb_only_missing_maturity_bill",
         }
     )
     merged = capture.merge(
@@ -661,6 +721,7 @@ def build_capture_completion_status(
                 "reconstructed_net_bill_issuance_bn",
                 "reconstruction_status_bill",
                 "issue_dates_missing_maturity_bill",
+                "issue_dates_cmb_only_missing_maturity_bill",
             ]
         ],
         on="quarter",
@@ -686,6 +747,9 @@ def build_capture_completion_status(
                 ),
                 "reconstruction_status_bill": _string_or_empty(row.get("reconstruction_status_bill")),
                 "issue_dates_missing_maturity_bill": row.get("issue_dates_missing_maturity_bill", pd.NA),
+                "issue_dates_cmb_only_missing_maturity_bill": row.get(
+                    "issue_dates_cmb_only_missing_maturity_bill", pd.NA
+                ),
                 "is_headline_ready": completion_tier in {
                     _AUCTION_COMPLETION_EXACT,
                     _AUCTION_COMPLETION_PROMOTED,
@@ -1051,6 +1115,23 @@ def _extract_named_section(text: str, heading: str, end_headings: tuple[str, ...
     return _clean_section_text(match.group("section"))
 
 
+def _extract_projected_financing_section(text: str) -> str:
+    return _extract_named_section(
+        text,
+        "PROJECTED FINANCING NEEDS AND ISSUANCE PLANS",
+        (
+            "TIPS FINANCING",
+            "DEBT LIMIT",
+            "BUYBACK OUTREACH",
+            "BUYBACKS",
+            "ADDITIONAL PUBLIC TRANSPARENCY",
+            "LARGE POSITION REPORT (LPR) CALL",
+            "SMALL-VALUE BUYBACK OPERATION",
+            "Please send comments or suggestions",
+        ),
+    )
+
+
 def _clean_section_text(text: str) -> str:
     cleaned = " ".join(str(text).replace("\xa0", " ").split())
     cleaned = re.sub(r"\s+([,;:.])", r"\1", cleaned)
@@ -1069,6 +1150,8 @@ def _extract_nominal_coupon_guidance(section: str) -> str:
             "Treasury plans to increase",
             "Treasury plans to maintain",
             "Treasury believes its current auction sizes",
+            "Treasury intends to keep nominal coupon and FRN new issue and reopening auction sizes unchanged",
+            "Treasury does not anticipate making any changes to nominal coupon and FRN new issue or reopening auction sizes",
             "Treasury does not anticipate needing to increase nominal coupon",
             "Treasury will continue to evaluate whether additional relative adjustments",
         ),
@@ -1103,6 +1186,23 @@ def _extract_frn_guidance(section: str) -> str:
         pieces.append(monthly_schedule)
 
     return " ".join(part for part in pieces if part).strip()
+
+
+def _extract_bill_guidance(section: str) -> str:
+    section = _clean_section_text(section)
+    if not section:
+        return ""
+    return _join_matching_sentences(
+        section,
+        include_keywords=(
+            "regular bill auction sizes",
+            "bill auction sizes",
+            "benchmark bill issuance",
+            "CMB",
+            "cash management bill",
+        ),
+        exclude_keywords=(),
+    )
 
 
 def _join_matching_sentences(
@@ -1168,10 +1268,11 @@ def _extract_target_schedule_rows(section: str) -> list[dict[str, str]]:
 
 
 def _extract_target_refunding_range(section: str) -> str:
-    match = _REFUNDING_RANGE_RE.search(section)
-    if match is None:
-        return ""
-    return _clean_section_text(match.group("range"))
+    for regex in (_REFUNDING_RANGE_RE, _REFUNDING_RANGE_WITH_YEARS_RE):
+        match = regex.search(section)
+        if match is not None:
+            return _clean_section_text(match.group("range"))
+    return ""
 
 
 def _month_labels_for_range(range_text: str) -> list[str]:
@@ -1203,21 +1304,30 @@ def _month_labels_for_range(range_text: str) -> list[str]:
         11: "Nov",
         12: "Dec",
     }
+    normalized = re.sub(r"\s*[–-]\s*", " to ", range_text.strip())
     match = re.match(
-        r"(?P<start>[A-Za-z]+)\s+to\s+(?P<end>[A-Za-z]+)\s+(?P<year>\d{4})",
-        range_text,
+        r"(?P<start>[A-Za-z]+)\s+(?:(?P<start_year>\d{4})\s+)?to\s+"
+        r"(?P<end>[A-Za-z]+)\s+(?P<end_year>\d{4})",
+        normalized,
         flags=re.IGNORECASE,
     )
     if match is None:
         return []
-    year = int(match.group("year"))
+    start_year = int(match.group("start_year") or match.group("end_year"))
+    end_year = int(match.group("end_year"))
     start_month = month_map.get(match.group("start").capitalize())
     end_month = month_map.get(match.group("end").capitalize())
     if start_month is None or end_month is None:
         return []
     labels: list[str] = []
-    for month_num in range(start_month, end_month + 1):
-        labels.append(f"{short_map[month_num]}-{str(year)[2:]}")
+    current_year = start_year
+    current_month = start_month
+    while (current_year, current_month) <= (end_year, end_month):
+        labels.append(f"{short_map[current_month]}-{str(current_year)[2:]}")
+        current_month += 1
+        if current_month > 12:
+            current_month = 1
+            current_year += 1
     return labels
 
 

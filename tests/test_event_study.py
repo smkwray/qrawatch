@@ -69,6 +69,7 @@ def test_build_event_panel_merges_overlap_annotations() -> None:
             "overlap_flag": [True, False],
             "overlap_label": ["FOMC", ""],
             "overlap_note": ["same day", ""],
+            "overlap_severity": ["high", ""],
         }
     )
 
@@ -83,6 +84,7 @@ def test_build_event_panel_merges_overlap_annotations() -> None:
     assert list(panel["overlap_flag"]) == [True, False]
     assert list(panel["overlap_label"]) == ["FOMC", ""]
     assert list(panel["overlap_note"]) == ["same day", ""]
+    assert list(panel["overlap_severity"]) == ["high", ""]
 
 
 def test_build_event_panel_missing_outcome_column_raises() -> None:
@@ -274,3 +276,27 @@ def test_build_qra_event_registry_v2_emits_required_fields() -> None:
     assert registry.loc[0, "overlap_severity"] == "high"
     assert bool(registry.loc[0, "financing_need_news_flag"]) is True
     assert registry.loc[0, "headline_eligibility_reason"] == "eligible_pending_shock_checks"
+
+
+def test_build_qra_event_registry_v2_respects_explicit_overlap_severity() -> None:
+    panel = pd.DataFrame(
+        {
+            "event_id": ["e2"],
+            "quarter": ["2024Q2"],
+            "event_date_type": ["official_release_date"],
+            "overlap_flag": [True],
+            "overlap_label": ["FOMC"],
+            "overlap_note": ["same day"],
+            "overlap_severity": ["medium"],
+            "current_quarter_action": ["tightening"],
+            "forward_guidance_bias": ["neutral"],
+            "headline_bucket": ["tightening"],
+            "classification_review_status": ["reviewed"],
+            "release_timestamp_et": ["2024-01-01T00:00:00-05:00"],
+            "timing_quality": ["explicit_multi_stage_release"],
+        }
+    )
+
+    registry = build_qra_event_registry_v2(panel)
+
+    assert registry.loc[0, "overlap_severity"] == "medium"

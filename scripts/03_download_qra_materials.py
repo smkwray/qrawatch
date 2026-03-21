@@ -70,9 +70,20 @@ def main() -> None:
 
     if args.download_files:
         files_dir = out_dir / "files"
-        downloaded = download_link_manifest(filtered, files_dir, limit=args.limit)
+        download_manifest = filtered.copy()
+        if "preferred_for_download" in download_manifest.columns:
+            preferred = download_manifest.loc[
+                download_manifest["preferred_for_download"].fillna(False).astype(bool)
+            ].copy()
+            if not preferred.empty:
+                download_manifest = preferred
+        downloaded = download_link_manifest(download_manifest, files_dir, limit=args.limit)
         write_df(downloaded, out_dir / "downloads.csv")
-        print(f"Downloaded {len(downloaded):,} candidate files to {files_dir}")
+        print(
+            "Downloaded "
+            f"{len(downloaded):,} preferred candidate files to {files_dir} "
+            f"(manifest candidates={len(filtered):,})"
+        )
 
 if __name__ == "__main__":
     main()

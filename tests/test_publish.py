@@ -390,6 +390,9 @@ def test_build_qra_shock_crosswalk_publish_table_is_optional(tmp_path, monkeypat
                 "gross_notional_delta_bn": 40.0,
                 "shock_source": "manual",
                 "manual_override_reason": "",
+                "alternative_treatment_complete": False,
+                "alternative_treatment_missing_fields": "schedule_diff_dv01_usd",
+                "alternative_treatment_missing_reason": "manual_statement_primary_only_pending_alt_treatments",
                 "shock_review_status": "reviewed",
             }
         ]
@@ -400,6 +403,7 @@ def test_build_qra_shock_crosswalk_publish_table_is_optional(tmp_path, monkeypat
     assert populated.loc[0, "spec_id"] == "spec_qra_event_v2"
     assert populated.loc[0, "treatment_variant"] == "schedule_diff_primary"
     assert populated.loc[0, "usable_for_headline_reason"] == "classification_not_reviewed"
+    assert populated.loc[0, "alternative_treatment_missing_reason"] == "manual_statement_primary_only_pending_alt_treatments"
 
 
 def test_build_event_usability_publish_table_is_optional(tmp_path, monkeypatch):
@@ -928,6 +932,77 @@ def test_dataset_status_marks_qra_elasticity_provisional_when_published(monkeypa
     assert qra_elasticity["readiness_tier"] == "supporting_ready"
     assert qra_elasticity["review_maturity"] == "provisional_supporting"
     assert treatment["readiness_tier"] == "supporting_ready"
+
+
+def test_dataset_status_ignores_treatment_variant_rows_when_checking_qra_duplicates(monkeypatch, tmp_path) -> None:
+    fake_extension_status = pd.DataFrame(
+        [
+            {
+                "extension": "investor_allotments",
+                "backend_status": "summary_ready",
+                "readiness_tier": "summary_ready",
+                "headline_ready": False,
+                "public_role": "supporting",
+            }
+        ]
+    )
+    monkeypatch.setattr(publish, "build_extension_status_table", lambda: fake_extension_status)
+
+    processed_dir = tmp_path / "processed"
+    tables_dir = tmp_path / "tables"
+    processed_dir.mkdir()
+    tables_dir.mkdir()
+    (processed_dir / "official_quarterly_refunding_capture.csv").write_text(
+        "quarter,qra_release_date,market_pricing_marker_minus_1d,total_financing_need_bn,net_bill_issuance_bn,source_url,source_doc_local,source_doc_type,qa_status\n",
+        encoding="utf-8",
+    )
+    (processed_dir / "ati_index_official_capture.csv").write_text(
+        "quarter,ati_baseline_bn,qa_status,source_doc_local,source_doc_type\n",
+        encoding="utf-8",
+    )
+    (tables_dir / "plumbing_regressions.csv").write_text(
+        "dependent_variable,term,coef,p_value\n", encoding="utf-8"
+    )
+    (processed_dir / "public_duration_supply.csv").write_text("date,val\n", encoding="utf-8")
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2024Q3",
+                "event_id": "qra_2024_07",
+                "event_date_type": "official_release_date",
+                "series": "DGS10",
+                "window": "d3",
+                "treatment_variant": "canonical_shock_bn",
+                "headline_bucket": "tightening",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
+                "usable_for_headline": True,
+                "elasticity_bp_per_100bn": 12.0,
+            },
+            {
+                "quarter": "2024Q3",
+                "event_id": "qra_2024_07",
+                "event_date_type": "official_release_date",
+                "series": "DGS10",
+                "window": "d3",
+                "treatment_variant": "fixed_10y_eq_bn",
+                "headline_bucket": "tightening",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
+                "usable_for_headline": False,
+                "elasticity_bp_per_100bn": 8.0,
+            },
+        ]
+    ).to_csv(tables_dir / "qra_event_elasticity.csv", index=False)
+
+    monkeypatch.setattr(publish, "PROCESSED_DIR", processed_dir)
+    monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
+
+    table = publish.build_dataset_status_table()
+    qra_elasticity = table.loc[table["dataset"] == "qra_event_elasticity"].iloc[0]
+
+    assert qra_elasticity["readiness_tier"] == "supporting_ready"
+    assert qra_elasticity["missing_critical_fields"] == ""
 
 
 def test_series_metadata_catalog_marks_extensions_supporting() -> None:

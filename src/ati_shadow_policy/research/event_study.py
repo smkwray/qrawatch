@@ -75,13 +75,15 @@ def _normalize_overlap_annotations(overlap_annotations: pd.DataFrame | None) -> 
         lambda value: str(value).strip().lower() in {"1", "true", "t", "yes", "y"}
     )
 
-    for column in ("overlap_label", "overlap_note"):
+    for column in ("overlap_label", "overlap_note", "overlap_severity"):
         if column not in annotations.columns:
             annotations[column] = ""
         else:
             annotations[column] = annotations[column].fillna("").astype(str)
 
-    annotations = annotations[["event_id", "overlap_flag", "overlap_label", "overlap_note"]]
+    annotations = annotations[
+        ["event_id", "overlap_flag", "overlap_label", "overlap_note", "overlap_severity"]
+    ]
     annotations = annotations.sort_values(["event_id", "overlap_flag"], kind="stable")
     annotations = annotations.drop_duplicates(subset=["event_id"], keep="last").reset_index(drop=True)
     return annotations
@@ -110,6 +112,10 @@ def _first_non_empty_series_value(series: pd.Series | None, default: str) -> str
 
 
 def _overlap_severity(row: pd.Series) -> str:
+    manual = _normalize_scalar_text(row.get("overlap_severity")).lower()
+    if manual:
+        return manual
+
     overlap_flag = str(row.get("overlap_flag", "")).strip().lower() in {"1", "true", "t", "yes", "y"}
     if not overlap_flag:
         return "none"
@@ -274,6 +280,7 @@ def build_event_panel(
             record["overlap_flag"] = bool(event.get("overlap_flag", False))
             record["overlap_label"] = event.get("overlap_label", "")
             record["overlap_note"] = event.get("overlap_note", "")
+            record["overlap_severity"] = event.get("overlap_severity", "")
 
         for col in value_columns:
             level_t, d1, d3 = _event_window_deltas(outcomes[col], aligned)

@@ -802,6 +802,9 @@ def _empty_qra_crosswalk_frame() -> pd.DataFrame:
             "gross_notional_delta_bn",
             "shock_source",
             "manual_override_reason",
+            "alternative_treatment_complete",
+            "alternative_treatment_missing_fields",
+            "alternative_treatment_missing_reason",
             "shock_review_status",
             "spec_id",
             "treatment_variant",
@@ -829,6 +832,9 @@ def build_qra_shock_crosswalk_publish_table() -> pd.DataFrame:
             "treatment_variant": "shock_bn",
             "usable_for_headline_reason": "non_headline_or_unreviewed",
             "manual_override_reason": "",
+            "alternative_treatment_complete": False,
+            "alternative_treatment_missing_fields": "",
+            "alternative_treatment_missing_reason": "",
             "shock_review_status": "",
         },
     )
@@ -842,7 +848,11 @@ def build_qra_shock_crosswalk_publish_table() -> pd.DataFrame:
         .fillna(out.get("shock_construction", pd.Series(index=out.index, dtype=object)))
         .fillna("shock_bn")
     )
-    out["manual_override_reason"] = out.get("shock_notes", pd.Series(index=out.index, dtype=object)).fillna("")
+    out["manual_override_reason"] = (
+        out.get("manual_override_reason", pd.Series(index=out.index, dtype=object))
+        .fillna(out.get("shock_notes", pd.Series(index=out.index, dtype=object)))
+        .fillna("")
+    )
     out["spec_id"] = QRA_EVENT_SPEC_ID
     out["treatment_variant"] = (
         out.get("canonical_shock_id", pd.Series(index=out.index, dtype=object))
@@ -862,6 +872,9 @@ def build_qra_shock_crosswalk_publish_table() -> pd.DataFrame:
         "gross_notional_delta_bn",
         "shock_source",
         "manual_override_reason",
+        "alternative_treatment_complete",
+        "alternative_treatment_missing_fields",
+        "alternative_treatment_missing_reason",
         "shock_review_status",
         "spec_id",
         "treatment_variant",
@@ -1856,8 +1869,11 @@ def _qra_elasticity_readiness(path: Path) -> dict[str, object]:
             missing.append(f"missing_column:{column}")
     if "quarter" in df.columns and df["quarter"].fillna("").astype(str).str.strip().eq("").any():
         missing.append("null_quarter")
-    if {"event_id", "event_date_type", "series", "window"}.issubset(df.columns):
-        if df.duplicated(subset=["event_id", "event_date_type", "series", "window"]).any():
+    duplicate_subset = ["event_id", "event_date_type", "series", "window"]
+    if set(duplicate_subset).issubset(df.columns):
+        if "treatment_variant" in df.columns:
+            duplicate_subset.append("treatment_variant")
+        if df.duplicated(subset=duplicate_subset).any():
             missing.append("duplicate_event_series_window")
     if "shock_review_status" in df.columns:
         invalid = sorted(

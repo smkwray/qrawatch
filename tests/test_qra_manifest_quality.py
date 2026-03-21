@@ -135,3 +135,25 @@ def test_build_qra_manifest_recognizes_known_qra_release_text():
     assert "https://home.treasury.gov/news/press-releases/jy0908" in set(manifest["href"])
     assert "https://home.treasury.gov/news/press-releases/sb7777" not in set(manifest["href"])
     assert by_href.loc["https://home.treasury.gov/news/press-releases/jy0908", "doc_type"] == "quarterly_refunding_press_release"
+
+
+def test_build_qra_manifest_infers_quarter_from_labels_and_filenames():
+    links = pd.DataFrame(
+        [
+            {
+                "source_page": "https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding/quarterly-refunding-archives/quarterly-refunding-financing-estimates-by-calendar-year",
+                "text": "2024 1st Quarter",
+                "href": "https://home.treasury.gov/news/press-releases/jy2054",
+            },
+            {
+                "source_page": "https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding/quarterly-refunding-archives/quarterly-refunding-financing-estimates-by-calendar-year",
+                "text": "3rd Quarter",
+                "href": "https://home.treasury.gov/system/files/221/fe-1995-q3.pdf",
+            },
+        ]
+    )
+
+    manifest = build_qra_manifest(links, min_relevance_score=5).set_index("href")
+
+    assert manifest.loc["https://home.treasury.gov/news/press-releases/jy2054", "quarter"] == "2024Q1"
+    assert manifest.loc["https://home.treasury.gov/system/files/221/fe-1995-q3.pdf", "quarter"] == "1995Q3"

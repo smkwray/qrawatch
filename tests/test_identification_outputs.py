@@ -111,6 +111,37 @@ def test_build_qra_event_registry_v2_adds_overlap_and_headline_decomposition_lin
     assert out.loc[0, "headline_eligibility_reason"] == "missing_shock|small_denominator|classification_not_reviewed|shock_not_reviewed"
 
 
+def test_build_qra_event_registry_v2_uses_manual_overlap_severity_override() -> None:
+    panel = pd.DataFrame(
+        {
+            "event_id": ["e3"],
+            "quarter": ["2024Q3"],
+            "event_date_type": ["official_release_date"],
+            "official_release_date": ["2024-07-03"],
+            "policy_statement_release_date": ["2024-07-03"],
+            "financing_estimates_release_date": ["2024-07-02"],
+            "policy_statement_url": ["https://example.com/policy3"],
+            "financing_estimates_url": ["https://example.com/financing3"],
+            "timing_quality": ["explicit_multi_stage_release"],
+            "forward_guidance_bias": ["neutral"],
+            "classification_review_status": ["reviewed"],
+        }
+    )
+    overlap = pd.DataFrame(
+        {
+            "event_id": ["e3"],
+            "overlap_flag": [True],
+            "overlap_label": ["fomc_overlap"],
+            "overlap_note": ["FOMC window overlap."],
+            "overlap_severity": ["low"],
+        }
+    )
+
+    out = build_qra_event_registry_v2(panel=panel, overlap_annotations=overlap)
+
+    assert out.loc[0, "overlap_severity"] == "low"
+
+
 def test_build_qra_shock_crosswalk_v1_extracts_manual_override_reason() -> None:
     elasticity = pd.DataFrame(
         {
@@ -132,6 +163,33 @@ def test_build_qra_shock_crosswalk_v1_extracts_manual_override_reason() -> None:
 
     assert out.loc[0, "canonical_shock_id"] == "canonical_shock_bn"
     assert out.loc[0, "manual_override_reason"] == "Manual override after review."
+    assert bool(out.loc[0, "alternative_treatment_complete"]) is True
+
+
+def test_build_qra_shock_crosswalk_v1_adds_missing_reason_for_reviewed_manual_statement_rows() -> None:
+    elasticity = pd.DataFrame(
+        {
+            "event_id": ["e1"],
+            "event_date_type": ["official_release_date"],
+            "shock_bn": [25.0],
+            "schedule_diff_10y_eq_bn": [pd.NA],
+            "schedule_diff_dynamic_10y_eq_bn": [pd.NA],
+            "schedule_diff_dv01_usd": [pd.NA],
+            "gross_notional_delta_bn": [pd.NA],
+            "shock_source": ["manual_statement_review_v1"],
+            "shock_notes": [""],
+            "shock_review_status": ["reviewed"],
+            "shock_construction": ["manual_override_with_schedule_context"],
+        }
+    )
+
+    out = build_qra_shock_crosswalk_v1(elasticity)
+
+    assert bool(out.loc[0, "alternative_treatment_complete"]) is False
+    assert (
+        out.loc[0, "alternative_treatment_missing_reason"]
+        == "manual_statement_primary_only_pending_alt_treatments"
+    )
 
 
 def test_build_event_usability_table_counts_unique_events() -> None:
@@ -152,6 +210,36 @@ def test_build_event_usability_table_counts_unique_events() -> None:
 
     assert out["event_count"].sum() == 2
     assert "usable_for_headline_reason" in out.columns
+
+
+def test_build_event_usability_table_uses_manual_overlap_severity_override() -> None:
+    elasticity = pd.DataFrame(
+        {
+            "event_id": ["e3", "e3"],
+            "event_date_type": ["official_release_date", "official_release_date"],
+            "headline_bucket": ["tightening", "tightening"],
+            "classification_review_status": ["reviewed", "reviewed"],
+            "shock_review_status": ["reviewed", "reviewed"],
+            "overlap_flag": [True, True],
+            "overlap_label": ["", ""],
+            "overlap_note": ["", ""],
+            "usable_for_headline": [True, True],
+        }
+    )
+    overlap_annotations = pd.DataFrame(
+        {
+            "event_id": ["e3"],
+            "overlap_flag": [True],
+            "overlap_label": ["fomc_overlap"],
+            "overlap_note": [""],
+            "overlap_severity": ["high"],
+        }
+    )
+
+    out = build_event_usability_table(elasticity, overlap_annotations=overlap_annotations)
+
+    assert out.loc[0, "overlap_severity"] == "high"
+    assert out.loc[0, "event_count"] == 1
 
 
 def test_build_leave_one_event_out_table_uses_headline_eligible_official_rows() -> None:

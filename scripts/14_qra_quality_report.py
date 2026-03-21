@@ -28,8 +28,23 @@ REQUIRED_CAPTURE_FIELDS = (
     "source_doc_type",
     "qa_status",
 )
+OFFICIAL_QA_STATUSES = {"manual_official_capture", "parser_verified"}
+OFFICIAL_PROVENANCE_FIELDS = ("source_url", "source_doc_local", "source_doc_type")
 PDF_EXTENSIONS = {".pdf"}
 HTML_EXTENSIONS = {".html", ".htm"}
+DOWNLOAD_PROVENANCE_FIELDS = (
+    "quarter",
+    "doc_type",
+    "source_family",
+    "quality_tier",
+    "preferred_for_download",
+)
+OFFICIAL_SOURCE_FAMILIES = {
+    "financing_estimates_archive",
+    "official_quarterly_refunding_statement_archive",
+    "quarterly_refunding_press_release",
+    "quarterly_refunding_main_page",
+}
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
@@ -50,6 +65,14 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--json",
         action="store_true",
         help="Emit the report as compact JSON instead of human-readable text.",
+    )
+    parser.add_argument(
+        "--fail-on-contract",
+        action="store_true",
+        help=(
+            "Exit non-zero if any official QA rows are missing required download provenance "
+            "fields."
+        ),
     )
     return parser.parse_args(argv)
 
@@ -123,6 +146,12 @@ def summarize_downloads(df: pd.DataFrame) -> dict:
             "html": 0,
             "other": 0,
             "extensions": {},
+            "source_family_counts": {},
+            "provenance_missing_counts": {
+                field: {"missing": 0, "pct": 0.0} for field in DOWNLOAD_PROVENANCE_FIELDS
+            },
+            "official_source_family_rows": 0,
+            "preferred_for_download_rows": 0,
         }
 
     ext = df.apply(_coalesce_extension, axis=1)
@@ -130,6 +159,43 @@ def summarize_downloads(df: pd.DataFrame) -> dict:
     total = len(df)
     pdf = int((ext.isin(PDF_EXTENSIONS)).sum())
     html = int((ext.isin(HTML_EXTENSIONS)).sum())
+    source_family_counts: dict[str, int]
+    if "source_family" in df.columns:
+        source_family_counts = (
+            df["source_family"]
+            .fillna("missing")
+            .astype(str)
+            .str.strip()
+            .replace("", "missing")
+            .value_counts(dropna=False)
+            .to_dict()
+        )
+        source_family_counts = {k: int(v) for k, v in source_family_counts.items()}
+    else:
+        source_family_counts = {}
+    provenance_missing_counts: dict[str, dict[str, float]]
+    provenance_missing_counts = {}
+    for field in DOWNLOAD_PROVENANCE_FIELDS:
+        if field in df.columns:
+            missing = int(_is_missing_value(df[field]).sum())
+            provenance_missing_counts[field] = {
+                "missing": missing,
+                "pct": (missing / total * 100) if total else 0.0,
+            }
+        else:
+            provenance_missing_counts[field] = {"missing": total, "pct": 100.0}
+    official_source_family_rows = 0
+    if "source_family" in df.columns:
+        official_source_family_rows = int(
+            df["source_family"].fillna("").astype(str).str.strip().isin(OFFICIAL_SOURCE_FAMILIES).sum()
+        )
+    preferred_rows = 0
+    if "preferred_for_download" in df.columns:
+        preferred_rows = int(
+            df["preferred_for_download"]
+            .map(lambda value: str(value).strip().lower() in {"1", "true", "t", "yes", "y"})
+            .sum()
+        )
     return {
         "status": "ok",
         "rows": total,
@@ -137,6 +203,10 @@ def summarize_downloads(df: pd.DataFrame) -> dict:
         "html": html,
         "other": total - pdf - html,
         "extensions": {k: int(v) for k, v in sorted(counts.items())},
+        "source_family_counts": source_family_counts,
+        "provenance_missing_counts": provenance_missing_counts,
+        "official_source_family_rows": official_source_family_rows,
+        "preferred_for_download_rows": preferred_rows,
     }
 
 
@@ -145,6 +215,16 @@ def _is_missing_value(series: pd.Series) -> pd.Series:
         return pd.Series([], index=series.index, dtype=bool)
     s = series.fillna("")
     return s.astype(str).str.strip().eq("")
+
+
+def _is_missing_value_scalar(value: object) -> bool:
+    if value is pd.NA:
+        return True
+    if value is None:
+        return True
+    if isinstance(value, float) and pd.isna(value):
+        return True
+    return str(value).strip() in {"", "nan", "none", "null"}
 
 
 def summarize_official_capture(df: pd.DataFrame) -> dict:
@@ -225,13 +305,41 @@ def summarize_official_capture(df: pd.DataFrame) -> dict:
     }
 
 
-def build_qra_quality_report(downloads_path: Path, capture_path: Path) -> dict:
+def _validate_capture_contract(df: pd.DataFrame) -> list[str]:
+    if df.empty:
+        return []
+    if "qa_status" not in df.columns:
+        return ["official_capture missing qa_status column"]
+
+    violations: list[str] = []
+    for idx, row in df.iterrows():
+        qa_status = str(row.get("qa_status", "")).strip()
+        if qa_status not in OFFICIAL_QA_STATUSES:
+            continue
+        row_num = idx + 2
+        for field in OFFICIAL_PROVENANCE_FIELDS:
+            if field not in df.columns or _is_missing_value_scalar(row.get(field, pd.NA)):
+                violations.append(
+                    f"row {row_num}: qa_status='{qa_status}' requires non-empty '{field}'"
+                )
+    return violations
+
+
+def build_qra_quality_report(
+    downloads_path: Path, capture_path: Path, *, check_contract: bool = False
+) -> dict:
     downloads, downloads_status = _safe_read_csv(downloads_path)
     capture, capture_status = _safe_read_csv(capture_path)
 
     downloads_summary = summarize_downloads(downloads)
     capture_summary = summarize_official_capture(capture)
 
+    contract_violations: list[str] = []
+    if check_contract:
+        if capture_status is not None:
+            contract_violations.append(f"official_capture status is not valid: {capture_status}")
+        else:
+            contract_violations = _validate_capture_contract(capture)
     if downloads_status is not None:
         downloads_summary["status"] = downloads_status
     if capture_status is not None:
@@ -240,6 +348,7 @@ def build_qra_quality_report(downloads_path: Path, capture_path: Path) -> dict:
     return {
         "downloads": downloads_summary,
         "official_capture": capture_summary,
+        "contract_violations": contract_violations,
     }
 
 
@@ -251,6 +360,22 @@ def _to_text(report: dict) -> str:
     lines.append(f"- downloads: rows={downloads['rows']}")
     if downloads["status"] == "ok":
         lines.append(f"- pdf_docs={downloads['pdf']} html_docs={downloads['html']} other_docs={downloads['other']}")
+        lines.append(
+            "- download provenance coverage: "
+            + ", ".join(
+                f"{field}={values['missing']} missing ({values['pct']:.1f}%)"
+                for field, values in downloads["provenance_missing_counts"].items()
+            )
+        )
+        lines.append(
+            "- preferred/official rows: "
+            f"preferred={downloads['preferred_for_download_rows']} "
+            f"official_source_family={downloads['official_source_family_rows']}"
+        )
+        if downloads["source_family_counts"]:
+            lines.append("- download source_family coverage:")
+            for item, count in sorted(downloads["source_family_counts"].items(), key=lambda x: x[0]):
+                lines.append(f"  - {item}: {count}")
     else:
         lines.append(f"  - note: {downloads['status']}")
 
@@ -277,6 +402,11 @@ def _to_text(report: dict) -> str:
         else:
             lines.append("- qa_status distribution: unavailable")
 
+    if report.get("contract_violations"):
+        lines.append(f"- contract_violations: {len(report['contract_violations'])}")
+        for message in report["contract_violations"]:
+            lines.append(f"  - {message}")
+
     return "\n".join(lines)
 
 
@@ -284,12 +414,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     downloads_path = Path(args.downloads)
     capture_path = Path(args.official_capture)
-    report = build_qra_quality_report(downloads_path=downloads_path, capture_path=capture_path)
+    report = build_qra_quality_report(
+        downloads_path=downloads_path,
+        capture_path=capture_path,
+        check_contract=args.fail_on_contract,
+    )
 
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=False))
     else:
         print(_to_text(report))
+
+    if args.fail_on_contract and report["contract_violations"]:
+        return 1
 
     return 0
 

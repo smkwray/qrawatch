@@ -372,6 +372,53 @@ def test_build_refunding_statement_source_map_extracts_guidance(tmp_path) -> Non
     assert "buyback program" in row["guidance_buybacks"]
 
 
+def test_build_refunding_statement_source_map_falls_back_to_projected_financing_section(tmp_path) -> None:
+    html_path = tmp_path / "jy1238_demo.html"
+    html_path.write_text(
+        """
+        <html><body>
+        PROJECTED FINANCING NEEDS AND ISSUANCE PLANS
+        Treasury believes that current issuance sizes leave it well-positioned to address a range of potential borrowing needs, and as such, does not anticipate making any changes to nominal coupon and FRN new issue or reopening auction sizes over the upcoming February 2023 – April 2023 quarter.
+        The table below presents the anticipated auction sizes in billions of dollars for the February 2023 – April 2023 quarter:
+        Nov-22 42 40 43 35 35 15 21 22
+        Dec-22 42 40 43 35 32 12 18 22
+        Jan-23 42 40 43 35 32 12 18 24
+        Feb-23 42 40 43 35 35 15 21 22
+        Mar-23 42 40 43 35 32 12 18 22
+        Apr-23 42 40 43 35 32 12 18 24
+        Treasury plans to address any seasonal or unexpected variations in borrowing needs over the next quarter through changes in regular bill auction sizes and/or CMBs.
+        TIPS FINANCING
+        Over the February 2023 – April 2023 quarter, Treasury intends to maintain TIPS auction sizes.
+        DEBT LIMIT
+        Until the debt limit is suspended or increased, debt limit-related constraints will lead to greater-than-normal variability in benchmark bill issuance and significant usage of CMBs.
+        BUYBACK OUTREACH
+        Treasury continues to study a potential buyback program.
+        </body></html>
+        """,
+        encoding="utf-8",
+    )
+    downloads = pd.DataFrame(
+        [
+            {
+                "quarter": "2023Q1",
+                "href": "https://home.treasury.gov/news/press-releases/jy1238",
+                "local_path": str(html_path),
+                "doc_type": "official_quarterly_refunding_statement",
+            }
+        ]
+    )
+
+    source_map = build_refunding_statement_source_map(downloads)
+
+    row = source_map.iloc[0]
+    assert "Feb-23: 2Y=42" in row["guidance_nominal_coupons"]
+    assert "Apr-23: 2Y=42" in row["guidance_nominal_coupons"]
+    assert "Nov-22: 2Y=42" not in row["guidance_nominal_coupons"]
+    assert "Monthly FRN schedule: Feb-23: 2Y FRN=22" in row["guidance_frns"]
+    assert "regular bill auction sizes" in row["bill_guidance"]
+    assert "benchmark bill issuance" in row["bill_guidance"]
+
+
 def test_enrich_capture_with_refunding_statement_map_merges_sources_and_notes() -> None:
     capture = _empty_capture_df()
     capture.loc[0] = {
@@ -425,6 +472,34 @@ def test_build_quarter_net_issuance_from_auctions_reconstructs_2023q4_bill_net()
     assert bill_row["quarter"] == "2023Q4"
     assert bill_row["reconstruction_status"] == "complete"
     assert float(bill_row["net_issuance_bn"]) == pytest.approx(437.45, abs=0.05)
+
+
+def test_build_quarter_net_issuance_treats_cmb_only_missing_maturity_as_complete() -> None:
+    auctions = pd.DataFrame(
+        [
+            {
+                "issue_date": "2023-03-01",
+                "security_type": "Bill",
+                "cash_management_bill_cmb": "No",
+                "offering_amt": 100_000_000_000,
+                "est_pub_held_mat_by_type_amt": 90_000_000_000,
+            },
+            {
+                "issue_date": "2023-03-31",
+                "security_type": "Bill",
+                "cash_management_bill_cmb": "Yes",
+                "offering_amt": 50_000_000_000,
+                "est_pub_held_mat_by_type_amt": pd.NA,
+            },
+        ]
+    )
+
+    reconstruction = build_quarter_net_issuance_from_auctions(auctions, quarters=["2023Q1"])
+    bill_row = reconstruction.loc[reconstruction["bucket"] == "bill_like"].iloc[0]
+
+    assert bill_row["issue_dates_missing_maturing_estimate"] == 1
+    assert bill_row["issue_dates_cmb_only_missing_maturity"] == 1
+    assert bill_row["reconstruction_status"] == "complete"
 
 
 def test_enrich_capture_with_auction_reconstruction_promotes_rows() -> None:

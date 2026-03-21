@@ -346,6 +346,37 @@ def _format_schedule_diff_note(component_rows: pd.DataFrame, total_10y_eq_bn: fl
     return " ".join(pieces)
 
 
+def _alternative_treatment_status(row: pd.Series) -> tuple[bool, str, str]:
+    fields = (
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "gross_notional_delta_bn",
+    )
+    missing_fields = [
+        field
+        for field in fields
+        if pd.isna(pd.to_numeric(pd.Series([row.get(field)]), errors="coerce").iloc[0])
+    ]
+    if not missing_fields:
+        return True, "", ""
+
+    review_status = normalize_lower(row.get("shock_review_status"))
+    shock_source = normalize_lower(row.get("shock_source"))
+    construction = normalize_lower(row.get("shock_construction"))
+    if "manual_statement_review" in shock_source:
+        reason = "manual_statement_primary_only_pending_alt_treatments"
+    elif "manual_schedule_diff" in shock_source:
+        reason = "manual_schedule_diff_missing_alternative_fields"
+    elif construction.startswith("manual_override"):
+        reason = "manual_override_missing_alternative_fields"
+    elif review_status == "reviewed":
+        reason = "reviewed_event_missing_alternative_treatment_fields"
+    else:
+        reason = "alternative_treatment_fields_not_populated"
+    return False, "|".join(missing_fields), reason
+
+
 def autofill_qra_shock_template_from_schedule_components(
     template: pd.DataFrame,
     schedule_components: pd.DataFrame,
@@ -748,6 +779,11 @@ def build_qra_shock_crosswalk_v1(
     for _, row in deduped.iterrows():
         shock_source = row.get("shock_source", pd.NA)
         manual_override_reason = pd.NA
+        (
+            alternative_treatment_complete,
+            alternative_treatment_missing_fields,
+            alternative_treatment_missing_reason,
+        ) = _alternative_treatment_status(row)
         normalized_source = normalize_lower(shock_source)
         normalized_construction = normalize_lower(row.get("shock_construction", ""))
         if normalized_construction.startswith("manual_override"):
@@ -769,6 +805,9 @@ def build_qra_shock_crosswalk_v1(
                 "gross_notional_delta_bn": row.get("gross_notional_delta_bn", pd.NA),
                 "shock_source": shock_source,
                 "manual_override_reason": manual_override_reason,
+                "alternative_treatment_complete": alternative_treatment_complete,
+                "alternative_treatment_missing_fields": alternative_treatment_missing_fields,
+                "alternative_treatment_missing_reason": alternative_treatment_missing_reason,
                 "shock_review_status": row.get("shock_review_status", pd.NA),
             }
         )

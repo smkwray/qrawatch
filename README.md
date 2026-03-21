@@ -33,7 +33,7 @@ The repo now has a reproducible backend product and public site, with a delibera
 - investor allotments, primary dealer, and SEC N-MFP are now summary-ready extension modules
 - QRA event, shock-crosswalk, usability, leave-one-out, and absorption bridge tables are published when their source files exist
 
-Exact official quarter coverage currently spans `2022Q3`, `2022Q4`, and `2023Q3` through `2025Q4`; the two intervening quarters remain hybrid.
+Exact official quarter coverage currently spans a contiguous `2022Q3` through `2025Q4` window.
 This public release should be read as an in-progress research/data product, not as a finished long-history dataset.
 
 ## Quickstart
@@ -124,7 +124,7 @@ Some pieces are seeded rather than fully automated:
 
 ## Current limitations
 
-- the exact official quarter history is still short and non-contiguous, currently including `2022Q3`, `2022Q4`, and `2023Q3` through `2025Q4`; the two intervening quarters remain hybrid
+- the exact official quarter history is still short, even though the current published window is now contiguous from `2022Q3` through `2025Q4`
 - the event-study layer is informative but still small-sample
 - extension modules are supporting context, not the headline result
 - the long-history version of the project still needs additional official quarter capture

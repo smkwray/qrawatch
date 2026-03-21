@@ -940,6 +940,40 @@ def test_validate_backend_flags_shock_drift_for_known_events(tmp_path: Path) -> 
         assert any(f":{event_id}:" in message for message in result.warnings), f"missing drift warning for {event_id}"
 
 
+def test_validate_shock_drift_alerts_ignores_elasticity_duplicates() -> None:
+    warnings: list[str] = []
+    frame = pd.DataFrame(
+        [
+            {
+                "event_id": "e1",
+                "event_date_type": "official_release_date",
+                "treatment_variant": "canonical_shock_bn",
+                "shock_bn": 0.0,
+                "schedule_diff_10y_eq_bn": 120.0,
+                "schedule_diff_dynamic_10y_eq_bn": 125.0,
+                "shock_review_status": "reviewed",
+            },
+            {
+                "event_id": "e1",
+                "event_date_type": "official_release_date",
+                "treatment_variant": "fixed_10y_eq_bn",
+                "shock_bn": 0.0,
+                "schedule_diff_10y_eq_bn": 120.0,
+                "schedule_diff_dynamic_10y_eq_bn": 125.0,
+                "shock_review_status": "reviewed",
+            },
+        ]
+    )
+
+    validate_backend_script._validate_shock_drift_alerts(
+        "qra_event_elasticity.csv",
+        frame,
+        warnings=warnings,
+    )
+
+    assert warnings == []
+
+
 def test_validate_backend_checks_readme_coverage_consistency(tmp_path: Path) -> None:
     capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
         tmp_path

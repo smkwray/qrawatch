@@ -87,3 +87,49 @@ def test_download_link_manifest_adds_provenance_and_skips_existing(monkeypatch, 
     assert first.loc[0, "content_type"] == "application/pdf"
     assert first.loc[0, "source_href_sha1"]
     assert first.loc[0, "filename_method"] == "slug_sha1_href_ext"
+
+
+def test_download_link_manifest_backfills_press_release_quarter_from_downloaded_html(
+    monkeypatch, tmp_path: Path
+):
+    def fake_download(url: str, path: Path, **kwargs):
+        path.write_text(
+            """
+            <html><body>
+            <div>Press Releases Treasury Announces Marketable Borrowing Estimates April 28, 2025 Sources and Uses Table WASHINGTON --</div>
+            </body></html>
+            """,
+            encoding="utf-8",
+        )
+        return {
+            "download_status": "ok",
+            "download_attempts": 1,
+            "http_status": 200,
+            "final_url": url,
+            "content_type": "text/html",
+            "content_length": "100",
+            "etag": None,
+            "last_modified": None,
+            "downloaded_at_utc": "2026-03-21T00:00:00+00:00",
+            "bytes_written": 100,
+            "skipped_existing": False,
+            "error_type": None,
+            "error_message": None,
+        }
+
+    monkeypatch.setattr(webscrape, "download_binary_with_metadata", fake_download)
+    links = pd.DataFrame(
+        [
+            {
+                "href": "https://example.com/press/sb0115",
+                "text": "2nd Quarter",
+                "doc_type": "quarterly_refunding_press_release",
+                "source_family": "financing_estimates_archive",
+                "quarter": "",
+            }
+        ]
+    )
+
+    downloaded = webscrape.download_link_manifest(links, tmp_path)
+
+    assert downloaded.loc[0, "quarter"] == "2025Q2"

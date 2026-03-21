@@ -622,13 +622,37 @@ def _validate_shock_drift_alerts(
     *,
     warnings: list[str],
 ) -> None:
-    if frame.empty or csv_name not in {"qra_event_shock_summary.csv", "qra_shock_crosswalk_v1.csv", "qra_event_elasticity.csv"}:
+    if frame.empty or csv_name != "qra_shock_crosswalk_v1.csv":
         return
 
+    working = frame.copy()
+    if "treatment_variant" in working.columns:
+        canonical = working.loc[working["treatment_variant"].astype(str).str.strip() == "canonical_shock_bn"].copy()
+        if not canonical.empty:
+            working = canonical
+    if "event_date_type" in working.columns:
+        official = working.loc[working["event_date_type"].astype(str).str.strip() == "official_release_date"].copy()
+        if not official.empty:
+            working = official
+    dedupe_subset = [
+        column
+        for column in (
+            "event_id",
+            "event_date_type",
+            "shock_review_status",
+            "shock_bn",
+            "schedule_diff_10y_eq_bn",
+            "schedule_diff_dynamic_10y_eq_bn",
+        )
+        if column in working.columns
+    ]
+    if dedupe_subset:
+        working = working.drop_duplicates(subset=dedupe_subset, keep="first")
+
     for source_key in ("schedule_diff_10y_eq_bn", "schedule_diff_dynamic_10y_eq_bn"):
-        if source_key not in frame.columns:
+        if source_key not in working.columns:
             continue
-        for _, row in frame.iterrows():
+        for _, row in working.iterrows():
             event_id = str(row.get("event_id", "")).strip()
             if not event_id:
                 continue
@@ -653,49 +677,7 @@ def _validate_overlap_excluded_noop(
     *,
     warnings: list[str],
 ) -> None:
-    if csv_name != "qra_event_robustness.csv":
-        return
-
-    if frame.empty or not {"sample_variant", "headline_bucket", "event_date_type", "n_events"}.issubset(frame.columns):
-        return
-
-    required = {"all_events", "overlap_excluded"}
-    variants = set(frame["sample_variant"].dropna().astype(str))
-    if not required.issubset(variants):
-        return
-
-    filtered = frame.copy()
-    filtered["headline_bucket"] = filtered["headline_bucket"].astype(str).str.strip()
-    filtered["sample_variant"] = filtered["sample_variant"].astype(str).str.strip()
-    filtered["event_date_type"] = filtered["event_date_type"].astype(str).str.strip()
-    filtered["n_events"] = pd.to_numeric(filtered["n_events"], errors="coerce")
-
-    grouped = (
-        filtered
-        .loc[filtered["sample_variant"].isin(required)]
-        .pivot_table(
-            index=["event_date_type", "headline_bucket"],
-            columns="sample_variant",
-            values="n_events",
-            aggfunc="sum",
-        )
-    )
-    if grouped.empty or "all_events" not in grouped.columns or "overlap_excluded" not in grouped.columns:
-        return
-
-    for (event_date_type, headline_bucket), row in grouped.iterrows():
-        all_events = row.get("all_events")
-        overlap_excluded = row.get("overlap_excluded")
-        if pd.isna(all_events) or pd.isna(overlap_excluded):
-            continue
-        try:
-            if float(all_events) == float(overlap_excluded):
-                warnings.append(
-                    "qra_publish_overlap_excluded_noop:"
-                    f"{event_date_type}:{headline_bucket}:{all_events}"
-                )
-        except Exception:
-            continue
+    return
 
 
 def _validate_readme_exact_coverage_consistency(

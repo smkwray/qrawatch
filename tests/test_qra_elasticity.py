@@ -371,9 +371,42 @@ def test_build_qra_shock_crosswalk_v1_emits_required_columns() -> None:
         "gross_notional_delta_bn",
         "shock_source",
         "manual_override_reason",
+        "alternative_treatment_complete",
+        "alternative_treatment_missing_fields",
+        "alternative_treatment_missing_reason",
         "shock_review_status",
     ]
     assert crosswalk.loc[0, "manual_override_reason"] == "manual_override_with_schedule_context"
+    assert bool(crosswalk.loc[0, "alternative_treatment_complete"]) is True
+
+
+def test_build_qra_shock_crosswalk_v1_marks_reviewed_missing_alternative_treatments() -> None:
+    template = pd.DataFrame(
+        {
+            "event_id": ["e1"],
+            "event_date_type": ["official_release_date"],
+            "shock_bn": [25.0],
+            "schedule_diff_10y_eq_bn": [pd.NA],
+            "schedule_diff_dynamic_10y_eq_bn": [pd.NA],
+            "schedule_diff_dv01_usd": [pd.NA],
+            "gross_notional_delta_bn": [pd.NA],
+            "shock_source": ["manual_statement_review_v1"],
+            "shock_review_status": ["reviewed"],
+            "shock_construction": ["manual_override_with_schedule_context"],
+        }
+    )
+
+    crosswalk = build_qra_shock_crosswalk_v1(template)
+
+    assert bool(crosswalk.loc[0, "alternative_treatment_complete"]) is False
+    assert crosswalk.loc[0, "alternative_treatment_missing_fields"] == (
+        "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|"
+        "schedule_diff_dv01_usd|gross_notional_delta_bn"
+    )
+    assert (
+        crosswalk.loc[0, "alternative_treatment_missing_reason"]
+        == "manual_statement_primary_only_pending_alt_treatments"
+    )
 
 
 def test_build_event_usability_table_uses_canonical_variant_only() -> None:
