@@ -1,7 +1,10 @@
 .venv/
+venv/
+env/
 __pycache__/
 *.pyc
 .pytest_cache/
+.cache/
 .DS_Store
 .playwright-mcp/
 do/

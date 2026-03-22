@@ -4,11 +4,11 @@
     {
       "dataset": "official_capture",
       "readiness_tier": "headline_ready",
-      "source_quality": "exact_official",
+      "source_quality": "exact_official_window_plus_seed_history",
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T22:41:14.202576+00:00",
+      "last_regenerated_utc": "2026-03-22T22:28:59.083074+00:00",
       "review_maturity": "headline_ready",
       "public_role": "supporting"
     },
@@ -19,7 +19,7 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T22:41:14.747858+00:00",
+      "last_regenerated_utc": "2026-03-22T22:28:59.659852+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
     },
@@ -30,18 +30,73 @@
       "headline_ready": false,
       "fallback_only": true,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-22T11:22:38.091999+00:00",
+      "last_regenerated_utc": "2026-03-22T22:34:09.779391+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
     {
       "dataset": "qra_event_registry_v2",
-      "readiness_tier": "supporting_ready",
+      "readiness_tier": "supporting_provisional",
       "source_quality": "derived_event_ledger",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "no_tier_a_components|no_reviewed_surprise_components",
+      "last_regenerated_utc": "2026-03-22T22:39:36.341743+00:00",
+      "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "qra_release_component_registry",
+      "readiness_tier": "supporting_provisional",
+      "source_quality": "derived_component_registry",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "no_tier_a_components|no_reviewed_surprise_components",
+      "last_regenerated_utc": "2026-03-22T22:39:36.374888+00:00",
+      "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "qra_benchmark_coverage",
+      "readiness_tier": "supporting_ready",
+      "source_quality": "derived_benchmark_coverage",
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-22T11:22:38.852988+00:00",
+      "last_regenerated_utc": "2026-03-22T22:39:36.374888+00:00",
+      "review_maturity": "supporting_ready",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "qra_causal_qa_ledger",
+      "readiness_tier": "supporting_provisional",
+      "source_quality": "derived_causal_qa",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "no_tier_a_components|no_reviewed_surprise_components",
+      "last_regenerated_utc": "2026-03-22T22:39:36.445708+00:00",
+      "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "official_capture_history_status",
+      "readiness_tier": "supporting_ready",
+      "source_quality": "exact_official_window_plus_backfilled_history",
+      "headline_ready": false,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-22T22:28:59.083074+00:00",
+      "review_maturity": "supporting_ready",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "event_design_status",
+      "readiness_tier": "supporting_provisional",
+      "source_quality": "derived_event_design_status",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "no_tier_a_components|no_reviewed_surprise_components",
+      "last_regenerated_utc": "2026-03-22T22:39:36.447073+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -52,7 +107,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-22T11:22:38.875520+00:00",
+      "last_regenerated_utc": "2026-03-22T22:39:36.533070+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -63,7 +118,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-22T11:22:37.369824+00:00",
+      "last_regenerated_utc": "2026-03-22T22:34:07.485419+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -74,7 +129,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-22T11:22:38.903189+00:00",
+      "last_regenerated_utc": "2026-03-22T22:39:36.624635+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -85,7 +140,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-22T11:22:39.166909+00:00",
+      "last_regenerated_utc": "2026-03-22T22:39:37.881577+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -96,7 +151,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T22:29:44.083247+00:00",
+      "last_regenerated_utc": "2026-03-22T21:49:02.707978+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },

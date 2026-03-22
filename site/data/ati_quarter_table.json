@@ -3,7 +3,7 @@
   "rows": [
     {
       "quarter": "2022Q3",
-      "financing_need_bn": 182,
+      "financing_need_bn": 182.0,
       "net_bills_bn": 137.088,
       "bill_share": 0.7532307692307691,
       "missing_coupons_15_bn": 109.788,
@@ -15,7 +15,7 @@
     },
     {
       "quarter": "2022Q4",
-      "financing_need_bn": 400,
+      "financing_need_bn": 400.0,
       "net_bills_bn": 73.149,
       "bill_share": 0.1828725,
       "missing_coupons_15_bn": 13.149,
@@ -27,7 +27,7 @@
     },
     {
       "quarter": "2023Q1",
-      "financing_need_bn": 578,
+      "financing_need_bn": 578.0,
       "net_bills_bn": 335.198,
       "bill_share": 0.5799273356401383,
       "missing_coupons_15_bn": 248.498,
@@ -39,7 +39,7 @@
     },
     {
       "quarter": "2023Q2",
-      "financing_need_bn": 278,
+      "financing_need_bn": 278.0,
       "net_bills_bn": 360.307,
       "bill_share": 1.2960683453237412,
       "missing_coupons_15_bn": 318.607,
@@ -51,7 +51,7 @@
     },
     {
       "quarter": "2023Q3",
-      "financing_need_bn": 733,
+      "financing_need_bn": 733.0,
       "net_bills_bn": 824.9,
       "bill_share": 1.12537517053206,
       "missing_coupons_15_bn": 714.9499999999999,
@@ -63,7 +63,7 @@
     },
     {
       "quarter": "2023Q4",
-      "financing_need_bn": 852,
+      "financing_need_bn": 852.0,
       "net_bills_bn": 437.423,
       "bill_share": 0.5134072769953052,
       "missing_coupons_15_bn": 309.623,
@@ -75,7 +75,7 @@
     },
     {
       "quarter": "2024Q1",
-      "financing_need_bn": 816,
+      "financing_need_bn": 816.0,
       "net_bills_bn": 409.117,
       "bill_share": 0.5013688725490196,
       "missing_coupons_15_bn": 286.71700000000004,
@@ -87,7 +87,7 @@
     },
     {
       "quarter": "2024Q2",
-      "financing_need_bn": 202,
+      "financing_need_bn": 202.0,
       "net_bills_bn": -296.523,
       "bill_share": -1.4679356435643565,
       "missing_coupons_15_bn": -326.82300000000004,
@@ -99,7 +99,7 @@
     },
     {
       "quarter": "2024Q3",
-      "financing_need_bn": 847,
+      "financing_need_bn": 847.0,
       "net_bills_bn": 239.382,
       "bill_share": 0.2826233766233766,
       "missing_coupons_15_bn": 112.332,
@@ -111,7 +111,7 @@
     },
     {
       "quarter": "2024Q4",
-      "financing_need_bn": 565,
+      "financing_need_bn": 565.0,
       "net_bills_bn": 182.504,
       "bill_share": 0.3230159292035398,
       "missing_coupons_15_bn": 97.754,
@@ -123,7 +123,7 @@
     },
     {
       "quarter": "2025Q1",
-      "financing_need_bn": 823,
+      "financing_need_bn": 823.0,
       "net_bills_bn": -30.595,
       "bill_share": -0.0371749696233292,
       "missing_coupons_15_bn": -154.045,
@@ -135,7 +135,7 @@
     },
     {
       "quarter": "2025Q2",
-      "financing_need_bn": 123,
+      "financing_need_bn": 123.0,
       "net_bills_bn": -371.653,
       "bill_share": -3.021569105691057,
       "missing_coupons_15_bn": -390.103,
@@ -147,7 +147,7 @@
     },
     {
       "quarter": "2025Q3",
-      "financing_need_bn": 554,
+      "financing_need_bn": 554.0,
       "net_bills_bn": 613.383,
       "bill_share": 1.1071895306859207,
       "missing_coupons_15_bn": 530.283,
@@ -159,7 +159,7 @@
     },
     {
       "quarter": "2025Q4",
-      "financing_need_bn": 590,
+      "financing_need_bn": 590.0,
       "net_bills_bn": 150.478,
       "bill_share": 0.2550474576271186,
       "missing_coupons_15_bn": 61.97800000000001,

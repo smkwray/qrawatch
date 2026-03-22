@@ -1,0 +1,9 @@
+metric,value,notes
+release_component_count,75,Total release components in the current registry.
+tier_a_count,0,Causal-eligible components.
+tier_b_count,28,Reviewed descriptive-only components.
+tier_c_count,44,Official components missing reviewed causal gates.
+tier_d_count,3,Provisional or scaffold components.
+exact_time_component_count,28,Components with exact release timestamps.
+reviewed_surprise_ready_count,0,Components with reviewed expectation/surprise inputs.
+reviewed_clean_component_count,23,Components marked reviewed_clean for contamination.

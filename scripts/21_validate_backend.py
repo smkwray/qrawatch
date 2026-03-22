@@ -78,6 +78,15 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "qa_status",
         "is_headline_ready",
     ],
+    "official_capture_history_status.csv": [
+        "quarter",
+        "qra_release_date",
+        "qa_status",
+        "source_quality",
+        "readiness_tier",
+        "headline_ready",
+        "source_completeness",
+    ],
     "ati_seed_vs_official.csv": [
         "quarter",
         "ati_seed_bn",
@@ -226,6 +235,7 @@ OPTIONAL_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "event_id",
         "event_date_type",
         "headline_bucket",
+        "overlap_severity",
         "classification_review_status",
         "shock_review_status",
         "shock_bn",
@@ -359,8 +369,19 @@ OPTIONAL_PUBLISH_SCHEMAS.update(
             "release_timestamp_et",
             "timestamp_precision",
             "source_url",
+            "benchmark_source_family",
+            "benchmark_timing_status",
+            "external_benchmark_ready",
+            "expectation_status",
+            "contamination_status",
             "quality_tier",
             "eligibility_blockers",
+        ],
+        "qra_benchmark_coverage.csv": [
+            "scope",
+            "metric",
+            "value",
+            "notes",
         ],
         "qra_causal_qa_ledger.csv": [
             "event_id",
@@ -1145,6 +1166,148 @@ def _validate_overlap_excluded_for_file(
         _validate_overlap_excluded_noop(csv_name, csv_frame, errors=errors, warnings=warnings)
 
 
+def _validate_causal_component_registry(component_registry: pd.DataFrame) -> list[str]:
+    errors: list[str] = []
+    if component_registry.empty:
+        return errors
+
+    exact_time = component_registry.loc[
+        component_registry.get("timestamp_precision", pd.Series(dtype=object))
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .eq("exact_time")
+    ].copy()
+    if not exact_time.empty:
+        missing_expectation = exact_time.loc[
+            exact_time.get("expectation_status", pd.Series(dtype=object))
+            .fillna("")
+            .astype(str)
+            .str.strip()
+            .eq("")
+        ]
+        if not missing_expectation.empty:
+            errors.append(
+                "qra_component_registry_missing_expectation_status:"
+                + ",".join(sorted(missing_expectation["release_component_id"].astype(str).unique()))
+            )
+        missing_contamination = exact_time.loc[
+            exact_time.get("contamination_status", pd.Series(dtype=object))
+            .fillna("")
+            .astype(str)
+            .str.strip()
+            .eq("")
+        ]
+        if not missing_contamination.empty:
+            errors.append(
+                "qra_component_registry_missing_contamination_status:"
+                + ",".join(sorted(missing_contamination["release_component_id"].astype(str).unique()))
+            )
+        if "benchmark_timing_status" in exact_time.columns:
+            missing_benchmark_timing = exact_time.loc[
+                exact_time["benchmark_timing_status"]
+                .fillna("")
+                .astype(str)
+                .str.strip()
+                .eq("")
+            ]
+        else:
+            missing_benchmark_timing = exact_time.copy()
+        if not missing_benchmark_timing.empty:
+            errors.append(
+                "qra_component_registry_missing_benchmark_timing_status:"
+                + ",".join(sorted(missing_benchmark_timing["release_component_id"].astype(str).unique()))
+            )
+
+    causal_claims = component_registry.loc[
+        component_registry.get("causal_eligible", pd.Series(dtype=bool)).fillna(False).astype(bool)
+    ].copy()
+    if not causal_claims.empty:
+        invalid_claims: list[str] = []
+        for _, row in causal_claims.iterrows():
+            if str(row.get("quality_tier", "")).strip() != "Tier A":
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if not _is_missing(row.get("eligibility_blockers", "")):
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if str(row.get("timestamp_precision", "")).strip() != "exact_time":
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if str(row.get("separability_status", "")).strip() != "separable_component":
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if str(row.get("expectation_status", "")).strip() != "reviewed_surprise_ready":
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if str(row.get("benchmark_timing_status", "")).strip() != "pre_release_external":
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if not _coerce_bool(row.get("external_benchmark_ready")):
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if str(row.get("contamination_status", "")).strip() != "reviewed_clean":
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if not str(row.get("source_url", "")).strip():
+                invalid_claims.append(str(row.get("release_component_id", "")))
+        if invalid_claims:
+            errors.append(
+                "qra_component_registry_invalid_causal_eligible_claim:"
+                + ",".join(sorted(set(invalid_claims)))
+            )
+
+    tier_a = component_registry.loc[
+        component_registry.get("quality_tier", pd.Series(dtype=object))
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .eq("Tier A")
+    ].copy()
+    if not tier_a.empty:
+        tier_a_without_flag = tier_a.loc[
+            ~tier_a.get("causal_eligible", pd.Series(dtype=bool)).fillna(False).astype(bool)
+        ]
+        if not tier_a_without_flag.empty:
+            errors.append(
+                "qra_component_registry_tier_a_not_marked_causal_eligible:"
+                + ",".join(sorted(tier_a_without_flag["release_component_id"].astype(str).unique()))
+            )
+    return errors
+
+
+def _validate_event_design_status_against_components(
+    component_registry: pd.DataFrame,
+    event_design_status: pd.DataFrame,
+) -> list[str]:
+    errors: list[str] = []
+    if component_registry.empty or event_design_status.empty:
+        return errors
+
+    actual_metrics = {
+        "release_component_count": int(len(component_registry)),
+        "tier_a_count": int(component_registry.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier A").sum()),
+        "tier_b_count": int(component_registry.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier B").sum()),
+        "tier_c_count": int(component_registry.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier C").sum()),
+        "tier_d_count": int(component_registry.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier D").sum()),
+        "exact_time_component_count": int(component_registry.get("timestamp_precision", pd.Series(dtype=object)).astype(str).eq("exact_time").sum()),
+        "reviewed_surprise_ready_count": int(component_registry.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("reviewed_surprise_ready").sum()),
+        "reviewed_clean_component_count": int(component_registry.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_clean").sum()),
+    }
+    reported = {
+        str(row.get("metric", "")).strip(): int(pd.to_numeric(pd.Series([row.get("value")]), errors="coerce").fillna(0).iloc[0])
+        for _, row in event_design_status.iterrows()
+    }
+    mismatched = [
+        metric
+        for metric, actual in actual_metrics.items()
+        if metric in reported and reported[metric] != actual
+    ]
+    if mismatched:
+        errors.append("qra_event_design_status_metric_mismatch:" + ",".join(sorted(mismatched)))
+    return errors
+
+
 def _canonical_qra_review_frame(frame: pd.DataFrame) -> pd.DataFrame:
     if frame.empty:
         return frame.copy()
@@ -1157,8 +1320,8 @@ def _canonical_qra_review_frame(frame: pd.DataFrame) -> pd.DataFrame:
         official = working.loc[working["event_date_type"].astype(str).str.strip() == "official_release_date"].copy()
         if not official.empty:
             working = official
-    dedupe = [column for column in ("event_id", "event_date_type") if column in working.columns]
-    if dedupe:
+    if "event_id" in working.columns:
+        dedupe = [column for column in ("event_id", "event_date_type") if column in working.columns]
         working = working.drop_duplicates(subset=dedupe, keep="first").reset_index(drop=True)
     return working
 
@@ -1167,6 +1330,7 @@ def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> li
     errors: list[str] = []
     registry = qra_frames.get("qra_event_registry_v2.csv", pd.DataFrame())
     component_registry = qra_frames.get("qra_release_component_registry.csv", pd.DataFrame())
+    event_design_status = qra_frames.get("event_design_status.csv", pd.DataFrame())
     crosswalk = _canonical_qra_review_frame(qra_frames.get("qra_shock_crosswalk_v1.csv", pd.DataFrame()))
     shock_summary = _canonical_qra_review_frame(qra_frames.get("qra_event_shock_summary.csv", pd.DataFrame()))
     elasticity = _canonical_qra_review_frame(qra_frames.get("qra_event_elasticity.csv", pd.DataFrame()))
@@ -1174,6 +1338,9 @@ def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> li
     if registry.empty or crosswalk.empty or shock_summary.empty or usability.empty:
         if registry.empty or component_registry.empty:
             return errors
+
+    errors.extend(_validate_causal_component_registry(component_registry))
+    errors.extend(_validate_event_design_status_against_components(component_registry, event_design_status))
 
     if not registry.empty and not component_registry.empty:
         registry = registry.drop_duplicates(subset=["event_id"], keep="first").copy()
@@ -1212,9 +1379,12 @@ def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> li
                     "qra_publish_consistency_registry_component_precision_mismatch:"
                     + ",".join(sorted(precision_mismatch["event_id"].astype(str).unique()))
                 )
-            timestamp_mismatch = joined_registry.loc[
-                joined_registry["release_timestamp_et"].fillna("").astype(str).str.strip()
-                != joined_registry["expected_release_timestamp_et"].fillna("").astype(str).str.strip()
+            timestamp_check = joined_registry.loc[
+                joined_registry["expected_release_timestamp_et"].fillna("").astype(str).str.strip() != ""
+            ].copy()
+            timestamp_mismatch = timestamp_check.loc[
+                timestamp_check["release_timestamp_et"].fillna("").astype(str).str.strip()
+                != timestamp_check["expected_release_timestamp_et"].fillna("").astype(str).str.strip()
             ]
             if not timestamp_mismatch.empty:
                 errors.append(
@@ -1316,6 +1486,7 @@ def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> li
         "usable_for_headline_reason",
         "event_count",
     }.issubset(usability.columns):
+        usability = _canonical_qra_review_frame(usability)
         summary_group = (
             shock_summary.groupby(
                 [
@@ -1398,7 +1569,7 @@ def validate_publish_artifacts(
             _validate_shock_drift_alerts(csv_name, csv_frame, warnings=warnings)
         if csv_name.startswith("qra_event_"):
             _validate_overlap_excluded_for_file(csv_name, csv_frame, errors=errors, warnings=warnings)
-        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv"}:
+        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv", "event_design_status.csv"}:
             qra_frames[csv_name] = csv_frame.copy()
         if csv_name == "official_capture_readiness.csv":
             readiness_frame = csv_frame
@@ -1434,7 +1605,7 @@ def validate_publish_artifacts(
             _validate_shock_drift_alerts(csv_name, csv_frame, warnings=warnings)
         if csv_name.startswith("qra_event_"):
             _validate_overlap_excluded_for_file(csv_name, csv_frame, errors=errors, warnings=warnings)
-        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv"}:
+        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv", "event_design_status.csv"}:
             qra_frames[csv_name] = csv_frame.copy()
         if csv_name == "official_capture_readiness.csv":
             readiness_frame = csv_frame

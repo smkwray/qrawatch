@@ -1,13 +1,13 @@
 event_id,overlap_flag,overlap_label,overlap_note
-qra_2022_05,false,,Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.
+qra_2022_05,true,FOMC_same_day,Reviewed explicit multi-stage Treasury release; the policy statement shares the day with the FOMC statement.
 qra_2022_08,false,,Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.
 qra_2022_11,false,,Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.
 qra_2023_02,false,,Reviewed false; hawkish guidance is handled in classification and no separate external macro overlap is recorded locally.
-qra_2023_05,false,,Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.
-qra_2023_08,false,,Reviewed same-day Treasury financing and statement bundle; no separate external macro overlap is recorded locally.
+qra_2023_05,true,FOMC_and_BLS_same_day,Reviewed explicit multi-stage Treasury release; the policy statement shares the day with BLS and the FOMC statement.
+qra_2023_08,true,BLS_same_day,Reviewed same-day Treasury financing and statement bundle; the policy statement shares the day with the BLS release.
 qra_2023_11,false,,Local materials show a same-day Treasury bundle only; external macro overlap crosswalk is still absent.
 qra_2024_01,false,,Local materials show a same-day Treasury bundle only; external macro overlap crosswalk is still absent.
-qra_2024_05,false,,Reviewed same-day Treasury bundle; no separate external macro overlap is recorded locally.
+qra_2024_05,true,Beige_Book_FOMC_BLS_same_day,Reviewed same-day Treasury bundle; financing coincides with the Beige Book and the policy statement shares the day with BLS and the FOMC statement.
 qra_2024_07,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded
 qra_2024_10,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded
 qra_2025_02,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded

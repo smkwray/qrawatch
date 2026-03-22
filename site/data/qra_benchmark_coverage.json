@@ -1,0 +1,101 @@
+{
+  "title": "QRA Benchmark Coverage",
+  "rows": [
+    {
+      "scope": "current_sample_all_components",
+      "metric": "release_component_count",
+      "value": 28,
+      "notes": "Components in scope."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "pre_release_external_benchmark_count",
+      "value": 0,
+      "notes": "Rows with benchmark timing classified as pre-release external."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "same_release_placeholder_count",
+      "value": 14,
+      "notes": "Rows still blocked by same-release placeholder benchmark semantics."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "post_release_invalid_count",
+      "value": 0,
+      "notes": "Rows with post-release benchmark timestamps."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "external_timing_unverified_count",
+      "value": 14,
+      "notes": "Rows with a benchmark source family attached but no validated pre-release timestamp."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "external_benchmark_ready_count",
+      "value": 0,
+      "notes": "Rows structurally ready for causal surprise use."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "reviewed_clean_count",
+      "value": 23,
+      "notes": "Rows with reviewed clean contamination status."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "causal_eligible_count",
+      "value": 0,
+      "notes": "Rows that currently pass all causal gates."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "release_component_count",
+      "value": 14,
+      "notes": "Components in scope."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "pre_release_external_benchmark_count",
+      "value": 0,
+      "notes": "Rows with benchmark timing classified as pre-release external."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "same_release_placeholder_count",
+      "value": 0,
+      "notes": "Rows still blocked by same-release placeholder benchmark semantics."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "post_release_invalid_count",
+      "value": 0,
+      "notes": "Rows with post-release benchmark timestamps."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "external_timing_unverified_count",
+      "value": 14,
+      "notes": "Rows with a benchmark source family attached but no validated pre-release timestamp."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "external_benchmark_ready_count",
+      "value": 0,
+      "notes": "Rows structurally ready for causal surprise use."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "reviewed_clean_count",
+      "value": 13,
+      "notes": "Rows with reviewed clean contamination status."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "causal_eligible_count",
+      "value": 0,
+      "notes": "Rows that currently pass all causal gates."
+    }
+  ]
+}

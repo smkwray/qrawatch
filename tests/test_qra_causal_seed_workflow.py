@@ -163,6 +163,8 @@ def test_seed_expectation_and_contamination_templates_use_release_component_plac
     assert expectation_policy["expectation_review_status"] == "reviewed"
     assert expectation_policy["benchmark_source"] == "dealer_survey"
     assert expectation_financing["expectation_review_status"] == "pending"
+    assert expectation_financing["benchmark_timing_status"] == "same_release_placeholder"
+    assert bool(expectation_financing["external_benchmark_ready"]) is False
     assert "shock_bn=25.5" in expectation_financing["expectation_notes"]
     assert contamination_policy["contamination_status"] == "reviewed_clean"
     assert contamination_policy["contamination_review_status"] == "reviewed"

@@ -2,6 +2,456 @@
   "title": "Official Capture Readiness",
   "rows": [
     {
+      "quarter": "2010Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2010Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2010Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2010Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2011Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2011Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2011Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2011Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2012Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2012Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2012Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2012Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2013Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2013Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2013Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2013Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2014Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2014Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2014Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2014Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2015Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2015Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2015Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|financing_estimates_attachment; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2015Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2016Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2016Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2016Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2016Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2017Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2017Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2017Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2017Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2018Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2018Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2018Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2018Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2019Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2019Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2019Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2019Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2020Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2020Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2020Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2020Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|quarterly_refunding_press_release; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2021Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|seed_csv; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2021Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|seed_csv; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2021Q3",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|seed_csv; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2021Q4",
+      "readiness_tier": "incomplete",
+      "source_quality": "official_hybrid",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|seed_csv; qa=semi_automated_capture"
+    },
+    {
+      "quarter": "2022Q1",
+      "readiness_tier": "incomplete",
+      "source_quality": "seed_only",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|seed_csv; qa=seed_only"
+    },
+    {
+      "quarter": "2022Q2",
+      "readiness_tier": "incomplete",
+      "source_quality": "seed_only",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "total_financing_need_bn",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|seed_csv; qa=seed_only"
+    },
+    {
       "quarter": "2022Q3",
       "readiness_tier": "headline_ready",
       "source_quality": "exact_official",

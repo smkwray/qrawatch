@@ -44,6 +44,17 @@ def _load_qra_events() -> pd.DataFrame:
         ):
             if right_col in events.columns:
                 events[left_col] = _coalesce(events[left_col], events[right_col])
+        for base_col in ("quarter", "policy_statement_url", "financing_estimates_url"):
+            left_col = f"{base_col}_x"
+            right_col = f"{base_col}_y"
+            if left_col not in events.columns and right_col not in events.columns:
+                continue
+            left_series = events[left_col] if left_col in events.columns else pd.Series(pd.NA, index=events.index)
+            right_series = events[right_col] if right_col in events.columns else pd.Series(pd.NA, index=events.index)
+            events[base_col] = _coalesce(left_series, right_series)
+            drop_cols = [column for column in (left_col, right_col) if column in events.columns]
+            if drop_cols:
+                events = events.drop(columns=drop_cols)
         if "policy_statement_release_date" in events.columns:
             events["official_release_date"] = _coalesce(
                 events["official_release_date"],

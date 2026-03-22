@@ -1,0 +1,45 @@
+{
+  "title": "Event Design Status",
+  "rows": [
+    {
+      "metric": "release_component_count",
+      "value": 75,
+      "notes": "Total release components in the current registry."
+    },
+    {
+      "metric": "tier_a_count",
+      "value": 0,
+      "notes": "Causal-eligible components."
+    },
+    {
+      "metric": "tier_b_count",
+      "value": 28,
+      "notes": "Reviewed descriptive-only components."
+    },
+    {
+      "metric": "tier_c_count",
+      "value": 44,
+      "notes": "Official components missing reviewed causal gates."
+    },
+    {
+      "metric": "tier_d_count",
+      "value": 3,
+      "notes": "Provisional or scaffold components."
+    },
+    {
+      "metric": "exact_time_component_count",
+      "value": 28,
+      "notes": "Components with exact release timestamps."
+    },
+    {
+      "metric": "reviewed_surprise_ready_count",
+      "value": 0,
+      "notes": "Components with reviewed expectation/surprise inputs."
+    },
+    {
+      "metric": "reviewed_clean_component_count",
+      "value": 23,
+      "notes": "Components marked reviewed_clean for contamination."
+    }
+  ]
+}

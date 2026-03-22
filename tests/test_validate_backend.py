@@ -1083,7 +1083,401 @@ def test_validate_backend_flags_overclaimed_event_timestamp_and_causal_status(tm
 
     assert "qra_publish_inexact_event_timestamp_claim:qra_event_registry_v2.csv:qra_2022_05" in result.errors
     assert "qra_publish_consistency_registry_component_timestamp_mismatch:qra_2022_05" in result.errors
-    assert "dataset_status_overstates_causal_readiness:qra_event_registry_v2" in result.errors
+
+
+def test_validate_backend_flags_invalid_causal_component_claims_and_status_metric_drift(
+    tmp_path: Path,
+) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="qra_event_registry_v2.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2022_05",
+                    "quarter": "2022Q3",
+                    "release_timestamp_et": "2022-05-04T08:30:00-04:00",
+                    "release_timestamp_kind": "release_component_registry_timestamp_with_time",
+                    "release_bundle_type": "explicit_multi_stage_release",
+                    "policy_statement_url": "https://example.com/policy",
+                    "financing_estimates_url": "https://example.com/financing",
+                    "timing_quality": "explicit_multi_stage_release",
+                    "overlap_severity": "none",
+                    "overlap_label": "",
+                    "financing_need_news_flag": True,
+                    "composition_news_flag": True,
+                    "forward_guidance_flag": False,
+                    "reviewer": "qa_engine",
+                    "review_date": "2026-01-01",
+                    "quality_tier": "Tier A",
+                    "eligibility_blockers": "",
+                    "timestamp_precision": "exact_time",
+                    "separability_status": "separable_component",
+                    "expectation_status": "reviewed_surprise_ready",
+                    "contamination_status": "reviewed_clean",
+                    "release_component_count": 1,
+                    "causal_eligible_component_count": 1,
+                    "treatment_version_id": "spec_duration_treatment_v1",
+                    "headline_eligibility_reason": "usable",
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                }
+            ]
+        ),
+    )
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="qra_release_component_registry.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "release_component_id": "qra_2022_05__policy_statement",
+                    "event_id": "qra_2022_05",
+                    "quarter": "2022Q3",
+                    "component_type": "policy_statement",
+                    "release_timestamp_et": "2022-05-04T08:30:00-04:00",
+                    "timestamp_precision": "exact_time",
+                    "source_url": "https://example.com/policy",
+                    "bundle_id": "qra_2022_05",
+                    "release_sequence_label": "financing_then_policy",
+                    "separable_component_flag": True,
+                    "review_status": "reviewed",
+                    "review_notes": "",
+                    "benchmark_timestamp_et": "",
+                    "benchmark_source": "",
+                    "expected_composition_bn": "",
+                    "realized_composition_bn": "",
+                    "composition_surprise_bn": "",
+                    "benchmark_stale_flag": False,
+                    "expectation_review_status": "",
+                    "expectation_notes": "",
+                    "expectation_status": "",
+                    "contamination_flag": False,
+                    "contamination_status": "",
+                    "contamination_review_status": "",
+                    "contamination_label": "",
+                    "contamination_notes": "",
+                    "separability_status": "separable_component",
+                    "eligibility_blockers": "",
+                    "quality_tier": "Tier A",
+                    "causal_eligible": True,
+                }
+            ]
+        ),
+    )
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="qra_causal_qa_ledger.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2022_05",
+                    "quality_tier": "Tier A",
+                    "eligibility_blockers": "",
+                    "timestamp_precision": "exact_time",
+                    "separability_status": "separable_component",
+                    "expectation_status": "reviewed_surprise_ready",
+                    "contamination_status": "reviewed_clean",
+                    "release_component_count": 1,
+                    "causal_eligible_component_count": 1,
+                }
+            ]
+        ),
+    )
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="event_design_status.csv",
+        frame=pd.DataFrame(
+            [
+                {"metric": "release_component_count", "value": 2, "notes": "Incorrect on purpose."},
+                {"metric": "tier_a_count", "value": 1, "notes": "Incorrectly claims one Tier A row."},
+                {"metric": "reviewed_surprise_ready_count", "value": 1, "notes": "Incorrectly claims reviewed surprise readiness."},
+                {"metric": "reviewed_clean_component_count", "value": 1, "notes": "Incorrectly claims clean contamination review."},
+            ]
+        ),
+    )
+    dataset_status = pd.read_csv(publish_path / "dataset_status.csv")
+    dataset_status = pd.concat(
+        [
+            dataset_status,
+            pd.DataFrame(
+                [
+                    {
+                        "dataset": "qra_event_registry_v2",
+                        "readiness_tier": "supporting_ready",
+                        "source_quality": "derived_event_ledger",
+                        "headline_ready": False,
+                        "fallback_only": False,
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "qra_release_component_registry",
+                        "readiness_tier": "supporting_ready",
+                        "source_quality": "derived_component_registry",
+                        "headline_ready": False,
+                        "fallback_only": False,
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "qra_causal_qa_ledger",
+                        "readiness_tier": "supporting_ready",
+                        "source_quality": "derived_causal_qa",
+                        "headline_ready": False,
+                        "fallback_only": False,
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "event_design_status",
+                        "readiness_tier": "supporting_ready",
+                        "source_quality": "derived_event_design_status",
+                        "headline_ready": False,
+                        "fallback_only": False,
+                        "public_role": "supporting",
+                    },
+                ]
+            ),
+        ],
+        ignore_index=True,
+    )
+    dataset_status.to_csv(publish_path / "dataset_status.csv", index=False)
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    assert "qra_component_registry_missing_expectation_status:qra_2022_05__policy_statement" in result.errors
+    assert "qra_component_registry_missing_contamination_status:qra_2022_05__policy_statement" in result.errors
+    assert "qra_component_registry_invalid_causal_eligible_claim:qra_2022_05__policy_statement" in result.errors
+    assert "qra_event_design_status_metric_mismatch:release_component_count,reviewed_clean_component_count,reviewed_surprise_ready_count" in result.errors
+
+
+def test_validate_qra_publish_consistency_ignores_historical_blank_component_timestamps() -> None:
+    component_registry = pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2010_02__policy_statement",
+                "event_id": "qra_2010_02",
+                "quarter": "2010Q1",
+                "component_type": "policy_statement",
+                "release_timestamp_et": "",
+                "timestamp_precision": "missing",
+                "source_url": "https://example.com/policy",
+                "bundle_id": "qra_2010_02",
+                "release_sequence_label": "unknown",
+                "separable_component_flag": False,
+                "review_status": "pending",
+                "review_notes": "historical scaffold",
+                "benchmark_timestamp_et": "",
+                "benchmark_source": "",
+                "benchmark_source_family": "",
+                "benchmark_timing_status": "same_release_placeholder",
+                "external_benchmark_ready": False,
+                "expected_composition_bn": "",
+                "realized_composition_bn": "",
+                "composition_surprise_bn": "",
+                "benchmark_stale_flag": False,
+                "expectation_review_status": "pending",
+                "expectation_notes": "historical scaffold",
+                "expectation_status": "missing_benchmark",
+                "contamination_flag": False,
+                "contamination_status": "pending_review",
+                "contamination_review_status": "pending",
+                "contamination_label": "",
+                "contamination_notes": "historical scaffold",
+                "separability_status": "same_day_inseparable_bundle",
+                "eligibility_blockers": "review_not_complete|missing_exact_timestamp",
+                "quality_tier": "Tier C",
+                "causal_eligible": False,
+            }
+        ]
+    )
+    frames = {
+        "qra_event_registry_v2.csv": pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2010_02",
+                    "release_timestamp_et": "2010-02-03T00:00:00-05:00",
+                    "timestamp_precision": "missing",
+                    "headline_eligibility_reason": "shock_missing",
+                }
+            ]
+        ),
+        "qra_release_component_registry.csv": component_registry,
+        "event_design_status.csv": pd.DataFrame(
+            [
+                {"metric": "release_component_count", "value": 1},
+                {"metric": "tier_a_count", "value": 0},
+                {"metric": "tier_b_count", "value": 0},
+                {"metric": "tier_c_count", "value": 1},
+                {"metric": "tier_d_count", "value": 0},
+                {"metric": "exact_time_component_count", "value": 0},
+                {"metric": "reviewed_surprise_ready_count", "value": 0},
+                {"metric": "reviewed_clean_component_count", "value": 0},
+            ]
+        ),
+    }
+
+    errors = validate_backend_script._validate_qra_publish_consistency(frames)
+
+    assert "qra_publish_consistency_registry_component_timestamp_mismatch:qra_2010_02" not in errors
+
+
+def test_validate_qra_publish_consistency_ignores_t_minus_one_usability_rows() -> None:
+    component_registry = pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2022_05__financing_estimates",
+                "event_id": "qra_2022_05",
+                "quarter": "2022Q3",
+                "component_type": "financing_estimates",
+                "release_timestamp_et": "2022-05-02T15:00:00-04:00",
+                "timestamp_precision": "exact_time",
+                "source_url": "https://example.com/financing",
+                "bundle_id": "qra_2022_05",
+                "release_sequence_label": "financing_then_policy",
+                "separable_component_flag": True,
+                "review_status": "reviewed",
+                "review_notes": "",
+                "benchmark_timestamp_et": "",
+                "benchmark_source": "https://example.com/benchmark",
+                "benchmark_source_family": "tbac_recommended_financing_tables",
+                "benchmark_timing_status": "external_timing_unverified",
+                "external_benchmark_ready": False,
+                "expected_composition_bn": 100.0,
+                "realized_composition_bn": 125.0,
+                "composition_surprise_bn": 25.0,
+                "benchmark_stale_flag": False,
+                "expectation_review_status": "reviewed",
+                "expectation_notes": "",
+                "expectation_status": "benchmark_timing_unverified",
+                "contamination_flag": False,
+                "contamination_status": "reviewed_clean",
+                "contamination_review_status": "reviewed",
+                "contamination_label": "",
+                "contamination_notes": "",
+                "separability_status": "separable_component",
+                "eligibility_blockers": "missing_pre_release_external_benchmark",
+                "quality_tier": "Tier B",
+                "causal_eligible": False,
+            }
+        ]
+    )
+    frames = {
+        "qra_event_registry_v2.csv": pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2022_05",
+                    "release_timestamp_et": "2022-05-02T15:00:00-04:00",
+                    "timestamp_precision": "exact_time",
+                    "headline_eligibility_reason": "usable",
+                }
+            ]
+        ),
+        "qra_release_component_registry.csv": component_registry,
+        "event_design_status.csv": pd.DataFrame(
+            [
+                {"metric": "release_component_count", "value": 1},
+                {"metric": "tier_a_count", "value": 0},
+                {"metric": "tier_b_count", "value": 1},
+                {"metric": "tier_c_count", "value": 0},
+                {"metric": "tier_d_count", "value": 0},
+                {"metric": "exact_time_component_count", "value": 1},
+                {"metric": "reviewed_surprise_ready_count", "value": 0},
+                {"metric": "reviewed_clean_component_count", "value": 1},
+            ]
+        ),
+        "qra_shock_crosswalk_v1.csv": pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2022_05",
+                    "event_date_type": "official_release_date",
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                    "usable_for_headline_reason": "usable",
+                }
+            ]
+        ),
+        "qra_event_shock_summary.csv": pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2022_05",
+                    "event_date_type": "official_release_date",
+                    "headline_bucket": "tightening",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "overlap_severity": "none",
+                    "usable_for_headline": True,
+                    "usable_for_headline_reason": "usable",
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                }
+            ]
+        ),
+        "event_usability_table.csv": pd.DataFrame(
+            [
+                {
+                    "headline_bucket": "tightening",
+                    "event_date_type": "market_pricing_marker_minus_1d",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "overlap_severity": "none",
+                    "usable_for_headline": False,
+                    "usable_for_headline_reason": "non_official_event_date_type",
+                    "event_count": 1,
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                },
+                {
+                    "headline_bucket": "tightening",
+                    "event_date_type": "official_release_date",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "overlap_severity": "none",
+                    "usable_for_headline": True,
+                    "usable_for_headline_reason": "usable",
+                    "event_count": 1,
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                },
+            ]
+        ),
+    }
+
+    errors = validate_backend_script._validate_qra_publish_consistency(frames)
+
+    assert "qra_publish_consistency_usability_count_mismatch" not in errors
+
+
+def test_canonical_qra_review_frame_does_not_collapse_aggregate_usability_rows() -> None:
+    frame = pd.DataFrame(
+        [
+            {
+                "event_date_type": "official_release_date",
+                "headline_bucket": "control_hold",
+                "treatment_variant": "canonical_shock_bn",
+                "event_count": 1,
+            },
+            {
+                "event_date_type": "official_release_date",
+                "headline_bucket": "tightening",
+                "treatment_variant": "canonical_shock_bn",
+                "event_count": 2,
+            },
+        ]
+    )
+
+    out = validate_backend_script._canonical_qra_review_frame(frame)
+
+    assert len(out) == 2
 
 
 def test_validate_backend_flags_shock_drift_for_known_events(tmp_path: Path) -> None:

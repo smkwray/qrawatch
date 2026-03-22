@@ -143,6 +143,16 @@ def _quarter_from_timestamp(value: object) -> str:
     return f"{int(ts.year)}Q{quarter}"
 
 
+def _quarter_sort_key(value: object) -> tuple[int, int]:
+    text = str(value or "").strip()
+    if len(text) != 6 or text[4] != "Q":
+        return (0, 0)
+    try:
+        return (int(text[:4]), int(text[5]))
+    except ValueError:
+        return (0, 0)
+
+
 def _metric_int(frame: pd.DataFrame, metric: str) -> int:
     if frame.empty or "metric" not in frame.columns or "value" not in frame.columns:
         return 0
@@ -788,6 +798,9 @@ def build_qra_release_component_registry_publish_table() -> pd.DataFrame:
         "review_notes",
         "benchmark_timestamp_et",
         "benchmark_source",
+        "benchmark_source_family",
+        "benchmark_timing_status",
+        "external_benchmark_ready",
         "expected_composition_bn",
         "realized_composition_bn",
         "composition_surprise_bn",
@@ -838,6 +851,136 @@ def build_event_design_status_publish_table() -> pd.DataFrame:
         if column not in source.columns:
             source[column] = pd.NA
     return source[columns]
+
+
+def build_qra_benchmark_coverage_table() -> pd.DataFrame:
+    columns = ["scope", "metric", "value", "notes"]
+    registry = build_qra_release_component_registry_publish_table()
+    if registry.empty:
+        return pd.DataFrame(columns=columns)
+    if "quarter" not in registry.columns:
+        return pd.DataFrame(columns=columns)
+    current_sample = registry.loc[
+        registry["quarter"].map(_quarter_sort_key) >= (2022, 3)
+    ].copy()
+    if current_sample.empty:
+        return pd.DataFrame(columns=columns)
+
+    rows: list[dict[str, object]] = []
+    scopes = {
+        "current_sample_all_components": current_sample,
+        "current_sample_financing_estimates": current_sample.loc[
+            current_sample.get("component_type", pd.Series(dtype=object)).astype(str).eq("financing_estimates")
+        ].copy(),
+    }
+    for scope, frame in scopes.items():
+        if frame.empty:
+            continue
+        rows.extend(
+            [
+                {
+                    "scope": scope,
+                    "metric": "release_component_count",
+                    "value": int(len(frame)),
+                    "notes": "Components in scope.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "pre_release_external_benchmark_count",
+                    "value": int(frame.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("pre_release_external").sum()),
+                    "notes": "Rows with benchmark timing classified as pre-release external.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "same_release_placeholder_count",
+                    "value": int(frame.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("same_release_placeholder").sum()),
+                    "notes": "Rows still blocked by same-release placeholder benchmark semantics.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "post_release_invalid_count",
+                    "value": int(frame.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("post_release_invalid").sum()),
+                    "notes": "Rows with post-release benchmark timestamps.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "external_timing_unverified_count",
+                    "value": int(frame.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("external_timing_unverified").sum()),
+                    "notes": "Rows with a benchmark source family attached but no validated pre-release timestamp.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "external_benchmark_ready_count",
+                    "value": int(frame.get("external_benchmark_ready", pd.Series(dtype=bool)).fillna(False).astype(bool).sum()),
+                    "notes": "Rows structurally ready for causal surprise use.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "reviewed_clean_count",
+                    "value": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_clean").sum()),
+                    "notes": "Rows with reviewed clean contamination status.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "causal_eligible_count",
+                    "value": int(frame.get("causal_eligible", pd.Series(dtype=bool)).fillna(False).astype(bool).sum()),
+                    "notes": "Rows that currently pass all causal gates.",
+                },
+            ]
+        )
+    return pd.DataFrame(rows, columns=columns)
+
+
+def build_official_capture_history_status_table() -> pd.DataFrame:
+    columns = [
+        "quarter",
+        "qra_release_date",
+        "qa_status",
+        "source_quality",
+        "readiness_tier",
+        "headline_ready",
+        "has_financing_estimates_source",
+        "has_refunding_statement_source",
+        "has_auction_reconstruction",
+        "source_completeness",
+    ]
+    capture = _official_capture_with_status_columns()
+    if capture.empty:
+        return pd.DataFrame(columns=columns)
+
+    def _has_token(value: object, needles: tuple[str, ...]) -> bool:
+        tokens = [str(item or "").strip().lower() for item in _split_pipe_values(value)]
+        return any(any(needle in token for needle in needles) for token in tokens)
+
+    out = capture.copy()
+    out["has_financing_estimates_source"] = out.apply(
+        lambda row: _has_token(row.get("source_doc_type"), ("financing",))
+        or _has_token(row.get("source_doc_local"), ("financing",)),
+        axis=1,
+    )
+    out["has_refunding_statement_source"] = out.apply(
+        lambda row: _has_token(row.get("source_doc_type"), ("refunding", "statement"))
+        or _has_token(row.get("source_doc_local"), ("refunding", "statement")),
+        axis=1,
+    )
+    out["has_auction_reconstruction"] = out.apply(
+        lambda row: _has_token(row.get("source_doc_type"), ("auction", "reconstruction"))
+        or pd.notna(pd.to_numeric(pd.Series([row.get("reconstructed_net_bill_issuance_bn")]), errors="coerce").iloc[0]),
+        axis=1,
+    )
+    completeness: list[str] = []
+    for _, row in out.iterrows():
+        parts: list[str] = []
+        if bool(row.get("has_financing_estimates_source")):
+            parts.append("financing_estimates")
+        if bool(row.get("has_refunding_statement_source")):
+            parts.append("refunding_statement")
+        if bool(row.get("has_auction_reconstruction")):
+            parts.append("auction_reconstruction")
+        completeness.append("|".join(parts) if parts else "source_incomplete")
+    out["source_completeness"] = completeness
+    keep = [column for column in columns if column in out.columns]
+    return out[keep].sort_values("quarter", key=lambda s: s.map(_quarter_sort_key)).reset_index(drop=True)
 
 
 def _empty_qra_crosswalk_frame() -> pd.DataFrame:
@@ -1298,6 +1441,7 @@ def _qra_event_shock_summary_publish_columns() -> list[str]:
         "policy_statement_url",
         "financing_estimates_url",
         "timing_quality",
+        "overlap_severity",
         "current_quarter_action",
         "forward_guidance_bias",
         "headline_bucket",
@@ -2063,6 +2207,7 @@ def _qra_review_surface_integrity(
 
 def build_dataset_status_table() -> pd.DataFrame:
     official_capture = build_official_capture_readiness_table()
+    official_capture_history_status = build_official_capture_history_status_table()
     extension_status = build_extension_status_table()
     official_ati_headline = _official_ati_headline_table()
     official_ati_headline_ready = not official_ati_headline.empty
@@ -2074,6 +2219,7 @@ def build_dataset_status_table() -> pd.DataFrame:
     qra_release_component_registry = build_qra_release_component_registry_publish_table()
     qra_causal_qa = build_qra_causal_qa_publish_table()
     event_design_status = build_event_design_status_publish_table()
+    qra_benchmark_coverage = build_qra_benchmark_coverage_table()
     causal_design_ready = _causal_design_supporting_ready(event_design_status)
     causal_design_missing = _causal_design_missing_fields(event_design_status)
     qra_shock_crosswalk = build_qra_shock_crosswalk_publish_table()
@@ -2095,23 +2241,27 @@ def build_dataset_status_table() -> pd.DataFrame:
             "dataset": "official_capture",
             "readiness_tier": (
                 "headline_ready"
-                if not official_capture.empty and bool(official_capture["headline_ready"].all())
+                if not official_capture.empty and bool(official_capture["headline_ready"].any())
                 else "fallback_only"
             ),
             "source_quality": (
                 "exact_official"
                 if not official_capture.empty and set(official_capture["source_quality"]) == {"exact_official"}
-                else "mixed"
+                else (
+                    "exact_official_window_plus_seed_history"
+                    if not official_capture.empty and bool(official_capture["headline_ready"].any())
+                    else "mixed"
+                )
             ),
-            "headline_ready": bool(not official_capture.empty and official_capture["headline_ready"].all()),
-            "fallback_only": bool(official_capture.empty or official_capture["fallback_only"].any()),
+            "headline_ready": bool(not official_capture.empty and official_capture["headline_ready"].any()),
+            "fallback_only": bool(official_capture.empty or not official_capture["headline_ready"].any()),
             "missing_critical_fields": (
                 ""
-                if official_capture.empty
+                if official_capture.empty or bool(official_capture["headline_ready"].any())
                 else "|".join(sorted({value for value in official_capture["missing_critical_fields"] if str(value).strip()}))
             ),
             "last_regenerated_utc": _artifact_mtime(PROCESSED_DIR / "official_quarterly_refunding_capture.csv"),
-            "review_maturity": "headline_ready" if not official_capture.empty and bool(official_capture["headline_ready"].all()) else "provisional_supporting",
+            "review_maturity": "headline_ready" if not official_capture.empty and bool(official_capture["headline_ready"].any()) else "provisional_supporting",
             "public_role": "supporting",
         },
         {
@@ -2194,6 +2344,17 @@ def build_dataset_status_table() -> pd.DataFrame:
             "public_role": "supporting",
         },
         {
+            "dataset": "qra_benchmark_coverage",
+            "readiness_tier": "supporting_ready" if not qra_benchmark_coverage.empty else "not_started",
+            "source_quality": "derived_benchmark_coverage",
+            "headline_ready": False,
+            "fallback_only": qra_benchmark_coverage.empty,
+            "missing_critical_fields": "" if not qra_benchmark_coverage.empty else "benchmark_coverage_missing",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_release_component_registry.csv"),
+            "review_maturity": "supporting_ready" if not qra_benchmark_coverage.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
             "dataset": "qra_causal_qa_ledger",
             "readiness_tier": (
                 "supporting_ready"
@@ -2206,6 +2367,21 @@ def build_dataset_status_table() -> pd.DataFrame:
             "missing_critical_fields": causal_design_missing,
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_causal_qa_ledger.csv"),
             "review_maturity": "provisional_supporting" if not qra_causal_qa.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "official_capture_history_status",
+            "readiness_tier": "supporting_ready" if not official_capture_history_status.empty else "not_started",
+            "source_quality": (
+                "exact_official_window_plus_backfilled_history"
+                if not official_capture_history_status.empty
+                else "missing"
+            ),
+            "headline_ready": False,
+            "fallback_only": official_capture_history_status.empty,
+            "missing_critical_fields": "" if not official_capture_history_status.empty else "official_capture_history_missing",
+            "last_regenerated_utc": _artifact_mtime(PROCESSED_DIR / "official_quarterly_refunding_capture.csv"),
+            "review_maturity": "supporting_ready" if not official_capture_history_status.empty else "not_started",
             "public_role": "supporting",
         },
         {
@@ -2342,12 +2518,14 @@ def build_publish_artifacts() -> None:
     publish_table("official_qra_capture", "Official QRA Capture", build_official_capture_publish_table())
     publish_table("official_capture_readiness", "Official Capture Readiness", build_official_capture_readiness_table())
     publish_table("official_capture_completion", "Official Capture Completion", build_official_capture_completion_publish_table())
+    publish_table("official_capture_history_status", "Official Capture History Status", build_official_capture_history_status_table())
     publish_table("ati_seed_vs_official", "ATI Seed vs Official Comparison", build_ati_seed_vs_official_comparison())
     publish_table("qra_event_table", "QRA Event Table", build_qra_event_publish_table())
     publish_table("qra_event_summary", "QRA Event Summary", build_qra_summary_publish_table())
     publish_table("qra_event_robustness", "QRA Event Robustness", build_qra_robustness_publish_table())
     publish_table("qra_event_registry_v2", "QRA Event Registry V2", build_qra_event_registry_publish_table())
     publish_table("qra_release_component_registry", "QRA Release Component Registry", build_qra_release_component_registry_publish_table())
+    publish_table("qra_benchmark_coverage", "QRA Benchmark Coverage", build_qra_benchmark_coverage_table())
     publish_table("qra_causal_qa_ledger", "QRA Causal QA Ledger", build_qra_causal_qa_publish_table())
     publish_table("event_design_status", "Event Design Status", build_event_design_status_publish_table())
     publish_table("qra_shock_crosswalk_v1", "QRA Shock Crosswalk V1", build_qra_shock_crosswalk_publish_table())

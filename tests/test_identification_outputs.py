@@ -108,7 +108,7 @@ def test_build_qra_event_registry_v2_adds_overlap_and_headline_decomposition_lin
     )
 
     assert out.loc[0, "release_timestamp_kind"] == "release_component_registry_date_only"
-    assert out.loc[0, "release_time_et"] == "00:00:00"
+    assert pd.isna(out.loc[0, "release_time_et"])
     assert out.loc[0, "overlap_annotation_source"] == "data/manual/qra_event_overlap_annotations.csv"
     assert bool(out.loc[0, "overlap_annotation_present"]) is True
     assert bool(out.loc[0, "headline_eligible"]) is False
@@ -147,9 +147,11 @@ def test_build_qra_event_registry_v2_uses_best_component_timestamp_when_availabl
     )
     expectation_template = pd.DataFrame(
         {
-            "release_component_id": ["e4__policy_statement"],
-            "benchmark_timestamp_et": ["2024-04-30T08:00:00-04:00"],
+            "release_component_id": ["e4__financing_estimates"],
+            "benchmark_timestamp_et": ["2024-04-29T08:00:00-04:00"],
             "benchmark_source": ["dealer_survey"],
+            "benchmark_source_family": ["primary_dealer_auction_size_survey"],
+            "benchmark_timing_status": ["pre_release_external"],
             "expected_composition_bn": [10.0],
             "realized_composition_bn": [20.0],
             "composition_surprise_bn": [10.0],
@@ -159,7 +161,7 @@ def test_build_qra_event_registry_v2_uses_best_component_timestamp_when_availabl
     )
     contamination_reviews = pd.DataFrame(
         {
-            "release_component_id": ["e4__policy_statement"],
+            "release_component_id": ["e4__financing_estimates"],
             "contamination_flag": [False],
             "contamination_status": ["reviewed_clean"],
             "contamination_review_status": ["reviewed"],
@@ -173,9 +175,9 @@ def test_build_qra_event_registry_v2_uses_best_component_timestamp_when_availabl
         contamination_reviews=contamination_reviews,
     )
 
-    assert out.loc[0, "release_timestamp_et"] == "2024-04-30T08:30:00-04:00"
+    assert out.loc[0, "release_timestamp_et"] == "2024-04-29T15:00:00-04:00"
     assert out.loc[0, "release_timestamp_kind"] == "release_component_registry_timestamp_with_time"
-    assert out.loc[0, "release_time_et"] == "08:30:00"
+    assert out.loc[0, "release_time_et"] == "15:00:00"
     assert out.loc[0, "timestamp_precision"] == "exact_time"
 
 
@@ -254,9 +256,11 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
     )
     expectations = pd.DataFrame(
         {
-            "release_component_id": ["e1__policy_statement"],
-            "benchmark_timestamp_et": ["2024-01-31T08:00:00-05:00"],
+            "release_component_id": ["e1__financing_estimates"],
+            "benchmark_timestamp_et": ["2024-01-29T08:00:00-05:00"],
             "benchmark_source": ["dealer_survey"],
+            "benchmark_source_family": ["primary_dealer_auction_size_survey"],
+            "benchmark_timing_status": ["pre_release_external"],
             "expected_composition_bn": [10.0],
             "realized_composition_bn": [25.0],
             "composition_surprise_bn": [15.0],
@@ -267,7 +271,7 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
     )
     contamination = pd.DataFrame(
         {
-            "release_component_id": ["e1__policy_statement"],
+            "release_component_id": ["e1__financing_estimates"],
             "contamination_flag": [False],
             "contamination_status": ["reviewed_clean"],
             "contamination_review_status": ["reviewed"],
@@ -284,12 +288,12 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
 
     policy = out.loc[out["release_component_id"] == "e1__policy_statement"].iloc[0]
     financing = out.loc[out["release_component_id"] == "e1__financing_estimates"].iloc[0]
-    assert policy["quality_tier"] == "Tier A"
-    assert bool(policy["causal_eligible"]) is True
-    assert policy["expectation_status"] == "reviewed_surprise_ready"
-    assert policy["contamination_status"] == "reviewed_clean"
-    assert financing["quality_tier"] == "Tier B"
-    assert "missing_expectation_benchmark" in financing["eligibility_blockers"]
+    assert financing["quality_tier"] == "Tier A"
+    assert bool(financing["causal_eligible"]) is True
+    assert financing["expectation_status"] == "reviewed_surprise_ready"
+    assert financing["contamination_status"] == "reviewed_clean"
+    assert policy["quality_tier"] == "Tier B"
+    assert "policy_statement_descriptive_only" in policy["eligibility_blockers"]
 
 
 def test_summarize_qra_causal_qa_and_event_design_status() -> None:

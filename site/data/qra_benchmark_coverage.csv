@@ -1,0 +1,17 @@
+scope,metric,value,notes
+current_sample_all_components,release_component_count,28,Components in scope.
+current_sample_all_components,pre_release_external_benchmark_count,0,Rows with benchmark timing classified as pre-release external.
+current_sample_all_components,same_release_placeholder_count,14,Rows still blocked by same-release placeholder benchmark semantics.
+current_sample_all_components,post_release_invalid_count,0,Rows with post-release benchmark timestamps.
+current_sample_all_components,external_timing_unverified_count,14,Rows with a benchmark source family attached but no validated pre-release timestamp.
+current_sample_all_components,external_benchmark_ready_count,0,Rows structurally ready for causal surprise use.
+current_sample_all_components,reviewed_clean_count,23,Rows with reviewed clean contamination status.
+current_sample_all_components,causal_eligible_count,0,Rows that currently pass all causal gates.
+current_sample_financing_estimates,release_component_count,14,Components in scope.
+current_sample_financing_estimates,pre_release_external_benchmark_count,0,Rows with benchmark timing classified as pre-release external.
+current_sample_financing_estimates,same_release_placeholder_count,0,Rows still blocked by same-release placeholder benchmark semantics.
+current_sample_financing_estimates,post_release_invalid_count,0,Rows with post-release benchmark timestamps.
+current_sample_financing_estimates,external_timing_unverified_count,14,Rows with a benchmark source family attached but no validated pre-release timestamp.
+current_sample_financing_estimates,external_benchmark_ready_count,0,Rows structurally ready for causal surprise use.
+current_sample_financing_estimates,reviewed_clean_count,13,Rows with reviewed clean contamination status.
+current_sample_financing_estimates,causal_eligible_count,0,Rows that currently pass all causal gates.

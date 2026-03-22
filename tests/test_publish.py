@@ -932,6 +932,79 @@ def test_dataset_status_derives_summary_ready_from_extension_status_rows(monkeyp
     assert primary["public_role"] == "supporting"
 
 
+def test_dataset_status_keeps_official_capture_headline_ready_with_seed_history(monkeypatch) -> None:
+    monkeypatch.setattr(
+        publish,
+        "build_extension_status_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "extension": "investor_allotments",
+                    "backend_status": "summary_ready",
+                    "readiness_tier": "summary_ready",
+                    "headline_ready": False,
+                    "public_role": "supporting",
+                },
+                {
+                    "extension": "primary_dealer",
+                    "backend_status": "summary_ready",
+                    "readiness_tier": "summary_ready",
+                    "headline_ready": False,
+                    "public_role": "supporting",
+                },
+                {
+                    "extension": "sec_nmfp",
+                    "backend_status": "summary_ready",
+                    "readiness_tier": "summary_ready",
+                    "headline_ready": False,
+                    "public_role": "supporting",
+                },
+                {
+                    "extension": "tic",
+                    "backend_status": "not_started",
+                    "readiness_tier": "not_started",
+                    "headline_ready": False,
+                    "public_role": "supporting",
+                },
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_official_capture_readiness_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "headline_ready": True,
+                    "fallback_only": False,
+                    "missing_critical_fields": "",
+                    "source_quality": "exact_official",
+                },
+                {
+                    "headline_ready": False,
+                    "fallback_only": True,
+                    "missing_critical_fields": "total_financing_need_bn",
+                    "source_quality": "seed_only",
+                },
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "_official_ati_headline_table",
+        lambda: pd.DataFrame([{"quarter": "2024Q3", "ati_baseline_bn": 1.0}]),
+    )
+
+    table = publish.build_dataset_status_table()
+    official_capture = table.loc[table["dataset"] == "official_capture"].iloc[0]
+
+    assert bool(official_capture["headline_ready"])
+    assert not bool(official_capture["fallback_only"])
+    assert official_capture["readiness_tier"] == "headline_ready"
+    assert official_capture["source_quality"] == "exact_official_window_plus_seed_history"
+    assert official_capture["missing_critical_fields"] == ""
+
+
 def test_dataset_status_marks_qra_elasticity_provisional_when_published(monkeypatch, tmp_path) -> None:
     fake_extension_status = pd.DataFrame(
         [
