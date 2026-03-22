@@ -365,8 +365,8 @@ def test_build_qra_event_registry_publish_table_is_optional(tmp_path, monkeypatc
     populated = publish.build_qra_event_registry_publish_table()
     assert populated.loc[0, "event_id"] == "qra_2024_07"
     assert populated.loc[0, "spec_id"] == "spec_qra_event_v2"
-    assert populated.loc[0, "treatment_variant"] == "shock_bn"
-    assert populated.loc[0, "headline_eligibility_reason"] == "non_headline_or_unreviewed"
+    assert populated.loc[0, "treatment_variant"] == "canonical_shock_bn"
+    assert populated.loc[0, "headline_eligibility_reason"] == "missing_shock_summary"
 
 
 def test_build_qra_shock_crosswalk_publish_table_is_optional(tmp_path, monkeypatch):
@@ -401,8 +401,8 @@ def test_build_qra_shock_crosswalk_publish_table_is_optional(tmp_path, monkeypat
     populated = publish.build_qra_shock_crosswalk_publish_table()
     assert populated.loc[0, "canonical_shock_id"] == "schedule_diff_primary"
     assert populated.loc[0, "spec_id"] == "spec_qra_event_v2"
-    assert populated.loc[0, "treatment_variant"] == "schedule_diff_primary"
-    assert populated.loc[0, "usable_for_headline_reason"] == "classification_not_reviewed"
+    assert populated.loc[0, "treatment_variant"] == "canonical_shock_bn"
+    assert populated.loc[0, "usable_for_headline_reason"] == "missing_shock_summary"
     assert populated.loc[0, "alternative_treatment_missing_reason"] == "manual_statement_primary_only_pending_alt_treatments"
 
 
@@ -431,7 +431,7 @@ def test_build_event_usability_publish_table_is_optional(tmp_path, monkeypatch):
 
     populated = publish.build_event_usability_publish_table()
     assert populated.loc[0, "spec_id"] == "spec_qra_event_v2"
-    assert populated.loc[0, "treatment_variant"] == "shock_bn"
+    assert populated.loc[0, "treatment_variant"] == "canonical_shock_bn"
     assert populated.loc[0, "n_events"] == 1
 
 
@@ -929,7 +929,7 @@ def test_dataset_status_marks_qra_elasticity_provisional_when_published(monkeypa
 
     qra_elasticity = table.loc[table["dataset"] == "qra_event_elasticity"].iloc[0]
     treatment = table.loc[table["dataset"] == "treatment_comparison_table"].iloc[0]
-    assert qra_elasticity["readiness_tier"] == "supporting_ready"
+    assert qra_elasticity["readiness_tier"] == "supporting_provisional"
     assert qra_elasticity["review_maturity"] == "provisional_supporting"
     assert treatment["readiness_tier"] == "supporting_ready"
 
@@ -1001,8 +1001,8 @@ def test_dataset_status_ignores_treatment_variant_rows_when_checking_qra_duplica
     table = publish.build_dataset_status_table()
     qra_elasticity = table.loc[table["dataset"] == "qra_event_elasticity"].iloc[0]
 
-    assert qra_elasticity["readiness_tier"] == "supporting_ready"
-    assert qra_elasticity["missing_critical_fields"] == ""
+    assert qra_elasticity["readiness_tier"] == "supporting_provisional"
+    assert "missing_review_surface" in qra_elasticity["missing_critical_fields"]
 
 
 def test_series_metadata_catalog_marks_extensions_supporting() -> None:

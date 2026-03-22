@@ -55,7 +55,7 @@ def test_build_qra_event_registry_v2_carries_review_and_eligibility_fields() -> 
     assert bool(out.loc[0, "headline_check_official_release"]) is True
     assert bool(out.loc[0, "headline_eligible"]) is True
     assert out.loc[0, "headline_eligibility_blockers"] == ""
-    assert out.loc[0, "headline_eligibility_reason"] == "eligible_headline_reviewed_official_release"
+    assert out.loc[0, "headline_eligibility_reason"] == "usable"
 
 
 def test_build_qra_event_registry_v2_adds_overlap_and_headline_decomposition_lineage() -> None:
@@ -108,7 +108,7 @@ def test_build_qra_event_registry_v2_adds_overlap_and_headline_decomposition_lin
     assert bool(out.loc[0, "overlap_annotation_present"]) is True
     assert bool(out.loc[0, "headline_eligible"]) is False
     assert out.loc[0, "headline_eligibility_blockers"] == "classification_not_reviewed|shock_not_reviewed|missing_shock|small_denominator"
-    assert out.loc[0, "headline_eligibility_reason"] == "missing_shock|small_denominator|classification_not_reviewed|shock_not_reviewed"
+    assert out.loc[0, "headline_eligibility_reason"] == "shock_missing"
 
 
 def test_build_qra_event_registry_v2_uses_manual_overlap_severity_override() -> None:

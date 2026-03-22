@@ -906,7 +906,7 @@ def test_validate_backend_flags_shock_drift_for_known_events(tmp_path: Path) -> 
     publish_path = tmp_path / "publish"
     _build_publish_artifacts(path=publish_path)
 
-    event_ids = ["qra_2022_05", "qra_2023_05", "qra_2023_08", "qra_2024_01", "qra_2024_07", "qra_2024_10"]
+    event_ids = ["qra_2023_05", "qra_2023_08"]
     _add_publish_artifact(
         publish_path=publish_path,
         csv_name="qra_shock_crosswalk_v1.csv",
@@ -920,9 +920,11 @@ def test_validate_backend_flags_shock_drift_for_known_events(tmp_path: Path) -> 
                     "schedule_diff_10y_eq_bn": 120.0,
                     "schedule_diff_dynamic_10y_eq_bn": 125.0,
                     "schedule_diff_dv01_usd": 5_000_000.0,
-                    "shock_source": "schedule_diff",
-                    "manual_override_reason": "bounded_validation_test",
+                    "shock_source": "manual_statement_review_v1",
+                    "manual_override_reason": "reviewed manual row pending alt treatment completion",
                     "shock_review_status": "reviewed",
+                    "alternative_treatment_complete": False,
+                    "alternative_treatment_missing_reason": "manual_statement_primary_only_pending_alt_treatments",
                 }
                 for event_id in event_ids
             ]
@@ -938,6 +940,57 @@ def test_validate_backend_flags_shock_drift_for_known_events(tmp_path: Path) -> 
 
     for event_id in event_ids:
         assert any(f":{event_id}:" in message for message in result.warnings), f"missing drift warning for {event_id}"
+
+
+def test_validate_backend_ignores_non_actionable_shock_drift_rows(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="qra_shock_crosswalk_v1.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2022_08",
+                    "event_date_type": "official_release_date",
+                    "canonical_shock_id": "manual_v1",
+                    "shock_bn": 0.0,
+                    "schedule_diff_10y_eq_bn": -602.2,
+                    "schedule_diff_dynamic_10y_eq_bn": -557.9,
+                    "schedule_diff_dv01_usd": 5_000_000.0,
+                    "shock_source": "manual_statement_review_v1",
+                    "manual_override_reason": "reviewed hold quarter",
+                    "shock_review_status": "reviewed",
+                    "alternative_treatment_complete": True,
+                },
+                {
+                    "event_id": "qra_2024_07",
+                    "event_date_type": "official_release_date",
+                    "canonical_shock_id": "auto_v1",
+                    "shock_bn": 0.0,
+                    "schedule_diff_10y_eq_bn": 476.9,
+                    "schedule_diff_dynamic_10y_eq_bn": 440.7,
+                    "schedule_diff_dv01_usd": 5_000_000.0,
+                    "shock_source": "auto_tenor_parser_v1",
+                    "shock_review_status": "provisional",
+                    "alternative_treatment_complete": True,
+                },
+            ]
+        ),
+    )
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    assert not any("qra_publish_shock_drift_alert:" in message for message in result.warnings)
 
 
 def test_validate_shock_drift_alerts_ignores_elasticity_duplicates() -> None:

@@ -7,6 +7,11 @@ import re
 import numpy as np
 import pandas as pd
 
+from ati_shadow_policy.research.qra_elasticity import (
+    build_event_usability_table as build_event_usability_table_from_ledger,
+    build_qra_review_ledger,
+    build_qra_shock_crosswalk_v1 as build_qra_shock_crosswalk_from_ledger,
+)
 from ati_shadow_policy.specs import (
     SPEC_DURATION_TREATMENT_V1,
     SPEC_QRA_EVENT_V2,
@@ -501,19 +506,22 @@ def build_qra_event_registry_v2(
     event_rows["spec_id"] = SPEC_QRA_EVENT_V2
 
     if shock_summary is not None and not shock_summary.empty:
-        usable = shock_summary.copy()
-        if "event_date_type" in usable.columns:
-            usable = usable.loc[usable["event_date_type"].astype(str) == "official_release_date"].copy()
-        usable["headline_eligibility_reason"] = usable.apply(_usable_for_headline_reason, axis=1)
+        usable = build_qra_review_ledger(shock_summary, overlap_annotations=overlap_annotations)
+        usable = usable.loc[usable["event_date_type"].astype(str) == "official_release_date"].copy()
         keep = [
             "event_id",
-            "headline_eligibility_reason",
             "event_date_type",
             "headline_bucket",
             "classification_review_status",
             "shock_review_status",
             "shock_missing_flag",
             "small_denominator_flag",
+            "usable_for_headline_reason",
+            "usable_for_headline",
+            "reviewer",
+            "review_date",
+            "treatment_version_id",
+            "spec_id",
         ]
         event_rows = event_rows.merge(
             usable[keep].drop_duplicates(subset=["event_id"], keep="first"),
@@ -521,9 +529,37 @@ def build_qra_event_registry_v2(
             how="left",
             suffixes=("", "_headline"),
         )
+    for source_column in ("usable_for_headline_reason_headline", "usable_for_headline_reason"):
+        if source_column in event_rows.columns:
+            event_rows["headline_eligibility_reason"] = event_rows[source_column]
+            break
     if "headline_eligibility_reason" not in event_rows.columns:
         event_rows["headline_eligibility_reason"] = "missing_shock_summary"
     event_rows["headline_eligibility_reason"] = event_rows["headline_eligibility_reason"].fillna("missing_shock_summary")
+    reviewer_source = "reviewer_headline" if "reviewer_headline" in event_rows.columns else ("reviewer" if shock_summary is not None and not shock_summary.empty else None)
+    if reviewer_source is not None:
+        event_rows["reviewer"] = event_rows[reviewer_source].where(
+            event_rows[reviewer_source].notna() & event_rows[reviewer_source].astype(str).str.strip().ne(""),
+            event_rows["reviewer"],
+        )
+    review_date_source = "review_date_headline" if "review_date_headline" in event_rows.columns else ("review_date" if shock_summary is not None and not shock_summary.empty else None)
+    if review_date_source is not None:
+        event_rows["review_date"] = event_rows[review_date_source].where(
+            event_rows[review_date_source].notna() & event_rows[review_date_source].astype(str).str.strip().ne(""),
+            event_rows["review_date"],
+        )
+    treatment_version_source = "treatment_version_id_headline" if "treatment_version_id_headline" in event_rows.columns else ("treatment_version_id" if shock_summary is not None and not shock_summary.empty else None)
+    if treatment_version_source is not None:
+        event_rows["treatment_version_id"] = event_rows[treatment_version_source].where(
+            event_rows[treatment_version_source].notna() & event_rows[treatment_version_source].astype(str).str.strip().ne(""),
+            event_rows["treatment_version_id"],
+        )
+    spec_source = "spec_id_headline" if "spec_id_headline" in event_rows.columns else ("spec_id" if shock_summary is not None and not shock_summary.empty else None)
+    if spec_source is not None:
+        event_rows["spec_id"] = event_rows[spec_source].where(
+            event_rows[spec_source].notna() & event_rows[spec_source].astype(str).str.strip().ne(""),
+            event_rows["spec_id"],
+        )
     event_rows["headline_check_official_release"] = event_rows.get(
         "event_date_type_headline",
         event_rows.get("event_date_type", pd.Series(dtype=object)),
@@ -549,7 +585,15 @@ def build_qra_event_registry_v2(
         event_rows.get("small_denominator_flag", pd.Series(False, index=event_rows.index)),
     ).map(_coerce_bool)
     event_rows["headline_eligibility_blockers"] = event_rows.apply(_headline_eligibility_blockers, axis=1)
-    event_rows["headline_eligible"] = event_rows["headline_eligibility_blockers"].map(lambda value: _normalize_text(value) == "")
+    headline_eligible_source = None
+    for candidate in ("usable_for_headline_headline", "usable_for_headline"):
+        if candidate in event_rows.columns:
+            headline_eligible_source = candidate
+            break
+    if headline_eligible_source is not None:
+        event_rows["headline_eligible"] = event_rows[headline_eligible_source].map(_coerce_bool)
+    else:
+        event_rows["headline_eligible"] = event_rows["headline_eligibility_blockers"].map(lambda value: _normalize_text(value) == "")
 
     keep = [
         "event_id",
@@ -614,80 +658,7 @@ def build_qra_event_registry_v2(
 
 
 def build_qra_shock_crosswalk_v1(elasticity: pd.DataFrame) -> pd.DataFrame:
-    if elasticity.empty:
-        return pd.DataFrame(
-            columns=[
-                "event_id",
-                "event_date_type",
-                "canonical_shock_id",
-                "shock_bn",
-                "schedule_diff_10y_eq_bn",
-                "schedule_diff_dynamic_10y_eq_bn",
-                "schedule_diff_dv01_usd",
-                "gross_notional_delta_bn",
-                "shock_source",
-                "manual_override_reason",
-                "alternative_treatment_complete",
-                "alternative_treatment_missing_fields",
-                "alternative_treatment_missing_reason",
-                "shock_review_status",
-                "spec_id",
-            ]
-        )
-    keep = [
-        "event_id",
-        "event_date_type",
-        "shock_bn",
-        "schedule_diff_10y_eq_bn",
-        "schedule_diff_dynamic_10y_eq_bn",
-        "schedule_diff_dv01_usd",
-        "gross_notional_delta_bn",
-        "shock_source",
-        "shock_notes",
-        "shock_review_status",
-        "shock_construction",
-    ]
-    frame = elasticity[[column for column in keep if column in elasticity.columns]].copy()
-    frame = frame.drop_duplicates(subset=["event_id", "event_date_type"], keep="first").reset_index(drop=True)
-    frame["canonical_shock_id"] = "canonical_shock_bn"
-    frame["manual_override_reason"] = frame.apply(
-        lambda row: (
-            _normalize_text(row.get("shock_notes"))
-            if "manual" in _normalize_lower(row.get("shock_source"))
-            or "manual_override" in _normalize_lower(row.get("shock_construction"))
-            else ""
-        ),
-        axis=1,
-    )
-    alt_status = frame.apply(_alternative_treatment_status, axis=1, result_type="expand")
-    alt_status.columns = [
-        "alternative_treatment_complete",
-        "alternative_treatment_missing_fields",
-        "alternative_treatment_missing_reason",
-    ]
-    frame = pd.concat([frame, alt_status], axis=1)
-    frame["spec_id"] = SPEC_DURATION_TREATMENT_V1
-    keep_out = [
-        "event_id",
-        "event_date_type",
-        "canonical_shock_id",
-        "shock_bn",
-        "schedule_diff_10y_eq_bn",
-        "schedule_diff_dynamic_10y_eq_bn",
-        "schedule_diff_dv01_usd",
-        "gross_notional_delta_bn",
-        "shock_source",
-        "manual_override_reason",
-        "alternative_treatment_complete",
-        "alternative_treatment_missing_fields",
-        "alternative_treatment_missing_reason",
-        "shock_review_status",
-        "spec_id",
-    ]
-    for column in keep_out:
-        if column not in frame.columns:
-            frame[column] = pd.NA
-    return frame[keep_out].sort_values(["event_id", "event_date_type"], kind="stable").reset_index(drop=True)
+    return build_qra_shock_crosswalk_from_ledger(elasticity)
 
 
 def expand_treatment_variants(elasticity: pd.DataFrame) -> pd.DataFrame:
@@ -721,69 +692,10 @@ def build_event_usability_table(
     elasticity: pd.DataFrame,
     overlap_annotations: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
-    if elasticity.empty:
-        return pd.DataFrame(
-            columns=[
-                "event_date_type",
-                "headline_bucket",
-                "classification_review_status",
-                "shock_review_status",
-                "overlap_severity",
-                "usable_for_headline",
-                "usable_for_headline_reason",
-                "event_count",
-                "n_rows",
-                "n_events",
-                "spec_id",
-            ]
-        )
-
-    frame = elasticity.copy()
-    if "usable_for_headline_reason" not in frame.columns:
-        frame["usable_for_headline_reason"] = frame.apply(_usable_for_headline_reason, axis=1)
-    frame = frame.drop_duplicates(subset=["event_id", "event_date_type"], keep="first").reset_index(drop=True)
-    if overlap_annotations is not None and not overlap_annotations.empty:
-        overlap = overlap_annotations.copy()
-        frame = frame.merge(overlap, on="event_id", how="left")
-    frame["overlap_severity"] = frame.apply(
-        lambda row: _overlap_severity(
-            row.get("overlap_flag", False),
-            row.get("overlap_severity", ""),
-            row.get("overlap_label", ""),
-            row.get("overlap_note", ""),
-        ),
-        axis=1,
+    return build_event_usability_table_from_ledger(
+        elasticity,
+        overlap_annotations=overlap_annotations,
     )
-    grouped = (
-        frame.groupby(
-            [
-                "event_date_type",
-                "headline_bucket",
-                "classification_review_status",
-                "shock_review_status",
-                "overlap_severity",
-                "usable_for_headline",
-                "usable_for_headline_reason",
-            ],
-            dropna=False,
-        )
-        .size()
-        .reset_index(name="event_count")
-    )
-    grouped["n_rows"] = grouped["event_count"]
-    grouped["n_events"] = grouped["event_count"]
-    grouped["spec_id"] = SPEC_QRA_EVENT_V2
-    return grouped.sort_values(
-        [
-            "event_date_type",
-            "headline_bucket",
-            "classification_review_status",
-            "shock_review_status",
-            "overlap_severity",
-            "usable_for_headline",
-        ],
-        kind="stable",
-    ).reset_index(drop=True)
 
 
 def build_leave_one_event_out_table(elasticity: pd.DataFrame) -> pd.DataFrame:

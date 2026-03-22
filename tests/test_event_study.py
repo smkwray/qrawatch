@@ -275,7 +275,7 @@ def test_build_qra_event_registry_v2_emits_required_fields() -> None:
     assert len(registry) == 1
     assert registry.loc[0, "overlap_severity"] == "high"
     assert bool(registry.loc[0, "financing_need_news_flag"]) is True
-    assert registry.loc[0, "headline_eligibility_reason"] == "eligible_pending_shock_checks"
+    assert registry.loc[0, "headline_eligibility_reason"] == "missing_shock_summary"
 
 
 def test_build_qra_event_registry_v2_respects_explicit_overlap_severity() -> None:

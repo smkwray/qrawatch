@@ -360,6 +360,7 @@ def test_build_qra_shock_crosswalk_v1_emits_required_columns() -> None:
     crosswalk = build_qra_shock_crosswalk_v1(template)
     assert list(crosswalk.columns) == [
         "spec_id",
+        "treatment_version_id",
         "treatment_variant",
         "event_id",
         "event_date_type",
@@ -375,6 +376,7 @@ def test_build_qra_shock_crosswalk_v1_emits_required_columns() -> None:
         "alternative_treatment_missing_fields",
         "alternative_treatment_missing_reason",
         "shock_review_status",
+        "usable_for_headline_reason",
     ]
     assert crosswalk.loc[0, "manual_override_reason"] == "manual_override_with_schedule_context"
     assert bool(crosswalk.loc[0, "alternative_treatment_complete"]) is True
@@ -426,6 +428,8 @@ def test_build_event_usability_table_uses_canonical_variant_only() -> None:
     )
     usability = build_event_usability_table(elasticity)
     assert len(usability) == 1
+    assert usability.loc[0, "spec_id"] == "spec_qra_event_v2"
+    assert usability.loc[0, "treatment_version_id"] == "spec_duration_treatment_v1"
     assert usability.loc[0, "treatment_variant"] == "canonical_shock_bn"
     assert bool(usability.loc[0, "usable_for_headline"]) is True
     assert usability.loc[0, "n_events"] == 1

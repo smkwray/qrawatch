@@ -16,9 +16,10 @@
       "alternative_treatment_missing_fields": "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|schedule_diff_dv01_usd|gross_notional_delta_bn",
       "alternative_treatment_missing_reason": "manual_schedule_diff_missing_alternative_fields",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2022_05",
@@ -35,9 +36,10 @@
       "alternative_treatment_missing_fields": "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|schedule_diff_dv01_usd|gross_notional_delta_bn",
       "alternative_treatment_missing_reason": "manual_schedule_diff_missing_alternative_fields",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "usable"
     },
     {
       "event_id": "qra_2022_08",
@@ -54,9 +56,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2022_08",
@@ -73,9 +76,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2022_11",
@@ -92,9 +96,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2022_11",
@@ -111,9 +116,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2023_02",
@@ -130,9 +136,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2023_02",
@@ -149,9 +156,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2023_05",
@@ -168,9 +176,10 @@
       "alternative_treatment_missing_fields": "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|schedule_diff_dv01_usd|gross_notional_delta_bn",
       "alternative_treatment_missing_reason": "manual_statement_primary_only_pending_alt_treatments",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2023_05",
@@ -187,9 +196,10 @@
       "alternative_treatment_missing_fields": "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|schedule_diff_dv01_usd|gross_notional_delta_bn",
       "alternative_treatment_missing_reason": "manual_statement_primary_only_pending_alt_treatments",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "usable"
     },
     {
       "event_id": "qra_2023_08",
@@ -206,9 +216,10 @@
       "alternative_treatment_missing_fields": "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|schedule_diff_dv01_usd|gross_notional_delta_bn",
       "alternative_treatment_missing_reason": "manual_statement_primary_only_pending_alt_treatments",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2023_08",
@@ -225,9 +236,10 @@
       "alternative_treatment_missing_fields": "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|schedule_diff_dv01_usd|gross_notional_delta_bn",
       "alternative_treatment_missing_reason": "manual_statement_primary_only_pending_alt_treatments",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "usable"
     },
     {
       "event_id": "qra_2023_11",
@@ -239,14 +251,15 @@
       "schedule_diff_dv01_usd": NaN,
       "gross_notional_delta_bn": NaN,
       "shock_source": "auto_tenor_parser_v1",
-      "manual_override_reason": "",
+      "manual_override_reason": "Legacy easing classification retained as provisional pending schedule-diff reconciliation.",
       "alternative_treatment_complete": false,
       "alternative_treatment_missing_fields": "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|schedule_diff_dv01_usd|gross_notional_delta_bn",
       "alternative_treatment_missing_reason": "alternative_treatment_fields_not_populated",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2023_11",
@@ -258,11 +271,12 @@
       "schedule_diff_dv01_usd": NaN,
       "gross_notional_delta_bn": NaN,
       "shock_source": "auto_tenor_parser_v1",
-      "manual_override_reason": "",
+      "manual_override_reason": "Legacy easing classification retained as provisional pending schedule-diff reconciliation.",
       "alternative_treatment_complete": false,
       "alternative_treatment_missing_fields": "schedule_diff_10y_eq_bn|schedule_diff_dynamic_10y_eq_bn|schedule_diff_dv01_usd|gross_notional_delta_bn",
       "alternative_treatment_missing_reason": "alternative_treatment_fields_not_populated",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
       "usable_for_headline_reason": "classification_not_reviewed"
@@ -282,9 +296,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2024_01",
@@ -301,9 +316,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2024_05",
@@ -320,9 +336,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2024_05",
@@ -339,9 +356,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "reviewed",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2024_07",
@@ -358,9 +376,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2024_07",
@@ -377,9 +396,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2024_10",
@@ -396,9 +416,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2024_10",
@@ -415,9 +436,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2025_02",
@@ -434,9 +456,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2025_02",
@@ -453,9 +476,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2025_04",
@@ -472,9 +496,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2025_04",
@@ -491,9 +516,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     },
     {
       "event_id": "qra_2025_07",
@@ -510,9 +536,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "non_official_event_date_type"
     },
     {
       "event_id": "qra_2025_07",
@@ -529,9 +556,10 @@
       "alternative_treatment_missing_fields": "",
       "alternative_treatment_missing_reason": "",
       "shock_review_status": "provisional",
+      "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "classification_not_reviewed"
+      "usable_for_headline_reason": "small_denominator"
     }
   ]
 }

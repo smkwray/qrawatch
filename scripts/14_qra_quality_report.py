@@ -45,6 +45,10 @@ OFFICIAL_SOURCE_FAMILIES = {
     "quarterly_refunding_press_release",
     "quarterly_refunding_main_page",
 }
+EXACT_OFFICIAL_SOURCE_DOC_TYPES = {
+    "official_auction_reconstruction",
+    "official_quarterly_refunding_statement",
+}
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
@@ -70,8 +74,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--fail-on-contract",
         action="store_true",
         help=(
-            "Exit non-zero if any official QA rows are missing required download provenance "
-            "fields."
+            "Exit non-zero if any official QA rows are missing required provenance fields "
+            "or exact-official linkage checks fail."
         ),
     )
     return parser.parse_args(argv)
@@ -193,7 +197,7 @@ def summarize_downloads(df: pd.DataFrame) -> dict:
     if "preferred_for_download" in df.columns:
         preferred_rows = int(
             df["preferred_for_download"]
-            .map(lambda value: str(value).strip().lower() in {"1", "true", "t", "yes", "y"})
+            .map(_is_truthy)
             .sum()
         )
     return {
@@ -225,6 +229,61 @@ def _is_missing_value_scalar(value: object) -> bool:
     if isinstance(value, float) and pd.isna(value):
         return True
     return str(value).strip() in {"", "nan", "none", "null"}
+
+
+def _string_or_empty(value: object) -> str:
+    if _is_missing_value_scalar(value):
+        return ""
+    return str(value).strip()
+
+
+def _split_pipe_values(value: object) -> list[str]:
+    if _is_missing_value_scalar(value):
+        return []
+    return [part.strip() for part in str(value).split("|") if part.strip()]
+
+
+def _normalize_url(value: object) -> str:
+    if _is_missing_value_scalar(value):
+        return ""
+    return str(value).strip().rstrip("/")
+
+
+def _is_truthy(value: object) -> bool:
+    return str(value).strip().lower() in {"1", "true", "t", "yes", "y"}
+
+
+def _build_download_lookup(df: pd.DataFrame) -> dict[str, dict[str, object]]:
+    lookup: dict[str, dict[str, object]] = {}
+    if df.empty:
+        return lookup
+
+    for _, row in df.iterrows():
+        record = row.to_dict()
+        for key in ("href", "final_url"):
+            url = _normalize_url(record.get(key))
+            if url and url not in lookup:
+                lookup[url] = record
+    return lookup
+
+
+def _infer_source_url_family(url: str) -> str:
+    parsed = urlparse(url)
+    host = parsed.netloc.lower()
+    path = parsed.path.lower()
+
+    if "fiscaldata.treasury.gov" in host and "auctions-query" in path:
+        return "official_auction_reconstruction"
+    if "home.treasury.gov" in host:
+        if "/news/press-releases/" in path:
+            return "quarterly_refunding_press_release"
+        if "official-remarks-on-quarterly-refunding-by-calendar-year" in path:
+            return "official_quarterly_refunding_statement_archive"
+        if "quarterly-refunding-financing-estimates-by-calendar-year" in path:
+            return "financing_estimates_archive"
+        if "/policy-issues/financing-the-government/quarterly-refunding" in path:
+            return "quarterly_refunding_main_page"
+    return "unknown"
 
 
 def summarize_official_capture(df: pd.DataFrame) -> dict:
@@ -305,13 +364,26 @@ def summarize_official_capture(df: pd.DataFrame) -> dict:
     }
 
 
-def _validate_capture_contract(df: pd.DataFrame) -> list[str]:
+def _is_exact_official_capture_row(row: pd.Series) -> bool:
+    qa_status = _string_or_empty(row.get("qa_status"))
+    if qa_status not in OFFICIAL_QA_STATUSES:
+        return False
+    if _is_missing_value_scalar(row.get("total_financing_need_bn")):
+        return False
+    if _is_missing_value_scalar(row.get("net_bill_issuance_bn")):
+        return False
+    source_doc_types = set(_split_pipe_values(row.get("source_doc_type")))
+    return EXACT_OFFICIAL_SOURCE_DOC_TYPES.issubset(source_doc_types)
+
+
+def _validate_capture_contract(df: pd.DataFrame, downloads: pd.DataFrame) -> list[str]:
     if df.empty:
         return []
     if "qa_status" not in df.columns:
         return ["official_capture missing qa_status column"]
 
     violations: list[str] = []
+    download_lookup = _build_download_lookup(downloads)
     for idx, row in df.iterrows():
         qa_status = str(row.get("qa_status", "")).strip()
         if qa_status not in OFFICIAL_QA_STATUSES:
@@ -322,6 +394,90 @@ def _validate_capture_contract(df: pd.DataFrame) -> list[str]:
                 violations.append(
                     f"row {row_num}: qa_status='{qa_status}' requires non-empty '{field}'"
                 )
+
+        if not _is_exact_official_capture_row(row):
+            continue
+
+        source_urls = _split_pipe_values(row.get("source_url"))
+        source_doc_types = set(_split_pipe_values(row.get("source_doc_type")))
+        if not source_urls:
+            violations.append(
+                f"row {row_num}: exact-official capture row requires at least one source_url"
+            )
+            continue
+
+        validated_official_source = False
+        for source_url in source_urls:
+            url_family = _infer_source_url_family(source_url)
+            if url_family == "official_auction_reconstruction":
+                if "official_auction_reconstruction" not in source_doc_types:
+                    violations.append(
+                        f"row {row_num}: source_url='{source_url}' is an official-auctions link "
+                        "but source_doc_type is missing 'official_auction_reconstruction'"
+                    )
+                else:
+                    validated_official_source = True
+                continue
+            if url_family == "quarterly_refunding_press_release":
+                if "quarterly_refunding_press_release" not in source_doc_types:
+                    violations.append(
+                        f"row {row_num}: source_url='{source_url}' is a Treasury press-release link "
+                        f"but source_doc_type='{_string_or_empty(row.get('source_doc_type'))}' is not press-release typed"
+                    )
+                else:
+                    validated_official_source = True
+                continue
+
+            download_row = download_lookup.get(_normalize_url(source_url))
+            if download_row is None:
+                violations.append(
+                    f"row {row_num}: source_url='{source_url}' is not linked to a preferred official download row"
+                )
+                continue
+
+            download_family = _string_or_empty(download_row.get("source_family"))
+            if download_family not in OFFICIAL_SOURCE_FAMILIES:
+                violations.append(
+                    f"row {row_num}: source_url='{source_url}' links to source_family='{download_family}' "
+                    f"which is not in allowed official families {sorted(OFFICIAL_SOURCE_FAMILIES)}"
+                )
+
+            if not _is_truthy(download_row.get("preferred_for_download")):
+                violations.append(
+                    f"row {row_num}: source_url='{source_url}' links to a download row that is not preferred_for_download"
+                )
+            else:
+                validated_official_source = True
+
+            if url_family == "official_quarterly_refunding_statement_archive":
+                if "official_quarterly_refunding_statement" not in source_doc_types:
+                    violations.append(
+                        f"row {row_num}: source_url='{source_url}' is a statement-archive link "
+                        f"but source_doc_type='{_string_or_empty(row.get('source_doc_type'))}' is not statement typed"
+                    )
+            elif url_family == "quarterly_refunding_main_page":
+                if not (
+                    "quarterly_refunding_press_release" in source_doc_types
+                    or "official_quarterly_refunding_statement" in source_doc_types
+                ):
+                    violations.append(
+                        f"row {row_num}: source_url='{source_url}' is a quarterly-refunding page link "
+                        f"but source_doc_type='{_string_or_empty(row.get('source_doc_type'))}' is not statement/press-release typed"
+                    )
+            elif url_family == "financing_estimates_archive":
+                if not (
+                    "quarterly_refunding_press_release" in source_doc_types
+                    or "official_quarterly_refunding_statement" in source_doc_types
+                ):
+                    violations.append(
+                        f"row {row_num}: source_url='{source_url}' is a financing-estimates archive link "
+                        f"but source_doc_type='{_string_or_empty(row.get('source_doc_type'))}' is not statement/press-release typed"
+                    )
+
+        if not validated_official_source:
+            violations.append(
+                f"row {row_num}: exact-official capture row requires at least one validated official source URL or preferred download linkage"
+            )
     return violations
 
 
@@ -339,7 +495,7 @@ def build_qra_quality_report(
         if capture_status is not None:
             contract_violations.append(f"official_capture status is not valid: {capture_status}")
         else:
-            contract_violations = _validate_capture_contract(capture)
+            contract_violations = _validate_capture_contract(capture, downloads)
     if downloads_status is not None:
         downloads_summary["status"] = downloads_status
     if capture_status is not None:

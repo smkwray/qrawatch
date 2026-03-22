@@ -5,6 +5,7 @@ from typing import Sequence
 import numpy as np
 import pandas as pd
 
+from .identification import build_qra_event_registry_v2 as build_qra_event_registry_v2_from_identification
 from .qra_classification import is_summary_headline_bucket
 
 SPEC_QRA_EVENT_V2 = "spec_qra_event_v2"
@@ -146,14 +147,10 @@ def build_qra_event_registry_v2(
     panel: pd.DataFrame,
     treatment_version_id: str = DEFAULT_TREATMENT_VERSION_ID,
 ) -> pd.DataFrame:
-    required = {"event_id", "event_date_type"}
-    missing = sorted(required - set(panel.columns))
-    if missing:
-        raise KeyError(f"Event panel missing required registry column(s): {missing}")
-
-    if panel.empty:
-        return pd.DataFrame(
-            columns=[
+    out = build_qra_event_registry_v2_from_identification(panel=panel)
+    if out.empty:
+        return out[
+            [
                 "event_id",
                 "quarter",
                 "release_timestamp_et",
@@ -171,48 +168,27 @@ def build_qra_event_registry_v2(
                 "treatment_version_id",
                 "headline_eligibility_reason",
             ]
-        )
-
-    working = panel.copy()
-    event_order = pd.CategoricalDtype(
-        ["official_release_date", "market_pricing_marker_minus_1d"],
-        ordered=True,
-    )
-    working["event_date_type"] = working["event_date_type"].astype(event_order)
-    working = working.sort_values(["event_id", "event_date_type"], kind="stable")
-    deduped = working.drop_duplicates(subset=["event_id"], keep="first").reset_index(drop=True)
-
-    rows: list[dict[str, object]] = []
-    for _, row in deduped.iterrows():
-        reviewer = row.get("reviewer", row.get("classification_reviewer", pd.NA))
-        review_date = row.get("review_date", row.get("classification_review_date", pd.NA))
-        rows.append(
-            {
-                "event_id": row.get("event_id", pd.NA),
-                "quarter": row.get("quarter", pd.NA),
-                "release_timestamp_et": row.get("release_timestamp_et", row.get("official_release_timestamp_et", pd.NA)),
-                "release_bundle_type": row.get("timing_quality", pd.NA),
-                "policy_statement_url": row.get("policy_statement_url", pd.NA),
-                "financing_estimates_url": row.get("financing_estimates_url", pd.NA),
-                "timing_quality": row.get("timing_quality", pd.NA),
-                "overlap_severity": _overlap_severity(row),
-                "overlap_label": row.get("overlap_label", pd.NA),
-                "financing_need_news_flag": _bool_from_non_empty(row.get("financing_estimates_url")),
-                "composition_news_flag": _normalize_scalar_text(row.get("current_quarter_action")).lower() in {
-                    "tightening",
-                    "easing",
-                    "hold",
-                    "mixed",
-                },
-                "forward_guidance_flag": _normalize_scalar_text(row.get("forward_guidance_bias")).lower() in {"hawkish", "dovish"},
-                "reviewer": reviewer if _normalize_scalar_text(reviewer) else pd.NA,
-                "review_date": review_date if _normalize_scalar_text(review_date) else pd.NA,
-                "treatment_version_id": treatment_version_id,
-                "headline_eligibility_reason": _headline_registry_reason(row),
-            }
-        )
-    out = pd.DataFrame(rows)
-    return out.sort_values(["event_id"], kind="stable").reset_index(drop=True)
+        ]
+    out["treatment_version_id"] = treatment_version_id
+    keep = [
+        "event_id",
+        "quarter",
+        "release_timestamp_et",
+        "release_bundle_type",
+        "policy_statement_url",
+        "financing_estimates_url",
+        "timing_quality",
+        "overlap_severity",
+        "overlap_label",
+        "financing_need_news_flag",
+        "composition_news_flag",
+        "forward_guidance_flag",
+        "reviewer",
+        "review_date",
+        "treatment_version_id",
+        "headline_eligibility_reason",
+    ]
+    return out[keep].sort_values(["event_id"], kind="stable").reset_index(drop=True)
 
 
 def _summary_group_column(panel: pd.DataFrame) -> str:

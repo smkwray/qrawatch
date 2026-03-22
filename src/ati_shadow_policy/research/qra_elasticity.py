@@ -84,6 +84,7 @@ _TENOR_10Y_EQ_WEIGHTS = {
 
 _NEGATIVE_CHANGE_VERBS = {"reduce", "decrease", "cut"}
 _POSITIVE_CHANGE_VERBS = {"increase", "raise"}
+_REVIEW_DATE_RE = re.compile(r"\b(20\d{2}-\d{2}-\d{2})\b")
 
 
 def _is_missing(value: object) -> bool:
@@ -213,6 +214,246 @@ def _overlap_severity_from_row(row: pd.Series) -> str:
     if overlap_label:
         return "high"
     return "low"
+
+
+def _reviewer_from_status(value: object) -> str:
+    status = normalize_lower(value)
+    if status == "reviewed":
+        return "manual_review"
+    if status == "provisional":
+        return "provisional_review"
+    return ""
+
+
+def _review_date_from_text(value: object) -> object:
+    text = normalize_text(value)
+    match = _REVIEW_DATE_RE.search(text)
+    if match is None:
+        return pd.NA
+    return match.group(1)
+
+
+def _review_date_from_row(row: pd.Series) -> object:
+    for column in ("review_date", "classification_review_date", "shock_review_date"):
+        value = row.get(column, pd.NA)
+        if not _is_missing(value):
+            return value
+    for column in ("notes", "review_notes", "shock_notes"):
+        value = _review_date_from_text(row.get(column, pd.NA))
+        if not _is_missing(value):
+            return value
+    return pd.NA
+
+
+def _merge_overlap_overrides(
+    working: pd.DataFrame,
+    overlap_annotations: pd.DataFrame | None,
+) -> pd.DataFrame:
+    if overlap_annotations is None or overlap_annotations.empty or "event_id" not in overlap_annotations.columns:
+        return working
+
+    overlap = overlap_annotations.copy()
+    keep = [
+        column
+        for column in ("event_id", "overlap_flag", "overlap_label", "overlap_note", "overlap_severity")
+        if column in overlap.columns
+    ]
+    overlap = overlap[keep].drop_duplicates(subset=["event_id"], keep="last").copy()
+    merged = working.merge(overlap, on="event_id", how="left", suffixes=("", "_override"))
+    for column in ("overlap_flag", "overlap_label", "overlap_note", "overlap_severity"):
+        override = f"{column}_override"
+        if override not in merged.columns:
+            continue
+        merged[column] = merged[override].where(~merged[override].isna(), merged.get(column, pd.Series(index=merged.index, dtype=object)))
+        merged = merged.drop(columns=[override])
+    return merged
+
+
+def build_qra_review_ledger(
+    elasticity: pd.DataFrame,
+    overlap_annotations: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    columns = [
+        "spec_id",
+        "event_spec_id",
+        "treatment_version_id",
+        "treatment_variant",
+        "canonical_shock_id",
+        "event_id",
+        "quarter",
+        "event_label",
+        "event_date_requested",
+        "event_date_aligned",
+        "event_date_type",
+        "policy_statement_url",
+        "financing_estimates_url",
+        "timing_quality",
+        "headline_bucket",
+        "classification_review_status",
+        "shock_review_status",
+        "shock_missing_flag",
+        "small_denominator_flag",
+        "usable_for_headline",
+        "usable_for_headline_reason",
+        "overlap_flag",
+        "overlap_label",
+        "overlap_note",
+        "overlap_severity",
+        "reviewer",
+        "review_date",
+        "shock_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "gross_notional_delta_bn",
+        "shock_source",
+        "shock_notes",
+        "shock_construction",
+        "alternative_treatment_complete",
+        "alternative_treatment_missing_fields",
+        "alternative_treatment_missing_reason",
+    ]
+    if elasticity.empty:
+        return pd.DataFrame(columns=columns)
+
+    working = elasticity.copy()
+    if "treatment_variant" in working.columns:
+        canonical = working.loc[working["treatment_variant"] == CANONICAL_TREATMENT_VARIANT].copy()
+        if not canonical.empty:
+            working = canonical
+    working = _merge_overlap_overrides(working, overlap_annotations)
+
+    keep = [
+        column
+        for column in (
+            "event_id",
+            "quarter",
+            "event_label",
+            "event_date_requested",
+            "event_date_aligned",
+            "event_date_type",
+            "policy_statement_url",
+            "financing_estimates_url",
+            "timing_quality",
+            "headline_bucket",
+            "classification_review_status",
+            "shock_review_status",
+            "shock_missing_flag",
+            "small_denominator_flag",
+            "usable_for_headline",
+            "usable_for_headline_reason",
+            "overlap_flag",
+            "overlap_label",
+            "overlap_note",
+            "overlap_severity",
+            "reviewer",
+            "review_date",
+            "classification_reviewer",
+            "classification_review_date",
+            "shock_reviewer",
+            "shock_review_date",
+            "notes",
+            "review_notes",
+            "shock_bn",
+            "schedule_diff_10y_eq_bn",
+            "schedule_diff_dynamic_10y_eq_bn",
+            "schedule_diff_dv01_usd",
+            "gross_notional_delta_bn",
+            "shock_source",
+            "shock_notes",
+            "shock_construction",
+            "event_spec_id",
+            "spec_id",
+        )
+        if column in working.columns
+    ]
+    ledger = _dedupe_on_keys(working[keep].copy(), key_columns=SHOCK_TEMPLATE_KEYS)
+    if ledger.empty:
+        return pd.DataFrame(columns=columns)
+
+    for column in (
+        "shock_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "gross_notional_delta_bn",
+        "shock_source",
+        "shock_notes",
+        "shock_construction",
+        "overlap_flag",
+        "overlap_label",
+        "overlap_note",
+        "overlap_severity",
+    ):
+        if column not in ledger.columns:
+            ledger[column] = pd.NA
+    if "shock_missing_flag" not in ledger.columns:
+        ledger["shock_missing_flag"] = ledger.get(
+            "usable_for_headline_reason",
+            pd.Series(index=ledger.index, dtype=object),
+        ).astype(str).eq("shock_missing")
+    else:
+        ledger["shock_missing_flag"] = ledger["shock_missing_flag"].map(_as_bool)
+    if "small_denominator_flag" not in ledger.columns:
+        ledger["small_denominator_flag"] = False
+    else:
+        ledger["small_denominator_flag"] = ledger["small_denominator_flag"].map(_as_bool)
+
+    ledger["classification_review_status"] = ledger.get(
+        "classification_review_status",
+        pd.Series(index=ledger.index, dtype=object),
+    ).fillna("")
+    ledger["shock_review_status"] = ledger.get(
+        "shock_review_status",
+        pd.Series(index=ledger.index, dtype=object),
+    ).fillna("")
+    ledger["headline_bucket"] = ledger.get("headline_bucket", pd.Series(index=ledger.index, dtype=object)).fillna("")
+    ledger["usable_for_headline_reason"] = ledger.apply(
+        lambda row: (
+            normalize_text(row.get("usable_for_headline_reason"))
+            or _headline_eligibility_reason(
+                event_date_type=row.get("event_date_type", ""),
+                treatment_variant=CANONICAL_TREATMENT_VARIANT,
+                shock_missing=bool(row.get("shock_missing_flag", False)),
+                small_denominator=bool(row.get("small_denominator_flag", False)),
+                headline_bucket=normalize_lower(row.get("headline_bucket")),
+                classification_review_status=normalize_lower(row.get("classification_review_status")),
+                shock_review_status=normalize_lower(row.get("shock_review_status")),
+            )
+        ),
+        axis=1,
+    )
+    ledger["usable_for_headline"] = ledger["usable_for_headline_reason"].eq("usable")
+    ledger["overlap_severity"] = ledger.apply(_overlap_severity_from_row, axis=1)
+    ledger["reviewer"] = ledger.apply(
+        lambda row: (
+            normalize_text(
+                _first_non_empty_value(
+                    row,
+                    ("reviewer", "classification_reviewer", "shock_reviewer"),
+                )
+            )
+            or _reviewer_from_status(_first_non_empty_value(row, ("classification_review_status", "shock_review_status")))
+        ),
+        axis=1,
+    )
+    ledger["review_date"] = ledger.apply(_review_date_from_row, axis=1)
+    alt_status = ledger.apply(_alternative_treatment_status, axis=1, result_type="expand")
+    alt_status.columns = [
+        "alternative_treatment_complete",
+        "alternative_treatment_missing_fields",
+        "alternative_treatment_missing_reason",
+    ]
+    ledger = pd.concat([ledger, alt_status], axis=1)
+    ledger["canonical_shock_id"] = CANONICAL_TREATMENT_VARIANT
+    ledger["spec_id"] = SPEC_QRA_EVENT_V2
+    ledger["event_spec_id"] = SPEC_QRA_EVENT_V2
+    ledger["treatment_version_id"] = SPEC_DURATION_TREATMENT_V1
+    ledger["treatment_variant"] = CANONICAL_TREATMENT_VARIANT
+    for column in columns:
+        if column not in ledger.columns:
+            ledger[column] = pd.NA
+    return ledger[columns].sort_values(["event_id", "event_date_type"], kind="stable").reset_index(drop=True)
 
 
 def _contains_no_change_signal(text: str) -> bool:
@@ -769,56 +1010,75 @@ def build_qra_shock_crosswalk_v1(
     shock_template: pd.DataFrame,
     canonical_shock_id: str = "shock_bn",
 ) -> pd.DataFrame:
-    required = [*SHOCK_TEMPLATE_KEYS, canonical_shock_id]
-    missing = [column for column in required if column not in shock_template.columns]
-    if missing:
-        raise KeyError(f"Shock template missing required crosswalk column(s): {missing}")
-
-    deduped = _dedupe_on_keys(shock_template.copy(), key_columns=SHOCK_TEMPLATE_KEYS)
-    rows: list[dict[str, object]] = []
-    for _, row in deduped.iterrows():
-        shock_source = row.get("shock_source", pd.NA)
-        manual_override_reason = pd.NA
-        (
-            alternative_treatment_complete,
-            alternative_treatment_missing_fields,
-            alternative_treatment_missing_reason,
-        ) = _alternative_treatment_status(row)
-        normalized_source = normalize_lower(shock_source)
-        normalized_construction = normalize_lower(row.get("shock_construction", ""))
-        if normalized_construction.startswith("manual_override"):
-            manual_override_reason = "manual_override_with_schedule_context"
-        elif normalized_source and normalized_source not in {"schedule_diff_10y_eq_v1", "auto_tenor_parser_v1"}:
-            manual_override_reason = "manual_source_override"
-
-        rows.append(
-            {
-                "spec_id": SPEC_DURATION_TREATMENT_V1,
-                "treatment_variant": CANONICAL_TREATMENT_VARIANT,
-                "event_id": row.get("event_id", pd.NA),
-                "event_date_type": row.get("event_date_type", pd.NA),
-                "canonical_shock_id": canonical_shock_id,
-                "shock_bn": row.get(canonical_shock_id, pd.NA),
-                "schedule_diff_10y_eq_bn": row.get("schedule_diff_10y_eq_bn", pd.NA),
-                "schedule_diff_dynamic_10y_eq_bn": row.get("schedule_diff_dynamic_10y_eq_bn", pd.NA),
-                "schedule_diff_dv01_usd": row.get("schedule_diff_dv01_usd", pd.NA),
-                "gross_notional_delta_bn": row.get("gross_notional_delta_bn", pd.NA),
-                "shock_source": shock_source,
-                "manual_override_reason": manual_override_reason,
-                "alternative_treatment_complete": alternative_treatment_complete,
-                "alternative_treatment_missing_fields": alternative_treatment_missing_fields,
-                "alternative_treatment_missing_reason": alternative_treatment_missing_reason,
-                "shock_review_status": row.get("shock_review_status", pd.NA),
-            }
+    ledger = build_qra_review_ledger(shock_template)
+    if ledger.empty:
+        return pd.DataFrame(
+            columns=[
+                "spec_id",
+                "treatment_version_id",
+                "treatment_variant",
+                "event_id",
+                "event_date_type",
+                "canonical_shock_id",
+                "shock_bn",
+                "schedule_diff_10y_eq_bn",
+                "schedule_diff_dynamic_10y_eq_bn",
+                "schedule_diff_dv01_usd",
+                "gross_notional_delta_bn",
+                "shock_source",
+                "manual_override_reason",
+                "alternative_treatment_complete",
+                "alternative_treatment_missing_fields",
+                "alternative_treatment_missing_reason",
+                "shock_review_status",
+                "usable_for_headline_reason",
+            ]
         )
-    return pd.DataFrame(rows).sort_values(["event_id", "event_date_type"], kind="stable").reset_index(drop=True)
+
+    out = ledger.copy()
+    out["manual_override_reason"] = out.apply(
+        lambda row: (
+            ("" if _is_missing(row.get("shock_notes", pd.NA)) else normalize_text(row.get("shock_notes")))
+            or (
+                "manual_override_with_schedule_context"
+                if normalize_lower(row.get("shock_construction")).startswith("manual_override")
+                else ("manual_source_override" if "manual" in normalize_lower(row.get("shock_source")) else "")
+            )
+        ),
+        axis=1,
+    )
+    keep = [
+        "spec_id",
+        "treatment_version_id",
+        "treatment_variant",
+        "event_id",
+        "event_date_type",
+        "canonical_shock_id",
+        "shock_bn",
+        "schedule_diff_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "schedule_diff_dv01_usd",
+        "gross_notional_delta_bn",
+        "shock_source",
+        "manual_override_reason",
+        "alternative_treatment_complete",
+        "alternative_treatment_missing_fields",
+        "alternative_treatment_missing_reason",
+        "shock_review_status",
+        "usable_for_headline_reason",
+    ]
+    return out[keep].sort_values(["event_id", "event_date_type"], kind="stable").reset_index(drop=True)
 
 
-def build_event_usability_table(elasticity: pd.DataFrame) -> pd.DataFrame:
+def build_event_usability_table(
+    elasticity: pd.DataFrame,
+    overlap_annotations: pd.DataFrame | None = None,
+) -> pd.DataFrame:
     if elasticity.empty:
         return pd.DataFrame(
             columns=[
                 "spec_id",
+                "treatment_version_id",
                 "treatment_variant",
                 "headline_bucket",
                 "classification_review_status",
@@ -827,40 +1087,20 @@ def build_event_usability_table(elasticity: pd.DataFrame) -> pd.DataFrame:
                 "overlap_severity",
                 "usable_for_headline",
                 "usable_for_headline_reason",
+                "event_count",
+                "n_rows",
                 "n_events",
             ]
         )
 
-    working = elasticity.copy()
-    if "treatment_variant" in working.columns:
-        canonical = working.loc[working["treatment_variant"] == CANONICAL_TREATMENT_VARIANT].copy()
-        if not canonical.empty:
-            working = canonical
-    dedupe_keys = [
-        column
-        for column in (
-            "event_id",
-            "event_date_type",
-            "treatment_variant",
-            "headline_bucket",
-            "classification_review_status",
-            "shock_review_status",
-            "overlap_severity",
-            "usable_for_headline",
-            "usable_for_headline_reason",
-            "spec_id",
-        )
-        if column in working.columns
-    ]
-    if dedupe_keys:
-        working = working.drop_duplicates(subset=dedupe_keys, keep="first").copy()
-
-    if "overlap_severity" not in working.columns:
-        working["overlap_severity"] = "none"
+    working = build_qra_review_ledger(elasticity, overlap_annotations=overlap_annotations)
+    if working.empty:
+        return pd.DataFrame()
     grouped = (
         working.groupby(
             [
                 "spec_id",
+                "treatment_version_id",
                 "treatment_variant",
                 "headline_bucket",
                 "classification_review_status",
@@ -873,9 +1113,10 @@ def build_event_usability_table(elasticity: pd.DataFrame) -> pd.DataFrame:
             dropna=False,
             observed=True,
         )
-        .size()
-        .reset_index(name="n_events")
+        .agg(n_rows=("event_id", "size"), n_events=("event_id", "nunique"))
+        .reset_index()
     )
+    grouped["event_count"] = grouped["n_events"]
     return grouped.sort_values(
         [
             "event_date_type",

@@ -288,6 +288,8 @@ QRA_SHOCK_CROSSWALK_V1_COLUMNS = [
     "shock_source",
     "manual_override_reason",
     "shock_review_status",
+    "treatment_version_id",
+    "usable_for_headline_reason",
 ]
 
 EVENT_USABILITY_TABLE_REQUIRED_GROUPS = [
@@ -663,7 +665,24 @@ def _validate_shock_drift_alerts(
                 continue
             shock = _coerce_float(row.get("shock_bn"))
             reviewed = str(row.get("shock_review_status", "")).strip().lower()
-            if shock is None or abs(shock) <= 1e-9 or reviewed == "pending":
+            alternative_complete = _coerce_bool(row.get("alternative_treatment_complete", False))
+            missing_alt_reason = str(row.get("alternative_treatment_missing_reason", "") or "").strip()
+            missing_alt_fields = str(row.get("alternative_treatment_missing_fields", "") or "").strip()
+            shock_source = str(row.get("shock_source", "") or "").strip().lower()
+            manual_override_reason = str(row.get("manual_override_reason", "") or "").strip().lower()
+            needs_manual_review = (
+                reviewed == "reviewed"
+                and not alternative_complete
+                and (
+                    bool(missing_alt_reason)
+                    or bool(missing_alt_fields)
+                    or "manual" in shock_source
+                    or "manual" in manual_override_reason
+                )
+            )
+            if not needs_manual_review:
+                continue
+            if shock is None or abs(shock) <= 1e-9:
                 warnings.append(
                     "qra_publish_shock_drift_alert:"
                     f"{csv_name}:{event_id}:{source_key}:{schedule}:{reviewed or 'missing_review_status'}"
@@ -675,9 +694,56 @@ def _validate_overlap_excluded_noop(
     csv_name: str,
     frame: pd.DataFrame,
     *,
+    errors: list[str],
     warnings: list[str],
 ) -> None:
-    return
+    required = {"sample_variant", "event_date_type", "headline_bucket", "n_events"}
+    missing = sorted(required - set(frame.columns))
+    if missing:
+        errors.append(f"qra_overlap_missing_columns:{csv_name}:{','.join(missing)}")
+        return
+    if frame.empty:
+        errors.append(f"qra_overlap_missing_rows:{csv_name}")
+        return
+
+    variants = set(frame["sample_variant"].dropna().astype(str))
+    for required_variant in ("all_events", "overlap_excluded"):
+        if required_variant not in variants:
+            errors.append(f"qra_overlap_missing_sample_variant:{csv_name}:{required_variant}")
+
+    note_column = "overlap_exclusion_note" if "overlap_exclusion_note" in frame.columns else None
+    grouped = frame.groupby(["event_date_type", "headline_bucket"], dropna=False)
+    for (event_date_type, headline_bucket), group in grouped:
+        sample_counts = {
+            str(row.get("sample_variant")): _coerce_int(row.get("n_events"))
+            for row in group.to_dict("records")
+        }
+        all_events = sample_counts.get("all_events")
+        overlap_excluded = sample_counts.get("overlap_excluded")
+        if all_events is None or overlap_excluded is None:
+            continue
+        if overlap_excluded > all_events:
+            errors.append(
+                "qra_overlap_invalid_count_order:"
+                f"{csv_name}:{event_date_type}:{headline_bucket}:{overlap_excluded}>{all_events}"
+            )
+        if overlap_excluded == all_events:
+            note_values = []
+            if note_column is not None:
+                note_values = [
+                    str(value).strip().lower()
+                    for value in group.loc[group["sample_variant"].astype(str) == "overlap_excluded", note_column]
+                    if str(value).strip()
+                ]
+            if not any(
+                ("no overlap-annotated events were flagged" in value)
+                or ("no reviewed overlaps found" in value)
+                for value in note_values
+            ):
+                errors.append(
+                    "qra_overlap_identical_without_audit_note:"
+                    f"{csv_name}:{event_date_type}:{headline_bucket}"
+                )
 
 
 def _validate_readme_exact_coverage_consistency(
@@ -989,10 +1055,168 @@ def _validate_overlap_excluded_for_file(
     csv_name: str,
     csv_frame: pd.DataFrame,
     *,
+    errors: list[str],
     warnings: list[str],
 ) -> None:
     if csv_name == "qra_event_robustness.csv":
-        _validate_overlap_excluded_noop(csv_name, csv_frame, warnings=warnings)
+        _validate_overlap_excluded_noop(csv_name, csv_frame, errors=errors, warnings=warnings)
+
+
+def _canonical_qra_review_frame(frame: pd.DataFrame) -> pd.DataFrame:
+    if frame.empty:
+        return frame.copy()
+    working = frame.copy()
+    if "treatment_variant" in working.columns:
+        canonical = working.loc[working["treatment_variant"].astype(str).str.strip() == "canonical_shock_bn"].copy()
+        if not canonical.empty:
+            working = canonical
+    if "event_date_type" in working.columns:
+        official = working.loc[working["event_date_type"].astype(str).str.strip() == "official_release_date"].copy()
+        if not official.empty:
+            working = official
+    dedupe = [column for column in ("event_id", "event_date_type") if column in working.columns]
+    if dedupe:
+        working = working.drop_duplicates(subset=dedupe, keep="first").reset_index(drop=True)
+    return working
+
+
+def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> list[str]:
+    errors: list[str] = []
+    registry = qra_frames.get("qra_event_registry_v2.csv", pd.DataFrame())
+    crosswalk = _canonical_qra_review_frame(qra_frames.get("qra_shock_crosswalk_v1.csv", pd.DataFrame()))
+    shock_summary = _canonical_qra_review_frame(qra_frames.get("qra_event_shock_summary.csv", pd.DataFrame()))
+    elasticity = _canonical_qra_review_frame(qra_frames.get("qra_event_elasticity.csv", pd.DataFrame()))
+    usability = qra_frames.get("event_usability_table.csv", pd.DataFrame())
+    if registry.empty or crosswalk.empty or shock_summary.empty or usability.empty:
+        return errors
+
+    registry = registry.drop_duplicates(subset=["event_id"], keep="first").copy()
+    if "headline_eligibility_reason" in registry.columns and "usable_for_headline_reason" in crosswalk.columns:
+        merged = registry.merge(
+            crosswalk[["event_id", "usable_for_headline_reason"]],
+            on="event_id",
+            how="inner",
+        )
+        mismatch = merged.loc[
+            merged["headline_eligibility_reason"].fillna("").astype(str).str.strip()
+            != merged["usable_for_headline_reason"].fillna("").astype(str).str.strip()
+        ]
+        if not mismatch.empty:
+            errors.append(
+                "qra_publish_consistency_registry_crosswalk_reason_mismatch:"
+                + ",".join(sorted(mismatch["event_id"].astype(str).unique()))
+            )
+
+    if not elasticity.empty:
+        joined = shock_summary.merge(
+            elasticity[["event_id", "usable_for_headline_reason", "spec_id", "treatment_variant"]],
+            on="event_id",
+            how="inner",
+            suffixes=("_summary", "_elasticity"),
+        )
+        if not joined.empty:
+            reason_mismatch = joined.loc[
+                joined["usable_for_headline_reason_summary"].fillna("").astype(str).str.strip()
+                != joined["usable_for_headline_reason_elasticity"].fillna("").astype(str).str.strip()
+            ]
+            if not reason_mismatch.empty:
+                errors.append(
+                    "qra_publish_consistency_summary_elasticity_reason_mismatch:"
+                    + ",".join(sorted(reason_mismatch["event_id"].astype(str).unique()))
+                )
+
+    joined = shock_summary.merge(
+        crosswalk[["event_id", "usable_for_headline_reason", "spec_id", "treatment_variant"]],
+        on="event_id",
+        how="inner",
+        suffixes=("_summary", "_crosswalk"),
+    )
+    if not joined.empty:
+        reason_mismatch = joined.loc[
+            joined["usable_for_headline_reason_summary"].fillna("").astype(str).str.strip()
+            != joined["usable_for_headline_reason_crosswalk"].fillna("").astype(str).str.strip()
+        ]
+        if not reason_mismatch.empty:
+            errors.append(
+                "qra_publish_consistency_summary_crosswalk_reason_mismatch:"
+                + ",".join(sorted(reason_mismatch["event_id"].astype(str).unique()))
+            )
+        if "spec_id_summary" in joined.columns and "spec_id_crosswalk" in joined.columns:
+            spec_mismatch = joined.loc[
+                joined["spec_id_summary"].fillna("").astype(str).str.strip()
+                != joined["spec_id_crosswalk"].fillna("").astype(str).str.strip()
+            ]
+            if not spec_mismatch.empty:
+                errors.append(
+                    "qra_publish_consistency_summary_crosswalk_spec_mismatch:"
+                    + ",".join(sorted(spec_mismatch["event_id"].astype(str).unique()))
+                )
+        if "treatment_variant_summary" in joined.columns and "treatment_variant_crosswalk" in joined.columns:
+            variant_mismatch = joined.loc[
+                joined["treatment_variant_summary"].fillna("").astype(str).str.strip()
+                != joined["treatment_variant_crosswalk"].fillna("").astype(str).str.strip()
+            ]
+            if not variant_mismatch.empty:
+                errors.append(
+                    "qra_publish_consistency_summary_crosswalk_variant_mismatch:"
+                    + ",".join(sorted(variant_mismatch["event_id"].astype(str).unique()))
+                )
+
+    if {
+        "event_date_type",
+        "headline_bucket",
+        "classification_review_status",
+        "shock_review_status",
+        "overlap_severity",
+        "usable_for_headline",
+        "usable_for_headline_reason",
+        "event_id",
+    }.issubset(shock_summary.columns) and {
+        "event_date_type",
+        "headline_bucket",
+        "classification_review_status",
+        "shock_review_status",
+        "overlap_severity",
+        "usable_for_headline",
+        "usable_for_headline_reason",
+        "event_count",
+    }.issubset(usability.columns):
+        summary_group = (
+            shock_summary.groupby(
+                [
+                    "event_date_type",
+                    "headline_bucket",
+                    "classification_review_status",
+                    "shock_review_status",
+                    "overlap_severity",
+                    "usable_for_headline",
+                    "usable_for_headline_reason",
+                ],
+                dropna=False,
+            )["event_id"]
+            .nunique()
+            .reset_index(name="event_count_summary")
+        )
+        merged_counts = usability.merge(
+            summary_group,
+            on=[
+                "event_date_type",
+                "headline_bucket",
+                "classification_review_status",
+                "shock_review_status",
+                "overlap_severity",
+                "usable_for_headline",
+                "usable_for_headline_reason",
+            ],
+            how="outer",
+        )
+        mismatch = merged_counts.loc[
+            merged_counts["event_count"].fillna(-1).astype(float)
+            != merged_counts["event_count_summary"].fillna(-1).astype(float)
+        ]
+        if not mismatch.empty:
+            errors.append("qra_publish_consistency_usability_count_mismatch")
+    return errors
 
 
 def validate_publish_artifacts(
@@ -1006,6 +1230,7 @@ def validate_publish_artifacts(
 
     readiness_frame: pd.DataFrame | None = None
     completion_frame: pd.DataFrame | None = None
+    qra_frames: dict[str, pd.DataFrame] = {}
 
     if not publish_dir.exists():
         errors.append(f"publish_dir_missing:{publish_dir}")
@@ -1037,7 +1262,9 @@ def validate_publish_artifacts(
         if csv_name in {"qra_event_shock_summary.csv", "qra_event_elasticity.csv", "qra_shock_crosswalk_v1.csv"}:
             _validate_shock_drift_alerts(csv_name, csv_frame, warnings=warnings)
         if csv_name.startswith("qra_event_"):
-            _validate_overlap_excluded_for_file(csv_name, csv_frame, warnings=warnings)
+            _validate_overlap_excluded_for_file(csv_name, csv_frame, errors=errors, warnings=warnings)
+        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv"}:
+            qra_frames[csv_name] = csv_frame.copy()
         if csv_name == "official_capture_readiness.csv":
             readiness_frame = csv_frame
         if csv_name == "official_capture_completion.csv":
@@ -1071,7 +1298,9 @@ def validate_publish_artifacts(
         if csv_name in {"qra_event_shock_summary.csv", "qra_shock_crosswalk_v1.csv", "qra_event_elasticity.csv"}:
             _validate_shock_drift_alerts(csv_name, csv_frame, warnings=warnings)
         if csv_name.startswith("qra_event_"):
-            _validate_overlap_excluded_for_file(csv_name, csv_frame, warnings=warnings)
+            _validate_overlap_excluded_for_file(csv_name, csv_frame, errors=errors, warnings=warnings)
+        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv"}:
+            qra_frames[csv_name] = csv_frame.copy()
         if csv_name == "official_capture_readiness.csv":
             readiness_frame = csv_frame
         if csv_name == "official_capture_completion.csv":
@@ -1167,6 +1396,7 @@ def validate_publish_artifacts(
                     errors.append(f"series_metadata_extension_public_role_invalid:{name}")
 
     readiness_exact, completion_exact = _validate_exact_coverages(readiness_frame, completion_frame)
+    errors.extend(_validate_qra_publish_consistency(qra_frames))
     _validate_readme_exact_coverage_consistency(
         readme_path=readme_path,
         readiness_exact=readiness_exact,

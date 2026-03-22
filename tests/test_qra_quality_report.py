@@ -211,9 +211,18 @@ def test_capture_summary_handles_known_episode_quarters(tmp_path: Path) -> None:
     assert official_capture["quarter_coverage"]["filled"] == 2
 
 
-def test_build_report_contract_check_detects_missing_official_provenance(tmp_path: Path) -> None:
+def test_build_report_contract_check_detects_unlinked_exact_official_row(tmp_path: Path) -> None:
     downloads_path = tmp_path / "downloads.csv"
-    pd.DataFrame(columns=["local_extension"]).to_csv(downloads_path, index=False)
+    pd.DataFrame(
+        [
+            {
+                "href": "https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding/test-row",
+                "source_family": "recent_refunding_page",
+                "preferred_for_download": False,
+                "doc_type": "quarterly_refunding_press_release",
+            }
+        ]
+    ).to_csv(downloads_path, index=False)
 
     capture_path = tmp_path / "official_quarterly_refunding_capture.csv"
     pd.DataFrame(
@@ -224,9 +233,12 @@ def test_build_report_contract_check_detects_missing_official_provenance(tmp_pat
                 "market_pricing_marker_minus_1d": "2026-03-19",
                 "total_financing_need_bn": 1.0,
                 "net_bill_issuance_bn": 1.0,
-                "source_url": "",
+                "source_url": "https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding/test-row",
                 "source_doc_local": "q1.pdf",
-                "source_doc_type": "quarterly_refunding_press_release",
+                "source_doc_type": (
+                    "official_auction_reconstruction|official_quarterly_refunding_statement|"
+                    "quarterly_refunding_press_release"
+                ),
                 "qa_status": "manual_official_capture",
             },
         ]
@@ -239,7 +251,47 @@ def test_build_report_contract_check_detects_missing_official_provenance(tmp_pat
     )
 
     assert result["contract_violations"]
-    assert "source_url" in result["contract_violations"][0]
+    assert "not in allowed official families" in result["contract_violations"][0]
+
+
+def test_build_report_contract_check_detects_source_url_type_mismatch(tmp_path: Path) -> None:
+    downloads_path = tmp_path / "downloads.csv"
+    pd.DataFrame(
+        [
+            {
+                "href": "https://home.treasury.gov/news/press-releases/jy9999",
+                "source_family": "financing_estimates_archive",
+                "preferred_for_download": True,
+                "doc_type": "quarterly_refunding_press_release",
+            }
+        ]
+    ).to_csv(downloads_path, index=False)
+
+    capture_path = tmp_path / "official_quarterly_refunding_capture.csv"
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2026Q1",
+                "qra_release_date": "2026-03-20",
+                "market_pricing_marker_minus_1d": "2026-03-19",
+                "total_financing_need_bn": 1.0,
+                "net_bill_issuance_bn": 1.0,
+                "source_url": "https://home.treasury.gov/news/press-releases/jy9999",
+                "source_doc_local": "q1.pdf",
+                "source_doc_type": "official_auction_reconstruction|official_quarterly_refunding_statement",
+                "qa_status": "manual_official_capture",
+            },
+        ]
+    ).to_csv(capture_path, index=False)
+
+    result = qra_quality_report.build_qra_quality_report(
+        downloads_path=downloads_path,
+        capture_path=capture_path,
+        check_contract=True,
+    )
+
+    assert result["contract_violations"]
+    assert "press-release typed" in result["contract_violations"][0]
 
 
 def test_main_exits_nonzero_when_contract_check_fails(tmp_path: Path) -> None:

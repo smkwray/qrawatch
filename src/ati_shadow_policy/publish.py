@@ -596,12 +596,20 @@ def _augment_qra_elasticity_frame(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     if out.empty:
         return out
-    if "spec_id" not in out.columns:
-        out["spec_id"] = QRA_EVENT_SPEC_ID
+    original_spec = out.get("spec_id", pd.Series(index=out.index, dtype=object))
+    event_spec = out.get("event_spec_id", pd.Series(index=out.index, dtype=object))
+    if "treatment_version_id" not in out.columns:
+        out["treatment_version_id"] = original_spec.fillna(QRA_DURATION_SPEC_ID).replace("", QRA_DURATION_SPEC_ID)
     else:
-        out["spec_id"] = out["spec_id"].fillna(QRA_EVENT_SPEC_ID).replace("", QRA_EVENT_SPEC_ID)
+        out["treatment_version_id"] = out["treatment_version_id"].fillna(QRA_DURATION_SPEC_ID).replace("", QRA_DURATION_SPEC_ID)
+    out["spec_id"] = event_spec.where(
+        event_spec.notna() & event_spec.astype(str).str.strip().ne(""),
+        original_spec,
+    ).fillna(QRA_EVENT_SPEC_ID).replace("", QRA_EVENT_SPEC_ID)
     if "treatment_variant" not in out.columns:
-        out["treatment_variant"] = out.get("shock_construction", pd.Series(index=out.index, dtype=object)).fillna("shock_bn")
+        out["treatment_variant"] = out.get("treatment_variant", pd.Series(index=out.index, dtype=object)).fillna(
+            out.get("shock_construction", pd.Series(index=out.index, dtype=object)).fillna("shock_bn")
+        )
     else:
         out["treatment_variant"] = out["treatment_variant"].fillna(
             out.get("shock_construction", pd.Series(index=out.index, dtype=object)).fillna("shock_bn")
@@ -661,107 +669,26 @@ def _empty_qra_registry_frame() -> pd.DataFrame:
 
 def build_qra_event_registry_publish_table() -> pd.DataFrame:
     source = _read_optional_source_csv("qra_event_registry_v2")
-    if not source.empty:
-        source = _ensure_columns(
-            source,
-            {
-                "spec_id": QRA_EVENT_SPEC_ID,
-                "treatment_variant": "shock_bn",
-                "release_timestamp_kind": "date_proxy",
-                "release_bundle_type": "",
-                "overlap_severity": "none",
-                "overlap_label": "",
-                "financing_need_news_flag": False,
-                "composition_news_flag": False,
-                "forward_guidance_flag": False,
-                "reviewer": "",
-                "review_date": "",
-                "treatment_version_id": QRA_EVENT_SPEC_ID,
-                "headline_eligibility_reason": "non_headline_or_unreviewed",
-            },
-        )
-        columns = [
-            "event_id",
-            "quarter",
-            "release_timestamp_et",
-            "release_timestamp_kind",
-            "release_bundle_type",
-            "policy_statement_url",
-            "financing_estimates_url",
-            "timing_quality",
-            "overlap_severity",
-            "overlap_label",
-            "financing_need_news_flag",
-            "composition_news_flag",
-            "forward_guidance_flag",
-            "reviewer",
-            "review_date",
-            "treatment_version_id",
-            "headline_eligibility_reason",
-            "spec_id",
-            "treatment_variant",
-        ]
-        for column in columns:
-            if column not in source.columns:
-                source[column] = pd.NA
-        return source[columns].drop_duplicates(subset=["event_id"], keep="first").sort_values(["quarter", "event_id"]).reset_index(drop=True)
-
-    events = _qra_event_table_frame()
-    if events.empty:
+    if source.empty:
         return _empty_qra_registry_frame()
-
-    official = events.loc[events.get("event_date_type", pd.Series(dtype=str)).astype(str) == "official_release_date"].copy()
-    if official.empty:
-        official = events.copy()
-
-    for column in ("spec_id", "treatment_variant", "release_timestamp_et", "release_timestamp_kind"):
-        if column not in official.columns:
-            official[column] = pd.NA
-
-    shock = _qra_shock_summary_frame()
-    if not shock.empty:
-        shock = shock.copy()
-        for column in ("shock_bn", "shock_source", "shock_notes", "shock_review_status", "shock_construction", "usable_for_headline"):
-            if column not in shock.columns:
-                shock[column] = pd.NA
-        shock = shock.drop_duplicates(subset=["event_id"], keep="first")
-        official = official.merge(
-            shock[
-                [
-                    "event_id",
-                    "shock_bn",
-                    "shock_source",
-                    "shock_notes",
-                    "shock_review_status",
-                    "shock_construction",
-                    "usable_for_headline",
-                ]
-            ],
-            on="event_id",
-            how="left",
-        )
-    if "release_timestamp_et" not in official.columns or official["release_timestamp_et"].isna().all():
-        source_dates = official.get("event_date_aligned")
-        if source_dates is None:
-            source_dates = official.get("official_release_date")
-        if source_dates is None:
-            source_dates = pd.Series(index=official.index, dtype=object)
-        official["release_timestamp_et"] = source_dates.map(_timestamp_proxy_et)
-        official["release_timestamp_kind"] = "date_proxy"
-
-    official["release_bundle_type"] = official.get("timing_quality", pd.Series(index=official.index, dtype=object))
-    official["overlap_severity"] = official.apply(_qra_overlap_severity, axis=1)
-    official["overlap_label"] = official.get("overlap_label", pd.Series(index=official.index, dtype=object)).fillna("")
-    official["financing_need_news_flag"] = official.apply(_qra_financing_need_news_flag, axis=1)
-    official["composition_news_flag"] = official.apply(_qra_composition_news_flag, axis=1)
-    official["forward_guidance_flag"] = official.apply(_qra_forward_guidance_flag, axis=1)
-    official["reviewer"] = official.get("shock_review_status", official.get("classification_review_status", pd.Series(index=official.index, dtype=object)))
-    official["review_date"] = ""
-    official["treatment_version_id"] = official.get("shock_construction", pd.Series(index=official.index, dtype=object)).fillna(QRA_EVENT_SPEC_ID)
-    official["headline_eligibility_reason"] = official.apply(_qra_headline_eligibility_reason, axis=1)
-    official["spec_id"] = QRA_EVENT_SPEC_ID
-    official["treatment_variant"] = official.get("shock_construction", pd.Series(index=official.index, dtype=object)).fillna("shock_bn")
-
+    source = _ensure_columns(
+        source,
+        {
+            "spec_id": QRA_EVENT_SPEC_ID,
+            "treatment_variant": "canonical_shock_bn",
+            "release_timestamp_kind": "date_proxy",
+            "release_bundle_type": "",
+            "overlap_severity": "none",
+            "overlap_label": "",
+            "financing_need_news_flag": False,
+            "composition_news_flag": False,
+            "forward_guidance_flag": False,
+            "reviewer": "",
+            "review_date": "",
+            "treatment_version_id": QRA_DURATION_SPEC_ID,
+            "headline_eligibility_reason": "missing_shock_summary",
+        },
+    )
     columns = [
         "event_id",
         "quarter",
@@ -784,9 +711,9 @@ def build_qra_event_registry_publish_table() -> pd.DataFrame:
         "treatment_variant",
     ]
     for column in columns:
-        if column not in official.columns:
-            official[column] = pd.NA
-    return official[columns].drop_duplicates(subset=["event_id"], keep="first").sort_values(["quarter", "event_id"]).reset_index(drop=True)
+        if column not in source.columns:
+            source[column] = pd.NA
+    return source[columns].drop_duplicates(subset=["event_id"], keep="first").sort_values(["quarter", "event_id"]).reset_index(drop=True)
 
 
 def _empty_qra_crosswalk_frame() -> pd.DataFrame:
@@ -816,21 +743,16 @@ def _empty_qra_crosswalk_frame() -> pd.DataFrame:
 def build_qra_shock_crosswalk_publish_table() -> pd.DataFrame:
     source = _read_optional_source_csv("qra_shock_crosswalk_v1")
     if source.empty:
-        shock = _qra_shock_summary_frame()
-        if shock.empty:
-            shock = _qra_elasticity_source_frame()
-        if shock.empty:
-            return _empty_qra_crosswalk_frame()
-        out = shock.copy()
-    else:
-        out = source.copy()
+        return _empty_qra_crosswalk_frame()
+    out = source.copy()
 
     out = _ensure_columns(
         out,
         {
             "spec_id": QRA_EVENT_SPEC_ID,
-            "treatment_variant": "shock_bn",
-            "usable_for_headline_reason": "non_headline_or_unreviewed",
+            "treatment_version_id": QRA_DURATION_SPEC_ID,
+            "treatment_variant": "canonical_shock_bn",
+            "usable_for_headline_reason": "missing_shock_summary",
             "manual_override_reason": "",
             "alternative_treatment_complete": False,
             "alternative_treatment_missing_fields": "",
@@ -853,14 +775,6 @@ def build_qra_shock_crosswalk_publish_table() -> pd.DataFrame:
         .fillna(out.get("shock_notes", pd.Series(index=out.index, dtype=object)))
         .fillna("")
     )
-    out["spec_id"] = QRA_EVENT_SPEC_ID
-    out["treatment_variant"] = (
-        out.get("canonical_shock_id", pd.Series(index=out.index, dtype=object))
-        .fillna(out.get("shock_construction", pd.Series(index=out.index, dtype=object)))
-        .fillna(out.get("treatment_variant", pd.Series(index=out.index, dtype=object)))
-        .fillna("shock_bn")
-    )
-    out["usable_for_headline_reason"] = out.apply(_qra_headline_eligibility_reason, axis=1)
     columns = [
         "event_id",
         "event_date_type",
@@ -876,6 +790,7 @@ def build_qra_shock_crosswalk_publish_table() -> pd.DataFrame:
         "alternative_treatment_missing_fields",
         "alternative_treatment_missing_reason",
         "shock_review_status",
+        "treatment_version_id",
         "spec_id",
         "treatment_variant",
         "usable_for_headline_reason",
@@ -895,10 +810,12 @@ def _empty_event_usability_frame() -> pd.DataFrame:
             "shock_review_status",
             "overlap_severity",
             "usable_for_headline",
+            "usable_for_headline_reason",
             "n_rows",
             "n_events",
             "event_count",
             "spec_id",
+            "treatment_version_id",
             "treatment_variant",
         ]
     )
@@ -906,48 +823,24 @@ def _empty_event_usability_frame() -> pd.DataFrame:
 
 def build_event_usability_publish_table() -> pd.DataFrame:
     source = _read_optional_source_csv("event_usability_table")
-    if not source.empty:
-        source = _ensure_columns(
-            source,
-            {
-                "spec_id": QRA_EVENT_SPEC_ID,
-                "treatment_variant": "shock_bn",
-            },
-        )
-        if "event_count" not in source.columns:
-            source["event_count"] = source.get("n_events", source.get("n_rows", pd.NA))
-        return source
-
-    elasticity = _augment_qra_elasticity_frame(_qra_elasticity_source_frame())
-    if elasticity.empty:
+    if source.empty:
         return _empty_event_usability_frame()
-
-    if "overlap_severity" not in elasticity.columns:
-        elasticity["overlap_severity"] = "none"
-    usable = elasticity.copy()
-    usable["overlap_severity"] = usable.get("overlap_severity", pd.Series(index=usable.index, dtype=object)).fillna("none")
-    usable["spec_id"] = usable.get("spec_id", pd.Series(index=usable.index, dtype=object)).fillna(QRA_EVENT_SPEC_ID)
-    usable["treatment_variant"] = usable.get("treatment_variant", pd.Series(index=usable.index, dtype=object)).fillna("shock_bn")
-
-    group_columns = [
-        "event_date_type",
-        "headline_bucket",
-        "classification_review_status",
-        "shock_review_status",
-        "overlap_severity",
-        "usable_for_headline",
-        "spec_id",
-        "treatment_variant",
-    ]
-    grouped = (
-        usable.groupby(group_columns, dropna=False)
-        .agg(n_rows=("event_id", "size"), n_events=("event_id", pd.Series.nunique))
-        .reset_index()
-        .sort_values(group_columns, kind="stable")
-        .reset_index(drop=True)
+    source = _ensure_columns(
+        source,
+        {
+            "spec_id": QRA_EVENT_SPEC_ID,
+            "treatment_version_id": QRA_DURATION_SPEC_ID,
+            "treatment_variant": "canonical_shock_bn",
+            "overlap_severity": "none",
+        },
     )
-    grouped["event_count"] = grouped["n_events"]
-    return grouped
+    if "event_count" not in source.columns:
+        source["event_count"] = source.get("n_events", source.get("n_rows", pd.NA))
+    if "n_rows" not in source.columns:
+        source["n_rows"] = source.get("event_count", pd.NA)
+    if "n_events" not in source.columns:
+        source["n_events"] = source.get("event_count", pd.NA)
+    return source
 
 
 def _empty_leave_one_out_frame() -> pd.DataFrame:
@@ -1344,10 +1237,13 @@ def build_qra_event_shock_summary_publish_table() -> pd.DataFrame:
         return _empty_qra_event_shock_summary_publish_frame()
     df = _augment_qra_elasticity_frame(df)
     keep = [column for column in _qra_event_shock_summary_publish_columns() if column in df.columns]
+    sort_columns = [column for column in ("event_date_requested", "event_id") if column in keep]
+    if not sort_columns:
+        sort_columns = [column for column in ("quarter", "event_id") if column in keep]
     return (
         df[keep]
         .drop_duplicates(subset=["event_id", "event_date_type"], keep="first")
-        .sort_values(["event_date_requested", "event_id"], kind="stable")
+        .sort_values(sort_columns, kind="stable")
         .reset_index(drop=True)
     )
 
@@ -1904,6 +1800,133 @@ def _qra_elasticity_readiness(path: Path) -> dict[str, object]:
     }
 
 
+def _qra_review_surface_integrity(
+    qra_event_registry: pd.DataFrame,
+    qra_shock_crosswalk: pd.DataFrame,
+    event_usability: pd.DataFrame,
+    qra_shock_summary: pd.DataFrame,
+    qra_event_robustness: pd.DataFrame,
+) -> dict[str, object]:
+    issues: list[str] = []
+    if qra_event_registry.empty or qra_shock_crosswalk.empty or event_usability.empty or qra_shock_summary.empty:
+        issues.append("missing_review_surface")
+        return {"ready": False, "issues": issues}
+
+    registry = qra_event_registry.copy()
+    registry = registry.drop_duplicates(subset=["event_id"], keep="first").copy()
+    registry["headline_eligibility_reason"] = registry.get(
+        "headline_eligibility_reason",
+        pd.Series(index=registry.index, dtype=object),
+    ).fillna("")
+
+    crosswalk = qra_shock_crosswalk.copy()
+    if "treatment_variant" in crosswalk.columns:
+        canonical = crosswalk.loc[crosswalk["treatment_variant"].astype(str) == "canonical_shock_bn"].copy()
+        if not canonical.empty:
+            crosswalk = canonical
+    crosswalk = crosswalk.loc[crosswalk.get("event_date_type", pd.Series(dtype=object)).astype(str) == "official_release_date"].copy()
+    crosswalk = crosswalk.drop_duplicates(subset=["event_id"], keep="first").copy()
+
+    shock = qra_shock_summary.copy()
+    if "treatment_variant" in shock.columns:
+        canonical = shock.loc[shock["treatment_variant"].astype(str) == "canonical_shock_bn"].copy()
+        if not canonical.empty:
+            shock = canonical
+    shock = shock.loc[shock.get("event_date_type", pd.Series(dtype=object)).astype(str) == "official_release_date"].copy()
+    shock = shock.drop_duplicates(subset=["event_id"], keep="first").copy()
+    if "overlap_severity" not in shock.columns:
+        shock["overlap_severity"] = "none"
+    if "usable_for_headline_reason" not in shock.columns:
+        shock["usable_for_headline_reason"] = "missing_shock_summary"
+    if "usable_for_headline" not in shock.columns:
+        shock["usable_for_headline"] = False
+
+    registry_check = registry.merge(
+        crosswalk[["event_id", "usable_for_headline_reason", "spec_id", "treatment_variant"]],
+        on="event_id",
+        how="inner",
+        suffixes=("_registry", "_crosswalk"),
+    )
+    if registry_check.empty:
+        issues.append("missing_registry_crosswalk_overlap")
+    else:
+        reason_mismatch = registry_check.loc[
+            registry_check["headline_eligibility_reason"].astype(str).str.strip()
+            != registry_check["usable_for_headline_reason"].astype(str).str.strip()
+        ]
+        if not reason_mismatch.empty:
+            issues.append("registry_crosswalk_reason_mismatch")
+
+    summary_check = shock.merge(
+        crosswalk[["event_id", "usable_for_headline_reason", "spec_id", "treatment_variant"]],
+        on="event_id",
+        how="inner",
+        suffixes=("_summary", "_crosswalk"),
+    )
+    if summary_check.empty:
+        issues.append("missing_summary_crosswalk_overlap")
+    else:
+        reason_mismatch = summary_check.loc[
+            summary_check["usable_for_headline_reason_summary"].astype(str).str.strip()
+            != summary_check["usable_for_headline_reason_crosswalk"].astype(str).str.strip()
+        ]
+        if not reason_mismatch.empty:
+            issues.append("summary_crosswalk_reason_mismatch")
+        spec_mismatch = summary_check.loc[
+            summary_check["spec_id_summary"].astype(str).str.strip()
+            != summary_check["spec_id_crosswalk"].astype(str).str.strip()
+        ]
+        if not spec_mismatch.empty:
+            issues.append("summary_crosswalk_spec_mismatch")
+        variant_mismatch = summary_check.loc[
+            summary_check["treatment_variant_summary"].astype(str).str.strip()
+            != summary_check["treatment_variant_crosswalk"].astype(str).str.strip()
+        ]
+        if not variant_mismatch.empty:
+            issues.append("summary_crosswalk_variant_mismatch")
+
+    summary_group = (
+        shock.groupby(
+            [
+                "event_date_type",
+                "headline_bucket",
+                "classification_review_status",
+                "shock_review_status",
+                "overlap_severity",
+                "usable_for_headline",
+                "usable_for_headline_reason",
+            ],
+            dropna=False,
+        )["event_id"]
+        .nunique()
+        .reset_index(name="event_count_summary")
+    )
+    usability_group = event_usability.copy()
+    merged_group = usability_group.merge(
+        summary_group,
+        on=[
+            "event_date_type",
+            "headline_bucket",
+            "classification_review_status",
+            "shock_review_status",
+            "overlap_severity",
+            "usable_for_headline",
+            "usable_for_headline_reason",
+        ],
+        how="outer",
+    )
+    if merged_group["event_count"].fillna(-1).astype(float).ne(merged_group["event_count_summary"].fillna(-1).astype(float)).any():
+        issues.append("usability_summary_count_mismatch")
+
+    if qra_event_robustness.empty:
+        issues.append("missing_qra_event_robustness")
+    else:
+        variants = set(qra_event_robustness.get("sample_variant", pd.Series(dtype=object)).astype(str))
+        if not {"all_events", "overlap_excluded"}.issubset(variants):
+            issues.append("missing_overlap_variants")
+    return {"ready": not issues, "issues": issues}
+
+
 def build_dataset_status_table() -> pd.DataFrame:
     official_capture = build_official_capture_readiness_table()
     extension_status = build_extension_status_table()
@@ -1912,10 +1935,19 @@ def build_dataset_status_table() -> pd.DataFrame:
     qra_elasticity_readiness = _qra_elasticity_readiness(TABLES_DIR / "qra_event_elasticity.csv")
     qra_event_registry = build_qra_event_registry_publish_table()
     qra_shock_crosswalk = build_qra_shock_crosswalk_publish_table()
+    qra_shock_summary = build_qra_event_shock_summary_publish_table()
+    qra_event_robustness = _read_optional_source_csv("qra_event_robustness")
     treatment_comparison = build_treatment_comparison_publish_table()
     event_usability = build_event_usability_publish_table()
     leave_one_out = build_leave_one_event_out_publish_table()
     auction_absorption = build_auction_absorption_publish_table()
+    qra_review_surface = _qra_review_surface_integrity(
+        qra_event_registry=qra_event_registry,
+        qra_shock_crosswalk=qra_shock_crosswalk,
+        event_usability=event_usability,
+        qra_shock_summary=qra_shock_summary,
+        qra_event_robustness=qra_event_robustness,
+    )
     rows = [
         {
             "dataset": "official_capture",
@@ -1953,11 +1985,25 @@ def build_dataset_status_table() -> pd.DataFrame:
         },
         {
             "dataset": "qra_event_elasticity",
-            "readiness_tier": str(qra_elasticity_readiness["readiness_tier"]),
+            "readiness_tier": (
+                str(qra_elasticity_readiness["readiness_tier"])
+                if (
+                    qra_review_surface["ready"]
+                    or str(qra_elasticity_readiness["readiness_tier"]) in {"not_started", "schema_incomplete"}
+                )
+                else "supporting_provisional"
+            ),
             "source_quality": "manual_qra_shock_template_plus_event_panel",
             "headline_ready": False,
-            "fallback_only": bool(qra_elasticity_readiness["fallback_only"]),
-            "missing_critical_fields": str(qra_elasticity_readiness["missing_critical_fields"]),
+            "fallback_only": bool(qra_elasticity_readiness["fallback_only"]) or not qra_review_surface["ready"],
+            "missing_critical_fields": "|".join(
+                part
+                for part in (
+                    str(qra_elasticity_readiness["missing_critical_fields"]),
+                    "|".join(qra_review_surface["issues"]),
+                )
+                if part
+            ),
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_event_elasticity.csv"),
             "review_maturity": "provisional_supporting"
             if not _read_optional_source_csv("qra_event_elasticity").empty
@@ -1966,22 +2012,22 @@ def build_dataset_status_table() -> pd.DataFrame:
         },
         {
             "dataset": "qra_event_registry_v2",
-            "readiness_tier": "supporting_ready" if not qra_event_registry.empty else "fallback_only",
+            "readiness_tier": "supporting_ready" if (not qra_event_registry.empty and qra_review_surface["ready"]) else "supporting_provisional",
             "source_quality": "derived_event_ledger",
             "headline_ready": False,
-            "fallback_only": qra_event_registry.empty,
-            "missing_critical_fields": "",
+            "fallback_only": qra_event_registry.empty or not qra_review_surface["ready"],
+            "missing_critical_fields": "|".join(qra_review_surface["issues"]),
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_event_registry_v2.csv"),
             "review_maturity": "provisional_supporting",
             "public_role": "supporting",
         },
         {
             "dataset": "qra_shock_crosswalk_v1",
-            "readiness_tier": "supporting_ready" if not qra_shock_crosswalk.empty else "fallback_only",
+            "readiness_tier": "supporting_ready" if (not qra_shock_crosswalk.empty and qra_review_surface["ready"]) else "supporting_provisional",
             "source_quality": "derived_shock_crosswalk",
             "headline_ready": False,
-            "fallback_only": qra_shock_crosswalk.empty,
-            "missing_critical_fields": "",
+            "fallback_only": qra_shock_crosswalk.empty or not qra_review_surface["ready"],
+            "missing_critical_fields": "|".join(qra_review_surface["issues"]),
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_shock_crosswalk_v1.csv"),
             "review_maturity": "provisional_supporting",
             "public_role": "supporting",
@@ -1999,22 +2045,22 @@ def build_dataset_status_table() -> pd.DataFrame:
         },
         {
             "dataset": "event_usability_table",
-            "readiness_tier": "supporting_ready" if not event_usability.empty else "fallback_only",
+            "readiness_tier": "supporting_ready" if (not event_usability.empty and qra_review_surface["ready"]) else "supporting_provisional",
             "source_quality": "derived_qra_usability",
             "headline_ready": False,
-            "fallback_only": event_usability.empty,
-            "missing_critical_fields": "",
+            "fallback_only": event_usability.empty or not qra_review_surface["ready"],
+            "missing_critical_fields": "|".join(qra_review_surface["issues"]),
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "event_usability_table.csv"),
-            "review_maturity": "supporting_ready",
+            "review_maturity": "supporting_ready" if qra_review_surface["ready"] else "provisional_supporting",
             "public_role": "supporting",
         },
         {
             "dataset": "leave_one_event_out_table",
-            "readiness_tier": "supporting_ready" if not leave_one_out.empty else "fallback_only",
+            "readiness_tier": "supporting_ready" if (not leave_one_out.empty and qra_review_surface["ready"]) else "supporting_provisional",
             "source_quality": "derived_qra_robustness",
             "headline_ready": False,
-            "fallback_only": leave_one_out.empty,
-            "missing_critical_fields": "",
+            "fallback_only": leave_one_out.empty or not qra_review_surface["ready"],
+            "missing_critical_fields": "|".join(qra_review_surface["issues"]),
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "leave_one_event_out_table.csv"),
             "review_maturity": "provisional_supporting",
             "public_role": "supporting",
