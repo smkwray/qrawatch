@@ -45,6 +45,17 @@ SHOCK_TEMPLATE_MANUAL_COLUMNS = (
     "shock_notes",
     "shock_review_status",
 )
+SHOCK_TEMPLATE_EXPECTATION_COLUMNS = (
+    "release_component_id",
+    "benchmark_timestamp_et",
+    "benchmark_source",
+    "expected_composition_bn",
+    "realized_composition_bn",
+    "composition_surprise_bn",
+    "benchmark_stale_flag",
+    "expectation_review_status",
+    "expectation_notes",
+)
 SHOCK_TEMPLATE_DERIVED_COLUMNS = (
     "previous_event_id",
     "previous_quarter",
@@ -787,6 +798,8 @@ def build_qra_shock_template(
     seeded["shock_bn"] = np.nan
     for column in ("shock_source", "shock_notes", "shock_review_status"):
         seeded[column] = pd.Series([np.nan] * len(seeded), dtype=object)
+    for column in SHOCK_TEMPLATE_EXPECTATION_COLUMNS:
+        seeded[column] = pd.Series([np.nan] * len(seeded), dtype=object)
     for column in SHOCK_TEMPLATE_DERIVED_COLUMNS:
         seeded[column] = pd.Series([np.nan] * len(seeded), dtype=object)
 
@@ -797,6 +810,10 @@ def build_qra_shock_template(
         output = seeded.merge(existing, on=required, how="left", suffixes=("", "_existing"))
 
         for column in SHOCK_TEMPLATE_MANUAL_COLUMNS:
+            existing_column = f"{column}_existing"
+            if existing_column in output.columns:
+                output[column] = output[existing_column].where(~output[existing_column].isna(), output[column])
+        for column in SHOCK_TEMPLATE_EXPECTATION_COLUMNS:
             existing_column = f"{column}_existing"
             if existing_column in output.columns:
                 output[column] = output[existing_column].where(~output[existing_column].isna(), output[column])
@@ -863,6 +880,15 @@ def build_qra_event_elasticity(
             "shock_source",
             "shock_notes",
             "shock_review_status",
+            "release_component_id",
+            "benchmark_timestamp_et",
+            "benchmark_source",
+            "expected_composition_bn",
+            "realized_composition_bn",
+            "composition_surprise_bn",
+            "benchmark_stale_flag",
+            "expectation_review_status",
+            "expectation_notes",
             "previous_event_id",
             "previous_quarter",
             "gross_notional_delta_bn",
@@ -969,6 +995,15 @@ def build_qra_event_elasticity(
                         "shock_source": row.get("shock_source", pd.NA),
                         "shock_notes": row.get("shock_notes", pd.NA),
                         "shock_review_status": row.get("shock_review_status", pd.NA),
+                        "release_component_id": row.get("release_component_id", pd.NA),
+                        "benchmark_timestamp_et": row.get("benchmark_timestamp_et", pd.NA),
+                        "benchmark_source": row.get("benchmark_source", pd.NA),
+                        "expected_composition_bn": row.get("expected_composition_bn", pd.NA),
+                        "realized_composition_bn": row.get("realized_composition_bn", pd.NA),
+                        "composition_surprise_bn": row.get("composition_surprise_bn", pd.NA),
+                        "benchmark_stale_flag": row.get("benchmark_stale_flag", pd.NA),
+                        "expectation_review_status": row.get("expectation_review_status", pd.NA),
+                        "expectation_notes": row.get("expectation_notes", pd.NA),
                         "previous_event_id": row.get("previous_event_id", pd.NA),
                         "previous_quarter": row.get("previous_quarter", pd.NA),
                         "gross_notional_delta_bn": row.get("gross_notional_delta_bn", pd.NA),

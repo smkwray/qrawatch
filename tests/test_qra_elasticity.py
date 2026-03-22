@@ -61,6 +61,39 @@ def test_build_qra_shock_template_preserves_manual_fills_and_context() -> None:
     assert row["shock_review_status"] == "reviewed"
 
 
+def test_build_qra_shock_template_preserves_expectation_fields() -> None:
+    panel = pd.DataFrame(
+        {
+            "event_id": ["e1"],
+            "event_date_type": ["official_release_date"],
+            "event_label": ["Event 1"],
+            "event_date_requested": ["2024-01-31"],
+            "event_date_aligned": ["2024-01-31"],
+        }
+    )
+    existing = pd.DataFrame(
+        {
+            "event_id": ["e1"],
+            "event_date_type": ["official_release_date"],
+            "release_component_id": ["e1__policy_statement"],
+            "benchmark_timestamp_et": ["2024-01-31T08:00:00-05:00"],
+            "benchmark_source": ["dealer_survey"],
+            "expected_composition_bn": [10.0],
+            "realized_composition_bn": [20.0],
+            "composition_surprise_bn": [10.0],
+            "benchmark_stale_flag": [False],
+            "expectation_review_status": ["reviewed"],
+            "expectation_notes": ["Reviewed benchmark."],
+        }
+    )
+
+    seeded = build_qra_shock_template(panel=panel, existing_template=existing)
+    row = seeded.iloc[0]
+    assert row["release_component_id"] == "e1__policy_statement"
+    assert row["composition_surprise_bn"] == 10.0
+    assert row["expectation_review_status"] == "reviewed"
+
+
 def test_autofill_qra_shock_template_from_capture_parses_explicit_increase_and_sign() -> None:
     template = pd.DataFrame(
         {

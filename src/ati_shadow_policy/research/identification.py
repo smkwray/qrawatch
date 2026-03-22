@@ -20,6 +20,39 @@ from ati_shadow_policy.specs import (
 
 
 _RELEASE_DATE_COLUMNS = ("official_release_date", "policy_statement_release_date", "event_date_requested")
+_QUALITY_TIER_ORDER = {"Tier A": 0, "Tier B": 1, "Tier C": 2, "Tier D": 3}
+_COMPONENT_REGISTRY_COLUMNS = [
+    "release_component_id",
+    "event_id",
+    "quarter",
+    "component_type",
+    "release_timestamp_et",
+    "timestamp_precision",
+    "source_url",
+    "bundle_id",
+    "release_sequence_label",
+    "separable_component_flag",
+    "review_status",
+    "review_notes",
+    "benchmark_timestamp_et",
+    "benchmark_source",
+    "expected_composition_bn",
+    "realized_composition_bn",
+    "composition_surprise_bn",
+    "benchmark_stale_flag",
+    "expectation_review_status",
+    "expectation_notes",
+    "expectation_status",
+    "contamination_flag",
+    "contamination_status",
+    "contamination_review_status",
+    "contamination_label",
+    "contamination_notes",
+    "separability_status",
+    "eligibility_blockers",
+    "quality_tier",
+    "causal_eligible",
+]
 
 
 def _first_non_empty(row: pd.Series, columns: Iterable[str]) -> object:
@@ -51,6 +84,14 @@ def _normalize_overlap_severity(value: object) -> str:
     return _normalize_lower(value)
 
 
+def _is_missing(value: object) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, float) and pd.isna(value):
+        return True
+    return _normalize_text(value) == ""
+
+
 def _coerce_bool(value: object) -> bool:
     if isinstance(value, bool):
         return value
@@ -59,6 +100,13 @@ def _coerce_bool(value: object) -> bool:
     if isinstance(value, float) and pd.isna(value):
         return False
     return str(value).strip().lower() in {"1", "true", "t", "yes", "y"}
+
+
+def _coerce_float(value: object) -> float | None:
+    numeric = pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0]
+    if pd.isna(numeric):
+        return None
+    return float(numeric)
 
 
 def _coerce_timestamp_et(value: object) -> object:
@@ -228,11 +276,436 @@ def _headline_eligibility_blockers(row: pd.Series) -> str:
     return "|".join(blockers)
 
 
+def _timestamp_precision_from_kind(value: object) -> str:
+    text = _normalize_lower(value)
+    if "timestamp_with_time" in text:
+        return "exact_time"
+    if "date_only" in text:
+        return "date_only"
+    if text in {"", "missing"}:
+        return "missing"
+    return "date_only"
+
+
+def _component_release_component_id(event_id: object, component_type: object) -> str:
+    return f"{_normalize_text(event_id)}__{_normalize_text(component_type)}"
+
+
+def _component_default_rows(event_registry: pd.DataFrame) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    for _, row in event_registry.iterrows():
+        event_id = _normalize_text(row.get("event_id"))
+        quarter = row.get("quarter", pd.NA)
+        release_sequence_label = row.get("release_sequence_label", pd.NA)
+        bundle_id = event_id
+        review_status = _normalize_lower(row.get("review_status") or row.get("classification_review_status"))
+        review_notes = row.get("review_notes", row.get("notes", pd.NA))
+        same_day_bundle = _coerce_bool(row.get("same_day_release_bundle_flag"))
+        multi_stage = _coerce_bool(row.get("multi_stage_release_flag"))
+
+        component_specs = [
+            (
+                "financing_estimates",
+                row.get("financing_estimates_release_timestamp_et", pd.NA),
+                row.get("financing_estimates_release_timestamp_kind", pd.NA),
+                row.get("financing_estimates_url", pd.NA),
+            ),
+            (
+                "policy_statement",
+                row.get("policy_statement_release_timestamp_et", pd.NA),
+                row.get("policy_statement_release_timestamp_kind", pd.NA),
+                row.get("policy_statement_url", pd.NA),
+            ),
+        ]
+        emitted = False
+        for component_type, timestamp_et, timestamp_kind, source_url in component_specs:
+            if _is_missing(timestamp_et) and _is_missing(source_url):
+                continue
+            emitted = True
+            separable_default = bool(multi_stage and not same_day_bundle)
+            rows.append(
+                {
+                    "release_component_id": _component_release_component_id(event_id, component_type),
+                    "event_id": event_id,
+                    "quarter": quarter,
+                    "component_type": component_type,
+                    "release_timestamp_et": timestamp_et,
+                    "timestamp_precision": _timestamp_precision_from_kind(timestamp_kind),
+                    "source_url": source_url,
+                    "bundle_id": bundle_id,
+                    "release_sequence_label": release_sequence_label,
+                    "separable_component_flag": separable_default,
+                    "review_status": review_status or "pending",
+                    "review_notes": review_notes,
+                }
+            )
+        if emitted:
+            continue
+        rows.append(
+            {
+                "release_component_id": _component_release_component_id(event_id, "event_composite"),
+                "event_id": event_id,
+                "quarter": quarter,
+                "component_type": "event_composite",
+                "release_timestamp_et": row.get("release_timestamp_et", pd.NA),
+                "timestamp_precision": _timestamp_precision_from_kind(row.get("release_timestamp_kind", pd.NA)),
+                "source_url": _first_non_empty(
+                    row,
+                    ("policy_statement_url", "financing_estimates_url"),
+                ),
+                "bundle_id": bundle_id,
+                "release_sequence_label": release_sequence_label,
+                "separable_component_flag": False,
+                "review_status": review_status or "pending",
+                "review_notes": review_notes,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _prepare_component_overrides(frame: pd.DataFrame | None) -> pd.DataFrame:
+    if frame is None or frame.empty:
+        return pd.DataFrame()
+    out = frame.copy()
+    if "release_component_id" not in out.columns:
+        if {"event_id", "component_type"}.issubset(out.columns):
+            out["release_component_id"] = out.apply(
+                lambda row: _component_release_component_id(row.get("event_id"), row.get("component_type")),
+                axis=1,
+            )
+        else:
+            return pd.DataFrame()
+    out["release_component_id"] = out["release_component_id"].map(_normalize_text)
+    return out.drop_duplicates(subset=["release_component_id"], keep="last").reset_index(drop=True)
+
+
+def _merge_component_overrides(
+    derived: pd.DataFrame,
+    overrides: pd.DataFrame | None,
+) -> pd.DataFrame:
+    if overrides is None or overrides.empty:
+        return derived
+    prepared = _prepare_component_overrides(overrides)
+    if prepared.empty:
+        return derived
+    merged = derived.merge(prepared, on="release_component_id", how="left", suffixes=("", "_override"))
+    for column in prepared.columns:
+        if column == "release_component_id":
+            continue
+        override_column = f"{column}_override"
+        if override_column not in merged.columns:
+            continue
+        if column not in merged.columns:
+            merged[column] = merged[override_column]
+        else:
+            merged[column] = merged[override_column].where(~merged[override_column].isna(), merged[column])
+        merged = merged.drop(columns=[override_column])
+    return merged
+
+
+def _merge_component_expectations(
+    components: pd.DataFrame,
+    expectation_template: pd.DataFrame | None,
+) -> pd.DataFrame:
+    defaults = {
+        "benchmark_timestamp_et": pd.NA,
+        "benchmark_source": pd.NA,
+        "expected_composition_bn": pd.NA,
+        "realized_composition_bn": pd.NA,
+        "composition_surprise_bn": pd.NA,
+        "benchmark_stale_flag": False,
+        "expectation_review_status": "pending",
+        "expectation_notes": pd.NA,
+    }
+    out = components.copy()
+    for column, default in defaults.items():
+        if column not in out.columns:
+            out[column] = default
+    if expectation_template is None or expectation_template.empty:
+        return out
+    prepared = _prepare_component_overrides(expectation_template)
+    if prepared.empty:
+        return out
+    keep = [
+        column
+        for column in (
+            "release_component_id",
+            "benchmark_timestamp_et",
+            "benchmark_source",
+            "expected_composition_bn",
+            "realized_composition_bn",
+            "composition_surprise_bn",
+            "benchmark_stale_flag",
+            "expectation_review_status",
+            "expectation_notes",
+        )
+        if column in prepared.columns
+    ]
+    merged = out.merge(prepared[keep], on="release_component_id", how="left", suffixes=("", "_expectation"))
+    for column in keep:
+        if column == "release_component_id":
+            continue
+        override_column = f"{column}_expectation"
+        if override_column not in merged.columns:
+            continue
+        merged[column] = merged[override_column].where(~merged[override_column].isna(), merged[column])
+        merged = merged.drop(columns=[override_column])
+    return merged
+
+
+def _merge_component_contamination(
+    components: pd.DataFrame,
+    contamination_reviews: pd.DataFrame | None,
+) -> pd.DataFrame:
+    defaults = {
+        "contamination_flag": False,
+        "contamination_status": "pending_review",
+        "contamination_review_status": "pending",
+        "contamination_label": pd.NA,
+        "contamination_notes": pd.NA,
+    }
+    out = components.copy()
+    for column, default in defaults.items():
+        if column not in out.columns:
+            out[column] = default
+    if contamination_reviews is None or contamination_reviews.empty:
+        return out
+    prepared = _prepare_component_overrides(contamination_reviews)
+    if prepared.empty:
+        return out
+    keep = [
+        column
+        for column in (
+            "release_component_id",
+            "contamination_flag",
+            "contamination_status",
+            "contamination_review_status",
+            "contamination_label",
+            "contamination_notes",
+        )
+        if column in prepared.columns
+    ]
+    merged = out.merge(prepared[keep], on="release_component_id", how="left", suffixes=("", "_contamination"))
+    for column in keep:
+        if column == "release_component_id":
+            continue
+        override_column = f"{column}_contamination"
+        if override_column not in merged.columns:
+            continue
+        merged[column] = merged[override_column].where(~merged[override_column].isna(), merged[column])
+        merged = merged.drop(columns=[override_column])
+    return merged
+
+
+def _component_separability_status(row: pd.Series) -> str:
+    component_type = _normalize_lower(row.get("component_type"))
+    if component_type == "event_composite":
+        return "event_composite"
+    if _coerce_bool(row.get("separable_component_flag")):
+        return "separable_component"
+    return "same_day_inseparable_bundle"
+
+
+def _component_expectation_status(row: pd.Series) -> str:
+    review_status = _normalize_lower(row.get("expectation_review_status"))
+    surprise = _coerce_float(row.get("composition_surprise_bn"))
+    if _coerce_bool(row.get("benchmark_stale_flag")):
+        return "benchmark_stale"
+    if surprise is None:
+        return "missing_benchmark"
+    if review_status != "reviewed":
+        return "unreviewed_surprise"
+    return "reviewed_surprise_ready"
+
+
+def _component_contamination_status(row: pd.Series) -> str:
+    review_status = _normalize_lower(row.get("contamination_review_status"))
+    status = _normalize_lower(row.get("contamination_status"))
+    flagged = _coerce_bool(row.get("contamination_flag"))
+    if review_status != "reviewed":
+        return "pending_review"
+    if status:
+        return status
+    return "reviewed_contaminated" if flagged else "reviewed_clean"
+
+
+def _component_eligibility_blockers(row: pd.Series) -> str:
+    blockers: list[str] = []
+    if _normalize_lower(row.get("review_status")) != "reviewed":
+        blockers.append("review_not_complete")
+    if _normalize_lower(row.get("timestamp_precision")) != "exact_time":
+        blockers.append("missing_exact_timestamp")
+    if _component_separability_status(row) != "separable_component":
+        blockers.append("inseparable_bundle")
+    expectation_status = _component_expectation_status(row)
+    if expectation_status != "reviewed_surprise_ready":
+        if expectation_status == "benchmark_stale":
+            blockers.append("benchmark_stale")
+        elif expectation_status == "unreviewed_surprise":
+            blockers.append("surprise_not_reviewed")
+        else:
+            blockers.append("missing_expectation_benchmark")
+    contamination_status = _component_contamination_status(row)
+    if contamination_status != "reviewed_clean":
+        if contamination_status == "pending_review":
+            blockers.append("contamination_not_reviewed")
+        else:
+            blockers.append("contamination_flagged")
+    if _is_missing(row.get("source_url")):
+        blockers.append("missing_source_url")
+    return "|".join(blockers)
+
+
+def _component_quality_tier(row: pd.Series) -> str:
+    blockers = _normalize_text(row.get("eligibility_blockers"))
+    review_status = _normalize_lower(row.get("review_status"))
+    if not blockers:
+        return "Tier A"
+    if review_status == "reviewed":
+        return "Tier B"
+    if not _is_missing(row.get("source_url")):
+        return "Tier C"
+    return "Tier D"
+
+
+def build_qra_release_component_registry(
+    event_registry: pd.DataFrame,
+    release_components: pd.DataFrame | None = None,
+    expectation_template: pd.DataFrame | None = None,
+    contamination_reviews: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    if event_registry.empty:
+        return pd.DataFrame(columns=_COMPONENT_REGISTRY_COLUMNS)
+    components = _component_default_rows(event_registry)
+    components = _merge_component_overrides(components, release_components)
+    components = _merge_component_expectations(components, expectation_template)
+    components = _merge_component_contamination(components, contamination_reviews)
+
+    components["timestamp_precision"] = components["timestamp_precision"].map(_normalize_text)
+    components["separable_component_flag"] = components["separable_component_flag"].map(_coerce_bool)
+    components["benchmark_stale_flag"] = components["benchmark_stale_flag"].map(_coerce_bool)
+    components["contamination_flag"] = components["contamination_flag"].map(_coerce_bool)
+    components["separability_status"] = components.apply(_component_separability_status, axis=1)
+    components["expectation_status"] = components.apply(_component_expectation_status, axis=1)
+    components["contamination_status"] = components.apply(_component_contamination_status, axis=1)
+    components["eligibility_blockers"] = components.apply(_component_eligibility_blockers, axis=1)
+    components["quality_tier"] = components.apply(_component_quality_tier, axis=1)
+    components["causal_eligible"] = components["quality_tier"].eq("Tier A")
+
+    for column in _COMPONENT_REGISTRY_COLUMNS:
+        if column not in components.columns:
+            components[column] = pd.NA
+    return components[_COMPONENT_REGISTRY_COLUMNS].sort_values(
+        ["quarter", "event_id", "release_component_id"],
+        kind="stable",
+    ).reset_index(drop=True)
+
+
+def summarize_qra_causal_qa(component_registry: pd.DataFrame) -> pd.DataFrame:
+    columns = [
+        "event_id",
+        "quality_tier",
+        "eligibility_blockers",
+        "timestamp_precision",
+        "separability_status",
+        "expectation_status",
+        "contamination_status",
+        "release_component_count",
+        "causal_eligible_component_count",
+        "event_release_component_id",
+        "event_release_component_type",
+        "event_release_timestamp_et",
+        "event_release_timestamp_kind",
+        "event_release_timestamp_source",
+    ]
+    if component_registry.empty:
+        return pd.DataFrame(columns=columns)
+    rows: list[dict[str, object]] = []
+    for event_id, group in component_registry.groupby("event_id", sort=False, dropna=False):
+        ordered = group.copy()
+        ordered["_quality_order"] = ordered["quality_tier"].map(
+            lambda value: _QUALITY_TIER_ORDER.get(str(value), 99)
+        )
+        ordered["_release_sort_ts"] = pd.to_datetime(
+            ordered.get("release_timestamp_et", pd.Series(dtype=object)),
+            errors="coerce",
+        )
+        ordered = ordered.sort_values(
+            by=["_quality_order", "_release_sort_ts", "release_component_id"],
+            kind="stable",
+        ).reset_index(drop=True)
+        best = ordered.iloc[0]
+        blockers: list[str] = []
+        for value in group.get("eligibility_blockers", pd.Series(dtype=object)).fillna(""):
+            for item in str(value).split("|"):
+                cleaned = item.strip()
+                if cleaned and cleaned not in blockers:
+                    blockers.append(cleaned)
+        best_precision = _normalize_text(best.get("timestamp_precision"))
+        if best_precision == "exact_time":
+            best_kind = "release_component_registry_timestamp_with_time"
+        elif best_precision == "date_only":
+            best_kind = "release_component_registry_date_only"
+        else:
+            best_kind = "missing"
+        rows.append(
+            {
+                "event_id": event_id,
+                "quality_tier": best.get("quality_tier", "Tier D"),
+                "eligibility_blockers": "|".join(blockers),
+                "timestamp_precision": best.get("timestamp_precision", pd.NA),
+                "separability_status": best.get("separability_status", pd.NA),
+                "expectation_status": best.get("expectation_status", pd.NA),
+                "contamination_status": best.get("contamination_status", pd.NA),
+                "release_component_count": int(group["release_component_id"].nunique()),
+                "causal_eligible_component_count": int(group["causal_eligible"].fillna(False).astype(bool).sum()),
+                "event_release_component_id": best.get("release_component_id", pd.NA),
+                "event_release_component_type": best.get("component_type", pd.NA),
+                "event_release_timestamp_et": best.get("release_timestamp_et", pd.NA),
+                "event_release_timestamp_kind": best_kind,
+                "event_release_timestamp_source": (
+                    "release_component_registry"
+                    if _normalize_text(best.get("release_timestamp_et"))
+                    else pd.NA
+                ),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_event_design_status(component_registry: pd.DataFrame) -> pd.DataFrame:
+    columns = [
+        "metric",
+        "value",
+        "notes",
+    ]
+    if component_registry.empty:
+        return pd.DataFrame(columns=columns)
+    counts = component_registry["quality_tier"].value_counts(dropna=False).to_dict()
+    reviewed_clean = int(component_registry["contamination_status"].astype(str).eq("reviewed_clean").sum())
+    exact_time = int(component_registry["timestamp_precision"].astype(str).eq("exact_time").sum())
+    surprise_ready = int(component_registry["expectation_status"].astype(str).eq("reviewed_surprise_ready").sum())
+    rows = [
+        {"metric": "release_component_count", "value": int(len(component_registry)), "notes": "Total release components in the current registry."},
+        {"metric": "tier_a_count", "value": int(counts.get("Tier A", 0)), "notes": "Causal-eligible components."},
+        {"metric": "tier_b_count", "value": int(counts.get("Tier B", 0)), "notes": "Reviewed descriptive-only components."},
+        {"metric": "tier_c_count", "value": int(counts.get("Tier C", 0)), "notes": "Official components missing reviewed causal gates."},
+        {"metric": "tier_d_count", "value": int(counts.get("Tier D", 0)), "notes": "Provisional or scaffold components."},
+        {"metric": "exact_time_component_count", "value": exact_time, "notes": "Components with exact release timestamps."},
+        {"metric": "reviewed_surprise_ready_count", "value": surprise_ready, "notes": "Components with reviewed expectation/surprise inputs."},
+        {"metric": "reviewed_clean_component_count", "value": reviewed_clean, "notes": "Components marked reviewed_clean for contamination."},
+    ]
+    return pd.DataFrame(rows, columns=columns)
+
+
 def build_qra_event_registry_v2(
     panel: pd.DataFrame,
     release_calendar: pd.DataFrame | None = None,
     overlap_annotations: pd.DataFrame | None = None,
     shock_summary: pd.DataFrame | None = None,
+    release_components: pd.DataFrame | None = None,
+    expectation_template: pd.DataFrame | None = None,
+    contamination_reviews: pd.DataFrame | None = None,
     release_calendar_source: str | None = None,
     overlap_annotations_source: str | None = None,
     shock_summary_source: str | None = None,
@@ -291,6 +764,14 @@ def build_qra_event_registry_v2(
                 "headline_check_non_small_denominator",
                 "headline_eligibility_blockers",
                 "headline_eligible",
+                "quality_tier",
+                "eligibility_blockers",
+                "timestamp_precision",
+                "separability_status",
+                "expectation_status",
+                "contamination_status",
+                "release_component_count",
+                "causal_eligible_component_count",
                 "treatment_version_id",
                 "headline_eligibility_reason",
                 "spec_id",
@@ -322,14 +803,16 @@ def build_qra_event_registry_v2(
         event_rows = event_rows.merge(calendar[keep], on="event_id", how="left", suffixes=("", "_calendar"))
         for left, right in (
             ("quarter", "quarter_calendar"),
+            ("financing_estimates_release_date", "financing_estimates_release_date_calendar"),
+            ("policy_statement_release_date", "policy_statement_release_date_calendar"),
             ("timing_quality", "timing_quality_calendar"),
             ("financing_estimates_url", "financing_estimates_url_calendar"),
             ("policy_statement_url", "policy_statement_url_calendar"),
         ):
             if right in event_rows.columns:
-                event_rows[left] = event_rows[left].where(
-                    event_rows[left].notna() & event_rows[left].astype(str).str.strip().ne(""),
-                    event_rows[right],
+                event_rows[left] = event_rows[right].where(
+                    event_rows[right].notna() & event_rows[right].astype(str).str.strip().ne(""),
+                    event_rows[left],
                 )
 
     if overlap_annotations is not None and not overlap_annotations.empty:
@@ -389,12 +872,12 @@ def build_qra_event_registry_v2(
         ),
         axis=1,
     )
-    release_components = event_rows["release_date_seed"].map(_coerce_timestamp_components)
-    event_rows["release_timestamp_et"] = release_components.map(lambda value: value[0])
-    event_rows["release_timestamp_kind"] = release_components.map(lambda value: value[1])
-    event_rows["release_date_et"] = release_components.map(lambda value: value[2])
-    event_rows["release_time_et"] = release_components.map(lambda value: value[3])
-    event_rows["release_timezone"] = release_components.map(lambda value: value[4])
+    release_timestamp_components = event_rows["release_date_seed"].map(_coerce_timestamp_components)
+    event_rows["release_timestamp_et"] = release_timestamp_components.map(lambda value: value[0])
+    event_rows["release_timestamp_kind"] = release_timestamp_components.map(lambda value: value[1])
+    event_rows["release_date_et"] = release_timestamp_components.map(lambda value: value[2])
+    event_rows["release_time_et"] = release_timestamp_components.map(lambda value: value[3])
+    event_rows["release_timezone"] = release_timestamp_components.map(lambda value: value[4])
     event_rows["release_timestamp_precision"] = event_rows["release_timestamp_kind"].map(
         lambda value: (
             "date_only_seeded"
@@ -595,6 +1078,52 @@ def build_qra_event_registry_v2(
     else:
         event_rows["headline_eligible"] = event_rows["headline_eligibility_blockers"].map(lambda value: _normalize_text(value) == "")
 
+    component_registry = build_qra_release_component_registry(
+        event_rows,
+        release_components=release_components,
+        expectation_template=expectation_template,
+        contamination_reviews=contamination_reviews,
+    )
+    causal_summary = summarize_qra_causal_qa(component_registry)
+    if not causal_summary.empty:
+        event_rows = event_rows.merge(causal_summary, on="event_id", how="left")
+        component_timestamp_mask = (
+            event_rows["event_release_timestamp_et"].notna()
+            & event_rows["event_release_timestamp_et"].astype(str).str.strip().ne("")
+        )
+        if component_timestamp_mask.any():
+            component_timestamp_components = event_rows["event_release_timestamp_et"].map(
+                _coerce_timestamp_components
+            )
+            event_rows["release_timestamp_et"] = event_rows["event_release_timestamp_et"].where(
+                component_timestamp_mask,
+                event_rows["release_timestamp_et"],
+            )
+            event_rows["release_timestamp_source"] = event_rows["event_release_timestamp_source"].where(
+                component_timestamp_mask,
+                event_rows["release_timestamp_source"],
+            )
+            event_rows["release_timestamp_kind"] = event_rows["event_release_timestamp_kind"].where(
+                component_timestamp_mask,
+                event_rows["release_timestamp_kind"],
+            )
+            event_rows["release_date_et"] = component_timestamp_components.map(lambda value: value[2]).where(
+                component_timestamp_mask,
+                event_rows["release_date_et"],
+            )
+            event_rows["release_time_et"] = component_timestamp_components.map(lambda value: value[3]).where(
+                component_timestamp_mask,
+                event_rows["release_time_et"],
+            )
+            event_rows["release_timezone"] = component_timestamp_components.map(lambda value: value[4]).where(
+                component_timestamp_mask,
+                event_rows["release_timezone"],
+            )
+            event_rows["release_timestamp_precision"] = event_rows["timestamp_precision"].where(
+                component_timestamp_mask,
+                event_rows["release_timestamp_precision"],
+            )
+
     keep = [
         "event_id",
         "quarter",
@@ -647,6 +1176,14 @@ def build_qra_event_registry_v2(
         "headline_check_non_small_denominator",
         "headline_eligibility_blockers",
         "headline_eligible",
+        "quality_tier",
+        "eligibility_blockers",
+        "timestamp_precision",
+        "separability_status",
+        "expectation_status",
+        "contamination_status",
+        "release_component_count",
+        "causal_eligible_component_count",
         "treatment_version_id",
         "headline_eligibility_reason",
         "spec_id",

@@ -23,6 +23,15 @@ Use this before treating any output as a real result.
 - [ ] Are weekly series aligned to Wednesday consistently?
 - [ ] Are quarterly labels based on a clearly documented convention?
 
+## Causal eligibility
+
+- [ ] Are event-facing tables explicitly labeled as `descriptive/supporting` unless a causal ledger promotes them to `causal-eligible`?
+- [ ] Do any rows treated as causal-eligible carry exact timestamps rather than date-only proxies?
+- [ ] Are bundled same-day Treasury releases marked as inseparable unless separate release components are documented?
+- [ ] Is there a benchmark expectation / surprise source for any claimed causal treatment?
+- [ ] Are overlap and contamination checks resolved before promotion to causal-eligible status?
+- [ ] Do blocker reasons distinguish missing timestamps, missing benchmark, inseparable bundles, and unresolved overlap?
+
 ## Security classification
 
 - [ ] Are bills and CMBs grouped correctly?
@@ -38,6 +47,7 @@ Use this before treating any output as a real result.
 - [ ] Are overlapping macro-news dates annotated?
 - [ ] Did we run both 1-day and 3-day windows?
 - [ ] Did we compare results using official dates and T-1 markers?
+- [ ] Are the daily event-study outputs described as monitoring / supporting evidence unless a causal tier is explicitly met?
 
 ## Plumbing regressions
 

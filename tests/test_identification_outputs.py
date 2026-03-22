@@ -3,10 +3,13 @@ from __future__ import annotations
 import pandas as pd
 
 from ati_shadow_policy.research.identification import (
+    build_event_design_status,
     build_event_usability_table,
     build_leave_one_event_out_table,
     build_qra_event_registry_v2,
+    build_qra_release_component_registry,
     build_qra_shock_crosswalk_v1,
+    summarize_qra_causal_qa,
 )
 
 
@@ -44,7 +47,7 @@ def test_build_qra_event_registry_v2_carries_review_and_eligibility_fields() -> 
     out = build_qra_event_registry_v2(panel=panel, shock_summary=shock_summary)
 
     assert out.loc[0, "release_bundle_type"] == "same_day_release_bundle"
-    assert out.loc[0, "release_timestamp_kind"] == "official_release_date_date_only"
+    assert out.loc[0, "release_timestamp_kind"] == "release_component_registry_date_only"
     assert out.loc[0, "release_sequence_label"] == "financing_then_policy"
     assert pd.notna(out.loc[0, "policy_statement_release_timestamp_et"])
     assert pd.notna(out.loc[0, "financing_estimates_release_timestamp_et"])
@@ -56,6 +59,8 @@ def test_build_qra_event_registry_v2_carries_review_and_eligibility_fields() -> 
     assert bool(out.loc[0, "headline_eligible"]) is True
     assert out.loc[0, "headline_eligibility_blockers"] == ""
     assert out.loc[0, "headline_eligibility_reason"] == "usable"
+    assert out.loc[0, "quality_tier"] == "Tier B"
+    assert out.loc[0, "contamination_status"] == "pending_review"
 
 
 def test_build_qra_event_registry_v2_adds_overlap_and_headline_decomposition_lineage() -> None:
@@ -102,13 +107,76 @@ def test_build_qra_event_registry_v2_adds_overlap_and_headline_decomposition_lin
         overlap_annotations_source="data/manual/qra_event_overlap_annotations.csv",
     )
 
-    assert out.loc[0, "release_timestamp_kind"] == "official_release_date_timestamp_with_time"
-    assert out.loc[0, "release_time_et"] == "08:30:00"
+    assert out.loc[0, "release_timestamp_kind"] == "release_component_registry_date_only"
+    assert out.loc[0, "release_time_et"] == "00:00:00"
     assert out.loc[0, "overlap_annotation_source"] == "data/manual/qra_event_overlap_annotations.csv"
     assert bool(out.loc[0, "overlap_annotation_present"]) is True
     assert bool(out.loc[0, "headline_eligible"]) is False
     assert out.loc[0, "headline_eligibility_blockers"] == "classification_not_reviewed|shock_not_reviewed|missing_shock|small_denominator"
     assert out.loc[0, "headline_eligibility_reason"] == "shock_missing"
+    assert out.loc[0, "quality_tier"] == "Tier C"
+    assert "contamination_not_reviewed" in out.loc[0, "eligibility_blockers"]
+
+
+def test_build_qra_event_registry_v2_uses_best_component_timestamp_when_available() -> None:
+    panel = pd.DataFrame(
+        {
+            "event_id": ["e4"],
+            "quarter": ["2024Q2"],
+            "event_date_type": ["official_release_date"],
+            "official_release_date": ["2024-04-30"],
+            "policy_statement_release_date": ["2024-04-30"],
+            "financing_estimates_release_date": ["2024-04-29"],
+            "policy_statement_url": ["https://example.com/policy4"],
+            "financing_estimates_url": ["https://example.com/financing4"],
+            "timing_quality": ["explicit_multi_stage_release"],
+            "classification_review_status": ["reviewed"],
+        }
+    )
+    release_components = pd.DataFrame(
+        {
+            "release_component_id": ["e4__policy_statement", "e4__financing_estimates"],
+            "event_id": ["e4", "e4"],
+            "component_type": ["policy_statement", "financing_estimates"],
+            "release_timestamp_et": ["2024-04-30T08:30:00-04:00", "2024-04-29T15:00:00-04:00"],
+            "timestamp_precision": ["exact_time", "exact_time"],
+            "source_url": ["https://example.com/policy4", "https://example.com/financing4"],
+            "review_status": ["reviewed", "reviewed"],
+            "separable_component_flag": [True, True],
+        }
+    )
+    expectation_template = pd.DataFrame(
+        {
+            "release_component_id": ["e4__policy_statement"],
+            "benchmark_timestamp_et": ["2024-04-30T08:00:00-04:00"],
+            "benchmark_source": ["dealer_survey"],
+            "expected_composition_bn": [10.0],
+            "realized_composition_bn": [20.0],
+            "composition_surprise_bn": [10.0],
+            "benchmark_stale_flag": [False],
+            "expectation_review_status": ["reviewed"],
+        }
+    )
+    contamination_reviews = pd.DataFrame(
+        {
+            "release_component_id": ["e4__policy_statement"],
+            "contamination_flag": [False],
+            "contamination_status": ["reviewed_clean"],
+            "contamination_review_status": ["reviewed"],
+        }
+    )
+
+    out = build_qra_event_registry_v2(
+        panel=panel,
+        release_components=release_components,
+        expectation_template=expectation_template,
+        contamination_reviews=contamination_reviews,
+    )
+
+    assert out.loc[0, "release_timestamp_et"] == "2024-04-30T08:30:00-04:00"
+    assert out.loc[0, "release_timestamp_kind"] == "release_component_registry_timestamp_with_time"
+    assert out.loc[0, "release_time_et"] == "08:30:00"
+    assert out.loc[0, "timestamp_precision"] == "exact_time"
 
 
 def test_build_qra_event_registry_v2_uses_manual_overlap_severity_override() -> None:
@@ -164,6 +232,91 @@ def test_build_qra_shock_crosswalk_v1_extracts_manual_override_reason() -> None:
     assert out.loc[0, "canonical_shock_id"] == "canonical_shock_bn"
     assert out.loc[0, "manual_override_reason"] == "Manual override after review."
     assert bool(out.loc[0, "alternative_treatment_complete"]) is True
+
+
+def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
+    event_registry = pd.DataFrame(
+        {
+            "event_id": ["e1"],
+            "quarter": ["2024Q1"],
+            "release_sequence_label": ["financing_then_policy"],
+            "same_day_release_bundle_flag": [False],
+            "multi_stage_release_flag": [True],
+            "review_status": ["reviewed"],
+            "review_notes": ["Reviewed component split."],
+            "policy_statement_release_timestamp_et": ["2024-01-31T08:30:00-05:00"],
+            "policy_statement_release_timestamp_kind": ["timestamp_with_time"],
+            "policy_statement_url": ["https://example.com/policy"],
+            "financing_estimates_release_timestamp_et": ["2024-01-29T08:30:00-05:00"],
+            "financing_estimates_release_timestamp_kind": ["timestamp_with_time"],
+            "financing_estimates_url": ["https://example.com/financing"],
+        }
+    )
+    expectations = pd.DataFrame(
+        {
+            "release_component_id": ["e1__policy_statement"],
+            "benchmark_timestamp_et": ["2024-01-31T08:00:00-05:00"],
+            "benchmark_source": ["dealer_survey"],
+            "expected_composition_bn": [10.0],
+            "realized_composition_bn": [25.0],
+            "composition_surprise_bn": [15.0],
+            "benchmark_stale_flag": [False],
+            "expectation_review_status": ["reviewed"],
+            "expectation_notes": ["Reviewed survey benchmark."],
+        }
+    )
+    contamination = pd.DataFrame(
+        {
+            "release_component_id": ["e1__policy_statement"],
+            "contamination_flag": [False],
+            "contamination_status": ["reviewed_clean"],
+            "contamination_review_status": ["reviewed"],
+            "contamination_label": [""],
+            "contamination_notes": ["No conflicting macro release."],
+        }
+    )
+
+    out = build_qra_release_component_registry(
+        event_registry,
+        expectation_template=expectations,
+        contamination_reviews=contamination,
+    )
+
+    policy = out.loc[out["release_component_id"] == "e1__policy_statement"].iloc[0]
+    financing = out.loc[out["release_component_id"] == "e1__financing_estimates"].iloc[0]
+    assert policy["quality_tier"] == "Tier A"
+    assert bool(policy["causal_eligible"]) is True
+    assert policy["expectation_status"] == "reviewed_surprise_ready"
+    assert policy["contamination_status"] == "reviewed_clean"
+    assert financing["quality_tier"] == "Tier B"
+    assert "missing_expectation_benchmark" in financing["eligibility_blockers"]
+
+
+def test_summarize_qra_causal_qa_and_event_design_status() -> None:
+    component_registry = pd.DataFrame(
+        {
+            "release_component_id": ["e1__policy_statement", "e1__financing_estimates", "e2__policy_statement"],
+            "event_id": ["e1", "e1", "e2"],
+            "quality_tier": ["Tier A", "Tier B", "Tier D"],
+            "eligibility_blockers": ["", "missing_expectation_benchmark", "review_not_complete|missing_exact_timestamp"],
+            "timestamp_precision": ["exact_time", "exact_time", "date_only"],
+            "separability_status": ["separable_component", "separable_component", "same_day_inseparable_bundle"],
+            "expectation_status": ["reviewed_surprise_ready", "missing_benchmark", "missing_benchmark"],
+            "contamination_status": ["reviewed_clean", "pending_review", "pending_review"],
+            "causal_eligible": [True, False, False],
+        }
+    )
+
+    summary = summarize_qra_causal_qa(component_registry)
+    status = build_event_design_status(component_registry)
+
+    e1 = summary.loc[summary["event_id"] == "e1"].iloc[0]
+    assert e1["quality_tier"] == "Tier A"
+    assert e1["release_component_count"] == 2
+    assert e1["causal_eligible_component_count"] == 1
+    assert "missing_expectation_benchmark" in e1["eligibility_blockers"]
+    assert int(status.loc[status["metric"] == "tier_a_count", "value"].iloc[0]) == 1
+    assert int(status.loc[status["metric"] == "release_component_count", "value"].iloc[0]) == 3
 
 
 def test_build_qra_shock_crosswalk_v1_adds_missing_reason_for_reviewed_manual_statement_rows() -> None:

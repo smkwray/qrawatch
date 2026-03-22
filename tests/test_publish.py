@@ -279,6 +279,74 @@ def test_build_qra_event_elasticity_publish_table_is_optional(tmp_path, monkeypa
         "usable_for_headline",
     ]
 
+
+def test_build_qra_event_registry_publish_table_includes_causal_summary(tmp_path, monkeypatch):
+    tables_dir = tmp_path / "tables"
+    tables_dir.mkdir(parents=True)
+    pd.DataFrame(
+        [
+            {
+                "event_id": "e1",
+                "quarter": "2024Q1",
+                "release_timestamp_et": "2024-01-31T08:30:00-05:00",
+                "release_timestamp_kind": "official_release_date_timestamp_with_time",
+                "release_bundle_type": "explicit_multi_stage_release",
+                "policy_statement_url": "https://example.com/policy",
+                "financing_estimates_url": "https://example.com/financing",
+                "timing_quality": "explicit_multi_stage_release",
+                "overlap_severity": "none",
+                "overlap_label": "",
+                "financing_need_news_flag": True,
+                "composition_news_flag": True,
+                "forward_guidance_flag": False,
+                "reviewer": "manual_review",
+                "review_date": "2024-02-01",
+                "quality_tier": "Tier B",
+                "eligibility_blockers": "missing_expectation_benchmark",
+                "timestamp_precision": "exact_time",
+                "separability_status": "separable_component",
+                "expectation_status": "missing_benchmark",
+                "contamination_status": "pending_review",
+                "release_component_count": 2,
+                "causal_eligible_component_count": 0,
+                "treatment_version_id": "spec_duration_treatment_v1",
+                "headline_eligibility_reason": "usable",
+                "spec_id": "spec_qra_event_v2",
+                "treatment_variant": "canonical_shock_bn",
+            }
+        ]
+    ).to_csv(tables_dir / "qra_event_registry_v2.csv", index=False)
+    monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
+
+    table = publish.build_qra_event_registry_publish_table()
+
+    row = table.iloc[0]
+    assert row["quality_tier"] == "Tier B"
+    assert row["timestamp_precision"] == "exact_time"
+    assert row["release_component_count"] == 2
+
+
+def test_build_event_design_status_publish_table_reads_optional_artifact(tmp_path, monkeypatch):
+    tables_dir = tmp_path / "tables"
+    tables_dir.mkdir(parents=True)
+    pd.DataFrame(
+        [
+            {"metric": "tier_a_count", "value": 1, "notes": "Causal-eligible components."},
+            {"metric": "tier_b_count", "value": 2, "notes": "Reviewed descriptive-only components."},
+        ]
+    ).to_csv(tables_dir / "event_design_status.csv", index=False)
+    monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
+
+    table = publish.build_event_design_status_publish_table()
+
+    assert list(table["metric"]) == ["tier_a_count", "tier_b_count"]
+
+
+def test_build_qra_event_elasticity_publish_table_populated(tmp_path, monkeypatch):
+    tables_dir = tmp_path / "tables"
+    tables_dir.mkdir(parents=True)
+    monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
+
     pd.DataFrame(
         [
             {
@@ -1142,6 +1210,26 @@ def test_dataset_status_uses_qra_robustness_publish_table(monkeypatch) -> None:
     )
     monkeypatch.setattr(
         publish,
+        "build_qra_release_component_registry_publish_table",
+        lambda: pd.DataFrame([{"release_component_id": "qra_2023_05__policy_statement"}]),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_causal_qa_publish_table",
+        lambda: pd.DataFrame([{"event_id": "qra_2023_05"}]),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_event_design_status_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {"metric": "tier_a_count", "value": 0, "notes": "No causal-eligible components yet."},
+                {"metric": "reviewed_surprise_ready_count", "value": 0, "notes": "No reviewed surprise-ready components yet."},
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
         "build_qra_shock_crosswalk_publish_table",
         lambda: pd.DataFrame(
             [
@@ -1233,11 +1321,17 @@ def test_dataset_status_uses_qra_robustness_publish_table(monkeypatch) -> None:
     table = publish.build_dataset_status_table()
 
     registry = table.loc[table["dataset"] == "qra_event_registry_v2"].iloc[0]
+    component_registry = table.loc[table["dataset"] == "qra_release_component_registry"].iloc[0]
+    causal_qa = table.loc[table["dataset"] == "qra_causal_qa_ledger"].iloc[0]
+    design_status = table.loc[table["dataset"] == "event_design_status"].iloc[0]
     usability = table.loc[table["dataset"] == "event_usability_table"].iloc[0]
 
-    assert registry["readiness_tier"] == "supporting_ready"
+    assert registry["readiness_tier"] == "supporting_provisional"
+    assert component_registry["readiness_tier"] == "supporting_provisional"
+    assert causal_qa["readiness_tier"] == "supporting_provisional"
+    assert design_status["readiness_tier"] == "supporting_provisional"
     assert usability["readiness_tier"] == "supporting_ready"
-    assert registry["missing_critical_fields"] == ""
+    assert registry["missing_critical_fields"] == "no_tier_a_components|no_reviewed_surprise_components"
     assert usability["missing_critical_fields"] == ""
 
 

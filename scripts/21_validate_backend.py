@@ -273,6 +273,14 @@ QRA_EVENT_REGISTRY_V2_COLUMNS = [
     "forward_guidance_flag",
     "reviewer",
     "review_date",
+    "quality_tier",
+    "eligibility_blockers",
+    "timestamp_precision",
+    "separability_status",
+    "expectation_status",
+    "contamination_status",
+    "release_component_count",
+    "causal_eligible_component_count",
     "treatment_version_id",
     "headline_eligibility_reason",
 ]
@@ -342,6 +350,33 @@ OPTIONAL_PUBLISH_SCHEMAS.update(
             "units",
             "source_quality",
             "provenance_summary",
+        ],
+        "qra_release_component_registry.csv": [
+            "release_component_id",
+            "event_id",
+            "quarter",
+            "component_type",
+            "release_timestamp_et",
+            "timestamp_precision",
+            "source_url",
+            "quality_tier",
+            "eligibility_blockers",
+        ],
+        "qra_causal_qa_ledger.csv": [
+            "event_id",
+            "quality_tier",
+            "eligibility_blockers",
+            "timestamp_precision",
+            "separability_status",
+            "expectation_status",
+            "contamination_status",
+            "release_component_count",
+            "causal_eligible_component_count",
+        ],
+        "event_design_status.csv": [
+            "metric",
+            "value",
+            "notes",
         ],
     }
 )
@@ -1025,8 +1060,22 @@ def _validate_qra_publish_frame(csv_name: str, frame: pd.DataFrame) -> list[str]
             if not event_id:
                 errors.append("qra_publish_missing_columns:qra_event_registry_v2.csv:event_id")
             if "release_timestamp_et" in frame.columns:
-                if _coerce_timestamp(row.get("release_timestamp_et")) is None:
+                parsed_timestamp = _coerce_timestamp(row.get("release_timestamp_et"))
+                if parsed_timestamp is None:
                     errors.append(f"qra_publish_invalid_timestamp:qra_event_registry_v2.csv:{event_id}")
+                elif str(row.get("timestamp_precision", "")).strip() == "exact_time":
+                    release_time = parsed_timestamp.strftime("%H:%M:%S")
+                    if release_time == "00:00:00":
+                        errors.append(
+                            f"qra_publish_inexact_event_timestamp_claim:qra_event_registry_v2.csv:{event_id}"
+                        )
+            elif str(row.get("timestamp_precision", "")).strip() == "exact_time":
+                if "release_timestamp_kind" not in frame.columns or "timestamp_with_time" not in str(
+                    row.get("release_timestamp_kind", "")
+                ):
+                    errors.append(
+                        f"qra_publish_inexact_event_timestamp_claim:qra_event_registry_v2.csv:{event_id}"
+                    )
         if "headline_eligibility_reason" not in frame.columns:
             errors.append("qra_publish_missing_columns:qra_event_registry_v2.csv:headline_eligibility_reason")
 
@@ -1117,10 +1166,62 @@ def _canonical_qra_review_frame(frame: pd.DataFrame) -> pd.DataFrame:
 def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> list[str]:
     errors: list[str] = []
     registry = qra_frames.get("qra_event_registry_v2.csv", pd.DataFrame())
+    component_registry = qra_frames.get("qra_release_component_registry.csv", pd.DataFrame())
     crosswalk = _canonical_qra_review_frame(qra_frames.get("qra_shock_crosswalk_v1.csv", pd.DataFrame()))
     shock_summary = _canonical_qra_review_frame(qra_frames.get("qra_event_shock_summary.csv", pd.DataFrame()))
     elasticity = _canonical_qra_review_frame(qra_frames.get("qra_event_elasticity.csv", pd.DataFrame()))
     usability = qra_frames.get("event_usability_table.csv", pd.DataFrame())
+    if registry.empty or crosswalk.empty or shock_summary.empty or usability.empty:
+        if registry.empty or component_registry.empty:
+            return errors
+
+    if not registry.empty and not component_registry.empty:
+        registry = registry.drop_duplicates(subset=["event_id"], keep="first").copy()
+        quality_order = {"Tier A": 0, "Tier B": 1, "Tier C": 2, "Tier D": 3}
+        expected_rows = []
+        for event_id, group in component_registry.groupby("event_id", sort=False, dropna=False):
+            working = group.copy()
+            working["_quality_order"] = working.get("quality_tier", pd.Series(dtype=object)).map(
+                lambda value: quality_order.get(str(value), 99)
+            )
+            working["_release_sort_ts"] = pd.to_datetime(
+                working.get("release_timestamp_et", pd.Series(dtype=object)),
+                errors="coerce",
+            )
+            working = working.sort_values(
+                by=["_quality_order", "_release_sort_ts", "release_component_id"],
+                kind="stable",
+            ).reset_index(drop=True)
+            best = working.iloc[0]
+            expected_rows.append(
+                {
+                    "event_id": event_id,
+                    "expected_release_timestamp_et": best.get("release_timestamp_et", ""),
+                    "expected_timestamp_precision": best.get("timestamp_precision", ""),
+                }
+            )
+        expected = pd.DataFrame(expected_rows)
+        joined_registry = registry.merge(expected, on="event_id", how="inner")
+        if not joined_registry.empty:
+            precision_mismatch = joined_registry.loc[
+                joined_registry["timestamp_precision"].fillna("").astype(str).str.strip()
+                != joined_registry["expected_timestamp_precision"].fillna("").astype(str).str.strip()
+            ]
+            if not precision_mismatch.empty:
+                errors.append(
+                    "qra_publish_consistency_registry_component_precision_mismatch:"
+                    + ",".join(sorted(precision_mismatch["event_id"].astype(str).unique()))
+                )
+            timestamp_mismatch = joined_registry.loc[
+                joined_registry["release_timestamp_et"].fillna("").astype(str).str.strip()
+                != joined_registry["expected_release_timestamp_et"].fillna("").astype(str).str.strip()
+            ]
+            if not timestamp_mismatch.empty:
+                errors.append(
+                    "qra_publish_consistency_registry_component_timestamp_mismatch:"
+                    + ",".join(sorted(timestamp_mismatch["event_id"].astype(str).unique()))
+                )
+
     if registry.empty or crosswalk.empty or shock_summary.empty or usability.empty:
         return errors
 
@@ -1364,8 +1465,16 @@ def validate_publish_artifacts(
         errors.append(f"publish_index_missing_artifacts:{','.join(missing_from_index)}")
 
     dataset_status_path = publish_dir / "dataset_status.csv"
+    event_design_status_path = publish_dir / "event_design_status.csv"
     extension_status_path = publish_dir / "extension_status.csv"
     series_catalog_path = publish_dir / "series_metadata_catalog.csv"
+    event_design_status = pd.DataFrame()
+    if event_design_status_path.exists():
+        try:
+            event_design_status = pd.read_csv(event_design_status_path)
+        except Exception as exc:
+            errors.append(f"publish_artifact_read_error:event_design_status.csv:{exc}")
+            event_design_status = pd.DataFrame()
     if dataset_status_path.exists():
         try:
             dataset_status = pd.read_csv(dataset_status_path)
@@ -1386,6 +1495,24 @@ def validate_publish_artifacts(
             public_role = str(match.iloc[0].get("public_role", "")).strip()
             if public_role != "supporting":
                 errors.append(f"dataset_status_extension_public_role_invalid:{dataset_name}:{public_role}")
+        if not event_design_status.empty:
+            metrics = {
+                str(row.get("metric", "")).strip(): int(pd.to_numeric(pd.Series([row.get("value")]), errors="coerce").fillna(0).iloc[0])
+                for _, row in event_design_status.iterrows()
+            }
+            causal_design_ready = metrics.get("tier_a_count", 0) > 0 and metrics.get("reviewed_surprise_ready_count", 0) > 0
+            for dataset_name in (
+                "qra_event_registry_v2",
+                "qra_release_component_registry",
+                "qra_causal_qa_ledger",
+                "event_design_status",
+            ):
+                match = dataset_status.loc[dataset_status.get("dataset", pd.Series(dtype=str)) == dataset_name]
+                if match.empty:
+                    continue
+                readiness = str(match.iloc[0].get("readiness_tier", "")).strip()
+                if not causal_design_ready and readiness == "supporting_ready":
+                    errors.append(f"dataset_status_overstates_causal_readiness:{dataset_name}")
     if extension_status_path.exists():
         try:
             extension_status = pd.read_csv(extension_status_path)

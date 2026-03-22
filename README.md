@@ -6,7 +6,7 @@ This repo is a reproducible research and data product for the project:
 
 **Do shifts in Treasury's bill-versus-coupon mix operate like a shadow form of balance-sheet policy by changing public duration supply, term premia, and market plumbing?**
 
-The design is intentionally **neutral about motive**. The repo treats the “activist Treasury issuance” framing (Miran) as a source of testable claims, then maps those claims into public-data measurement, event-study, and plumbing exercises. The measure itself is presented as Treasury maturity composition — a neutral measurement construct.
+The design is intentionally **neutral about motive**. The repo treats the “activist Treasury issuance” framing (Miran) as a source of testable claims, then maps those claims into public-data measurement, descriptive event monitoring, and plumbing exercises. The measure itself is presented as Treasury maturity composition — a neutral measurement construct.
 
 ## What is already seeded
 
@@ -31,10 +31,10 @@ The repo now has a reproducible backend product and public site, with a delibera
 - the duration headline is a hybrid exact-plus-proxy construction with explicit fallback comparisons
 - the publish layer under `output/publish/` is the frontend-facing API
 - investor allotments, primary dealer, and SEC N-MFP are now summary-ready extension modules
-- QRA event, shock-crosswalk, usability, leave-one-out, and absorption bridge tables are published when their source files exist
+- QRA event, shock-crosswalk, usability, leave-one-out, and absorption bridge tables are published when their source files exist, but they are supporting audit surfaces rather than referee-grade causal estimates
 
 Exact official quarter coverage currently spans a contiguous `2022Q3` through `2025Q4` window.
-This public release should be read as an in-progress research/data product, not as a finished long-history dataset.
+This public release should be read as an in-progress research/data product, not as a finished long-history dataset or a settled causal design.
 
 ## Quickstart
 
@@ -66,6 +66,8 @@ source .env
 "$HOME/venvs/qrawatch/bin/python" scripts/10_run_event_study.py
 "$HOME/venvs/qrawatch/bin/python" scripts/23_seed_qra_shock_template.py
 "$HOME/venvs/qrawatch/bin/python" scripts/24_build_qra_event_elasticity.py
+"$HOME/venvs/qrawatch/bin/python" scripts/25_build_qra_identification_tables.py
+"$HOME/venvs/qrawatch/bin/python" scripts/28_seed_qra_causal_review_inputs.py
 "$HOME/venvs/qrawatch/bin/python" scripts/11_run_plumbing_regressions.py
 "$HOME/venvs/qrawatch/bin/python" scripts/12_build_public_duration_supply.py
 "$HOME/venvs/qrawatch/bin/python" scripts/16_build_investor_allotments_inventory.py
@@ -120,13 +122,13 @@ Some pieces are seeded rather than fully automated:
 - the duration headline still combines exact non-bill net supply with a QT proxy, and publish artifacts keep fallback constructions explicit
 - the SEC N-MFP backend stops at summary analytics depth rather than security-level research depth
 - TIC remains out of scope for the current public release
-- the QRA elasticity layer is published as provisional-supporting research infrastructure, not as a settled headline elasticity estimate
+- the QRA event and elasticity layers are published as provisional-supporting research infrastructure, not as settled headline causal estimates
 - QRA downloads now use deterministic filenames of the form `<slug>_<sha1>.pdf|.html` and record provenance in `data/raw/qra/downloads.csv`
 
 ## Current limitations
 
 - the exact official quarter history is still short, even though the current published window is now contiguous from `2022Q3` through `2025Q4`
-- the event-study layer is informative but still small-sample
+- the event-study layer is informative but still small-sample and descriptive/supporting rather than causal-eligible
 - extension modules are supporting context, not the headline result
 - the long-history version of the project still needs additional official quarter capture
 
@@ -137,9 +139,9 @@ The backend now emits a publish-ready layer under `output/publish/`, derived fro
 - coupon-shortfall quarter tables
 - official QRA quarter capture tables
 - seed-vs-official shortfall comparisons
-- QRA event tables, baseline summaries, and robustness summaries
-- optional QRA event elasticity tables built from the manual shock template plus the event panel
-- QRA event registry, shock crosswalk, event usability, leave-one-out, and auction absorption tables when the source files exist
+- QRA event tables, baseline summaries, and robustness summaries for descriptive monitoring
+- optional QRA event elasticity tables built from the manual shock template plus the event panel, kept as supporting/provisional outputs
+- QRA event registry, release-component registry, causal QA ledger, event-design status, shock crosswalk, event usability, leave-one-out, and auction absorption tables when the source files exist
 - plumbing baseline summaries and robustness summaries
 - duration-supply summaries and construction comparisons
 - data-source and extension-status inventories
@@ -156,6 +158,9 @@ source .env
 "$HOME/venvs/qrawatch/bin/python" scripts/22_seed_forward_official_quarters.py --direction backward
 "$HOME/venvs/qrawatch/bin/python" scripts/23_seed_qra_shock_template.py
 "$HOME/venvs/qrawatch/bin/python" scripts/24_build_qra_event_elasticity.py
+"$HOME/venvs/qrawatch/bin/python" scripts/25_build_qra_identification_tables.py
+"$HOME/venvs/qrawatch/bin/python" scripts/28_seed_qra_causal_review_inputs.py
+"$HOME/venvs/qrawatch/bin/python" scripts/27_build_qra_intraday_event_panel.py
 "$HOME/venvs/qrawatch/bin/python" scripts/16_build_investor_allotments_inventory.py
 "$HOME/venvs/qrawatch/bin/python" scripts/18_build_primary_dealer_inventory.py
 "$HOME/venvs/qrawatch/bin/python" scripts/19_build_sec_nmfp_inventory.py
@@ -170,7 +175,7 @@ Public site consumers should read only from `output/publish/`. The key site-faci
 - `output/publish/investor_allotments_summary.{csv,json,md}`
 - `output/publish/primary_dealer_summary.{csv,json,md}`
 - `output/publish/sec_nmfp_summary.{csv,json,md}`
-- `output/publish/qra_event_elasticity.{csv,json,md}` when manual shock inputs have been filled
+- `output/publish/qra_event_elasticity.{csv,json,md}` when manual shock inputs have been filled, for supporting analysis only
 
 If `FRED_API_KEY` is set in `.env`, the FRED downloader uses the official API to avoid flaky public CSV fetches for larger series.
 

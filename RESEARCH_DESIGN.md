@@ -74,9 +74,11 @@ Quarterly / monthly:
 
 ## 4. Identification strategy
 
-### Design A. QRA announcement event study
+### Design A. Descriptive QRA announcement event study
 
-The cleanest first design is a short-window event study around QRA statements.
+The cleanest first design is a short-window descriptive event study around QRA statements.
+
+This is useful for monitoring and for building a provenance-rich event surface, but it is not yet referee-grade causal identification.
 
 Use two date definitions:
 
@@ -114,9 +116,11 @@ QRA dates can sit near other macro events, especially FOMC meetings and major da
 - run both official date and T-1 marker
 - inspect pre-trends within event windows
 
+Treat the `market_pricing_marker_minus_1d` definition as a robustness benchmark, not as a substitute for exact release timing.
+
 Implemented backend output:
 
-- baseline event summary remains the stable v1 table
+- baseline event summary remains the stable v1 descriptive table
 - robustness output is published separately with official-vs-T-1 splits and overlap-excluded sensitivity rows
 
 ### Design B. Weekly plumbing regressions
@@ -171,7 +175,7 @@ Controls can include:
 - macro surprise controls if available
 - debt-limit episode dummies
 
-Use this for medium-horizon interpretation, not as the only design.
+Use this for medium-horizon interpretation, not as the only design. It is still descriptive unless the event layer is upgraded to a causal-eligible ledger.
 
 ### Design D. Flow-versus-stock horse race
 
@@ -247,7 +251,13 @@ Automate parsing only after the paper already has pricing and plumbing results.
 - gross weekly auction proxy vs net quarterly financing measure
 - flow-only vs stock-only vs combined models
 
-## 8. What not to over-engineer first
+## 8. Causal upgrade path
+
+The current daily event stack should be treated as descriptive/supporting evidence only.
+
+To move to causal eligibility, the repo would need a component-level release registry, an expectation/surprise benchmark, exact timestamped event windows, and hard contamination rules. Until then, event outputs should be interpreted as reviewed monitoring surfaces, not as referee-grade causal estimates.
+
+## 9. What not to over-engineer first
 
 Do not start with:
 

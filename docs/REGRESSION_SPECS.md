@@ -17,7 +17,7 @@ Robustness:
 - `tau = 0.15`
 - `tau = 0.20`
 
-## B. Daily QRA event windows
+## B. Daily descriptive QRA event windows
 
 For outcome `Y_t` and event day `t0`:
 
@@ -34,6 +34,8 @@ Recommended outcomes:
 - `SP500`
 - `VIXCLS`
 
+These windows are descriptive/supporting outputs in the current release. Rows without exact release timing remain non-causal, and T-1 comparisons are robustness checks rather than a substitute for exact-timestamp identification.
+
 ## C. Weekly plumbing regressions
 
 ```text
@@ -49,6 +51,8 @@ Baseline implementation notes:
 Expected sign pattern in the note's logic:
 - `b1` more negative than `b2` in ON RRP equation
 - `b1` less negative than `b2` in reserves equation
+
+These regressions are mechanism tests, not proofs of causal identification on their own.
 
 ## D. Combined public-duration-supply measure
 
@@ -71,3 +75,5 @@ Possible stock definitions:
 - cumulative signed ATI
 - stock bill share minus target bill share
 - stock marketable bill share from MSPD
+
+Use these specifications only after labeling the event layer correctly. The daily QRA event stack remains descriptive/supporting unless and until the causal ledger upgrades a row to causal-eligible.

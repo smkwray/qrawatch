@@ -143,6 +143,38 @@ def _quarter_from_timestamp(value: object) -> str:
     return f"{int(ts.year)}Q{quarter}"
 
 
+def _metric_int(frame: pd.DataFrame, metric: str) -> int:
+    if frame.empty or "metric" not in frame.columns or "value" not in frame.columns:
+        return 0
+    match = frame.loc[frame["metric"].astype(str) == metric, "value"]
+    if match.empty:
+        return 0
+    numeric = pd.to_numeric(match, errors="coerce")
+    if numeric.empty or pd.isna(numeric.iloc[0]):
+        return 0
+    return int(numeric.iloc[0])
+
+
+def _causal_design_supporting_ready(event_design_status: pd.DataFrame) -> bool:
+    if event_design_status.empty:
+        return False
+    return (
+        _metric_int(event_design_status, "tier_a_count") > 0
+        and _metric_int(event_design_status, "reviewed_surprise_ready_count") > 0
+    )
+
+
+def _causal_design_missing_fields(event_design_status: pd.DataFrame) -> str:
+    if event_design_status.empty:
+        return ""
+    missing: list[str] = []
+    if _metric_int(event_design_status, "tier_a_count") == 0:
+        missing.append("no_tier_a_components")
+    if _metric_int(event_design_status, "reviewed_surprise_ready_count") == 0:
+        missing.append("no_reviewed_surprise_components")
+    return "|".join(missing)
+
+
 def _timestamp_proxy_et(value: object) -> str:
     ts = pd.to_datetime(value, errors="coerce")
     if pd.isna(ts):
@@ -659,6 +691,14 @@ def _empty_qra_registry_frame() -> pd.DataFrame:
             "forward_guidance_flag",
             "reviewer",
             "review_date",
+            "quality_tier",
+            "eligibility_blockers",
+            "timestamp_precision",
+            "separability_status",
+            "expectation_status",
+            "contamination_status",
+            "release_component_count",
+            "causal_eligible_component_count",
             "treatment_version_id",
             "headline_eligibility_reason",
             "spec_id",
@@ -685,6 +725,14 @@ def build_qra_event_registry_publish_table() -> pd.DataFrame:
             "forward_guidance_flag": False,
             "reviewer": "",
             "review_date": "",
+            "quality_tier": "Tier D",
+            "eligibility_blockers": "",
+            "timestamp_precision": "missing",
+            "separability_status": "same_day_inseparable_bundle",
+            "expectation_status": "missing_benchmark",
+            "contamination_status": "pending_review",
+            "release_component_count": 0,
+            "causal_eligible_component_count": 0,
             "treatment_version_id": QRA_DURATION_SPEC_ID,
             "headline_eligibility_reason": "missing_shock_summary",
         },
@@ -705,6 +753,14 @@ def build_qra_event_registry_publish_table() -> pd.DataFrame:
         "forward_guidance_flag",
         "reviewer",
         "review_date",
+        "quality_tier",
+        "eligibility_blockers",
+        "timestamp_precision",
+        "separability_status",
+        "expectation_status",
+        "contamination_status",
+        "release_component_count",
+        "causal_eligible_component_count",
         "treatment_version_id",
         "headline_eligibility_reason",
         "spec_id",
@@ -714,6 +770,74 @@ def build_qra_event_registry_publish_table() -> pd.DataFrame:
         if column not in source.columns:
             source[column] = pd.NA
     return source[columns].drop_duplicates(subset=["event_id"], keep="first").sort_values(["quarter", "event_id"]).reset_index(drop=True)
+
+
+def build_qra_release_component_registry_publish_table() -> pd.DataFrame:
+    columns = [
+        "release_component_id",
+        "event_id",
+        "quarter",
+        "component_type",
+        "release_timestamp_et",
+        "timestamp_precision",
+        "source_url",
+        "bundle_id",
+        "release_sequence_label",
+        "separable_component_flag",
+        "review_status",
+        "review_notes",
+        "benchmark_timestamp_et",
+        "benchmark_source",
+        "expected_composition_bn",
+        "realized_composition_bn",
+        "composition_surprise_bn",
+        "benchmark_stale_flag",
+        "expectation_review_status",
+        "expectation_notes",
+        "expectation_status",
+        "contamination_flag",
+        "contamination_status",
+        "contamination_review_status",
+        "contamination_label",
+        "contamination_notes",
+        "separability_status",
+        "eligibility_blockers",
+        "quality_tier",
+        "causal_eligible",
+    ]
+    source = _read_optional_source_csv("qra_release_component_registry", columns=columns)
+    for column in columns:
+        if column not in source.columns:
+            source[column] = pd.NA
+    return source[columns]
+
+
+def build_qra_causal_qa_publish_table() -> pd.DataFrame:
+    columns = [
+        "event_id",
+        "quality_tier",
+        "eligibility_blockers",
+        "timestamp_precision",
+        "separability_status",
+        "expectation_status",
+        "contamination_status",
+        "release_component_count",
+        "causal_eligible_component_count",
+    ]
+    source = _read_optional_source_csv("qra_causal_qa_ledger", columns=columns)
+    for column in columns:
+        if column not in source.columns:
+            source[column] = pd.NA
+    return source[columns]
+
+
+def build_event_design_status_publish_table() -> pd.DataFrame:
+    columns = ["metric", "value", "notes"]
+    source = _read_optional_source_csv("event_design_status", columns=columns)
+    for column in columns:
+        if column not in source.columns:
+            source[column] = pd.NA
+    return source[columns]
 
 
 def _empty_qra_crosswalk_frame() -> pd.DataFrame:
@@ -1947,6 +2071,11 @@ def build_dataset_status_table() -> pd.DataFrame:
     if qra_elasticity_tier == "supporting_ready":
         qra_elasticity_tier = "supporting_provisional"
     qra_event_registry = build_qra_event_registry_publish_table()
+    qra_release_component_registry = build_qra_release_component_registry_publish_table()
+    qra_causal_qa = build_qra_causal_qa_publish_table()
+    event_design_status = build_event_design_status_publish_table()
+    causal_design_ready = _causal_design_supporting_ready(event_design_status)
+    causal_design_missing = _causal_design_missing_fields(event_design_status)
     qra_shock_crosswalk = build_qra_shock_crosswalk_publish_table()
     qra_shock_summary = build_qra_event_shock_summary_publish_table()
     qra_event_robustness = build_qra_robustness_publish_table()
@@ -2029,13 +2158,69 @@ def build_dataset_status_table() -> pd.DataFrame:
         },
         {
             "dataset": "qra_event_registry_v2",
-            "readiness_tier": "supporting_ready" if (not qra_event_registry.empty and qra_review_surface["ready"]) else "supporting_provisional",
+            "readiness_tier": (
+                "supporting_ready"
+                if (not qra_event_registry.empty and qra_review_surface["ready"] and causal_design_ready)
+                else "supporting_provisional"
+            ),
             "source_quality": "derived_event_ledger",
             "headline_ready": False,
-            "fallback_only": qra_event_registry.empty or not qra_review_surface["ready"],
-            "missing_critical_fields": "|".join(qra_review_surface["issues"]),
+            "fallback_only": qra_event_registry.empty or not qra_review_surface["ready"] or not causal_design_ready,
+            "missing_critical_fields": "|".join(
+                part
+                for part in (
+                    "|".join(qra_review_surface["issues"]),
+                    causal_design_missing,
+                )
+                if part
+            ),
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_event_registry_v2.csv"),
             "review_maturity": "provisional_supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "qra_release_component_registry",
+            "readiness_tier": (
+                "supporting_ready"
+                if (not qra_release_component_registry.empty and causal_design_ready)
+                else ("supporting_provisional" if not qra_release_component_registry.empty else "not_started")
+            ),
+            "source_quality": "derived_component_registry",
+            "headline_ready": False,
+            "fallback_only": qra_release_component_registry.empty or not causal_design_ready,
+            "missing_critical_fields": causal_design_missing,
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_release_component_registry.csv"),
+            "review_maturity": "provisional_supporting" if not qra_release_component_registry.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "qra_causal_qa_ledger",
+            "readiness_tier": (
+                "supporting_ready"
+                if (not qra_causal_qa.empty and causal_design_ready)
+                else ("supporting_provisional" if not qra_causal_qa.empty else "not_started")
+            ),
+            "source_quality": "derived_causal_qa",
+            "headline_ready": False,
+            "fallback_only": qra_causal_qa.empty or not causal_design_ready,
+            "missing_critical_fields": causal_design_missing,
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_causal_qa_ledger.csv"),
+            "review_maturity": "provisional_supporting" if not qra_causal_qa.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "event_design_status",
+            "readiness_tier": (
+                "supporting_ready"
+                if (not event_design_status.empty and causal_design_ready)
+                else ("supporting_provisional" if not event_design_status.empty else "not_started")
+            ),
+            "source_quality": "derived_event_design_status",
+            "headline_ready": False,
+            "fallback_only": event_design_status.empty or not causal_design_ready,
+            "missing_critical_fields": causal_design_missing,
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "event_design_status.csv"),
+            "review_maturity": "provisional_supporting" if not event_design_status.empty else "not_started",
             "public_role": "supporting",
         },
         {
@@ -2162,6 +2347,9 @@ def build_publish_artifacts() -> None:
     publish_table("qra_event_summary", "QRA Event Summary", build_qra_summary_publish_table())
     publish_table("qra_event_robustness", "QRA Event Robustness", build_qra_robustness_publish_table())
     publish_table("qra_event_registry_v2", "QRA Event Registry V2", build_qra_event_registry_publish_table())
+    publish_table("qra_release_component_registry", "QRA Release Component Registry", build_qra_release_component_registry_publish_table())
+    publish_table("qra_causal_qa_ledger", "QRA Causal QA Ledger", build_qra_causal_qa_publish_table())
+    publish_table("event_design_status", "Event Design Status", build_event_design_status_publish_table())
     publish_table("qra_shock_crosswalk_v1", "QRA Shock Crosswalk V1", build_qra_shock_crosswalk_publish_table())
     publish_table("treatment_comparison_table", "Treatment Comparison Table", build_treatment_comparison_publish_table())
     publish_table("event_usability_table", "Event Usability Table", build_event_usability_publish_table())

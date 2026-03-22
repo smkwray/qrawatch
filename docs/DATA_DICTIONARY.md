@@ -15,8 +15,8 @@
 
 - `event_id` — stable event identifier
 - `event_label` — human-readable label
-- `official_release_date` — official QRA statement date
-- `market_pricing_marker_minus_1d` — alternative date to test
+- `official_release_date` — official QRA statement date used for descriptive event monitoring
+- `market_pricing_marker_minus_1d` — alternative date to test in descriptive robustness checks
 - `expected_direction` — qualitative event classification
 - `notes` — summary interpretation
 - `seed_source` — provenance
@@ -40,6 +40,39 @@
 - `qa_status` — `seed_only`, `manual_official_capture`, `semi_automated_capture`, or `parser_verified`
 - `notes` — capture notes and caveats
 
+### `data/manual/qra_release_component_registry.csv`
+
+- `release_component_id` — canonical component identifier of the form `<event_id>__<component_type>`
+- `event_id` — parent event identifier for grouping components back to a QRA episode
+- `quarter` — canonical quarter label
+- `component_type` — Treasury release component such as `financing_estimates` or `policy_statement`
+- `release_timestamp_et` — reviewed Treasury release timestamp in Eastern Time
+- `timestamp_precision` — `exact_time`, `date_only`, or `missing`
+- `source_url` — official Treasury page for the specific release component
+- `bundle_id` — grouping key for components belonging to the same broader QRA episode
+- `release_sequence_label` — ordering label such as `financing_then_policy`
+- `separable_component_flag` — whether the component is treated as separable from same-day bundled Treasury communication
+- `review_status` / `review_notes` — manual review status and notes for the component split
+
+### `data/manual/qra_component_expectation_template.csv`
+
+- `release_component_id` — component key joined against `qra_release_component_registry.csv`
+- `benchmark_timestamp_et` — timestamp for the benchmark expectation snapshot
+- `benchmark_source` — provenance for the expectation benchmark
+- `expected_composition_bn` — expected maturity-composition path in billions
+- `realized_composition_bn` — realized maturity-composition path in billions
+- `composition_surprise_bn` — reviewed surprise measure used for causal treatment when present
+- `benchmark_stale_flag` — whether the benchmark is considered stale
+- `expectation_review_status` / `expectation_notes` — review status and notes for the expectation layer
+
+### `data/manual/qra_event_contamination_reviews.csv`
+
+- `release_component_id` — component key joined against `qra_release_component_registry.csv`
+- `contamination_flag` — whether macro or policy contamination is present
+- `contamination_status` — contamination adjudication state such as `pending_review` or `reviewed_clean`
+- `contamination_review_status` — review status for the contamination decision
+- `contamination_label` / `contamination_notes` — short label and free-text notes for the overlap call
+
 ## Processed datasets
 
 ### `data/processed/ati_index_seed.csv`
@@ -56,8 +89,8 @@
 - `event_date_requested` — requested event date from manual seed
 - `event_date_aligned` — nearest available market-data date
 - `event_date_type` — official vs T-1 marker
-- `*_d1` — 1-day change
-- `*_d3` — 3-day change
+- `*_d1` — 1-day change used for descriptive event monitoring
+- `*_d3` — 3-day change used for descriptive event monitoring
 
 ### `data/processed/plumbing_weekly_panel.csv`
 
@@ -104,6 +137,39 @@
 - official-quarter ATI rebuild derived from `data/processed/official_quarterly_refunding_capture.csv`
 - preserves official-capture provenance through `capture_quality` and `capture_source`
 
+### `data/processed/qra_event_registry_v2.csv`
+
+- `release_timestamp_et` — release timestamp in Eastern Time when available
+- `release_bundle_type` — bundle classification for the event-level registry
+- `timing_quality` — descriptive timing quality inherited from the calendar scaffold
+- `financing_need_news_flag` / `composition_news_flag` / `forward_guidance_flag` — content-decomposition flags for the event-level registry
+- `headline_eligibility_reason` — descriptive headline blocker label, not a causal-eligibility label
+- `quality_tier` — event-level summary of the best available causal tier across its release components
+- `eligibility_blockers` — event-level rollup of causal blockers inherited from the component registry
+- `timestamp_precision` / `separability_status` / `expectation_status` / `contamination_status` — event-level summary governance fields for the causal path
+- `release_component_count` / `causal_eligible_component_count` — counts used to distinguish descriptive coverage from true causal eligibility
+
+### `data/processed/qra_release_component_registry.csv`
+
+- component-level registry used by the causal-credibility upgrade
+- carries release timestamps, component separability, expectation/surprise provenance, contamination review, `quality_tier`, `eligibility_blockers`, and `causal_eligible`
+
+### `data/processed/qra_causal_qa_ledger.csv`
+
+- event-level QA rollup derived from the component registry
+- records the best available `quality_tier` for each event plus aggregated blocker fields and counts of causal-eligible components
+
+### `data/processed/event_design_status.csv`
+
+- compact status surface for the causal-design upgrade
+- reports counts such as `tier_a_count`, `exact_time_component_count`, `reviewed_surprise_ready_count`, and `reviewed_clean_component_count`
+
+### `data/processed/qra_event_elasticity.csv`
+
+- `shock_bn` — reviewed/manual canonical shock used for supporting event-layer summaries
+- `schedule_diff_10y_eq_bn` / `schedule_diff_dynamic_10y_eq_bn` / `schedule_diff_dv01_usd` — comparison treatments for audit and diagnostics
+- `usable_for_headline` — descriptive usability flag, not a guarantee of causal eligibility
+
 ### `data/processed/investor_allotments.csv`
 
 - processed inventory of investor-allotments raw artifacts
@@ -142,6 +208,17 @@
 - site-facing readiness/status index for core and extension datasets
 - reports readiness tier, source quality, headline/fallback status, and regeneration freshness
 - see `docs/STATUS_GLOSSARY.md` for label semantics used across publish artifacts and the site
+
+### Event-quality terminology
+
+The causal-credibility upgrade uses `quality_tier` values rather than prose labels:
+
+- `Tier A` — causal-eligible
+- `Tier B` — reviewed descriptive-only
+- `Tier C` — measurement-only official component or event
+- `Tier D` — provisional or scaffold
+
+These are governance labels, not statistical results. Use `eligibility_blockers`, `timestamp_precision`, `separability_status`, `expectation_status`, and `contamination_status` to understand why a row remains non-causal.
 
 ### `output/publish/extension_status.csv`
 

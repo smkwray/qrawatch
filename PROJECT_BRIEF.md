@@ -2,7 +2,7 @@
 
 ## Working title
 
-**Treasury maturity composition as shadow balance-sheet policy: measurement, announcement effects, and transmission**
+**Treasury maturity composition as shadow balance-sheet policy: measurement, descriptive announcement monitoring, and transmission**
 
 ## One-sentence version
 
@@ -21,7 +21,7 @@ The note’s core claims naturally collapse into one empirical chain:
 That gives one coherent project with:
 
 - a measurement object,
-- an announcement-based identification design,
+- an announcement-based monitoring design,
 - a transmission mechanism,
 - and a macro-financial interpretation.
 
@@ -45,9 +45,9 @@ This moves the project away from contested political interpretation and toward o
 
 A quarter-level ATI series based on **missing coupons** captures economically meaningful deviations from a regular bill-share range better than WAM alone.
 
-### H2. Announcement effects
+### H2. Descriptive announcement effects
 
-QRA announcements that imply more coupon supply or faster term-out raise term premia and long yields relative to announcements that imply coupon restraint.
+QRA announcements that imply more coupon supply or faster term-out are associated with higher term premia and long yields than announcements that imply coupon restraint. In the current release, this is a descriptive event-monitoring claim, not referee-grade causal identification.
 
 ### H3. Plumbing channel
 
@@ -67,7 +67,7 @@ The contribution is not simply a replication of the note. It is a reframing:
 
 - translate controversial narrative into neutral, testable claims,
 - build the measure using free public data,
-- identify effects around QRA dates,
+- describe price responses around QRA dates,
 - trace the plumbing channel through ON RRP / reserves / TGA,
 - and nest Treasury issuance inside a broader public-duration-supply framework.
 
@@ -76,7 +76,7 @@ The contribution is not simply a replication of the note. It is a reframing:
 Keep these at the center:
 
 - ATI / missing-coupons measurement
-- QRA announcement event studies
+- QRA announcement event monitoring
 - bills / reserves / ON RRP plumbing tests
 - combined Treasury + Fed duration-supply measure
 - flow-versus-stock comparison
@@ -98,7 +98,7 @@ Those are interesting side sections or extensions, but they are weaker as the pa
 A strong first draft only needs:
 
 1. a clean ATI seed series
-2. a four-event QRA table
+2. a four-event QRA descriptive table
 3. a weekly plumbing prototype
 4. a provisional combined-duration-supply series
 5. robustness on target bill share and event-date definition
@@ -108,7 +108,7 @@ A strong first draft only needs:
 If the repo can produce:
 
 - a quarter-level ATI table,
-- a QRA event-study summary,
+- a QRA event-study summary labeled descriptive/supporting,
 - and at least one weekly plumbing regression with sensible signs,
 
 then the project has crossed from concept into a real empirical paper.

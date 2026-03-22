@@ -13,10 +13,13 @@ import pandas as pd
 from ati_shadow_policy.io_utils import write_df
 from ati_shadow_policy.paths import MANUAL_DIR, PROCESSED_DIR, TABLES_DIR, ensure_project_dirs
 from ati_shadow_policy.research.identification import (
+    build_event_design_status,
     build_event_usability_table,
     build_leave_one_event_out_table,
     build_qra_event_registry_v2,
+    build_qra_release_component_registry,
     build_qra_shock_crosswalk_v1,
+    summarize_qra_causal_qa,
 )
 from ati_shadow_policy.specs import spec_registry_frame
 
@@ -32,7 +35,10 @@ def main() -> None:
 
     panel = _read_csv_if_exists(PROCESSED_DIR / "qra_event_panel.csv")
     release_calendar = _read_csv_if_exists(MANUAL_DIR / "qra_release_calendar_seed.csv")
+    release_components = _read_csv_if_exists(MANUAL_DIR / "qra_release_component_registry.csv")
+    expectation_template = _read_csv_if_exists(MANUAL_DIR / "qra_component_expectation_template.csv")
     overlap_annotations = _read_csv_if_exists(MANUAL_DIR / "qra_event_overlap_annotations.csv")
+    contamination_reviews = _read_csv_if_exists(MANUAL_DIR / "qra_event_contamination_reviews.csv")
     elasticity = _read_csv_if_exists(TABLES_DIR / "qra_event_elasticity.csv")
     shock_summary = _read_csv_if_exists(TABLES_DIR / "qra_event_elasticity.csv")
 
@@ -44,12 +50,31 @@ def main() -> None:
         release_calendar=release_calendar,
         overlap_annotations=overlap_annotations,
         shock_summary=shock_summary,
+        release_components=release_components,
+        expectation_template=expectation_template,
+        contamination_reviews=contamination_reviews,
         release_calendar_source=str(MANUAL_DIR / "qra_release_calendar_seed.csv"),
         overlap_annotations_source=str(MANUAL_DIR / "qra_event_overlap_annotations.csv"),
         shock_summary_source=str(TABLES_DIR / "qra_event_elasticity.csv"),
     )
     write_df(event_registry, PROCESSED_DIR / "qra_event_registry_v2.csv")
     write_df(event_registry, TABLES_DIR / "qra_event_registry_v2.csv")
+
+    component_registry = build_qra_release_component_registry(
+        event_registry,
+        release_components=release_components,
+        expectation_template=expectation_template,
+        contamination_reviews=contamination_reviews,
+    )
+    write_df(component_registry, PROCESSED_DIR / "qra_release_component_registry.csv")
+    write_df(component_registry, TABLES_DIR / "qra_release_component_registry.csv")
+
+    causal_qa = summarize_qra_causal_qa(component_registry)
+    write_df(causal_qa, PROCESSED_DIR / "qra_causal_qa_ledger.csv")
+    write_df(causal_qa, TABLES_DIR / "qra_causal_qa_ledger.csv")
+
+    event_design_status = build_event_design_status(component_registry)
+    write_df(event_design_status, TABLES_DIR / "event_design_status.csv")
 
     shock_crosswalk = build_qra_shock_crosswalk_v1(elasticity)
     write_df(shock_crosswalk, PROCESSED_DIR / "qra_shock_crosswalk_v1.csv")
@@ -66,6 +91,8 @@ def main() -> None:
         "Saved identification artifacts: "
         f"spec_registry={len(spec_registry):,}, "
         f"event_registry={len(event_registry):,}, "
+        f"component_registry={len(component_registry):,}, "
+        f"causal_qa={len(causal_qa):,}, "
         f"shock_crosswalk={len(shock_crosswalk):,}, "
         f"event_usability={len(event_usability):,}, "
         f"leave_one_out={len(leave_one_out):,}"
