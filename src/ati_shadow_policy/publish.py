@@ -1902,6 +1902,16 @@ def _qra_review_surface_integrity(
         .reset_index(name="event_count_summary")
     )
     usability_group = event_usability.copy()
+    if "treatment_variant" in usability_group.columns:
+        canonical = usability_group.loc[
+            usability_group["treatment_variant"].astype(str) == "canonical_shock_bn"
+        ].copy()
+        if not canonical.empty:
+            usability_group = canonical
+    usability_group = usability_group.loc[
+        usability_group.get("event_date_type", pd.Series(dtype=object)).astype(str)
+        == "official_release_date"
+    ].copy()
     merged_group = usability_group.merge(
         summary_group,
         on=[
@@ -1933,10 +1943,13 @@ def build_dataset_status_table() -> pd.DataFrame:
     official_ati_headline = _official_ati_headline_table()
     official_ati_headline_ready = not official_ati_headline.empty
     qra_elasticity_readiness = _qra_elasticity_readiness(TABLES_DIR / "qra_event_elasticity.csv")
+    qra_elasticity_tier = str(qra_elasticity_readiness["readiness_tier"])
+    if qra_elasticity_tier == "supporting_ready":
+        qra_elasticity_tier = "supporting_provisional"
     qra_event_registry = build_qra_event_registry_publish_table()
     qra_shock_crosswalk = build_qra_shock_crosswalk_publish_table()
     qra_shock_summary = build_qra_event_shock_summary_publish_table()
-    qra_event_robustness = _read_optional_source_csv("qra_event_robustness")
+    qra_event_robustness = build_qra_robustness_publish_table()
     treatment_comparison = build_treatment_comparison_publish_table()
     event_usability = build_event_usability_publish_table()
     leave_one_out = build_leave_one_event_out_publish_table()
@@ -1986,16 +1999,20 @@ def build_dataset_status_table() -> pd.DataFrame:
         {
             "dataset": "qra_event_elasticity",
             "readiness_tier": (
-                str(qra_elasticity_readiness["readiness_tier"])
+                qra_elasticity_tier
                 if (
                     qra_review_surface["ready"]
-                    or str(qra_elasticity_readiness["readiness_tier"]) in {"not_started", "schema_incomplete"}
+                    or qra_elasticity_tier in {"not_started", "schema_incomplete"}
                 )
                 else "supporting_provisional"
             ),
             "source_quality": "manual_qra_shock_template_plus_event_panel",
             "headline_ready": False,
-            "fallback_only": bool(qra_elasticity_readiness["fallback_only"]) or not qra_review_surface["ready"],
+            "fallback_only": (
+                True
+                if qra_elasticity_tier == "supporting_provisional"
+                else bool(qra_elasticity_readiness["fallback_only"]) or not qra_review_surface["ready"]
+            ),
             "missing_critical_fields": "|".join(
                 part
                 for part in (

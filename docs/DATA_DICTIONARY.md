@@ -35,7 +35,7 @@
 - `guidance_frns` — free-text FRN guidance notes
 - `guidance_buybacks` — free-text buyback guidance notes
 - `source_url` — official Treasury source URL
-- `source_doc_local` — internal processed-data provenance reference used for validation and reproducibility; not exposed in public site artifacts
+- `source_doc_local` — repo-relative internal provenance references used for validation and reproducibility; not exposed in public site artifacts
 - `source_doc_type` — source family such as `seed_csv`, official statement, or attachment type
 - `qa_status` — `seed_only`, `manual_official_capture`, `semi_automated_capture`, or `parser_verified`
 - `notes` — capture notes and caveats
@@ -141,6 +141,7 @@
 
 - site-facing readiness/status index for core and extension datasets
 - reports readiness tier, source quality, headline/fallback status, and regeneration freshness
+- see `docs/STATUS_GLOSSARY.md` for label semantics used across publish artifacts and the site
 
 ### `output/publish/extension_status.csv`
 

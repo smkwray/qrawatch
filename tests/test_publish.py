@@ -1005,6 +1005,385 @@ def test_dataset_status_ignores_treatment_variant_rows_when_checking_qra_duplica
     assert "missing_review_surface" in qra_elasticity["missing_critical_fields"]
 
 
+def test_qra_review_surface_integrity_ignores_t_minus_one_usability_rows() -> None:
+    registry = pd.DataFrame(
+        [
+            {
+                "event_id": "qra_2023_05",
+                "headline_eligibility_reason": "usable",
+            }
+        ]
+    )
+    crosswalk = pd.DataFrame(
+        [
+            {
+                "event_id": "qra_2023_05",
+                "event_date_type": "official_release_date",
+                "usable_for_headline_reason": "usable",
+                "spec_id": "spec_qra_event_v2",
+                "treatment_variant": "canonical_shock_bn",
+            }
+        ]
+    )
+    event_usability = pd.DataFrame(
+        [
+            {
+                "event_date_type": "official_release_date",
+                "headline_bucket": "easing",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
+                "overlap_severity": "none",
+                "usable_for_headline": True,
+                "usable_for_headline_reason": "usable",
+                "event_count": 1,
+                "treatment_variant": "canonical_shock_bn",
+            },
+            {
+                "event_date_type": "market_pricing_marker_minus_1d",
+                "headline_bucket": "easing",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
+                "overlap_severity": "none",
+                "usable_for_headline": False,
+                "usable_for_headline_reason": "non_official_event_date_type",
+                "event_count": 1,
+                "treatment_variant": "canonical_shock_bn",
+            },
+        ]
+    )
+    shock_summary = pd.DataFrame(
+        [
+            {
+                "event_id": "qra_2023_05",
+                "event_date_type": "official_release_date",
+                "headline_bucket": "easing",
+                "classification_review_status": "reviewed",
+                "shock_review_status": "reviewed",
+                "usable_for_headline": True,
+                "usable_for_headline_reason": "usable",
+                "spec_id": "spec_qra_event_v2",
+                "treatment_variant": "canonical_shock_bn",
+            }
+        ]
+    )
+    qra_event_robustness = pd.DataFrame(
+        [
+            {"sample_variant": "all_events"},
+            {"sample_variant": "overlap_excluded"},
+        ]
+    )
+
+    result = publish._qra_review_surface_integrity(
+        qra_event_registry=registry,
+        qra_shock_crosswalk=crosswalk,
+        event_usability=event_usability,
+        qra_shock_summary=shock_summary,
+        qra_event_robustness=qra_event_robustness,
+    )
+
+    assert result == {"ready": True, "issues": []}
+
+
+def test_dataset_status_uses_qra_robustness_publish_table(monkeypatch) -> None:
+    monkeypatch.setattr(
+        publish,
+        "build_extension_status_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "extension": "investor_allotments",
+                    "backend_status": "summary_ready",
+                    "readiness_tier": "summary_ready",
+                    "headline_ready": False,
+                    "public_role": "supporting",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_official_capture_readiness_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "headline_ready": True,
+                    "fallback_only": False,
+                    "missing_critical_fields": "",
+                    "source_quality": "exact_official",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "_official_ati_headline_table",
+        lambda: pd.DataFrame([{"quarter": "2024Q3", "ati_baseline_bn": 1.0}]),
+    )
+    monkeypatch.setattr(
+        publish,
+        "_qra_elasticity_readiness",
+        lambda path: {
+            "readiness_tier": "not_started",
+            "fallback_only": True,
+            "missing_critical_fields": "",
+        },
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_event_registry_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2023_05",
+                    "headline_eligibility_reason": "usable",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_shock_crosswalk_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2023_05",
+                    "event_date_type": "official_release_date",
+                    "usable_for_headline_reason": "usable",
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_event_usability_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_date_type": "official_release_date",
+                    "headline_bucket": "easing",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "overlap_severity": "none",
+                    "usable_for_headline": True,
+                    "usable_for_headline_reason": "usable",
+                    "event_count": 1,
+                    "treatment_variant": "canonical_shock_bn",
+                },
+                {
+                    "event_date_type": "market_pricing_marker_minus_1d",
+                    "headline_bucket": "easing",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "overlap_severity": "none",
+                    "usable_for_headline": False,
+                    "usable_for_headline_reason": "non_official_event_date_type",
+                    "event_count": 1,
+                    "treatment_variant": "canonical_shock_bn",
+                },
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_event_shock_summary_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2023_05",
+                    "event_date_type": "official_release_date",
+                    "headline_bucket": "easing",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "usable_for_headline": True,
+                    "usable_for_headline_reason": "usable",
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_robustness_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {"sample_variant": "all_events"},
+                {"sample_variant": "overlap_excluded"},
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_treatment_comparison_publish_table",
+        lambda: pd.DataFrame([{"spec_id": "spec_qra_event_v2"}]),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_leave_one_event_out_publish_table",
+        lambda: pd.DataFrame([{"event_id": "qra_2023_05"}]),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_auction_absorption_publish_table",
+        lambda: pd.DataFrame([{"event_id": "qra_2023_05"}]),
+    )
+
+    table = publish.build_dataset_status_table()
+
+    registry = table.loc[table["dataset"] == "qra_event_registry_v2"].iloc[0]
+    usability = table.loc[table["dataset"] == "event_usability_table"].iloc[0]
+
+    assert registry["readiness_tier"] == "supporting_ready"
+    assert usability["readiness_tier"] == "supporting_ready"
+    assert registry["missing_critical_fields"] == ""
+    assert usability["missing_critical_fields"] == ""
+
+
+def test_dataset_status_keeps_qra_elasticity_provisional_when_review_surface_is_ready(monkeypatch) -> None:
+    monkeypatch.setattr(
+        publish,
+        "build_extension_status_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "extension": "investor_allotments",
+                    "backend_status": "summary_ready",
+                    "readiness_tier": "summary_ready",
+                    "headline_ready": False,
+                    "public_role": "supporting",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_official_capture_readiness_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "headline_ready": True,
+                    "fallback_only": False,
+                    "missing_critical_fields": "",
+                    "source_quality": "exact_official",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "_official_ati_headline_table",
+        lambda: pd.DataFrame([{"quarter": "2024Q3", "ati_baseline_bn": 1.0}]),
+    )
+    monkeypatch.setattr(
+        publish,
+        "_qra_elasticity_readiness",
+        lambda path: {
+            "readiness_tier": "supporting_ready",
+            "fallback_only": False,
+            "missing_critical_fields": "",
+        },
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_event_registry_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2023_05",
+                    "headline_eligibility_reason": "usable",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_shock_crosswalk_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2023_05",
+                    "event_date_type": "official_release_date",
+                    "usable_for_headline_reason": "usable",
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_event_usability_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_date_type": "official_release_date",
+                    "headline_bucket": "easing",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "overlap_severity": "none",
+                    "usable_for_headline": True,
+                    "usable_for_headline_reason": "usable",
+                    "event_count": 1,
+                    "treatment_variant": "canonical_shock_bn",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_event_shock_summary_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2023_05",
+                    "event_date_type": "official_release_date",
+                    "headline_bucket": "easing",
+                    "classification_review_status": "reviewed",
+                    "shock_review_status": "reviewed",
+                    "usable_for_headline": True,
+                    "usable_for_headline_reason": "usable",
+                    "spec_id": "spec_qra_event_v2",
+                    "treatment_variant": "canonical_shock_bn",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_robustness_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {"sample_variant": "all_events"},
+                {"sample_variant": "overlap_excluded"},
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_treatment_comparison_publish_table",
+        lambda: pd.DataFrame([{"spec_id": "spec_qra_event_v2"}]),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_leave_one_event_out_publish_table",
+        lambda: pd.DataFrame([{"event_id": "qra_2023_05"}]),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_auction_absorption_publish_table",
+        lambda: pd.DataFrame([{"event_id": "qra_2023_05"}]),
+    )
+
+    table = publish.build_dataset_status_table()
+    qra_elasticity = table.loc[table["dataset"] == "qra_event_elasticity"].iloc[0]
+
+    assert qra_elasticity["readiness_tier"] == "supporting_provisional"
+    assert bool(qra_elasticity["fallback_only"])
+    assert qra_elasticity["missing_critical_fields"] == ""
+
+
 def test_series_metadata_catalog_marks_extensions_supporting() -> None:
     catalog = publish.build_series_metadata_catalog()
 

@@ -89,6 +89,7 @@ make regenerate
 - `PROJECT_BRIEF.md` — the paper question, scope, hypotheses, and contribution
 - `RESEARCH_DESIGN.md` — equations, identification, outcomes, and robustness
 - `DATA_SOURCES.md` — source registry and why each dataset matters
+- `docs/STATUS_GLOSSARY.md` — readiness/source-quality labels and ATI terminology used in publish artifacts
 - `VALIDATION_CHECKLIST.md` — QA before trusting any headline result
 - `data/manual/` — seed quarter inputs and event dates
 - `src/ati_shadow_policy/` — reusable download and research modules

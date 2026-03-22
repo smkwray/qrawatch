@@ -938,6 +938,40 @@ def validate_official_capture(capture: pd.DataFrame) -> tuple[list[str], list[st
     }
 
 
+def _has_absolute_local_path(value: object) -> bool:
+    text = str(value or "").strip()
+    if not text or text.lower() in {"nan", "none"}:
+        return False
+    for part in text.split("|"):
+        candidate = part.strip()
+        if not candidate or "://" in candidate:
+            continue
+        if Path(candidate).is_absolute():
+            return True
+    return False
+
+
+def validate_manual_capture_template(path: Path) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    frame, status = _safe_read_csv(path)
+    if status is not None:
+        warnings.append(f"official_capture_template_{status.replace(':', '_')}")
+        return errors, warnings
+    if frame.empty:
+        warnings.append(f"official_capture_template_empty:{path}")
+        return errors, warnings
+    if {"quarter", "source_doc_local"}.issubset(frame.columns):
+        flagged = frame.loc[
+            frame["source_doc_local"].apply(_has_absolute_local_path)
+        ]
+        for row in flagged.to_dict("records"):
+            errors.append(
+                f"official_capture_template_absolute_source_doc_local:{row.get('quarter', '')}"
+            )
+    return errors, warnings
+
+
 def validate_official_ati_path(path: Path) -> tuple[list[str], list[str], dict[str, int]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -1557,6 +1591,10 @@ def validate_backend(
 
     if not manual_capture_path.exists():
         warnings.append(f"official_capture_template_missing:{manual_capture_path}")
+    else:
+        template_errors, template_warnings = validate_manual_capture_template(manual_capture_path)
+        errors.extend(template_errors)
+        warnings.extend(template_warnings)
 
     official_capture, status = _safe_read_csv(official_capture_path)
     if status is not None:

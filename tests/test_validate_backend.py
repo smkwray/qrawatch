@@ -441,6 +441,38 @@ def test_validate_backend_reports_missing_publish_artifact(tmp_path: Path) -> No
     )
 
 
+def test_validate_backend_flags_absolute_paths_in_manual_capture_template(tmp_path: Path) -> None:
+    capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
+        tmp_path
+    )
+    pd.DataFrame(
+        [
+            {
+                "quarter": "2026Q1",
+                "qra_release_date": "2026-04-01",
+                "market_pricing_marker_minus_1d": "2026-03-31",
+                "total_financing_need_bn": 816.0,
+                "net_bill_issuance_bn": 468.0,
+                "source_url": "https://example.com",
+                "source_doc_local": "/tmp/doc.pdf|data/raw/qra/files/doc.html",
+                "source_doc_type": "official_quarterly_refunding_statement|quarterly_refunding_press_release",
+                "qa_status": "manual_official_capture",
+            }
+        ]
+    ).to_csv(manual_capture_path, index=False)
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+
+    result = validate_backend_script.validate_backend(
+        official_capture_path=capture_path,
+        official_ati_path=official_ati_path,
+        manual_capture_path=manual_capture_path,
+        publish_dir=publish_path,
+    )
+
+    assert "official_capture_template_absolute_source_doc_local:2026Q1" in result.errors
+
+
 def test_validate_backend_flags_missing_extension_summary_artifacts(tmp_path: Path, monkeypatch) -> None:
     capture_path, official_ati_path, manual_capture_path = _build_valid_official_capture_inputs(
         tmp_path
