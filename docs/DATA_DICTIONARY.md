@@ -37,6 +37,9 @@
 - `source_url` — official Treasury source URL
 - `source_doc_local` — repo-relative internal provenance references used for validation and reproducibility; not exposed in public site artifacts
 - `source_doc_type` — source family such as `seed_csv`, official statement, or attachment type
+- `financing_source_*` — canonical provenance triplet for the Treasury borrowing-estimate / financing release
+- `refunding_statement_source_*` — canonical provenance triplet for the official quarterly refunding statement
+- `auction_reconstruction_source_*` — canonical provenance triplet for the FiscalData auction-reconstruction layer
 - `qa_status` — `seed_only`, `manual_official_capture`, `semi_automated_capture`, or `parser_verified`
 - `notes` — capture notes and caveats
 
@@ -49,6 +52,10 @@
 - `release_timestamp_et` — reviewed Treasury release timestamp in Eastern Time
 - `timestamp_precision` — `exact_time`, `date_only`, or `missing`
 - `source_url` — official Treasury page for the specific release component
+- `release_timestamp_source_method` — how the exact-time claim was evidenced
+- `timestamp_evidence_url` / `timestamp_evidence_note` — supporting provenance for the exact-time claim
+- `release_timezone_asserted` — timezone asserted for the release timestamp, currently Eastern Time for Treasury releases
+- `bundle_decomposition_evidence` — short audit note explaining why the component is treated as separable within the broader QRA bundle
 - `bundle_id` — grouping key for components belonging to the same broader QRA episode
 - `release_sequence_label` — ordering label such as `financing_then_policy`
 - `separable_component_flag` — whether the component is treated as separable from same-day bundled Treasury communication
@@ -59,9 +66,16 @@
 - `release_component_id` — component key joined against `qra_release_component_registry.csv`
 - `benchmark_timestamp_et` — timestamp for the benchmark expectation snapshot
 - `benchmark_source` — provenance for the expectation benchmark
+- `benchmark_document_url` / `benchmark_document_local` — canonical benchmark-document provenance
+- `benchmark_release_timestamp_et` — observed publication timestamp or date for the external benchmark document
+- `benchmark_release_timestamp_precision` — timing precision for that benchmark document, such as `date_only`
+- `benchmark_timestamp_source_method` — how the benchmark timing was verified
+- `benchmark_pre_release_verified_flag` — whether pre-release timing is actually evidenced rather than assumed
+- `benchmark_observed_before_component_flag` — whether the benchmark was observed before the component release
 - `expected_composition_bn` — expected maturity-composition path in billions
 - `realized_composition_bn` — realized maturity-composition path in billions
 - `composition_surprise_bn` — reviewed surprise measure used for causal treatment when present
+- `surprise_construction_method` / `surprise_units` — explicit construction contract for the component-level surprise
 - `benchmark_stale_flag` — whether the benchmark is considered stale
 - `expectation_review_status` / `expectation_notes` — review status and notes for the expectation layer
 
@@ -71,6 +85,11 @@
 - `contamination_flag` — whether macro or policy contamination is present
 - `contamination_status` — contamination adjudication state such as `pending_review` or `reviewed_clean`
 - `contamination_review_status` — review status for the contamination decision
+- `contamination_window_start_et` / `contamination_window_end_et` — reviewed event window used for the contamination call
+- `confound_release_type` / `confound_release_timestamp_et` — structured provenance for the competing release when present
+- `decision_rule` — short structured note describing the contamination rule applied
+- `exclude_from_causal_pool` — whether contamination forces exclusion from the causal pool
+- `decision_confidence` — manual confidence label for the contamination decision
 - `contamination_label` / `contamination_notes` — short label and free-text notes for the overlap call
 
 ## Processed datasets
@@ -168,7 +187,19 @@
 
 - `shock_bn` — reviewed/manual canonical shock used for supporting event-layer summaries
 - `schedule_diff_10y_eq_bn` / `schedule_diff_dynamic_10y_eq_bn` / `schedule_diff_dv01_usd` — comparison treatments for audit and diagnostics
-- `usable_for_headline` — descriptive usability flag, not a guarantee of causal eligibility
+- `descriptive_headline_reason` / `usable_for_descriptive_headline` — preferred descriptive-usability aliases for one round of public compatibility
+- `usable_for_headline` — compatibility field; descriptive usability flag, not a guarantee of causal eligibility
+
+### `data/processed/qra_event_shock_summary.csv`
+
+- dedicated event-level shock summary artifact used by the identification/publication layer
+- mirrors the descriptive shock fields from the elasticity layer without treating elasticity output as the canonical upstream source
+
+### `data/processed/qra_benchmark_blockers_by_event.csv`
+
+- event-level blocker summary for the current-sample financing pilot
+- reports counts such as `pre_release_external_count`, `external_timing_unverified_count`, `reviewed_surprise_ready_count`, and `tier_a_count`
+- `benchmark_blockers` is the compact public blocker label rollup
 
 ### `data/processed/investor_allotments.csv`
 

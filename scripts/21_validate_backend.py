@@ -35,6 +35,11 @@ OFFICIAL_REQUIRED_FIELDS = (
     "source_doc_type",
     "qa_status",
 )
+OFFICIAL_ROLE_PREFIXES = (
+    "financing",
+    "refunding_statement",
+    "auction_reconstruction",
+)
 
 QUARTER_PATTERN = re.compile(r"^\d{4}Q[1-4]$")
 UNANCHORED_QUARTER_PATTERN = r"\d{4}Q[1-4]"
@@ -85,6 +90,10 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "source_quality",
         "readiness_tier",
         "headline_ready",
+        "financing_provenance_ready",
+        "refunding_statement_provenance_ready",
+        "auction_reconstruction_ready",
+        "numeric_official_capture_ready",
         "source_completeness",
     ],
     "ati_seed_vs_official.csv": [
@@ -243,6 +252,8 @@ OPTIONAL_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "schedule_diff_dynamic_10y_eq_bn",
         "schedule_diff_dv01_usd",
         "shock_construction",
+        "descriptive_headline_reason",
+        "usable_for_descriptive_headline",
         "usable_for_headline",
     ],
     "qra_event_shock_components.csv": [
@@ -382,6 +393,19 @@ OPTIONAL_PUBLISH_SCHEMAS.update(
             "metric",
             "value",
             "notes",
+        ],
+        "qra_benchmark_blockers_by_event.csv": [
+            "event_id",
+            "quarter",
+            "release_component_count",
+            "pre_release_external_count",
+            "external_timing_unverified_count",
+            "same_release_placeholder_count",
+            "post_release_invalid_count",
+            "benchmark_verification_incomplete_count",
+            "reviewed_surprise_ready_count",
+            "tier_a_count",
+            "benchmark_blockers",
         ],
         "qra_causal_qa_ledger.csv": [
             "event_id",
@@ -971,6 +995,16 @@ def validate_official_capture(capture: pd.DataFrame) -> tuple[list[str], list[st
             marker = _coerce_timestamp(row.get("market_pricing_marker_minus_1d"))
             if release is None or marker is None or (release - marker).days != 1:
                 errors.append(f"official_capture_invalid_release_marker:{quarter}")
+            for prefix in OFFICIAL_ROLE_PREFIXES:
+                doc_type = str(row.get(f"{prefix}_source_doc_type", "") or "").strip()
+                if not doc_type:
+                    errors.append(
+                        f"official_capture_missing_required_role_doc_type:{prefix}:quarter={quarter}"
+                    )
+                if not _has_role_locator(row, prefix):
+                    errors.append(
+                        f"official_capture_missing_required_role_locator:{prefix}:quarter={quarter}"
+                    )
         elif qa_status == "semi_automated_capture":
             semi_rows += 1
             if seed_dependency:
@@ -1007,6 +1041,12 @@ def _has_absolute_local_path(value: object) -> bool:
     return False
 
 
+def _has_role_locator(row: dict[str, object] | pd.Series, prefix: str) -> bool:
+    return bool(str(row.get(f"{prefix}_source_url", "") or "").strip()) or bool(
+        str(row.get(f"{prefix}_source_doc_local", "") or "").strip()
+    )
+
+
 def validate_manual_capture_template(path: Path) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -1025,6 +1065,14 @@ def validate_manual_capture_template(path: Path) -> tuple[list[str], list[str]]:
             errors.append(
                 f"official_capture_template_absolute_source_doc_local:{row.get('quarter', '')}"
             )
+    for prefix in OFFICIAL_ROLE_PREFIXES:
+        column = f"{prefix}_source_doc_local"
+        if {"quarter", column}.issubset(frame.columns):
+            flagged = frame.loc[frame[column].apply(_has_absolute_local_path)]
+            for row in flagged.to_dict("records"):
+                errors.append(
+                    f"official_capture_template_absolute_{prefix}_source_doc_local:{row.get('quarter', '')}"
+                )
     return errors, warnings
 
 
@@ -1138,8 +1186,13 @@ def _validate_qra_publish_frame(csv_name: str, frame: pd.DataFrame) -> list[str]
         if frame.duplicated(subset=["event_id", "event_date_type"]).any():
             errors.append("qra_publish_duplicate_event_summary:qra_event_shock_summary.csv")
 
-    if {"usable_for_headline", "event_date_type", "headline_bucket", "classification_review_status", "shock_review_status"}.issubset(frame.columns):
-        flagged = frame.loc[frame["usable_for_headline"].map(_coerce_bool)]
+    headline_flag_column = None
+    if "usable_for_descriptive_headline" in frame.columns:
+        headline_flag_column = "usable_for_descriptive_headline"
+    elif "usable_for_headline" in frame.columns:
+        headline_flag_column = "usable_for_headline"
+    if headline_flag_column and {"event_date_type", "headline_bucket", "classification_review_status", "shock_review_status"}.issubset(frame.columns):
+        flagged = frame.loc[frame[headline_flag_column].map(_coerce_bool)]
         if not flagged.empty:
             invalid = flagged.loc[
                 (flagged["event_date_type"].astype(str).str.strip() != "official_release_date")
@@ -1218,6 +1271,103 @@ def _validate_causal_component_registry(component_registry: pd.DataFrame) -> lis
                 "qra_component_registry_missing_benchmark_timing_status:"
                 + ",".join(sorted(missing_benchmark_timing["release_component_id"].astype(str).unique()))
             )
+        reviewed_mask = (
+            exact_time.get("review_status", pd.Series("", index=exact_time.index))
+            .fillna("")
+            .astype(str)
+            .str.strip()
+            .eq("reviewed")
+        )
+        current_sample_mask = (
+            exact_time.get("quarter", pd.Series("", index=exact_time.index))
+            .map(_normalize_quarter)
+            .map(_quarter_to_int)
+            .fillna(0)
+            .ge(_quarter_to_int("2022Q3") or 0)
+        )
+        reviewed_current = exact_time.loc[reviewed_mask & current_sample_mask].copy()
+        if not reviewed_current.empty:
+            missing_source_method = (
+                reviewed_current.get("release_timestamp_source_method", pd.Series("", index=reviewed_current.index))
+                .fillna("")
+                .astype(str)
+                .str.strip()
+                .eq("")
+            )
+            missing_url = (
+                reviewed_current.get("timestamp_evidence_url", pd.Series("", index=reviewed_current.index))
+                .fillna("")
+                .astype(str)
+                .str.strip()
+                .eq("")
+            )
+            missing_note = (
+                reviewed_current.get("timestamp_evidence_note", pd.Series("", index=reviewed_current.index))
+                .fillna("")
+                .astype(str)
+                .str.strip()
+                .eq("")
+            )
+            missing_evidence = reviewed_current.loc[missing_source_method | (missing_url & missing_note)]
+            if not missing_evidence.empty:
+                errors.append(
+                    "qra_component_registry_missing_timestamp_evidence:"
+                    + ",".join(sorted(missing_evidence["release_component_id"].astype(str).unique()))
+                )
+    benchmark_ready_mask = (
+        component_registry.get("external_benchmark_ready", pd.Series(False, index=component_registry.index))
+        .fillna(False)
+        .astype(bool)
+    )
+    benchmark_ready = component_registry.loc[benchmark_ready_mask].copy()
+    if not benchmark_ready.empty:
+        invalid_benchmark_ready = benchmark_ready.loc[
+            benchmark_ready.get(
+                "benchmark_pre_release_verified_flag",
+                pd.Series("", index=benchmark_ready.index),
+            ).map(_coerce_bool).ne(True)
+            | benchmark_ready.get(
+                "benchmark_observed_before_component_flag",
+                pd.Series("", index=benchmark_ready.index),
+            ).map(_coerce_bool).ne(True)
+            | benchmark_ready.get(
+                "benchmark_timestamp_source_method",
+                pd.Series("", index=benchmark_ready.index),
+            ).fillna("").astype(str).str.strip().eq("")
+            | benchmark_ready.get(
+                "benchmark_timing_status",
+                pd.Series("", index=benchmark_ready.index),
+            ).fillna("").astype(str).str.strip().ne("pre_release_external")
+        ]
+        if not invalid_benchmark_ready.empty:
+            errors.append(
+                "qra_component_registry_invalid_external_benchmark_ready:"
+                + ",".join(sorted(invalid_benchmark_ready["release_component_id"].astype(str).unique()))
+            )
+    financing_mask = (
+        component_registry.get("component_type", pd.Series("", index=component_registry.index))
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .eq("financing_estimates")
+    )
+    current_sample_quarter_mask = (
+        component_registry.get("quarter", pd.Series("", index=component_registry.index))
+        .map(_normalize_quarter)
+        .map(_quarter_to_int)
+        .fillna(0)
+        .ge(_quarter_to_int("2022Q3") or 0)
+    )
+    current_sample_financing = component_registry.loc[financing_mask & current_sample_quarter_mask].copy()
+    if not current_sample_financing.empty:
+        pending_contamination = current_sample_financing.loc[
+            current_sample_financing.get("contamination_status", pd.Series(dtype=object)).fillna("").astype(str).str.strip().eq("pending_review")
+        ]
+        if not pending_contamination.empty:
+            errors.append(
+                "qra_component_registry_pending_financing_contamination_review:"
+                + ",".join(sorted(pending_contamination["release_component_id"].astype(str).unique()))
+            )
 
     causal_claims = component_registry.loc[
         component_registry.get("causal_eligible", pd.Series(dtype=bool)).fillna(False).astype(bool)
@@ -1244,6 +1394,12 @@ def _validate_causal_component_registry(component_registry: pd.DataFrame) -> lis
                 invalid_claims.append(str(row.get("release_component_id", "")))
                 continue
             if not _coerce_bool(row.get("external_benchmark_ready")):
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if not str(row.get("release_timestamp_source_method", "")).strip():
+                invalid_claims.append(str(row.get("release_component_id", "")))
+                continue
+            if not str(row.get("timestamp_evidence_url", "")).strip() and not str(row.get("timestamp_evidence_note", "")).strip():
                 invalid_claims.append(str(row.get("release_component_id", "")))
                 continue
             if str(row.get("contamination_status", "")).strip() != "reviewed_clean":
@@ -1284,6 +1440,10 @@ def _validate_event_design_status_against_components(
     if component_registry.empty or event_design_status.empty:
         return errors
 
+    current_sample_financing = component_registry.loc[
+        component_registry.get("component_type", pd.Series(dtype=object)).astype(str).eq("financing_estimates")
+        & component_registry.get("quarter", pd.Series(dtype=object)).map(_normalize_quarter).map(_quarter_to_int).fillna(0).ge(_quarter_to_int("2022Q3") or 0)
+    ].copy()
     actual_metrics = {
         "release_component_count": int(len(component_registry)),
         "tier_a_count": int(component_registry.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier A").sum()),
@@ -1293,6 +1453,11 @@ def _validate_event_design_status_against_components(
         "exact_time_component_count": int(component_registry.get("timestamp_precision", pd.Series(dtype=object)).astype(str).eq("exact_time").sum()),
         "reviewed_surprise_ready_count": int(component_registry.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("reviewed_surprise_ready").sum()),
         "reviewed_clean_component_count": int(component_registry.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_clean").sum()),
+        "current_sample_financing_component_count": int(len(current_sample_financing)),
+        "current_sample_financing_exact_time_count": int(current_sample_financing.get("timestamp_precision", pd.Series(dtype=object)).astype(str).eq("exact_time").sum()),
+        "current_sample_financing_reviewed_clean_count": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_clean").sum()),
+        "current_sample_financing_pre_release_external_count": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("pre_release_external").sum()),
+        "current_sample_financing_tier_a_count": int(current_sample_financing.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier A").sum()),
     }
     reported = {
         str(row.get("metric", "")).strip(): int(pd.to_numeric(pd.Series([row.get("value")]), errors="coerce").fillna(0).iloc[0])
@@ -1306,6 +1471,41 @@ def _validate_event_design_status_against_components(
     if mismatched:
         errors.append("qra_event_design_status_metric_mismatch:" + ",".join(sorted(mismatched)))
     return errors
+
+
+def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    registry_path = manual_dir / "qra_release_component_registry.csv"
+    expectation_path = manual_dir / "qra_component_expectation_template.csv"
+    contamination_path = manual_dir / "qra_event_contamination_reviews.csv"
+    if not registry_path.exists():
+        warnings.append(f"manual_causal_registry_missing:{registry_path}")
+        return errors, warnings
+    registry, status = _safe_read_csv(registry_path)
+    if status is not None:
+        warnings.append(f"manual_causal_registry_{status.replace(':', '_')}")
+        return errors, warnings
+    registry_ids = set(registry.get("release_component_id", pd.Series(dtype=object)).dropna().astype(str))
+    for name, path in (
+        ("expectation", expectation_path),
+        ("contamination", contamination_path),
+    ):
+        if not path.exists():
+            warnings.append(f"manual_causal_{name}_missing:{path}")
+            continue
+        frame, status = _safe_read_csv(path)
+        if status is not None:
+            warnings.append(f"manual_causal_{name}_{status.replace(':', '_')}")
+            continue
+        if "release_component_id" not in frame.columns:
+            errors.append(f"manual_causal_{name}_missing_release_component_id")
+            continue
+        frame_ids = set(frame["release_component_id"].dropna().astype(str))
+        orphan_ids = sorted(frame_ids - registry_ids)
+        if orphan_ids:
+            errors.append(f"manual_causal_{name}_orphans:" + ",".join(orphan_ids))
+    return errors, warnings
 
 
 def _canonical_qra_review_frame(frame: pd.DataFrame) -> pd.DataFrame:
@@ -1893,6 +2093,9 @@ def validate_backend(
         template_errors, template_warnings = validate_manual_capture_template(manual_capture_path)
         errors.extend(template_errors)
         warnings.extend(template_warnings)
+    causal_input_errors, causal_input_warnings = validate_manual_causal_review_inputs(MANUAL_DIR)
+    errors.extend(causal_input_errors)
+    warnings.extend(causal_input_warnings)
 
     official_capture, status = _safe_read_csv(official_capture_path)
     if status is not None:

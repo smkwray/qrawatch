@@ -33,7 +33,7 @@ The repo now has a reproducible backend product and public site, with a delibera
 - investor allotments, primary dealer, and SEC N-MFP are now summary-ready extension modules
 - QRA event, shock-crosswalk, usability, leave-one-out, and absorption bridge tables are published when their source files exist, but they are supporting audit surfaces rather than referee-grade causal estimates
 
-Exact official quarter coverage currently spans a contiguous `2022Q3` through `2025Q4` window.
+Exact official quarter coverage currently spans `2011Q1` through `2025Q4`.
 This public release should be read as an in-progress research/data product, not as a finished long-history dataset or a settled causal design.
 
 ## Quickstart
@@ -119,16 +119,17 @@ Some pieces are seeded rather than fully automated:
 - the seed shortfall path still exists for comparison, but the headline official coupon-shortfall path is now exact and non-seed
 - the QRA download and parsing scripts are designed to collect official documents first, then support later automation
 - the QRA enrichment step now pairs each capture quarter with both the Treasury borrowing-estimate release and the matching official quarterly refunding statement, writing intermediate maps under `data/processed/`
+- the manual official-capture template now carries explicit role-based provenance fields for financing releases, refunding statements, and auction reconstruction
 - the duration headline still combines exact non-bill net supply with a QT proxy, and publish artifacts keep fallback constructions explicit
 - the SEC N-MFP backend stops at summary analytics depth rather than security-level research depth
 - TIC remains out of scope for the current public release
-- the QRA event and elasticity layers are published as provisional-supporting research infrastructure, not as settled headline causal estimates
+- the QRA event and elasticity layers are published as provisional-supporting research infrastructure; `usable_for_descriptive_headline` is not a causal-readiness flag
 - QRA downloads now use deterministic filenames of the form `<slug>_<sha1>.pdf|.html` and record provenance in `data/raw/qra/downloads.csv`
 
 ## Current limitations
 
-- the exact official quarter history is still short, even though the current published window is now contiguous from `2022Q3` through `2025Q4`
-- the event-study layer is informative but still small-sample and descriptive/supporting rather than causal-eligible
+- the exact official quarter history now spans `2011Q1` through `2025Q4`, but the pre-`2011Q1` archive remains hybrid rather than exact-official
+- the event-study layer is informative but still mostly descriptive/supporting; the causal surface is currently a small post-`2022Q3` financing-estimates pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, and `5` Tier A components rather than a full-sample design
 - extension modules are supporting context, not the headline result
 - the long-history version of the project still needs additional official quarter capture
 
@@ -140,8 +141,9 @@ The backend now emits a publish-ready layer under `output/publish/`, derived fro
 - official QRA quarter capture tables
 - seed-vs-official shortfall comparisons
 - QRA event tables, baseline summaries, and robustness summaries for descriptive monitoring
-- optional QRA event elasticity tables built from the manual shock template plus the event panel, kept as supporting/provisional outputs
+- optional QRA event shock-summary and elasticity tables built from the manual shock template plus the event panel, kept as supporting/provisional outputs
 - QRA event registry, release-component registry, causal QA ledger, event-design status, shock crosswalk, event usability, leave-one-out, and auction absorption tables when the source files exist
+- QRA benchmark-coverage and benchmark-blocker tables for the current-sample financing pilot when the source files exist
 - plumbing baseline summaries and robustness summaries
 - duration-supply summaries and construction comparisons
 - data-source and extension-status inventories
@@ -175,14 +177,15 @@ Public site consumers should read only from `output/publish/`. The key site-faci
 - `output/publish/investor_allotments_summary.{csv,json,md}`
 - `output/publish/primary_dealer_summary.{csv,json,md}`
 - `output/publish/sec_nmfp_summary.{csv,json,md}`
+- `output/publish/qra_event_shock_summary.{csv,json,md}` when manual shock inputs have been filled, for supporting analysis only
 - `output/publish/qra_event_elasticity.{csv,json,md}` when manual shock inputs have been filled, for supporting analysis only
 
 If `FRED_API_KEY` is set in `.env`, the FRED downloader uses the official API to avoid flaky public CSV fetches for larger series.
 
 ## What comes next
 
-- extend exact official quarter capture beyond `2025Q4`
-- extend the official quarter history backward now that the recent forward panel is built
+- extend exact official quarter history backward from `2011Q1` toward the older archive
+- deepen the post-`2022Q3` causal pilot by finding more genuinely pre-release external benchmarks
 - deepen extensions after the core quarter history is longer
 
 The current workflow emphasizes reproducibility:

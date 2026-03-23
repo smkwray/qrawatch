@@ -1,0 +1,15 @@
+event_id,quarter,release_component_count,pre_release_external_count,external_timing_unverified_count,same_release_placeholder_count,post_release_invalid_count,benchmark_verification_incomplete_count,reviewed_surprise_ready_count,tier_a_count,benchmark_blockers
+qra_2022_05,2022Q3,1,0,0,0,1,0,0,0,post_release_benchmark_invalid
+qra_2022_08,2022Q4,1,0,0,0,1,0,0,0,post_release_benchmark_invalid
+qra_2022_11,2023Q1,1,1,0,0,0,0,1,1,
+qra_2023_02,2023Q2,1,0,0,0,1,0,0,0,post_release_benchmark_invalid
+qra_2023_05,2023Q3,1,1,0,0,0,0,1,1,
+qra_2023_08,2023Q4,1,0,0,0,1,0,0,0,post_release_benchmark_invalid
+qra_2023_11,2024Q1,1,1,0,0,0,0,1,1,
+qra_2024_01,2024Q2,1,0,0,0,1,0,0,0,post_release_benchmark_invalid
+qra_2024_05,2024Q3,1,1,0,0,0,0,1,0,
+qra_2024_07,2024Q4,1,0,0,0,1,0,0,0,post_release_benchmark_invalid
+qra_2024_10,2025Q1,1,1,0,0,0,0,1,1,
+qra_2025_02,2025Q2,1,0,0,0,1,0,0,0,post_release_benchmark_invalid
+qra_2025_04,2025Q3,1,1,0,0,0,0,1,1,
+qra_2025_07,2025Q4,1,0,0,0,1,0,0,0,post_release_benchmark_invalid

@@ -3,6 +3,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
+import ati_shadow_policy.qra_capture as qra_capture_mod
 from ati_shadow_policy.paths import RAW_DIR
 from ati_shadow_policy.qra_capture import (
     CAPTURE_COLUMNS,
@@ -62,6 +63,50 @@ def test_build_official_capture_requires_official_fields_for_manual_capture() ->
     }
     with pytest.raises(ValueError, match="requires non-empty 'source_url'"):
         build_official_capture(frame)
+
+
+def test_build_official_capture_normalizes_project_root_local_paths(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(qra_capture_mod, "PROJECT_ROOT", tmp_path)
+    frame = _empty_capture_df()
+    frame.loc[0] = {
+        "quarter": "2026Q1",
+        "qra_release_date": "2026-01-29",
+        "market_pricing_marker_minus_1d": "2026-01-28",
+        "total_financing_need_bn": "123",
+        "net_bill_issuance_bn": "45",
+        "financing_source_url": "https://example.com/financing",
+        "financing_source_doc_local": str(tmp_path / "data/raw/qra/files/financing.html"),
+        "financing_source_doc_type": "quarterly_refunding_press_release",
+        "refunding_statement_source_url": "https://example.com/statement",
+        "refunding_statement_source_doc_local": str(tmp_path / "data/raw/qra/files/statement.html"),
+        "refunding_statement_source_doc_type": "official_quarterly_refunding_statement",
+        "auction_reconstruction_source_url": "https://example.com/auction",
+        "auction_reconstruction_source_doc_local": str(tmp_path / "data/raw/fiscaldata/auctions_query.csv"),
+        "auction_reconstruction_source_doc_type": "official_auction_reconstruction",
+        "source_url": "https://example.com/financing|https://example.com/statement|https://example.com/auction",
+        "source_doc_local": (
+            f"{tmp_path / 'data/raw/qra/files/financing.html'}|"
+            f"{tmp_path / 'data/raw/qra/files/statement.html'}|"
+            f"{tmp_path / 'data/raw/fiscaldata/auctions_query.csv'}"
+        ),
+        "source_doc_type": (
+            "quarterly_refunding_press_release|"
+            "official_quarterly_refunding_statement|"
+            "official_auction_reconstruction"
+        ),
+        "qa_status": "manual_official_capture",
+    }
+
+    result = build_official_capture(frame).dataframe.iloc[0]
+
+    assert result["financing_source_doc_local"] == "data/raw/qra/files/financing.html"
+    assert result["refunding_statement_source_doc_local"] == "data/raw/qra/files/statement.html"
+    assert result["auction_reconstruction_source_doc_local"] == "data/raw/fiscaldata/auctions_query.csv"
+    assert result["source_doc_local"] == (
+        "data/raw/qra/files/financing.html|"
+        "data/raw/qra/files/statement.html|"
+        "data/raw/fiscaldata/auctions_query.csv"
+    )
 
 
 def test_seed_capture_rows_from_local_sources_maps_known_quarters() -> None:
@@ -370,6 +415,43 @@ def test_build_refunding_statement_source_map_extracts_guidance(tmp_path) -> Non
     assert "8-week bill auction sizes" in row["bill_guidance"]
     assert "6-week CMB" in row["bill_guidance"]
     assert "buyback program" in row["guidance_buybacks"]
+
+
+def test_build_refunding_statement_source_map_normalizes_project_root_local_paths(
+    monkeypatch, tmp_path
+) -> None:
+    monkeypatch.setattr(qra_capture_mod, "PROJECT_ROOT", tmp_path)
+    html_dir = tmp_path / "data/raw/qra/files"
+    html_dir.mkdir(parents=True)
+    html_path = html_dir / "jy2315_demo.html"
+    html_path.write_text(
+        """
+        <html><body>
+        NOMINAL COUPON AND FRN FINANCING
+        Treasury does not anticipate changing coupon sizes.
+        BILL ISSUANCE
+        Treasury plans to address borrowing needs through regular bill auction sizes.
+        BUYBACKS
+        Treasury continues to study a potential buyback program.
+        </body></html>
+        """,
+        encoding="utf-8",
+    )
+    downloads = pd.DataFrame(
+        [
+            {
+                "quarter": "2024Q2",
+                "href": "https://home.treasury.gov/news/press-releases/jy2315",
+                "local_path": str(html_path),
+                "doc_type": "official_quarterly_refunding_statement",
+            }
+        ]
+    )
+
+    source_map = build_refunding_statement_source_map(downloads)
+
+    assert source_map.loc[0, "refunding_statement_source_doc_local"] == "data/raw/qra/files/jy2315_demo.html"
+    assert source_map.loc[0, "source_doc_local"] == "data/raw/qra/files/jy2315_demo.html"
 
 
 def test_build_refunding_statement_source_map_falls_back_to_projected_financing_section(tmp_path) -> None:

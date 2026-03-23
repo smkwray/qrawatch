@@ -4,6 +4,7 @@ import pandas as pd
 
 from ati_shadow_policy.research.identification import (
     build_event_design_status,
+    build_qra_benchmark_blockers_by_event,
     build_event_usability_table,
     build_leave_one_event_out_table,
     build_qra_event_registry_v2,
@@ -257,9 +258,13 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
     expectations = pd.DataFrame(
         {
             "release_component_id": ["e1__financing_estimates"],
+            "benchmark_release_timestamp_et": ["2024-01-29T08:00:00-05:00"],
             "benchmark_timestamp_et": ["2024-01-29T08:00:00-05:00"],
             "benchmark_source": ["dealer_survey"],
             "benchmark_source_family": ["primary_dealer_auction_size_survey"],
+            "benchmark_pre_release_verified_flag": [True],
+            "benchmark_observed_before_component_flag": [True],
+            "benchmark_timestamp_source_method": ["archive_timestamp"],
             "benchmark_timing_status": ["pre_release_external"],
             "expected_composition_bn": [10.0],
             "realized_composition_bn": [25.0],
@@ -267,6 +272,14 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
             "benchmark_stale_flag": [False],
             "expectation_review_status": ["reviewed"],
             "expectation_notes": ["Reviewed survey benchmark."],
+        }
+    )
+    release_components = pd.DataFrame(
+        {
+            "release_component_id": ["e1__financing_estimates"],
+            "release_timestamp_source_method": ["treasury_archive_header"],
+            "timestamp_evidence_url": ["https://example.com/evidence"],
+            "timestamp_evidence_note": ["Header timestamp captured from archived release."],
         }
     )
     contamination = pd.DataFrame(
@@ -282,6 +295,7 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
 
     out = build_qra_release_component_registry(
         event_registry,
+        release_components=release_components,
         expectation_template=expectations,
         contamination_reviews=contamination,
     )
@@ -292,8 +306,130 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
     assert bool(financing["causal_eligible"]) is True
     assert financing["expectation_status"] == "reviewed_surprise_ready"
     assert financing["contamination_status"] == "reviewed_clean"
+    assert financing["benchmark_timing_status"] == "pre_release_external"
     assert policy["quality_tier"] == "Tier B"
     assert "policy_statement_descriptive_only" in policy["eligibility_blockers"]
+
+
+def test_build_qra_release_component_registry_requires_verified_pre_release_benchmark_evidence() -> None:
+    event_registry = pd.DataFrame(
+        {
+            "event_id": ["e2"],
+            "quarter": ["2024Q2"],
+            "release_sequence_label": ["financing_then_policy"],
+            "same_day_release_bundle_flag": [False],
+            "multi_stage_release_flag": [True],
+            "review_status": ["reviewed"],
+            "policy_statement_release_timestamp_et": ["2024-04-30T08:30:00-04:00"],
+            "policy_statement_release_timestamp_kind": ["timestamp_with_time"],
+            "policy_statement_url": ["https://example.com/policy2"],
+            "financing_estimates_release_timestamp_et": ["2024-04-29T08:30:00-04:00"],
+            "financing_estimates_release_timestamp_kind": ["timestamp_with_time"],
+            "financing_estimates_url": ["https://example.com/financing2"],
+        }
+    )
+    expectations = pd.DataFrame(
+        {
+            "release_component_id": ["e2__financing_estimates"],
+            "benchmark_release_timestamp_et": ["2024-04-29T08:00:00-04:00"],
+            "benchmark_source": ["dealer_survey"],
+            "benchmark_source_family": ["primary_dealer_auction_size_survey"],
+            "benchmark_timing_status": ["pre_release_external"],
+            "benchmark_pre_release_verified_flag": [False],
+            "benchmark_observed_before_component_flag": [False],
+            "expected_composition_bn": [12.0],
+            "realized_composition_bn": [22.0],
+            "composition_surprise_bn": [10.0],
+            "expectation_review_status": ["reviewed"],
+        }
+    )
+    release_components = pd.DataFrame(
+        {
+            "release_component_id": ["e2__financing_estimates"],
+            "release_timestamp_source_method": ["treasury_archive_header"],
+            "timestamp_evidence_url": ["https://example.com/evidence2"],
+        }
+    )
+
+    out = build_qra_release_component_registry(
+        event_registry,
+        release_components=release_components,
+        expectation_template=expectations,
+    )
+    financing = out.loc[out["release_component_id"] == "e2__financing_estimates"].iloc[0]
+    assert financing["benchmark_timing_status"] == "external_timing_unverified"
+    assert financing["expectation_status"] == "benchmark_timing_unverified"
+    assert bool(financing["external_benchmark_ready"]) is False
+    assert "missing_pre_release_external_benchmark" in financing["eligibility_blockers"]
+
+
+def test_build_qra_release_component_registry_requires_timestamp_evidence_for_reviewed_current_financing() -> None:
+    event_registry = pd.DataFrame(
+        {
+            "event_id": ["e3"],
+            "quarter": ["2024Q3"],
+            "release_sequence_label": ["financing_then_policy"],
+            "same_day_release_bundle_flag": [False],
+            "multi_stage_release_flag": [True],
+            "review_status": ["reviewed"],
+            "policy_statement_release_timestamp_et": ["2024-07-31T08:30:00-04:00"],
+            "policy_statement_release_timestamp_kind": ["timestamp_with_time"],
+            "policy_statement_url": ["https://example.com/policy3"],
+            "financing_estimates_release_timestamp_et": ["2024-07-29T08:30:00-04:00"],
+            "financing_estimates_release_timestamp_kind": ["timestamp_with_time"],
+            "financing_estimates_url": ["https://example.com/financing3"],
+        }
+    )
+    expectations = pd.DataFrame(
+        {
+            "release_component_id": ["e3__financing_estimates"],
+            "benchmark_release_timestamp_et": ["2024-07-29T08:00:00-04:00"],
+            "benchmark_source_family": ["primary_dealer_auction_size_survey"],
+            "benchmark_pre_release_verified_flag": [True],
+            "benchmark_observed_before_component_flag": [True],
+            "composition_surprise_bn": [8.0],
+            "expectation_review_status": ["reviewed"],
+        }
+    )
+
+    out = build_qra_release_component_registry(
+        event_registry,
+        expectation_template=expectations,
+    )
+    financing = out.loc[out["release_component_id"] == "e3__financing_estimates"].iloc[0]
+    assert "missing_exact_timestamp_evidence" in financing["eligibility_blockers"]
+    assert financing["quality_tier"] == "Tier B"
+
+
+def test_build_qra_release_component_registry_normalizes_contamination_statuses() -> None:
+    event_registry = pd.DataFrame(
+        {
+            "event_id": ["e4"],
+            "quarter": ["2024Q4"],
+            "release_sequence_label": ["financing_then_policy"],
+            "same_day_release_bundle_flag": [False],
+            "multi_stage_release_flag": [True],
+            "review_status": ["reviewed"],
+            "policy_statement_release_timestamp_et": ["2024-10-30T08:30:00-04:00"],
+            "policy_statement_release_timestamp_kind": ["timestamp_with_time"],
+            "policy_statement_url": ["https://example.com/policy4"],
+            "financing_estimates_release_timestamp_et": ["2024-10-28T08:30:00-04:00"],
+            "financing_estimates_release_timestamp_kind": ["timestamp_with_time"],
+            "financing_estimates_url": ["https://example.com/financing4"],
+        }
+    )
+    contamination = pd.DataFrame(
+        {
+            "release_component_id": ["e4__financing_estimates"],
+            "contamination_status": ["reviewed_contaminated"],
+            "contamination_review_status": ["reviewed"],
+            "contamination_flag": [True],
+        }
+    )
+    out = build_qra_release_component_registry(event_registry, contamination_reviews=contamination)
+    financing = out.loc[out["release_component_id"] == "e4__financing_estimates"].iloc[0]
+    assert financing["contamination_status"] == "reviewed_contaminated_exclude"
+    assert "contamination_flagged" in financing["eligibility_blockers"]
 
 
 def test_summarize_qra_causal_qa_and_event_design_status() -> None:
@@ -301,12 +437,15 @@ def test_summarize_qra_causal_qa_and_event_design_status() -> None:
         {
             "release_component_id": ["e1__policy_statement", "e1__financing_estimates", "e2__policy_statement"],
             "event_id": ["e1", "e1", "e2"],
+            "quarter": ["2024Q1", "2024Q1", "2024Q1"],
+            "component_type": ["policy_statement", "financing_estimates", "policy_statement"],
             "quality_tier": ["Tier A", "Tier B", "Tier D"],
             "eligibility_blockers": ["", "missing_expectation_benchmark", "review_not_complete|missing_exact_timestamp"],
             "timestamp_precision": ["exact_time", "exact_time", "date_only"],
             "separability_status": ["separable_component", "separable_component", "same_day_inseparable_bundle"],
             "expectation_status": ["reviewed_surprise_ready", "missing_benchmark", "missing_benchmark"],
             "contamination_status": ["reviewed_clean", "pending_review", "pending_review"],
+            "benchmark_timing_status": ["same_release_placeholder", "external_timing_unverified", "same_release_placeholder"],
             "causal_eligible": [True, False, False],
         }
     )
@@ -321,6 +460,29 @@ def test_summarize_qra_causal_qa_and_event_design_status() -> None:
     assert "missing_expectation_benchmark" in e1["eligibility_blockers"]
     assert int(status.loc[status["metric"] == "tier_a_count", "value"].iloc[0]) == 1
     assert int(status.loc[status["metric"] == "release_component_count", "value"].iloc[0]) == 3
+    assert int(status.loc[status["metric"] == "current_sample_financing_component_count", "value"].iloc[0]) == 1
+    assert int(status.loc[status["metric"] == "current_sample_financing_tier_a_count", "value"].iloc[0]) == 0
+
+
+def test_build_qra_benchmark_blockers_by_event_current_sample_financing_only() -> None:
+    component_registry = pd.DataFrame(
+        {
+            "release_component_id": ["qra_2024_01__financing_estimates", "qra_2024_01__policy_statement", "qra_2010_02__financing_estimates"],
+            "event_id": ["qra_2024_01", "qra_2024_01", "qra_2010_02"],
+            "quarter": ["2024Q2", "2024Q2", "2010Q1"],
+            "component_type": ["financing_estimates", "policy_statement", "financing_estimates"],
+            "benchmark_timing_status": ["external_timing_unverified", "same_release_placeholder", "same_release_placeholder"],
+            "expectation_status": ["benchmark_verification_incomplete", "same_release_placeholder", "same_release_placeholder"],
+            "quality_tier": ["Tier B", "Tier B", "Tier C"],
+            "eligibility_blockers": ["missing_pre_release_external_benchmark|benchmark_verification_incomplete", "policy_statement_descriptive_only", "missing_expectation_benchmark"],
+        }
+    )
+    out = build_qra_benchmark_blockers_by_event(component_registry)
+    assert len(out) == 1
+    row = out.iloc[0]
+    assert row["event_id"] == "qra_2024_01"
+    assert int(row["external_timing_unverified_count"]) == 1
+    assert "missing_pre_release_external_benchmark" in row["benchmark_blockers"]
 
 
 def test_build_qra_shock_crosswalk_v1_adds_missing_reason_for_reviewed_manual_statement_rows() -> None:

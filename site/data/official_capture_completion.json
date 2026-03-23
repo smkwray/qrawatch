@@ -43,463 +43,463 @@
     },
     {
       "quarter": "2011Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -99.075,
       "reconstructed_net_bill_issuance_bn": -99.075,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2011Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -127.065,
       "reconstructed_net_bill_issuance_bn": -127.065,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2011Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -57.054,
       "reconstructed_net_bill_issuance_bn": -57.054,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2011Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 42.94,
       "reconstructed_net_bill_issuance_bn": 42.94,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2012Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 133.933,
       "reconstructed_net_bill_issuance_bn": 133.933,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2012Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -78.014,
       "reconstructed_net_bill_issuance_bn": -78.014,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2012Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 83.004,
       "reconstructed_net_bill_issuance_bn": 83.004,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2012Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 82.998,
       "reconstructed_net_bill_issuance_bn": 82.998,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2013Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 57.02,
       "reconstructed_net_bill_issuance_bn": 57.02,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2013Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -190.979,
       "reconstructed_net_bill_issuance_bn": -190.979,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2013Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 25.028,
       "reconstructed_net_bill_issuance_bn": 25.028,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2013Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 97.01,
       "reconstructed_net_bill_issuance_bn": 97.01,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2014Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -54.985,
       "reconstructed_net_bill_issuance_bn": -54.985,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2014Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -263.983,
       "reconstructed_net_bill_issuance_bn": -263.983,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2014Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 37.993,
       "reconstructed_net_bill_issuance_bn": 37.993,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2014Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 46.995,
       "reconstructed_net_bill_issuance_bn": 46.995,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2015Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 20.02,
       "reconstructed_net_bill_issuance_bn": 20.02,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2015Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -82.906,
       "reconstructed_net_bill_issuance_bn": -82.906,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2015Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -36.995,
       "reconstructed_net_bill_issuance_bn": -36.995,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2015Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 90.978,
       "reconstructed_net_bill_issuance_bn": 90.978,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2016Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 104.028,
       "reconstructed_net_bill_issuance_bn": 104.028,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2016Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -109.976,
       "reconstructed_net_bill_issuance_bn": -109.976,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2016Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 139.058,
       "reconstructed_net_bill_issuance_bn": 139.058,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2016Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 171.044,
       "reconstructed_net_bill_issuance_bn": 171.044,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2017Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -23.976,
       "reconstructed_net_bill_issuance_bn": -23.976,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2017Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -39.008,
       "reconstructed_net_bill_issuance_bn": -39.008,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2017Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 69.047,
       "reconstructed_net_bill_issuance_bn": 69.047,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2017Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 145.059,
       "reconstructed_net_bill_issuance_bn": 145.059,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2018Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 323.058,
       "reconstructed_net_bill_issuance_bn": 323.058,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2018Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -130.956,
       "reconstructed_net_bill_issuance_bn": -130.956,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2018Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 82.046,
       "reconstructed_net_bill_issuance_bn": 82.046,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2018Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 100.017,
       "reconstructed_net_bill_issuance_bn": 100.017,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2019Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 117.028,
       "reconstructed_net_bill_issuance_bn": 117.028,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2019Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -228.937,
       "reconstructed_net_bill_issuance_bn": -228.937,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2019Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 126.147,
       "reconstructed_net_bill_issuance_bn": 126.147,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2019Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 39.985,
       "reconstructed_net_bill_issuance_bn": 39.985,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2020Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 240.614,
       "reconstructed_net_bill_issuance_bn": 240.614,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2020Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 1967.17,
       "reconstructed_net_bill_issuance_bn": 1967.171,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2020Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -50.699,
       "reconstructed_net_bill_issuance_bn": -50.699,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2020Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -64.82,
       "reconstructed_net_bill_issuance_bn": -64.82,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2021Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
-      "uses_seed_source": true,
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
+      "uses_seed_source": false,
       "net_bill_issuance_bn": -295.128,
       "reconstructed_net_bill_issuance_bn": -295.128,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2021Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
-      "uses_seed_source": true,
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
+      "uses_seed_source": false,
       "net_bill_issuance_bn": -394.01,
       "reconstructed_net_bill_issuance_bn": -394.01,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2021Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
-      "uses_seed_source": true,
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
+      "uses_seed_source": false,
       "net_bill_issuance_bn": -561.065,
       "reconstructed_net_bill_issuance_bn": -561.065,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2021Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
-      "uses_seed_source": true,
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
+      "uses_seed_source": false,
       "net_bill_issuance_bn": 110.948,
       "reconstructed_net_bill_issuance_bn": 110.948,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2022Q1",
-      "completion_tier": "seed_assisted",
-      "qa_status": "seed_only",
-      "uses_seed_source": true,
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
+      "uses_seed_source": false,
       "net_bill_issuance_bn": 159.004,
       "reconstructed_net_bill_issuance_bn": 159.004,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2022Q2",
-      "completion_tier": "seed_assisted",
-      "qa_status": "seed_only",
-      "uses_seed_source": true,
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
+      "uses_seed_source": false,
       "net_bill_issuance_bn": -404.958,
       "reconstructed_net_bill_issuance_bn": -404.958,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2022Q3",

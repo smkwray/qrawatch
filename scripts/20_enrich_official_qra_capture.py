@@ -56,9 +56,8 @@ def main() -> None:
     statement_map = build_refunding_statement_source_map(statement_downloads)
     write_df(statement_map, PROCESSED_DIR / "qra_refunding_statement_source_map.csv")
     enriched = enrich_capture_with_refunding_statement_map(enriched, statement_map)
-    write_df(enriched, template_path)
-
     processed = build_official_capture(enriched).dataframe
+    write_df(processed, template_path)
     write_df(processed, PROCESSED_DIR / "official_quarterly_refunding_capture.csv")
 
     matched = int((source_map["match_status"] == "matched").sum())

@@ -12,6 +12,8 @@
       "overlap_severity": "high",
       "usable_for_headline": false,
       "usable_for_headline_reason": "non_official_event_date_type",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 1,
       "n_events": 1,
       "event_count": 1
@@ -27,6 +29,8 @@
       "overlap_severity": "none",
       "usable_for_headline": false,
       "usable_for_headline_reason": "non_official_event_date_type",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 2,
       "n_events": 2,
       "event_count": 2
@@ -42,6 +46,8 @@
       "overlap_severity": "high",
       "usable_for_headline": false,
       "usable_for_headline_reason": "non_official_event_date_type",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 1,
       "n_events": 1,
       "event_count": 1
@@ -57,6 +63,8 @@
       "overlap_severity": "none",
       "usable_for_headline": false,
       "usable_for_headline_reason": "non_official_event_date_type",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 1,
       "n_events": 1,
       "event_count": 1
@@ -72,6 +80,8 @@
       "overlap_severity": "none",
       "usable_for_headline": false,
       "usable_for_headline_reason": "non_official_event_date_type",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 47,
       "n_events": 47,
       "event_count": 47
@@ -87,6 +97,8 @@
       "overlap_severity": "none",
       "usable_for_headline": false,
       "usable_for_headline_reason": "non_official_event_date_type",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 7,
       "n_events": 7,
       "event_count": 7
@@ -102,6 +114,8 @@
       "overlap_severity": "high",
       "usable_for_headline": false,
       "usable_for_headline_reason": "non_official_event_date_type",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 2,
       "n_events": 2,
       "event_count": 2
@@ -117,6 +131,8 @@
       "overlap_severity": "high",
       "usable_for_headline": false,
       "usable_for_headline_reason": "small_denominator",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "small_denominator",
       "n_rows": 1,
       "n_events": 1,
       "event_count": 1
@@ -132,6 +148,8 @@
       "overlap_severity": "none",
       "usable_for_headline": false,
       "usable_for_headline_reason": "small_denominator",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "small_denominator",
       "n_rows": 2,
       "n_events": 2,
       "event_count": 2
@@ -147,6 +165,8 @@
       "overlap_severity": "high",
       "usable_for_headline": true,
       "usable_for_headline_reason": "usable",
+      "usable_for_descriptive_headline": true,
+      "descriptive_headline_reason": "usable",
       "n_rows": 1,
       "n_events": 1,
       "event_count": 1
@@ -162,6 +182,8 @@
       "overlap_severity": "none",
       "usable_for_headline": true,
       "usable_for_headline_reason": "usable",
+      "usable_for_descriptive_headline": true,
+      "descriptive_headline_reason": "usable",
       "n_rows": 1,
       "n_events": 1,
       "event_count": 1
@@ -177,6 +199,8 @@
       "overlap_severity": "none",
       "usable_for_headline": false,
       "usable_for_headline_reason": "shock_missing",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "shock_missing",
       "n_rows": 47,
       "n_events": 47,
       "event_count": 47
@@ -192,6 +216,8 @@
       "overlap_severity": "none",
       "usable_for_headline": false,
       "usable_for_headline_reason": "small_denominator",
+      "usable_for_descriptive_headline": false,
+      "descriptive_headline_reason": "small_denominator",
       "n_rows": 7,
       "n_events": 7,
       "event_count": 7
@@ -207,6 +233,8 @@
       "overlap_severity": "high",
       "usable_for_headline": true,
       "usable_for_headline_reason": "usable",
+      "usable_for_descriptive_headline": true,
+      "descriptive_headline_reason": "usable",
       "n_rows": 2,
       "n_events": 2,
       "event_count": 2

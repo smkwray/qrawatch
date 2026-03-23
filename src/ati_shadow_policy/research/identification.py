@@ -28,6 +28,11 @@ _COMPONENT_REGISTRY_COLUMNS = [
     "component_type",
     "release_timestamp_et",
     "timestamp_precision",
+    "release_timestamp_source_method",
+    "timestamp_evidence_url",
+    "timestamp_evidence_note",
+    "release_timezone_asserted",
+    "bundle_decomposition_evidence",
     "source_url",
     "bundle_id",
     "release_sequence_label",
@@ -37,11 +42,20 @@ _COMPONENT_REGISTRY_COLUMNS = [
     "benchmark_timestamp_et",
     "benchmark_source",
     "benchmark_source_family",
+    "benchmark_document_url",
+    "benchmark_document_local",
+    "benchmark_release_timestamp_et",
+    "benchmark_release_timestamp_precision",
+    "benchmark_timestamp_source_method",
+    "benchmark_pre_release_verified_flag",
+    "benchmark_observed_before_component_flag",
     "benchmark_timing_status",
     "external_benchmark_ready",
     "expected_composition_bn",
     "realized_composition_bn",
     "composition_surprise_bn",
+    "surprise_construction_method",
+    "surprise_units",
     "benchmark_stale_flag",
     "expectation_review_status",
     "expectation_notes",
@@ -50,6 +64,13 @@ _COMPONENT_REGISTRY_COLUMNS = [
     "contamination_status",
     "contamination_review_status",
     "contamination_label",
+    "contamination_window_start_et",
+    "contamination_window_end_et",
+    "confound_release_type",
+    "confound_release_timestamp_et",
+    "decision_rule",
+    "exclude_from_causal_pool",
+    "decision_confidence",
     "contamination_notes",
     "separability_status",
     "eligibility_blockers",
@@ -74,8 +95,11 @@ def _first_non_empty(row: pd.Series, columns: Iterable[str]) -> object:
 def _normalize_text(value: object) -> str:
     if value is None:
         return ""
-    if isinstance(value, float) and pd.isna(value):
-        return ""
+    try:
+        if pd.isna(value):
+            return ""
+    except TypeError:
+        pass
     return " ".join(str(value).split()).strip()
 
 
@@ -90,8 +114,11 @@ def _normalize_overlap_severity(value: object) -> str:
 def _is_missing(value: object) -> bool:
     if value is None:
         return True
-    if isinstance(value, float) and pd.isna(value):
-        return True
+    try:
+        if pd.isna(value):
+            return True
+    except TypeError:
+        pass
     return _normalize_text(value) == ""
 
 
@@ -299,6 +326,47 @@ def _timestamp_precision_from_kind(value: object) -> str:
     return "date_only"
 
 
+def _quarter_sort_key(value: object) -> tuple[int, int]:
+    text = _normalize_text(value)
+    match = re.match(r"^(\d{4})Q([1-4])$", text)
+    if not match:
+        return (0, 0)
+    return (int(match.group(1)), int(match.group(2)))
+
+
+def _is_current_sample_financing_row(row: pd.Series) -> bool:
+    return _normalize_lower(row.get("component_type")) == "financing_estimates" and _quarter_sort_key(
+        row.get("quarter")
+    ) >= (2022, 3)
+
+
+def _has_timestamp_evidence(row: pd.Series) -> bool:
+    source_method = _normalize_text(row.get("release_timestamp_source_method"))
+    evidence_url = _normalize_text(row.get("timestamp_evidence_url"))
+    evidence_note = _normalize_text(row.get("timestamp_evidence_note"))
+    return bool(source_method and (evidence_url or evidence_note))
+
+
+def _is_external_benchmark_family(value: object) -> bool:
+    family = _normalize_lower(value)
+    return bool(family and family not in {"treasury_release", "same_release"})
+
+
+def _benchmark_release_timestamp(row: pd.Series) -> pd.Timestamp | pd.NaT:
+    explicit = _coerce_timestamp_et_ts(row.get("benchmark_release_timestamp_et"))
+    if pd.notna(explicit):
+        return explicit
+    return _coerce_timestamp_et_ts(row.get("benchmark_timestamp_et"))
+
+
+def _benchmark_pre_release_verified(row: pd.Series) -> bool:
+    return _coerce_bool(row.get("benchmark_pre_release_verified_flag"))
+
+
+def _benchmark_observed_before_component(row: pd.Series) -> bool:
+    return _coerce_bool(row.get("benchmark_observed_before_component_flag"))
+
+
 def _component_release_component_id(event_id: object, component_type: object) -> str:
     return f"{_normalize_text(event_id)}__{_normalize_text(component_type)}"
 
@@ -343,6 +411,11 @@ def _component_default_rows(event_registry: pd.DataFrame) -> pd.DataFrame:
                     "component_type": component_type,
                     "release_timestamp_et": timestamp_et,
                     "timestamp_precision": _timestamp_precision_from_kind(timestamp_kind),
+                    "release_timestamp_source_method": pd.NA,
+                    "timestamp_evidence_url": pd.NA,
+                    "timestamp_evidence_note": pd.NA,
+                    "release_timezone_asserted": pd.NA,
+                    "bundle_decomposition_evidence": pd.NA,
                     "source_url": source_url,
                     "bundle_id": bundle_id,
                     "release_sequence_label": release_sequence_label,
@@ -361,6 +434,11 @@ def _component_default_rows(event_registry: pd.DataFrame) -> pd.DataFrame:
                 "component_type": "event_composite",
                 "release_timestamp_et": row.get("release_timestamp_et", pd.NA),
                 "timestamp_precision": _timestamp_precision_from_kind(row.get("release_timestamp_kind", pd.NA)),
+                "release_timestamp_source_method": pd.NA,
+                "timestamp_evidence_url": pd.NA,
+                "timestamp_evidence_note": pd.NA,
+                "release_timezone_asserted": pd.NA,
+                "bundle_decomposition_evidence": pd.NA,
                 "source_url": _first_non_empty(
                     row,
                     ("policy_statement_url", "financing_estimates_url"),
@@ -423,11 +501,20 @@ def _merge_component_expectations(
         "benchmark_timestamp_et": pd.NA,
         "benchmark_source": pd.NA,
         "benchmark_source_family": pd.NA,
+        "benchmark_document_url": pd.NA,
+        "benchmark_document_local": pd.NA,
+        "benchmark_release_timestamp_et": pd.NA,
+        "benchmark_release_timestamp_precision": pd.NA,
+        "benchmark_timestamp_source_method": pd.NA,
+        "benchmark_pre_release_verified_flag": False,
+        "benchmark_observed_before_component_flag": False,
         "benchmark_timing_status": "same_release_placeholder",
         "external_benchmark_ready": False,
         "expected_composition_bn": pd.NA,
         "realized_composition_bn": pd.NA,
         "composition_surprise_bn": pd.NA,
+        "surprise_construction_method": pd.NA,
+        "surprise_units": pd.NA,
         "benchmark_stale_flag": False,
         "expectation_review_status": "pending",
         "expectation_notes": pd.NA,
@@ -448,11 +535,20 @@ def _merge_component_expectations(
             "benchmark_timestamp_et",
             "benchmark_source",
             "benchmark_source_family",
+            "benchmark_document_url",
+            "benchmark_document_local",
+            "benchmark_release_timestamp_et",
+            "benchmark_release_timestamp_precision",
+            "benchmark_timestamp_source_method",
+            "benchmark_pre_release_verified_flag",
+            "benchmark_observed_before_component_flag",
             "benchmark_timing_status",
             "external_benchmark_ready",
             "expected_composition_bn",
             "realized_composition_bn",
             "composition_surprise_bn",
+            "surprise_construction_method",
+            "surprise_units",
             "benchmark_stale_flag",
             "expectation_review_status",
             "expectation_notes",
@@ -480,6 +576,13 @@ def _merge_component_contamination(
         "contamination_status": "pending_review",
         "contamination_review_status": "pending",
         "contamination_label": pd.NA,
+        "contamination_window_start_et": pd.NA,
+        "contamination_window_end_et": pd.NA,
+        "confound_release_type": pd.NA,
+        "confound_release_timestamp_et": pd.NA,
+        "decision_rule": pd.NA,
+        "exclude_from_causal_pool": pd.NA,
+        "decision_confidence": pd.NA,
         "contamination_notes": pd.NA,
     }
     out = components.copy()
@@ -499,6 +602,13 @@ def _merge_component_contamination(
             "contamination_status",
             "contamination_review_status",
             "contamination_label",
+            "contamination_window_start_et",
+            "contamination_window_end_et",
+            "confound_release_type",
+            "confound_release_timestamp_et",
+            "decision_rule",
+            "exclude_from_causal_pool",
+            "decision_confidence",
             "contamination_notes",
         )
         if column in prepared.columns
@@ -548,15 +658,25 @@ def _benchmark_source_family(row: pd.Series) -> str:
 
 def _benchmark_timing_status(row: pd.Series) -> str:
     manual = _normalize_lower(row.get("benchmark_timing_status"))
-    if manual:
-        return manual
-
     benchmark_source_family = _benchmark_source_family(row)
     benchmark_source = _normalize_lower(row.get("benchmark_source"))
     release_source = _normalize_lower(row.get("source_url"))
-    benchmark_ts = _coerce_timestamp_et_ts(row.get("benchmark_timestamp_et"))
+    benchmark_ts = _benchmark_release_timestamp(row)
     release_ts = _coerce_timestamp_et_ts(row.get("release_timestamp_et"))
     benchmark_same_source = bool(benchmark_source and release_source and benchmark_source == release_source)
+    external_family = _is_external_benchmark_family(benchmark_source_family)
+    pre_release_verified = _benchmark_pre_release_verified(row)
+    observed_before = _benchmark_observed_before_component(row)
+
+    if manual and manual != "pre_release_external":
+        return manual
+    if manual == "pre_release_external":
+        if external_family and pre_release_verified and observed_before:
+            if pd.notna(benchmark_ts) and pd.notna(release_ts):
+                if benchmark_ts >= release_ts:
+                    return "post_release_invalid"
+                return "pre_release_external"
+        return "external_timing_unverified" if external_family else "same_release_placeholder"
 
     if (
         benchmark_source_family == "treasury_release"
@@ -565,27 +685,31 @@ def _benchmark_timing_status(row: pd.Series) -> str:
     ):
         return "same_release_placeholder"
 
-    if pd.notna(benchmark_ts) and pd.notna(release_ts):
-        if benchmark_ts >= release_ts:
-            if benchmark_ts == release_ts:
-                return "same_release_placeholder"
-            return "post_release_invalid"
-        if benchmark_source_family:
-            return "pre_release_external"
+    if external_family and pd.notna(benchmark_ts) and pd.notna(release_ts) and benchmark_ts >= release_ts:
+        if benchmark_ts == release_ts:
+            return "same_release_placeholder"
+        return "post_release_invalid"
 
-    if benchmark_source_family:
+    if external_family and pre_release_verified and observed_before and pd.notna(benchmark_ts) and pd.notna(release_ts):
+        return "pre_release_external"
+
+    if external_family:
         return "external_timing_unverified"
     return "same_release_placeholder"
 
 
 def _external_benchmark_ready(row: pd.Series) -> bool:
-    if _coerce_bool(row.get("external_benchmark_ready")):
-        return True
     if _coerce_bool(row.get("benchmark_stale_flag")):
         return False
     if _normalize_lower(row.get("expectation_review_status")) != "reviewed":
         return False
     if _coerce_float(row.get("composition_surprise_bn")) is None:
+        return False
+    if not _is_external_benchmark_family(_benchmark_source_family(row)):
+        return False
+    if not _benchmark_pre_release_verified(row):
+        return False
+    if not _benchmark_observed_before_component(row):
         return False
     return _benchmark_timing_status(row) == "pre_release_external"
 
@@ -602,10 +726,12 @@ def _component_expectation_status(row: pd.Series) -> str:
         return "post_release_invalid"
     if benchmark_timing_status == "same_release_placeholder":
         return "same_release_placeholder"
+    if benchmark_timing_status == "external_timing_unverified":
+        return "benchmark_timing_unverified"
     if review_status != "reviewed":
         return "unreviewed_surprise"
     if not _external_benchmark_ready(row):
-        return "benchmark_not_external"
+        return "benchmark_verification_incomplete"
     return "reviewed_surprise_ready"
 
 
@@ -613,11 +739,18 @@ def _component_contamination_status(row: pd.Series) -> str:
     review_status = _normalize_lower(row.get("contamination_review_status"))
     status = _normalize_lower(row.get("contamination_status"))
     flagged = _coerce_bool(row.get("contamination_flag"))
+    exclude_flag = _coerce_bool(row.get("exclude_from_causal_pool"))
     if review_status != "reviewed":
         return "pending_review"
-    if status:
+    if status in {"reviewed_clean", "reviewed_contaminated_exclude", "reviewed_contaminated_context_only"}:
         return status
-    return "reviewed_contaminated" if flagged else "reviewed_clean"
+    if status in {"reviewed_contaminated", "reviewed_contaminated_flagged", "contaminated", "exclude", "excluded"}:
+        return "reviewed_contaminated_exclude"
+    if status in {"context_only", "reviewed_context_only", "reviewed_contaminated_context"}:
+        return "reviewed_contaminated_context_only"
+    if exclude_flag or flagged:
+        return "reviewed_contaminated_exclude"
+    return "reviewed_clean"
 
 
 def _component_eligibility_blockers(row: pd.Series) -> str:
@@ -631,6 +764,13 @@ def _component_eligibility_blockers(row: pd.Series) -> str:
         blockers.append("component_type_not_in_causal_scope")
     if _normalize_lower(row.get("timestamp_precision")) != "exact_time":
         blockers.append("missing_exact_timestamp")
+    if (
+        _normalize_lower(row.get("timestamp_precision")) == "exact_time"
+        and _normalize_lower(row.get("review_status")) == "reviewed"
+        and _is_current_sample_financing_row(row)
+        and not _has_timestamp_evidence(row)
+    ):
+        blockers.append("missing_exact_timestamp_evidence")
     if _component_separability_status(row) != "separable_component":
         blockers.append("inseparable_bundle")
     expectation_status = _component_expectation_status(row)
@@ -643,14 +783,18 @@ def _component_eligibility_blockers(row: pd.Series) -> str:
             blockers.append("same_release_placeholder_benchmark")
         elif expectation_status == "post_release_invalid":
             blockers.append("post_release_benchmark_invalid")
-        elif expectation_status == "benchmark_not_external":
-            blockers.append("non_external_benchmark")
+        elif expectation_status == "benchmark_timing_unverified":
+            blockers.append("missing_pre_release_external_benchmark")
+        elif expectation_status == "benchmark_verification_incomplete":
+            blockers.append("benchmark_verification_incomplete")
         else:
             blockers.append("missing_expectation_benchmark")
     contamination_status = _component_contamination_status(row)
     if contamination_status != "reviewed_clean":
         if contamination_status == "pending_review":
             blockers.append("contamination_not_reviewed")
+        elif contamination_status == "reviewed_contaminated_context_only":
+            blockers.append("contamination_context_only")
         else:
             blockers.append("contamination_flagged")
     if _is_missing(row.get("source_url")):
@@ -687,6 +831,8 @@ def build_qra_release_component_registry(
     components["separable_component_flag"] = components["separable_component_flag"].map(_coerce_bool)
     components["benchmark_stale_flag"] = components["benchmark_stale_flag"].map(_coerce_bool)
     components["external_benchmark_ready"] = components["external_benchmark_ready"].map(_coerce_bool)
+    components["benchmark_pre_release_verified_flag"] = components["benchmark_pre_release_verified_flag"].map(_coerce_bool)
+    components["benchmark_observed_before_component_flag"] = components["benchmark_observed_before_component_flag"].map(_coerce_bool)
     components["contamination_flag"] = components["contamination_flag"].map(_coerce_bool)
     components["benchmark_source_family"] = components.apply(_benchmark_source_family, axis=1)
     components["benchmark_timing_status"] = components.apply(_benchmark_timing_status, axis=1)
@@ -791,6 +937,9 @@ def build_event_design_status(component_registry: pd.DataFrame) -> pd.DataFrame:
     reviewed_clean = int(component_registry["contamination_status"].astype(str).eq("reviewed_clean").sum())
     exact_time = int(component_registry["timestamp_precision"].astype(str).eq("exact_time").sum())
     surprise_ready = int(component_registry["expectation_status"].astype(str).eq("reviewed_surprise_ready").sum())
+    current_sample_financing = component_registry.loc[
+        component_registry.apply(_is_current_sample_financing_row, axis=1)
+    ].copy()
     rows = [
         {"metric": "release_component_count", "value": int(len(component_registry)), "notes": "Total release components in the current registry."},
         {"metric": "tier_a_count", "value": int(counts.get("Tier A", 0)), "notes": "Causal-eligible components."},
@@ -800,8 +949,84 @@ def build_event_design_status(component_registry: pd.DataFrame) -> pd.DataFrame:
         {"metric": "exact_time_component_count", "value": exact_time, "notes": "Components with exact release timestamps."},
         {"metric": "reviewed_surprise_ready_count", "value": surprise_ready, "notes": "Components with reviewed expectation/surprise inputs."},
         {"metric": "reviewed_clean_component_count", "value": reviewed_clean, "notes": "Components marked reviewed_clean for contamination."},
+        {
+            "metric": "current_sample_financing_component_count",
+            "value": int(len(current_sample_financing)),
+            "notes": "Current-sample financing-estimates release components (`2022Q3+`).",
+        },
+        {
+            "metric": "current_sample_financing_exact_time_count",
+            "value": int(current_sample_financing.get("timestamp_precision", pd.Series(dtype=object)).astype(str).eq("exact_time").sum()),
+            "notes": "Current-sample financing components with exact-time timestamps.",
+        },
+        {
+            "metric": "current_sample_financing_reviewed_clean_count",
+            "value": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_clean").sum()),
+            "notes": "Current-sample financing components with reviewed clean contamination decisions.",
+        },
+        {
+            "metric": "current_sample_financing_pre_release_external_count",
+            "value": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("pre_release_external").sum()),
+            "notes": "Current-sample financing components with verified pre-release external benchmarks.",
+        },
+        {
+            "metric": "current_sample_financing_tier_a_count",
+            "value": int(current_sample_financing.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier A").sum()),
+            "notes": "Current-sample financing components currently passing all causal gates (Tier A).",
+        },
     ]
     return pd.DataFrame(rows, columns=columns)
+
+
+def build_qra_benchmark_blockers_by_event(component_registry: pd.DataFrame) -> pd.DataFrame:
+    columns = [
+        "event_id",
+        "quarter",
+        "release_component_count",
+        "pre_release_external_count",
+        "external_timing_unverified_count",
+        "same_release_placeholder_count",
+        "post_release_invalid_count",
+        "benchmark_verification_incomplete_count",
+        "reviewed_surprise_ready_count",
+        "tier_a_count",
+        "benchmark_blockers",
+    ]
+    if component_registry.empty:
+        return pd.DataFrame(columns=columns)
+    financing = component_registry.loc[
+        component_registry.apply(_is_current_sample_financing_row, axis=1)
+    ].copy()
+    if financing.empty:
+        return pd.DataFrame(columns=columns)
+
+    rows: list[dict[str, object]] = []
+    for event_id, group in financing.groupby("event_id", sort=False, dropna=False):
+        blockers: list[str] = []
+        for value in group.get("eligibility_blockers", pd.Series(dtype=object)).fillna(""):
+            for blocker in str(value).split("|"):
+                cleaned = blocker.strip()
+                if cleaned and "benchmark" in cleaned and cleaned not in blockers:
+                    blockers.append(cleaned)
+        rows.append(
+            {
+                "event_id": event_id,
+                "quarter": _normalize_text(group.get("quarter", pd.Series(dtype=object)).iloc[0]),
+                "release_component_count": int(len(group)),
+                "pre_release_external_count": int(group.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("pre_release_external").sum()),
+                "external_timing_unverified_count": int(group.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("external_timing_unverified").sum()),
+                "same_release_placeholder_count": int(group.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("same_release_placeholder").sum()),
+                "post_release_invalid_count": int(group.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("post_release_invalid").sum()),
+                "benchmark_verification_incomplete_count": int(group.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("benchmark_verification_incomplete").sum()),
+                "reviewed_surprise_ready_count": int(group.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("reviewed_surprise_ready").sum()),
+                "tier_a_count": int(group.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier A").sum()),
+                "benchmark_blockers": "|".join(blockers),
+            }
+        )
+    out = pd.DataFrame(rows, columns=columns)
+    out["_quarter_sort_key"] = out["quarter"].map(_quarter_sort_key)
+    out = out.sort_values(["_quarter_sort_key", "event_id"], kind="stable").drop(columns=["_quarter_sort_key"])
+    return out.reset_index(drop=True)
 
 
 def build_qra_event_registry_v2(

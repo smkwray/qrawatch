@@ -221,8 +221,13 @@ def _qra_forward_guidance_flag(row: pd.Series) -> bool:
 
 
 def _qra_headline_eligibility_reason(row: pd.Series) -> str:
+    if _truthy_text(row.get("usable_for_descriptive_headline")):
+        return "usable_for_descriptive_headline"
     if _truthy_text(row.get("usable_for_headline")):
         return "usable_for_headline"
+    descriptive_reason = str(row.get("descriptive_headline_reason", "") or "").strip()
+    if descriptive_reason:
+        return descriptive_reason
     if _truthy_text(row.get("shock_missing_flag")):
         return "missing_shock"
     if _truthy_text(row.get("small_denominator_flag")):
@@ -241,9 +246,14 @@ def _qra_headline_eligibility_reason(row: pd.Series) -> str:
 def _qra_review_maturity(df: pd.DataFrame) -> str:
     if df.empty:
         return "not_started"
-    required = {"classification_review_status", "shock_review_status", "usable_for_headline"}
+    required = {"classification_review_status", "shock_review_status"}
     if not required.issubset(df.columns):
         return "provisional_supporting"
+    headline_column = (
+        "usable_for_descriptive_headline"
+        if "usable_for_descriptive_headline" in df.columns
+        else "usable_for_headline"
+    )
     statuses = {
         str(value).strip().lower()
         for value in df["classification_review_status"].dropna().astype(str)
@@ -253,7 +263,7 @@ def _qra_review_maturity(df: pd.DataFrame) -> str:
         for value in df["shock_review_status"].dropna().astype(str)
         if str(value).strip()
     }
-    if statuses.issubset({"reviewed"}) and bool(df["usable_for_headline"].fillna(False).astype(bool).any()):
+    if statuses.issubset({"reviewed"}) and headline_column in df.columns and bool(df[headline_column].fillna(False).astype(bool).any()):
         return "supporting_ready"
     return "provisional_supporting"
 
@@ -662,6 +672,31 @@ def _augment_qra_elasticity_frame(df: pd.DataFrame) -> pd.DataFrame:
         out["usable_for_headline_reason"] = out["usable_for_headline_reason"].fillna(
             out.apply(_qra_headline_eligibility_reason, axis=1)
         )
+    if "descriptive_headline_reason" not in out.columns:
+        out["descriptive_headline_reason"] = out["usable_for_headline_reason"]
+    else:
+        out["descriptive_headline_reason"] = out["descriptive_headline_reason"].fillna(
+            out["usable_for_headline_reason"]
+        )
+    if "usable_for_descriptive_headline" not in out.columns:
+        out["usable_for_descriptive_headline"] = out.get(
+            "usable_for_headline",
+            pd.Series(index=out.index, dtype=bool),
+        ).fillna(False).astype(bool)
+    else:
+        out["usable_for_descriptive_headline"] = (
+            out["usable_for_descriptive_headline"]
+            .fillna(out.get("usable_for_headline", pd.Series(index=out.index, dtype=bool)).fillna(False))
+            .astype(bool)
+        )
+    if "usable_for_headline" not in out.columns:
+        out["usable_for_headline"] = out["usable_for_descriptive_headline"]
+    else:
+        out["usable_for_headline"] = (
+            out["usable_for_headline"]
+            .fillna(out["usable_for_descriptive_headline"])
+            .astype(bool)
+        )
     if "review_maturity" not in out.columns:
         out["review_maturity"] = _qra_review_maturity(out)
     else:
@@ -790,6 +825,11 @@ def build_qra_release_component_registry_publish_table() -> pd.DataFrame:
         "component_type",
         "release_timestamp_et",
         "timestamp_precision",
+        "release_timestamp_source_method",
+        "timestamp_evidence_url",
+        "timestamp_evidence_note",
+        "release_timezone_asserted",
+        "bundle_decomposition_evidence",
         "source_url",
         "bundle_id",
         "release_sequence_label",
@@ -799,11 +839,20 @@ def build_qra_release_component_registry_publish_table() -> pd.DataFrame:
         "benchmark_timestamp_et",
         "benchmark_source",
         "benchmark_source_family",
+        "benchmark_document_url",
+        "benchmark_document_local",
+        "benchmark_release_timestamp_et",
+        "benchmark_release_timestamp_precision",
+        "benchmark_timestamp_source_method",
+        "benchmark_pre_release_verified_flag",
+        "benchmark_observed_before_component_flag",
         "benchmark_timing_status",
         "external_benchmark_ready",
         "expected_composition_bn",
         "realized_composition_bn",
         "composition_surprise_bn",
+        "surprise_construction_method",
+        "surprise_units",
         "benchmark_stale_flag",
         "expectation_review_status",
         "expectation_notes",
@@ -812,6 +861,13 @@ def build_qra_release_component_registry_publish_table() -> pd.DataFrame:
         "contamination_status",
         "contamination_review_status",
         "contamination_label",
+        "contamination_window_start_et",
+        "contamination_window_end_et",
+        "confound_release_type",
+        "confound_release_timestamp_et",
+        "decision_rule",
+        "exclude_from_causal_pool",
+        "decision_confidence",
         "contamination_notes",
         "separability_status",
         "eligibility_blockers",
@@ -838,6 +894,27 @@ def build_qra_causal_qa_publish_table() -> pd.DataFrame:
         "causal_eligible_component_count",
     ]
     source = _read_optional_source_csv("qra_causal_qa_ledger", columns=columns)
+    for column in columns:
+        if column not in source.columns:
+            source[column] = pd.NA
+    return source[columns]
+
+
+def build_qra_benchmark_blockers_by_event_publish_table() -> pd.DataFrame:
+    columns = [
+        "event_id",
+        "quarter",
+        "release_component_count",
+        "pre_release_external_count",
+        "external_timing_unverified_count",
+        "same_release_placeholder_count",
+        "post_release_invalid_count",
+        "benchmark_verification_incomplete_count",
+        "reviewed_surprise_ready_count",
+        "tier_a_count",
+        "benchmark_blockers",
+    ]
+    source = _read_optional_source_csv("qra_benchmark_blockers_by_event", columns=columns)
     for column in columns:
         if column not in source.columns:
             source[column] = pd.NA
@@ -942,6 +1019,10 @@ def build_official_capture_history_status_table() -> pd.DataFrame:
         "has_financing_estimates_source",
         "has_refunding_statement_source",
         "has_auction_reconstruction",
+        "financing_provenance_ready",
+        "refunding_statement_provenance_ready",
+        "auction_reconstruction_ready",
+        "numeric_official_capture_ready",
         "source_completeness",
     ]
     capture = _official_capture_with_status_columns()
@@ -953,29 +1034,56 @@ def build_official_capture_history_status_table() -> pd.DataFrame:
         return any(any(needle in token for needle in needles) for token in tokens)
 
     out = capture.copy()
-    out["has_financing_estimates_source"] = out.apply(
-        lambda row: _has_token(row.get("source_doc_type"), ("financing",))
-        or _has_token(row.get("source_doc_local"), ("financing",)),
+    out["financing_provenance_ready"] = out.apply(
+        lambda row: bool(str(row.get("financing_source_doc_type", "") or "").strip())
+        and (
+            bool(str(row.get("financing_source_url", "") or "").strip())
+            or bool(str(row.get("financing_source_doc_local", "") or "").strip())
+        ),
         axis=1,
     )
-    out["has_refunding_statement_source"] = out.apply(
+    out["refunding_statement_provenance_ready"] = out.apply(
+        lambda row: bool(str(row.get("refunding_statement_source_doc_type", "") or "").strip())
+        and (
+            bool(str(row.get("refunding_statement_source_url", "") or "").strip())
+            or bool(str(row.get("refunding_statement_source_doc_local", "") or "").strip())
+        ),
+        axis=1,
+    )
+    out["auction_reconstruction_ready"] = out.apply(
+        lambda row: (
+            bool(str(row.get("auction_reconstruction_source_doc_type", "") or "").strip())
+            and (
+                bool(str(row.get("auction_reconstruction_source_url", "") or "").strip())
+                or bool(str(row.get("auction_reconstruction_source_doc_local", "") or "").strip())
+            )
+        )
+        or pd.notna(pd.to_numeric(pd.Series([row.get("reconstructed_net_bill_issuance_bn")]), errors="coerce").iloc[0]),
+        axis=1,
+    )
+    out["has_financing_estimates_source"] = out["financing_provenance_ready"] | out.apply(
+        lambda row: _has_token(row.get("source_doc_type"), ("quarterly_refunding_press_release", "financing"))
+        or _has_token(row.get("source_doc_local"), ("borrowing", "financing")),
+        axis=1,
+    )
+    out["has_refunding_statement_source"] = out["refunding_statement_provenance_ready"] | out.apply(
         lambda row: _has_token(row.get("source_doc_type"), ("refunding", "statement"))
         or _has_token(row.get("source_doc_local"), ("refunding", "statement")),
         axis=1,
     )
-    out["has_auction_reconstruction"] = out.apply(
-        lambda row: _has_token(row.get("source_doc_type"), ("auction", "reconstruction"))
-        or pd.notna(pd.to_numeric(pd.Series([row.get("reconstructed_net_bill_issuance_bn")]), errors="coerce").iloc[0]),
+    out["has_auction_reconstruction"] = out["auction_reconstruction_ready"]
+    out["numeric_official_capture_ready"] = out.apply(
+        lambda row: str(row.get("readiness_tier", "")).strip() == "headline_ready",
         axis=1,
     )
     completeness: list[str] = []
     for _, row in out.iterrows():
         parts: list[str] = []
-        if bool(row.get("has_financing_estimates_source")):
+        if bool(row.get("financing_provenance_ready")):
             parts.append("financing_estimates")
-        if bool(row.get("has_refunding_statement_source")):
+        if bool(row.get("refunding_statement_provenance_ready")):
             parts.append("refunding_statement")
-        if bool(row.get("has_auction_reconstruction")):
+        if bool(row.get("auction_reconstruction_ready")):
             parts.append("auction_reconstruction")
         completeness.append("|".join(parts) if parts else "source_incomplete")
     out["source_completeness"] = completeness
@@ -1076,6 +1184,8 @@ def _empty_event_usability_frame() -> pd.DataFrame:
             "classification_review_status",
             "shock_review_status",
             "overlap_severity",
+            "usable_for_descriptive_headline",
+            "descriptive_headline_reason",
             "usable_for_headline",
             "usable_for_headline_reason",
             "n_rows",
@@ -1107,6 +1217,10 @@ def build_event_usability_publish_table() -> pd.DataFrame:
         source["n_rows"] = source.get("event_count", pd.NA)
     if "n_events" not in source.columns:
         source["n_events"] = source.get("event_count", pd.NA)
+    if "descriptive_headline_reason" not in source.columns:
+        source["descriptive_headline_reason"] = source.get("usable_for_headline_reason", pd.NA)
+    if "usable_for_descriptive_headline" not in source.columns:
+        source["usable_for_descriptive_headline"] = source.get("usable_for_headline", False)
     return source
 
 
@@ -1418,6 +1532,8 @@ def _qra_elasticity_publish_columns() -> list[str]:
         "shock_review_status",
         "shock_missing_flag",
         "small_denominator_flag",
+        "descriptive_headline_reason",
+        "usable_for_descriptive_headline",
         "usable_for_headline_reason",
         "review_maturity",
         "elasticity_bp_per_100bn",
@@ -1464,6 +1580,8 @@ def _qra_event_shock_summary_publish_columns() -> list[str]:
         "sign_flip_flag",
         "spec_id",
         "treatment_variant",
+        "descriptive_headline_reason",
+        "usable_for_descriptive_headline",
         "usable_for_headline_reason",
         "review_maturity",
         "usable_for_headline",
@@ -1496,8 +1614,12 @@ def build_qra_event_elasticity_diagnostic_publish_table() -> pd.DataFrame:
 
 
 def build_qra_event_shock_summary_publish_table() -> pd.DataFrame:
-    path = TABLES_DIR / "qra_event_elasticity.csv"
-    if not path.exists():
+    path = _first_existing_path(
+        TABLES_DIR / "qra_event_shock_summary.csv",
+        TABLES_DIR / "qra_event_elasticity.csv",
+        PROCESSED_DIR / "qra_event_shock_summary.csv",
+    )
+    if path is None:
         return _empty_qra_event_shock_summary_publish_frame()
     df = pd.read_csv(path)
     df = df.loc[df.get("event_date_type", pd.Series(dtype=str)).astype(str) == "official_release_date"].copy()
@@ -2220,6 +2342,7 @@ def build_dataset_status_table() -> pd.DataFrame:
     qra_causal_qa = build_qra_causal_qa_publish_table()
     event_design_status = build_event_design_status_publish_table()
     qra_benchmark_coverage = build_qra_benchmark_coverage_table()
+    qra_benchmark_blockers = build_qra_benchmark_blockers_by_event_publish_table()
     causal_design_ready = _causal_design_supporting_ready(event_design_status)
     causal_design_missing = _causal_design_missing_fields(event_design_status)
     qra_shock_crosswalk = build_qra_shock_crosswalk_publish_table()
@@ -2355,6 +2478,17 @@ def build_dataset_status_table() -> pd.DataFrame:
             "public_role": "supporting",
         },
         {
+            "dataset": "qra_benchmark_blockers_by_event",
+            "readiness_tier": "supporting_ready" if not qra_benchmark_blockers.empty else "not_started",
+            "source_quality": "derived_benchmark_blockers",
+            "headline_ready": False,
+            "fallback_only": qra_benchmark_blockers.empty,
+            "missing_critical_fields": "" if not qra_benchmark_blockers.empty else "benchmark_blockers_missing",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_benchmark_blockers_by_event.csv"),
+            "review_maturity": "supporting_ready" if not qra_benchmark_blockers.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
             "dataset": "qra_causal_qa_ledger",
             "readiness_tier": (
                 "supporting_ready"
@@ -2373,7 +2507,7 @@ def build_dataset_status_table() -> pd.DataFrame:
             "dataset": "official_capture_history_status",
             "readiness_tier": "supporting_ready" if not official_capture_history_status.empty else "not_started",
             "source_quality": (
-                "exact_official_window_plus_backfilled_history"
+                "exact_official_window_plus_archive_scaffold_history"
                 if not official_capture_history_status.empty
                 else "missing"
             ),
@@ -2526,6 +2660,7 @@ def build_publish_artifacts() -> None:
     publish_table("qra_event_registry_v2", "QRA Event Registry V2", build_qra_event_registry_publish_table())
     publish_table("qra_release_component_registry", "QRA Release Component Registry", build_qra_release_component_registry_publish_table())
     publish_table("qra_benchmark_coverage", "QRA Benchmark Coverage", build_qra_benchmark_coverage_table())
+    publish_table("qra_benchmark_blockers_by_event", "QRA Benchmark Blockers By Event", build_qra_benchmark_blockers_by_event_publish_table())
     publish_table("qra_causal_qa_ledger", "QRA Causal QA Ledger", build_qra_causal_qa_publish_table())
     publish_table("event_design_status", "Event Design Status", build_event_design_status_publish_table())
     publish_table("qra_shock_crosswalk_v1", "QRA Shock Crosswalk V1", build_qra_shock_crosswalk_publish_table())
@@ -2540,6 +2675,7 @@ def build_publish_artifacts() -> None:
             "QRA Event Elasticity Diagnostic",
             build_qra_event_elasticity_diagnostic_publish_table(),
         )
+    if _first_existing_path(TABLES_DIR / "qra_event_shock_summary.csv", PROCESSED_DIR / "qra_event_shock_summary.csv", TABLES_DIR / "qra_event_elasticity.csv") is not None:
         publish_table(
             "qra_event_shock_summary",
             "QRA Event Shock Summary",

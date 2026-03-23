@@ -32,7 +32,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Seed or reseed the manual QRA causal-review inputs from the derived component registry. "
-            "Existing manual rows are preserved when reseeding."
+            "By default, orphan rows are pruned to live release_component_id values."
         )
     )
     parser.add_argument("--component-registry", default=str(DEFAULT_COMPONENT_REGISTRY))
@@ -41,6 +41,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--component-output", default=str(DEFAULT_COMPONENT_OUTPUT))
     parser.add_argument("--expectation-output", default=str(DEFAULT_EXPECTATION_OUTPUT))
     parser.add_argument("--contamination-output", default=str(DEFAULT_CONTAMINATION_OUTPUT))
+    parser.add_argument(
+        "--preserve-orphans",
+        action="store_true",
+        help="Keep orphan manual rows whose release_component_id is no longer in the live component registry.",
+    )
     return parser.parse_args()
 
 
@@ -77,17 +82,24 @@ def main() -> None:
     existing_component = _read_csv_if_exists(component_output_path)
     existing_expectation = _read_csv_if_exists(expectation_output_path)
     existing_contamination = _read_csv_if_exists(contamination_output_path)
+    preserve_orphans = bool(args.preserve_orphans)
 
-    seeded_component = seed_release_component_registry(component_registry, existing=existing_component)
+    seeded_component = seed_release_component_registry(
+        component_registry,
+        existing=existing_component,
+        preserve_orphans=preserve_orphans,
+    )
     seeded_expectation = seed_expectation_template(
         component_registry,
         shock_summary=shock_summary,
         existing=existing_expectation,
+        preserve_orphans=preserve_orphans,
     )
     seeded_contamination = seed_contamination_reviews(
         component_registry,
         overlap_annotations=overlap_annotations,
         existing=existing_contamination,
+        preserve_orphans=preserve_orphans,
     )
 
     write_df(seeded_component, component_output_path)
@@ -97,7 +109,8 @@ def main() -> None:
         "Seeded causal review inputs: "
         f"component_registry={len(seeded_component):,}, "
         f"expectation_template={len(seeded_expectation):,}, "
-        f"contamination_reviews={len(seeded_contamination):,}"
+        f"contamination_reviews={len(seeded_contamination):,}, "
+        f"preserve_orphans={preserve_orphans}"
     )
 
 

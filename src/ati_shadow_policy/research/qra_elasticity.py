@@ -306,6 +306,8 @@ def build_qra_review_ledger(
         "small_denominator_flag",
         "usable_for_headline",
         "usable_for_headline_reason",
+        "usable_for_descriptive_headline",
+        "descriptive_headline_reason",
         "overlap_flag",
         "overlap_label",
         "overlap_note",
@@ -353,6 +355,8 @@ def build_qra_review_ledger(
             "small_denominator_flag",
             "usable_for_headline",
             "usable_for_headline_reason",
+            "usable_for_descriptive_headline",
+            "descriptive_headline_reason",
             "overlap_flag",
             "overlap_label",
             "overlap_note",
@@ -435,6 +439,21 @@ def build_qra_review_ledger(
         axis=1,
     )
     ledger["usable_for_headline"] = ledger["usable_for_headline_reason"].eq("usable")
+    ledger["descriptive_headline_reason"] = ledger.apply(
+        lambda row: (
+            normalize_text(row.get("descriptive_headline_reason"))
+            or normalize_text(row.get("usable_for_headline_reason"))
+        ),
+        axis=1,
+    )
+    ledger["usable_for_descriptive_headline"] = ledger.apply(
+        lambda row: (
+            _as_bool(row.get("usable_for_descriptive_headline"))
+            if not _is_missing(row.get("usable_for_descriptive_headline"))
+            else normalize_text(row.get("descriptive_headline_reason")) == "usable"
+        ),
+        axis=1,
+    )
     ledger["overlap_severity"] = ledger.apply(_overlap_severity_from_row, axis=1)
     ledger["reviewer"] = ledger.apply(
         lambda row: (
@@ -1017,6 +1036,8 @@ def build_qra_event_elasticity(
                         "elasticity_bp_per_100bn": elasticity_bp_per_100bn,
                         "usable_for_headline": usable_for_headline,
                         "usable_for_headline_reason": usable_for_headline_reason,
+                        "usable_for_descriptive_headline": usable_for_headline,
+                        "descriptive_headline_reason": usable_for_headline_reason,
                     }
                 )
 
@@ -1122,6 +1143,8 @@ def build_event_usability_table(
                 "overlap_severity",
                 "usable_for_headline",
                 "usable_for_headline_reason",
+                "usable_for_descriptive_headline",
+                "descriptive_headline_reason",
                 "event_count",
                 "n_rows",
                 "n_events",
@@ -1144,6 +1167,8 @@ def build_event_usability_table(
                 "overlap_severity",
                 "usable_for_headline",
                 "usable_for_headline_reason",
+                "usable_for_descriptive_headline",
+                "descriptive_headline_reason",
             ],
             dropna=False,
             observed=True,
@@ -1160,6 +1185,8 @@ def build_event_usability_table(
             "shock_review_status",
             "usable_for_headline",
             "usable_for_headline_reason",
+            "usable_for_descriptive_headline",
+            "descriptive_headline_reason",
         ],
         kind="stable",
     ).reset_index(drop=True)

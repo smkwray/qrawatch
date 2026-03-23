@@ -12,10 +12,7 @@ import pandas as pd
 
 from ati_shadow_policy.io_utils import write_df
 from ati_shadow_policy.paths import MANUAL_DIR, PROCESSED_DIR, RAW_DIR, ensure_project_dirs
-from ati_shadow_policy.research.event_study import (
-    build_event_panel,
-    build_qra_event_registry_v2,
-)
+from ati_shadow_policy.research.event_study import build_event_panel
 from ati_shadow_policy.research.qra_classification import derive_legacy_expected_direction
 
 VALUE_COLUMNS = ["THREEFYTP10", "DGS10", "DGS2", "DGS30", "SP500", "VIXCLS"]
@@ -71,6 +68,7 @@ def _load_qra_events() -> pd.DataFrame:
         )
     return events
 
+
 def main() -> None:
     ensure_project_dirs()
     events = _load_qra_events()
@@ -115,10 +113,7 @@ def main() -> None:
     panel = panel.sort_values(["event_id", "event_date_type"]).reset_index(drop=True)
     panel["event_date_type"] = panel["event_date_type"].astype(str)
     write_df(panel, PROCESSED_DIR / "qra_event_panel.csv")
-    registry = build_qra_event_registry_v2(panel)
-    write_df(registry, PROCESSED_DIR / "qra_event_registry_v2.csv")
     print(f"Saved QRA event panel with {len(panel):,} rows")
-    print(f"Saved QRA event registry v2 with {len(registry):,} rows")
 
 if __name__ == "__main__":
     main()

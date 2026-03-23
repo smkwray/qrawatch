@@ -272,6 +272,8 @@ def test_build_qra_event_elasticity_publish_table_is_optional(tmp_path, monkeypa
         "shock_review_status",
         "shock_missing_flag",
         "small_denominator_flag",
+        "descriptive_headline_reason",
+        "usable_for_descriptive_headline",
         "usable_for_headline_reason",
         "review_maturity",
         "elasticity_bp_per_100bn",

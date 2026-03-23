@@ -27,9 +27,12 @@ Use this before treating any output as a real result.
 
 - [ ] Are event-facing tables explicitly labeled as `descriptive/supporting` unless a causal ledger promotes them to `causal-eligible`?
 - [ ] Do any rows treated as causal-eligible carry exact timestamps rather than date-only proxies?
+- [ ] Does every reviewed current-sample exact-time release component carry timestamp evidence, not just a hand-entered timestamp?
 - [ ] Are bundled same-day Treasury releases marked as inseparable unless separate release components are documented?
 - [ ] Is there a benchmark expectation / surprise source for any claimed causal treatment?
+- [ ] Does any claimed `pre_release_external` benchmark status rest on verified pre-release evidence rather than an attached external-family label alone?
 - [ ] Are overlap and contamination checks resolved before promotion to causal-eligible status?
+- [ ] Do contamination calls distinguish `reviewed_clean`, `reviewed_contaminated_exclude`, and `reviewed_contaminated_context_only`?
 - [ ] Do blocker reasons distinguish missing timestamps, missing benchmark, inseparable bundles, and unresolved overlap?
 
 ## Security classification
@@ -61,6 +64,7 @@ Use this before treating any output as a real result.
 
 - [ ] Does every processed file identify its source files or source family?
 - [ ] Are manual overrides or manual captures recorded in a field?
+- [ ] Does the manual official-capture template carry explicit role-based provenance for financing, refunding statements, and auction reconstruction?
 - [ ] Are output tables timestamped or versioned?
 - [ ] Does `data/raw/qra/downloads.csv` record deterministic local filenames plus source URL, content type, HTTP status, and download timestamp?
 - [ ] Does `output/publish/` contain the full site-facing artifact set with matching CSV/JSON/Markdown files?

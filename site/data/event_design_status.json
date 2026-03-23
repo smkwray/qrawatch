@@ -8,12 +8,12 @@
     },
     {
       "metric": "tier_a_count",
-      "value": 0,
+      "value": 5,
       "notes": "Causal-eligible components."
     },
     {
       "metric": "tier_b_count",
-      "value": 28,
+      "value": 23,
       "notes": "Reviewed descriptive-only components."
     },
     {
@@ -33,13 +33,38 @@
     },
     {
       "metric": "reviewed_surprise_ready_count",
-      "value": 0,
+      "value": 6,
       "notes": "Components with reviewed expectation/surprise inputs."
     },
     {
       "metric": "reviewed_clean_component_count",
       "value": 23,
       "notes": "Components marked reviewed_clean for contamination."
+    },
+    {
+      "metric": "current_sample_financing_component_count",
+      "value": 14,
+      "notes": "Current-sample financing-estimates release components (`2022Q3+`)."
+    },
+    {
+      "metric": "current_sample_financing_exact_time_count",
+      "value": 14,
+      "notes": "Current-sample financing components with exact-time timestamps."
+    },
+    {
+      "metric": "current_sample_financing_reviewed_clean_count",
+      "value": 13,
+      "notes": "Current-sample financing components with reviewed clean contamination decisions."
+    },
+    {
+      "metric": "current_sample_financing_pre_release_external_count",
+      "value": 6,
+      "notes": "Current-sample financing components with verified pre-release external benchmarks."
+    },
+    {
+      "metric": "current_sample_financing_tier_a_count",
+      "value": 5,
+      "notes": "Current-sample financing components currently passing all causal gates (Tier A)."
     }
   ]
 }

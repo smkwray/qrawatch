@@ -1,7 +1,7 @@
 {
   "title": "qrawatch publish artifacts",
-  "generated_at_utc": "2026-03-22T22:39:41.766653+00:00",
-  "artifact_count": 106,
+  "generated_at_utc": "2026-03-23T09:50:52.312348+00:00",
+  "artifact_count": 109,
   "artifacts": [
     "ati_quarter_table.csv",
     "ati_quarter_table.json",
@@ -64,6 +64,9 @@
     "primary_dealer_summary.csv",
     "primary_dealer_summary.json",
     "primary_dealer_summary.md",
+    "qra_benchmark_blockers_by_event.csv",
+    "qra_benchmark_blockers_by_event.json",
+    "qra_benchmark_blockers_by_event.md",
     "qra_benchmark_coverage.csv",
     "qra_benchmark_coverage.json",
     "qra_benchmark_coverage.md",

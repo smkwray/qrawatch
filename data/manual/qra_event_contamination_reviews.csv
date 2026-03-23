@@ -1,170 +1,76 @@
-release_component_id,event_id,component_type,contamination_flag,contamination_status,contamination_review_status,contamination_label,contamination_notes
-qra_2010_02__event_composite,qra_2010_02,event_composite,False,pending_review,pending,,
-qra_2010_02__financing_estimates,qra_2010_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2010_02__policy_statement,qra_2010_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2010_05__event_composite,qra_2010_05,event_composite,False,pending_review,pending,,
-qra_2010_05__financing_estimates,qra_2010_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2010_05__policy_statement,qra_2010_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2010_08__event_composite,qra_2010_08,event_composite,False,pending_review,pending,,
-qra_2010_08__financing_estimates,qra_2010_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2010_08__policy_statement,qra_2010_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2010_11__event_composite,qra_2010_11,event_composite,False,pending_review,pending,,
-qra_2010_11__financing_estimates,qra_2010_11,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2010_11__policy_statement,qra_2010_11,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2011_02__event_composite,qra_2011_02,event_composite,False,pending_review,pending,,
-qra_2011_02__financing_estimates,qra_2011_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2011_02__policy_statement,qra_2011_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2011_05__event_composite,qra_2011_05,event_composite,False,pending_review,pending,,
-qra_2011_05__financing_estimates,qra_2011_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2011_05__policy_statement,qra_2011_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2011_08__event_composite,qra_2011_08,event_composite,False,pending_review,pending,,
-qra_2011_08__financing_estimates,qra_2011_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2011_08__policy_statement,qra_2011_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2011_11__event_composite,qra_2011_11,event_composite,False,pending_review,pending,,
-qra_2011_11__financing_estimates,qra_2011_11,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2011_11__policy_statement,qra_2011_11,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2012_02__event_composite,qra_2012_02,event_composite,False,pending_review,pending,,
-qra_2012_02__financing_estimates,qra_2012_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2012_02__policy_statement,qra_2012_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2012_05__event_composite,qra_2012_05,event_composite,False,pending_review,pending,,
-qra_2012_05__financing_estimates,qra_2012_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2012_05__policy_statement,qra_2012_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2012_08__event_composite,qra_2012_08,event_composite,False,pending_review,pending,,
-qra_2012_08__financing_estimates,qra_2012_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2012_08__policy_statement,qra_2012_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2012_10__event_composite,qra_2012_10,event_composite,False,pending_review,pending,,
-qra_2012_10__financing_estimates,qra_2012_10,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2012_10__policy_statement,qra_2012_10,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2013_02__event_composite,qra_2013_02,event_composite,False,pending_review,pending,,
-qra_2013_02__financing_estimates,qra_2013_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2013_02__policy_statement,qra_2013_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2013_05__event_composite,qra_2013_05,event_composite,False,pending_review,pending,,
-qra_2013_05__financing_estimates,qra_2013_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2013_05__policy_statement,qra_2013_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2013_07__event_composite,qra_2013_07,event_composite,False,pending_review,pending,,
-qra_2013_07__financing_estimates,qra_2013_07,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2013_07__policy_statement,qra_2013_07,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2013_11__event_composite,qra_2013_11,event_composite,False,pending_review,pending,,
-qra_2013_11__financing_estimates,qra_2013_11,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2013_11__policy_statement,qra_2013_11,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2014_02__event_composite,qra_2014_02,event_composite,False,pending_review,pending,,
-qra_2014_02__financing_estimates,qra_2014_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2014_02__policy_statement,qra_2014_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2014_04__event_composite,qra_2014_04,event_composite,False,pending_review,pending,,
-qra_2014_04__financing_estimates,qra_2014_04,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2014_04__policy_statement,qra_2014_04,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2014_08__event_composite,qra_2014_08,event_composite,False,pending_review,pending,,
-qra_2014_08__financing_estimates,qra_2014_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2014_08__policy_statement,qra_2014_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2014_11__event_composite,qra_2014_11,event_composite,False,pending_review,pending,,
-qra_2014_11__financing_estimates,qra_2014_11,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2014_11__policy_statement,qra_2014_11,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2015_02__event_composite,qra_2015_02,event_composite,False,pending_review,pending,,
-qra_2015_02__financing_estimates,qra_2015_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2015_02__policy_statement,qra_2015_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2015_05__event_composite,qra_2015_05,event_composite,False,pending_review,pending,,
-qra_2015_05__financing_estimates,qra_2015_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2015_05__policy_statement,qra_2015_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2015_08__event_composite,qra_2015_08,event_composite,False,pending_review,pending,,
-qra_2015_08__financing_estimates,qra_2015_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2015_08__policy_statement,qra_2015_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2015_11__event_composite,qra_2015_11,event_composite,False,pending_review,pending,,
-qra_2015_11__financing_estimates,qra_2015_11,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2015_11__policy_statement,qra_2015_11,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2016_02__event_composite,qra_2016_02,event_composite,False,pending_review,pending,,
-qra_2016_02__financing_estimates,qra_2016_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2016_02__policy_statement,qra_2016_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2016_05__event_composite,qra_2016_05,event_composite,False,pending_review,pending,,
-qra_2016_05__financing_estimates,qra_2016_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2016_05__policy_statement,qra_2016_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2016_08__event_composite,qra_2016_08,event_composite,False,pending_review,pending,,
-qra_2016_08__financing_estimates,qra_2016_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2016_08__policy_statement,qra_2016_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2016_11__event_composite,qra_2016_11,event_composite,False,pending_review,pending,,
-qra_2016_11__financing_estimates,qra_2016_11,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2016_11__policy_statement,qra_2016_11,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2017_02__event_composite,qra_2017_02,event_composite,False,pending_review,pending,,
-qra_2017_02__financing_estimates,qra_2017_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2017_02__policy_statement,qra_2017_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2017_05__event_composite,qra_2017_05,event_composite,False,pending_review,pending,,
-qra_2017_05__financing_estimates,qra_2017_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2017_05__policy_statement,qra_2017_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2017_08__event_composite,qra_2017_08,event_composite,False,pending_review,pending,,
-qra_2017_08__financing_estimates,qra_2017_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2017_08__policy_statement,qra_2017_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2017_11__event_composite,qra_2017_11,event_composite,False,pending_review,pending,,
-qra_2017_11__financing_estimates,qra_2017_11,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2017_11__policy_statement,qra_2017_11,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2018_01__event_composite,qra_2018_01,event_composite,False,pending_review,pending,,
-qra_2018_01__financing_estimates,qra_2018_01,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2018_01__policy_statement,qra_2018_01,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2018_05__event_composite,qra_2018_05,event_composite,False,pending_review,pending,,
-qra_2018_05__financing_estimates,qra_2018_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2018_05__policy_statement,qra_2018_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2018_08__event_composite,qra_2018_08,event_composite,False,pending_review,pending,,
-qra_2018_08__financing_estimates,qra_2018_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2018_08__policy_statement,qra_2018_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2018_10__event_composite,qra_2018_10,event_composite,False,pending_review,pending,,
-qra_2018_10__financing_estimates,qra_2018_10,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2018_10__policy_statement,qra_2018_10,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2019_01__event_composite,qra_2019_01,event_composite,False,pending_review,pending,,
-qra_2019_01__financing_estimates,qra_2019_01,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2019_01__policy_statement,qra_2019_01,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2019_05__event_composite,qra_2019_05,event_composite,False,pending_review,pending,,
-qra_2019_05__financing_estimates,qra_2019_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2019_05__policy_statement,qra_2019_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2019_07__event_composite,qra_2019_07,event_composite,False,pending_review,pending,,
-qra_2019_07__financing_estimates,qra_2019_07,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2019_07__policy_statement,qra_2019_07,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2019_10__event_composite,qra_2019_10,event_composite,False,pending_review,pending,,
-qra_2019_10__financing_estimates,qra_2019_10,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2019_10__policy_statement,qra_2019_10,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2020_02__event_composite,qra_2020_02,event_composite,False,pending_review,pending,,
-qra_2020_02__financing_estimates,qra_2020_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2020_02__policy_statement,qra_2020_02,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2020_05__event_composite,qra_2020_05,event_composite,False,pending_review,pending,,
-qra_2020_05__financing_estimates,qra_2020_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2020_05__policy_statement,qra_2020_05,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2020_08__event_composite,qra_2020_08,event_composite,False,pending_review,pending,,
-qra_2020_08__financing_estimates,qra_2020_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2020_08__policy_statement,qra_2020_08,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2020_11__event_composite,qra_2020_11,event_composite,False,pending_review,pending,,
-qra_2020_11__financing_estimates,qra_2020_11,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2020_11__policy_statement,qra_2020_11,policy_statement,False,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2021_02__event_composite,qra_2021_02,event_composite,False,pending_review,pending,,
-qra_2021_02__financing_estimates,qra_2021_02,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2021_02__policy_statement,qra_2021_02,policy_statement,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2021_05__event_composite,qra_2021_05,event_composite,False,pending_review,pending,,
-qra_2021_05__financing_estimates,qra_2021_05,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2021_05__policy_statement,qra_2021_05,policy_statement,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2021_08__event_composite,qra_2021_08,event_composite,False,pending_review,pending,,
-qra_2021_08__financing_estimates,qra_2021_08,financing_estimates,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2021_08__policy_statement,qra_2021_08,policy_statement,,pending,pending,,Historical descriptive-only scaffold row; contamination review pending.
-qra_2022_05__financing_estimates,qra_2022_05,financing_estimates,False,reviewed_clean,reviewed,FOMC_same_day,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2022_05__policy_statement,qra_2022_05,policy_statement,True,reviewed_contaminated,reviewed,FOMC_same_day,Reviewed contaminated because the FOMC statement followed later the same day.
-qra_2022_08__financing_estimates,qra_2022_08,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2022_08__policy_statement,qra_2022_08,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2022_11__financing_estimates,qra_2022_11,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2022_11__policy_statement,qra_2022_11,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2023_02__financing_estimates,qra_2023_02,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2023_02__policy_statement,qra_2023_02,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2023_05__financing_estimates,qra_2023_05,financing_estimates,False,reviewed_clean,reviewed,FOMC_and_BLS_same_day,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2023_05__policy_statement,qra_2023_05,policy_statement,True,reviewed_contaminated,reviewed,FOMC_and_BLS_same_day,Reviewed contaminated because BLS and the FOMC statement followed later the same day.
-qra_2023_08__financing_estimates,qra_2023_08,financing_estimates,False,reviewed_clean,reviewed,BLS_same_day,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2023_08__policy_statement,qra_2023_08,policy_statement,True,reviewed_contaminated,reviewed,BLS_same_day,Reviewed contaminated because BLS followed later the same day.
-qra_2023_11__financing_estimates,qra_2023_11,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2023_11__policy_statement,qra_2023_11,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2024_01__financing_estimates,qra_2024_01,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2024_01__policy_statement,qra_2024_01,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; no separate external macro overlap recorded in local materials.
-qra_2024_05__financing_estimates,qra_2024_05,financing_estimates,True,reviewed_contaminated,reviewed,Beige_Book_same_day,Reviewed contaminated because the Beige Book followed later the same day.
-qra_2024_05__policy_statement,qra_2024_05,policy_statement,True,reviewed_contaminated,reviewed,FOMC_and_BLS_same_day,Reviewed contaminated because BLS and the FOMC statement followed later the same day.
-qra_2024_07__financing_estimates,qra_2024_07,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2024_07__policy_statement,qra_2024_07,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2024_10__financing_estimates,qra_2024_10,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2024_10__policy_statement,qra_2024_10,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2025_02__financing_estimates,qra_2025_02,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2025_02__policy_statement,qra_2025_02,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2025_04__financing_estimates,qra_2025_04,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2025_04__policy_statement,qra_2025_04,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2025_07__financing_estimates,qra_2025_07,financing_estimates,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
-qra_2025_07__policy_statement,qra_2025_07,policy_statement,False,reviewed_clean,reviewed,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+release_component_id,event_id,component_type,contamination_flag,contamination_status,contamination_review_status,contamination_label,contamination_window_start_et,contamination_window_end_et,confound_release_type,confound_release_timestamp_et,decision_rule,exclude_from_causal_pool,decision_confidence,contamination_notes
+qra_2010_02__policy_statement,qra_2010_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2010_05__policy_statement,qra_2010_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2010_08__policy_statement,qra_2010_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2010_11__policy_statement,qra_2010_11,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2011_02__policy_statement,qra_2011_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2011_05__policy_statement,qra_2011_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2011_08__policy_statement,qra_2011_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2011_11__policy_statement,qra_2011_11,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2012_02__policy_statement,qra_2012_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2012_05__policy_statement,qra_2012_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2012_08__policy_statement,qra_2012_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2012_10__policy_statement,qra_2012_10,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2013_02__policy_statement,qra_2013_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2013_05__policy_statement,qra_2013_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2013_07__policy_statement,qra_2013_07,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2013_11__policy_statement,qra_2013_11,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2014_02__policy_statement,qra_2014_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2014_04__policy_statement,qra_2014_04,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2014_08__policy_statement,qra_2014_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2014_11__policy_statement,qra_2014_11,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2015_02__policy_statement,qra_2015_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2015_05__policy_statement,qra_2015_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2015_08__policy_statement,qra_2015_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2015_11__policy_statement,qra_2015_11,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2016_02__policy_statement,qra_2016_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2016_05__policy_statement,qra_2016_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2016_08__policy_statement,qra_2016_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2016_11__policy_statement,qra_2016_11,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2017_02__policy_statement,qra_2017_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2017_05__policy_statement,qra_2017_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2017_08__policy_statement,qra_2017_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2017_11__policy_statement,qra_2017_11,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2018_01__policy_statement,qra_2018_01,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2018_05__policy_statement,qra_2018_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2018_08__policy_statement,qra_2018_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2018_10__policy_statement,qra_2018_10,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2019_01__policy_statement,qra_2019_01,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2019_05__policy_statement,qra_2019_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2019_07__policy_statement,qra_2019_07,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2019_10__policy_statement,qra_2019_10,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2020_02__policy_statement,qra_2020_02,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2020_05__policy_statement,qra_2020_05,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2020_08__policy_statement,qra_2020_08,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2020_11__policy_statement,qra_2020_11,policy_statement,False,pending,pending,,,,,,,,,Historical descriptive-only scaffold row; contamination review pending.
+qra_2021_02__event_composite,qra_2021_02,event_composite,False,pending_review,pending,,,,,,,,,Seeded review row. Confirm macro/policy contamination by hand.
+qra_2021_05__event_composite,qra_2021_05,event_composite,False,pending_review,pending,,,,,,,,,Seeded review row. Confirm macro/policy contamination by hand.
+qra_2021_08__event_composite,qra_2021_08,event_composite,False,pending_review,pending,,,,,,,,,Seeded review row. Confirm macro/policy contamination by hand.
+qra_2022_05__financing_estimates,qra_2022_05,financing_estimates,False,reviewed_clean,reviewed,FOMC_same_day,2022-05-02T14:00:00-04:00,2022-05-02T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2022_05__policy_statement,qra_2022_05,policy_statement,True,reviewed_contaminated,reviewed,FOMC_same_day,,,,,Review overlap annotation: Reviewed explicit multi-stage Treasury release; the policy statement shares the day with the FOMC statement.,,,Reviewed contaminated because the FOMC statement followed later the same day.
+qra_2022_08__financing_estimates,qra_2022_08,financing_estimates,False,reviewed_clean,reviewed,,2022-08-01T14:00:00-04:00,2022-08-01T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2022_08__policy_statement,qra_2022_08,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.,,,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2022_11__financing_estimates,qra_2022_11,financing_estimates,False,reviewed_clean,reviewed,,2022-10-31T14:00:00-04:00,2022-10-31T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2022_11__policy_statement,qra_2022_11,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.,,,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2023_02__financing_estimates,qra_2023_02,financing_estimates,False,reviewed_clean,reviewed,,2023-01-30T14:00:00-05:00,2023-01-30T16:30:00-05:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2023_02__policy_statement,qra_2023_02,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: Reviewed false; hawkish guidance is handled in classification and no separate external macro overlap is recorded locally.,,,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2023_05__financing_estimates,qra_2023_05,financing_estimates,False,reviewed_clean,reviewed,FOMC_and_BLS_same_day,2023-05-01T14:00:00-04:00,2023-05-01T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2023_05__policy_statement,qra_2023_05,policy_statement,True,reviewed_contaminated,reviewed,FOMC_and_BLS_same_day,,,,,Review overlap annotation: Reviewed explicit multi-stage Treasury release; the policy statement shares the day with BLS and the FOMC statement.,,,Reviewed contaminated because BLS and the FOMC statement followed later the same day.
+qra_2023_08__financing_estimates,qra_2023_08,financing_estimates,False,reviewed_clean,reviewed,BLS_same_day,2023-07-31T14:00:00-04:00,2023-07-31T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2023_08__policy_statement,qra_2023_08,policy_statement,True,reviewed_contaminated,reviewed,BLS_same_day,,,,,Review overlap annotation: Reviewed same-day Treasury financing and statement bundle; the policy statement shares the day with the BLS release.,,,Reviewed contaminated because BLS followed later the same day.
+qra_2023_11__financing_estimates,qra_2023_11,financing_estimates,False,reviewed_clean,reviewed,,2023-10-30T14:00:00-04:00,2023-10-30T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2023_11__policy_statement,qra_2023_11,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: Local materials show a same-day Treasury bundle only; external macro overlap crosswalk is still absent.,,,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2024_01__financing_estimates,qra_2024_01,financing_estimates,False,reviewed_clean,reviewed,,2024-01-29T14:00:00-05:00,2024-01-29T16:30:00-05:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2024_01__policy_statement,qra_2024_01,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: Local materials show a same-day Treasury bundle only; external macro overlap crosswalk is still absent.,,,Reviewed clean; no separate external macro overlap recorded in local materials.
+qra_2024_05__financing_estimates,qra_2024_05,financing_estimates,True,reviewed_contaminated_context_only,reviewed,Beige_Book_same_day,2024-04-29T14:00:00-04:00,2024-04-29T16:30:00-04:00,beige_book,2024-04-29T14:00:00-04:00,"Beige Book hit earlier on the same afternoon; retain the component as timestamped Treasury context, but mark context-only contamination rather than promoting it as a fully clean row.",False,high,Same-day Beige Book context is recorded explicitly; row remains context-only contaminated rather than excluded.
+qra_2024_05__policy_statement,qra_2024_05,policy_statement,True,reviewed_contaminated,reviewed,FOMC_and_BLS_same_day,,,,,Review overlap annotation: Reviewed same-day Treasury bundle; financing coincides with the Beige Book and the policy statement shares the day with BLS and the FOMC statement.,,,Reviewed contaminated because BLS and the FOMC statement followed later the same day.
+qra_2024_07__financing_estimates,qra_2024_07,financing_estimates,False,reviewed_clean,reviewed,,2024-07-29T14:00:00-04:00,2024-07-29T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2024_07__policy_statement,qra_2024_07,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2024_10__financing_estimates,qra_2024_10,financing_estimates,False,reviewed_clean,reviewed,,2024-10-28T14:00:00-04:00,2024-10-28T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2024_10__policy_statement,qra_2024_10,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2025_02__financing_estimates,qra_2025_02,financing_estimates,False,reviewed_clean,reviewed,,2025-02-03T14:00:00-05:00,2025-02-03T16:30:00-05:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2025_02__policy_statement,qra_2025_02,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2025_04__financing_estimates,qra_2025_04,financing_estimates,False,reviewed_clean,reviewed,,2025-04-28T14:00:00-04:00,2025-04-28T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2025_04__policy_statement,qra_2025_04,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2025_07__financing_estimates,qra_2025_07,financing_estimates,False,reviewed_clean,reviewed,,2025-07-28T14:00:00-04:00,2025-07-28T16:30:00-04:00,,,Reviewed exact-time Treasury financing release against local overlap annotations; no separate same-window external macro release is documented for this component.,False,high,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.
+qra_2025_07__policy_statement,qra_2025_07,policy_statement,False,reviewed_clean,reviewed,,,,,,Review overlap annotation: overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,,,Reviewed clean; same-day Treasury bundle has no separate external macro overlap recorded in local materials.

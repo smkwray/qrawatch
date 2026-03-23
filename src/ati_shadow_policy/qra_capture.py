@@ -8,9 +8,37 @@ from urllib.parse import urljoin
 import pandas as pd
 
 from .io_utils import coerce_numeric
+from .paths import PROJECT_ROOT
 
 
 CAPTURE_COLUMNS: tuple[str, ...] = (
+    "quarter",
+    "qra_release_date",
+    "market_pricing_marker_minus_1d",
+    "total_financing_need_bn",
+    "net_bill_issuance_bn",
+    "gross_coupon_schedule_bn",
+    "net_coupon_issuance_bn",
+    "frn_issuance_bn",
+    "guidance_nominal_coupons",
+    "guidance_frns",
+    "guidance_buybacks",
+    "financing_source_url",
+    "financing_source_doc_local",
+    "financing_source_doc_type",
+    "refunding_statement_source_url",
+    "refunding_statement_source_doc_local",
+    "refunding_statement_source_doc_type",
+    "auction_reconstruction_source_url",
+    "auction_reconstruction_source_doc_local",
+    "auction_reconstruction_source_doc_type",
+    "source_url",
+    "source_doc_local",
+    "source_doc_type",
+    "qa_status",
+    "notes",
+)
+LEGACY_CAPTURE_COLUMNS: tuple[str, ...] = (
     "quarter",
     "qra_release_date",
     "market_pricing_marker_minus_1d",
@@ -59,6 +87,11 @@ OFFICIAL_REQUIRED_COLUMNS: tuple[str, ...] = (
     "source_url",
     "source_doc_local",
     "source_doc_type",
+)
+ROLE_REQUIRED_PREFIXES: tuple[str, ...] = (
+    "financing",
+    "refunding_statement",
+    "auction_reconstruction",
 )
 
 _QUARTER_RE = re.compile(r"^\d{4}Q[1-4]$")
@@ -119,7 +152,8 @@ class CaptureBuildResult:
 def read_capture_template(path: Path) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(f"Capture template not found: {path}")
-    return pd.read_csv(path, dtype=str).fillna("")
+    template = pd.read_csv(path, dtype=str).fillna("")
+    return _coerce_capture_contract(template)
 
 
 def read_qra_event_seed(path: Path) -> pd.DataFrame:
@@ -215,7 +249,7 @@ def build_official_capture(
     quarterly_refunding_seed_df: pd.DataFrame | None = None,
     seed_missing_quarters: bool = False,
 ) -> CaptureBuildResult:
-    capture = template_df.copy()
+    capture = _coerce_capture_contract(template_df.copy())
     _validate_columns(capture)
     capture = _normalize_capture(capture)
 
@@ -310,11 +344,12 @@ def build_financing_release_source_map(
         matched_row: dict[str, object] | None = None
 
         for _, download in qra_downloads_df.iterrows():
-            local_path = _string_or_empty(download.get("local_path"))
-            if not local_path:
+            raw_local_path = _string_or_empty(download.get("local_path"))
+            if not raw_local_path:
                 continue
 
-            text_path = text_dir / f"{Path(local_path).stem}.txt"
+            local_path = _normalize_repo_local_reference(raw_local_path)
+            text_path = text_dir / f"{Path(raw_local_path).stem}.txt"
             if not text_path.exists():
                 continue
 
@@ -327,6 +362,9 @@ def build_financing_release_source_map(
                 "qra_release_date": release_date,
                 "official_release_date_phrase": release_date_phrase,
                 "expected_period": expected_period,
+                "financing_source_url": _string_or_empty(download.get("href")),
+                "financing_source_doc_local": local_path,
+                "financing_source_doc_type": _string_or_empty(download.get("doc_type")) or "quarterly_refunding_press_release",
                 "source_url": _string_or_empty(download.get("href")),
                 "source_doc_local": local_path,
                 "source_doc_type": _string_or_empty(download.get("doc_type")) or "quarterly_refunding_press_release",
@@ -341,6 +379,9 @@ def build_financing_release_source_map(
                 "qra_release_date": release_date,
                 "official_release_date_phrase": release_date_phrase,
                 "expected_period": expected_period,
+                "financing_source_url": pd.NA,
+                "financing_source_doc_local": pd.NA,
+                "financing_source_doc_type": pd.NA,
                 "source_url": pd.NA,
                 "source_doc_local": pd.NA,
                 "source_doc_type": pd.NA,
@@ -355,6 +396,9 @@ def build_financing_release_source_map(
         "qra_release_date",
         "official_release_date_phrase",
         "expected_period",
+        "financing_source_url",
+        "financing_source_doc_local",
+        "financing_source_doc_type",
         "source_url",
         "source_doc_local",
         "source_doc_type",
@@ -416,11 +460,15 @@ def build_refunding_statement_source_map(statement_downloads_df: pd.DataFrame) -
     rows: list[dict[str, object]] = []
     for _, download in statement_downloads_df.iterrows():
         quarter = _string_or_empty(download.get("quarter"))
-        local_path = _string_or_empty(download.get("local_path"))
-        if not quarter or not local_path or not Path(local_path).exists():
+        raw_local_path = _string_or_empty(download.get("local_path"))
+        if not quarter or not raw_local_path:
             continue
+        resolved_local_path = _resolve_repo_local_path(raw_local_path)
+        if not resolved_local_path.exists():
+            continue
+        local_path = _normalize_repo_local_reference(raw_local_path)
 
-        text = _extract_html_text(Path(local_path))
+        text = _extract_html_text(resolved_local_path)
         projected_financing_section = _extract_projected_financing_section(text)
         nominal_section = _extract_named_section(
             text,
@@ -464,6 +512,10 @@ def build_refunding_statement_source_map(statement_downloads_df: pd.DataFrame) -
         rows.append(
             {
                 "quarter": quarter,
+                "refunding_statement_source_url": _string_or_empty(download.get("href")),
+                "refunding_statement_source_doc_local": local_path,
+                "refunding_statement_source_doc_type": _string_or_empty(download.get("doc_type"))
+                or "official_quarterly_refunding_statement",
                 "source_url": _string_or_empty(download.get("href")),
                 "source_doc_local": local_path,
                 "source_doc_type": _string_or_empty(download.get("doc_type"))
@@ -478,6 +530,9 @@ def build_refunding_statement_source_map(statement_downloads_df: pd.DataFrame) -
 
     columns = [
         "quarter",
+        "refunding_statement_source_url",
+        "refunding_statement_source_doc_local",
+        "refunding_statement_source_doc_type",
         "source_url",
         "source_doc_local",
         "source_doc_type",
@@ -594,7 +649,7 @@ def enrich_capture_with_auction_reconstruction(
     capture_df: pd.DataFrame,
     quarter_net_df: pd.DataFrame,
 ) -> pd.DataFrame:
-    capture = capture_df.copy().astype(object)
+    capture = _coerce_capture_contract(capture_df.copy().astype(object))
     _validate_columns(capture)
     if quarter_net_df.empty:
         return capture
@@ -645,11 +700,28 @@ def enrich_capture_with_auction_reconstruction(
         capture.at[idx, "source_doc_type"] = _merge_pipe_values(
             _AUCTION_RECON_SOURCE_DOC_TYPE, existing_type
         )
+        existing_auction_url = _string_or_empty(capture.at[idx, "auction_reconstruction_source_url"])
+        capture.at[idx, "auction_reconstruction_source_url"] = _merge_pipe_values(
+            _FISCALDATA_AUCTIONS_URL, existing_auction_url
+        )
+        existing_auction_local = _string_or_empty(
+            capture.at[idx, "auction_reconstruction_source_doc_local"]
+        )
+        capture.at[idx, "auction_reconstruction_source_doc_local"] = _merge_pipe_values(
+            "data/raw/fiscaldata/auctions_query.csv", existing_auction_local
+        )
+        existing_auction_type = _string_or_empty(
+            capture.at[idx, "auction_reconstruction_source_doc_type"]
+        )
+        capture.at[idx, "auction_reconstruction_source_doc_type"] = _merge_pipe_values(
+            _AUCTION_RECON_SOURCE_DOC_TYPE, existing_auction_type
+        )
 
         if (
             has_complete_bill_reconstruction
             and _has_official_financing_provenance(capture.loc[idx])
             and _has_official_refunding_statement_provenance(capture.loc[idx])
+            and _has_official_auction_reconstruction_provenance(capture.loc[idx])
         ):
             capture.at[idx, "source_doc_local"] = _drop_seed_provenance(
                 _string_or_empty(capture.at[idx, "source_doc_local"])
@@ -683,7 +755,7 @@ def build_capture_completion_status(
     capture_df: pd.DataFrame,
     quarter_net_df: pd.DataFrame,
 ) -> pd.DataFrame:
-    capture = capture_df.copy()
+    capture = _coerce_capture_contract(capture_df.copy())
     _validate_columns(capture)
     recon = quarter_net_df.copy()
     if recon.empty:
@@ -766,7 +838,7 @@ def enrich_capture_with_financing_release_map(
     capture_df: pd.DataFrame,
     financing_release_map_df: pd.DataFrame,
 ) -> pd.DataFrame:
-    capture = capture_df.copy().astype(object)
+    capture = _coerce_capture_contract(capture_df.copy().astype(object))
     _validate_columns(capture)
     if financing_release_map_df.empty:
         return capture
@@ -784,11 +856,31 @@ def enrich_capture_with_financing_release_map(
         if _string_or_empty(source.get("match_status")) != "matched":
             continue
 
-        source_url = _string_or_empty(source.get("source_url"))
-        source_doc_local = _string_or_empty(source.get("source_doc_local"))
-        source_doc_type = _string_or_empty(source.get("source_doc_type"))
+        source_url = (
+            _string_or_empty(source.get("financing_source_url"))
+            or _string_or_empty(source.get("source_url"))
+        )
+        source_doc_local = (
+            _string_or_empty(source.get("financing_source_doc_local"))
+            or _string_or_empty(source.get("source_doc_local"))
+        )
+        source_doc_type = (
+            _string_or_empty(source.get("financing_source_doc_type"))
+            or _string_or_empty(source.get("source_doc_type"))
+        )
         announced_borrowing_bn = source.get("announced_borrowing_bn")
 
+        if source_url:
+            existing_url = _string_or_empty(capture.at[idx, "financing_source_url"])
+            capture.at[idx, "financing_source_url"] = _merge_pipe_values(source_url, existing_url)
+        if source_doc_local:
+            existing_local = _string_or_empty(capture.at[idx, "financing_source_doc_local"])
+            capture.at[idx, "financing_source_doc_local"] = _merge_pipe_values(source_doc_local, existing_local)
+        if source_doc_type:
+            existing_type = _string_or_empty(capture.at[idx, "financing_source_doc_type"])
+            capture.at[idx, "financing_source_doc_type"] = _merge_pipe_values(source_doc_type, existing_type)
+
+        # Preserve legacy aggregated provenance fields for one transition round.
         if source_url:
             existing_url = _string_or_empty(capture.at[idx, "source_url"])
             capture.at[idx, "source_url"] = _merge_pipe_values(source_url, existing_url)
@@ -820,7 +912,7 @@ def enrich_capture_with_refunding_statement_map(
     capture_df: pd.DataFrame,
     statement_map_df: pd.DataFrame,
 ) -> pd.DataFrame:
-    capture = capture_df.copy().astype(object)
+    capture = _coerce_capture_contract(capture_df.copy().astype(object))
     _validate_columns(capture)
     if statement_map_df.empty:
         return capture
@@ -838,6 +930,21 @@ def enrich_capture_with_refunding_statement_map(
         if _string_or_empty(source.get("match_status")) != "matched":
             continue
 
+        for source_col, target_col in (
+            ("refunding_statement_source_url", "refunding_statement_source_url"),
+            ("source_url", "refunding_statement_source_url"),
+            ("refunding_statement_source_doc_local", "refunding_statement_source_doc_local"),
+            ("source_doc_local", "refunding_statement_source_doc_local"),
+            ("refunding_statement_source_doc_type", "refunding_statement_source_doc_type"),
+            ("source_doc_type", "refunding_statement_source_doc_type"),
+        ):
+            incoming = _string_or_empty(source.get(source_col))
+            if not incoming:
+                continue
+            existing = _string_or_empty(capture.at[idx, target_col])
+            capture.at[idx, target_col] = _merge_pipe_values(incoming, existing)
+
+        # Preserve legacy aggregated provenance fields for one transition round.
         for col in ("source_url", "source_doc_local", "source_doc_type"):
             incoming = _string_or_empty(source.get(col))
             if not incoming:
@@ -862,6 +969,136 @@ def enrich_capture_with_refunding_statement_map(
     return capture
 
 
+def _coerce_capture_contract(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy().astype(object)
+    actual = list(out.columns)
+    expected = list(CAPTURE_COLUMNS)
+    legacy_expected = list(LEGACY_CAPTURE_COLUMNS)
+    if actual == expected:
+        return _hydrate_role_provenance_from_legacy(out[expected].copy())
+    if actual == legacy_expected:
+        for col in CAPTURE_COLUMNS:
+            if col not in out.columns:
+                out[col] = pd.NA
+        return _hydrate_role_provenance_from_legacy(out[expected].copy())
+
+    missing = [col for col in expected if col not in actual]
+    extra = [col for col in actual if col not in expected]
+    raise ValueError(
+        "Official QRA capture columns do not match required contract. "
+        f"Missing={missing} Extra={extra} ExpectedOrder={expected}"
+    )
+
+
+def _hydrate_role_provenance_from_legacy(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy().astype(object)
+    for idx in out.index:
+        out = _hydrate_role_from_legacy(
+            out,
+            idx,
+            prefix="financing",
+            matcher=_is_financing_provenance_entry,
+        )
+        out = _hydrate_role_from_legacy(
+            out,
+            idx,
+            prefix="refunding_statement",
+            matcher=_is_refunding_statement_provenance_entry,
+        )
+        out = _hydrate_role_from_legacy(
+            out,
+            idx,
+            prefix="auction_reconstruction",
+            matcher=_is_auction_reconstruction_provenance_entry,
+        )
+    return out
+
+
+def _hydrate_role_from_legacy(
+    df: pd.DataFrame,
+    row_idx: int,
+    *,
+    prefix: str,
+    matcher,
+) -> pd.DataFrame:
+    url_col = f"{prefix}_source_url"
+    local_col = f"{prefix}_source_doc_local"
+    type_col = f"{prefix}_source_doc_type"
+    existing_url = _string_or_empty(df.at[row_idx, url_col])
+    existing_local = _string_or_empty(df.at[row_idx, local_col])
+    existing_type = _string_or_empty(df.at[row_idx, type_col])
+    if existing_url and existing_local and existing_type:
+        return df
+
+    matched_url = ""
+    matched_local = ""
+    matched_type = ""
+    for candidate_url, candidate_local, candidate_type in _iter_legacy_provenance_entries(df.loc[row_idx]):
+        if matcher(candidate_url, candidate_local, candidate_type):
+            matched_url = candidate_url
+            matched_local = candidate_local
+            matched_type = candidate_type
+            break
+
+    if not existing_url and matched_url:
+        df.at[row_idx, url_col] = matched_url
+    if not existing_local and matched_local:
+        df.at[row_idx, local_col] = matched_local
+    if not existing_type and matched_type:
+        df.at[row_idx, type_col] = matched_type
+    return df
+
+
+def _iter_legacy_provenance_entries(row: pd.Series) -> list[tuple[str, str, str]]:
+    urls = _split_pipe_values(row.get("source_url"))
+    locals_ = _split_pipe_values(row.get("source_doc_local"))
+    types = _split_pipe_values(row.get("source_doc_type"))
+    max_len = max(len(urls), len(locals_), len(types), 0)
+    entries: list[tuple[str, str, str]] = []
+    for idx in range(max_len):
+        entries.append(
+            (
+                urls[idx] if idx < len(urls) else "",
+                locals_[idx] if idx < len(locals_) else "",
+                types[idx] if idx < len(types) else "",
+            )
+        )
+    return entries
+
+
+def _split_pipe_values(value: object) -> list[str]:
+    raw = _string_or_empty(value)
+    if not raw:
+        return []
+    values: list[str] = []
+    for part in raw.split("|"):
+        cleaned = part.strip()
+        if cleaned:
+            values.append(cleaned)
+    return values
+
+
+def _is_financing_provenance_entry(url: str, local: str, doc_type: str) -> bool:
+    combined = " ".join((url, local, doc_type)).lower()
+    return (
+        "quarterly_refunding_press_release" in combined
+        or "borrowing-estimates" in combined
+        or "treasury announces marketable borrowing estimates" in combined
+    )
+
+
+def _is_refunding_statement_provenance_entry(url: str, local: str, doc_type: str) -> bool:
+    combined = " ".join((url, local, doc_type)).lower()
+    return "official_quarterly_refunding_statement" in combined or (
+        "refunding" in combined and "statement" in combined
+    )
+
+
+def _is_auction_reconstruction_provenance_entry(url: str, local: str, doc_type: str) -> bool:
+    combined = " ".join((url, local, doc_type)).lower()
+    return _AUCTION_RECON_SOURCE_DOC_TYPE in combined or "auctions_query" in combined
+
+
 def _normalize_capture(df: pd.DataFrame) -> pd.DataFrame:
     normalized = df.copy()
     for col in CAPTURE_COLUMNS:
@@ -871,6 +1108,12 @@ def _normalize_capture(df: pd.DataFrame) -> pd.DataFrame:
             .astype(str)
             .str.strip()
             .replace({"nan": "", "None": ""})
+        )
+
+    for col in (name for name in CAPTURE_COLUMNS if name.endswith("source_doc_local")):
+        mask = normalized[col] != ""
+        normalized.loc[mask, col] = normalized.loc[mask, col].map(
+            _normalize_repo_local_reference_list
         )
 
     for col in DATE_COLUMNS:
@@ -945,6 +1188,21 @@ def _validate_rows(df: pd.DataFrame) -> None:
                     errors.append(
                         f"row {row_num}: qa_status='{qa_status}' requires non-empty '{col}'"
                     )
+            if qa_status == "manual_official_capture":
+                for prefix in ROLE_REQUIRED_PREFIXES:
+                    role_type = _string_or_empty(row.get(f"{prefix}_source_doc_type"))
+                    role_url = _string_or_empty(row.get(f"{prefix}_source_url"))
+                    role_local = _string_or_empty(row.get(f"{prefix}_source_doc_local"))
+                    if not role_type:
+                        errors.append(
+                            f"row {row_num}: qa_status='manual_official_capture' requires "
+                            f"non-empty '{prefix}_source_doc_type'"
+                        )
+                    if not role_url and not role_local:
+                        errors.append(
+                            f"row {row_num}: qa_status='manual_official_capture' requires "
+                            f"'{prefix}_source_url' or '{prefix}_source_doc_local'"
+                        )
         elif qa_status == "seed_only":
             if _is_missing(row["source_doc_local"]):
                 errors.append(
@@ -984,6 +1242,32 @@ def _string_or_empty(value: object) -> str:
     if _is_missing(value):
         return ""
     return str(value).strip()
+
+
+def _resolve_repo_local_path(value: str) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    return PROJECT_ROOT / path
+
+
+def _normalize_repo_local_reference(value: str) -> str:
+    path = Path(value)
+    if not path.is_absolute():
+        return str(path)
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
+
+
+def _normalize_repo_local_reference_list(value: object) -> str:
+    values: list[str] = []
+    for raw in _split_pipe_values(value):
+        normalized = _normalize_repo_local_reference(raw)
+        if normalized and normalized not in values:
+            values.append(normalized)
+    return "|".join(values)
 
 
 def _quarter_period_label(quarter: str) -> str:
@@ -1393,18 +1677,25 @@ def _format_optional_float(value: object) -> str:
 
 
 def _uses_seed_source(row: pd.Series) -> bool:
-    source_doc_type = _string_or_empty(row.get("source_doc_type")).lower()
-    source_doc_local = _string_or_empty(row.get("source_doc_local")).lower()
-    return "seed_csv" in source_doc_type or "quarterly_refunding_seed.csv" in source_doc_local
+    values = (
+        _string_or_empty(row.get("source_doc_type")).lower(),
+        _string_or_empty(row.get("source_doc_local")).lower(),
+        _string_or_empty(row.get("financing_source_doc_type")).lower(),
+        _string_or_empty(row.get("financing_source_doc_local")).lower(),
+        _string_or_empty(row.get("refunding_statement_source_doc_type")).lower(),
+        _string_or_empty(row.get("refunding_statement_source_doc_local")).lower(),
+        _string_or_empty(row.get("auction_reconstruction_source_doc_type")).lower(),
+        _string_or_empty(row.get("auction_reconstruction_source_doc_local")).lower(),
+    )
+    return any("seed_csv" in value or "quarterly_refunding_seed.csv" in value for value in values)
 
 
 def _completion_tier_for_row(row: pd.Series) -> str:
     qa_status = _string_or_empty(row.get("qa_status"))
-    source_doc_type = _string_or_empty(row.get("source_doc_type")).lower()
     has_net_bill = not _is_missing(row.get("net_bill_issuance_bn"))
     has_financing = not _is_missing(row.get("total_financing_need_bn"))
     uses_seed = _uses_seed_source(row)
-    has_auction_reconstruction = _AUCTION_RECON_SOURCE_DOC_TYPE in source_doc_type
+    has_auction_reconstruction = _has_official_auction_reconstruction_provenance(row)
     has_official_financing = _has_official_financing_provenance(row)
     has_official_refunding_statement = _has_official_refunding_statement_provenance(row)
     if (
@@ -1434,13 +1725,31 @@ def _completion_tier_for_row(row: pd.Series) -> str:
 
 
 def _has_official_financing_provenance(row: pd.Series) -> bool:
+    financing_source_doc_type = _string_or_empty(row.get("financing_source_doc_type")).lower()
+    if financing_source_doc_type:
+        return "quarterly_refunding_press_release" in financing_source_doc_type
     source_doc_type = _string_or_empty(row.get("source_doc_type")).lower()
     return "quarterly_refunding_press_release" in source_doc_type
 
 
 def _has_official_refunding_statement_provenance(row: pd.Series) -> bool:
+    refunding_source_doc_type = _string_or_empty(
+        row.get("refunding_statement_source_doc_type")
+    ).lower()
+    if refunding_source_doc_type:
+        return "official_quarterly_refunding_statement" in refunding_source_doc_type
     source_doc_type = _string_or_empty(row.get("source_doc_type")).lower()
     return "official_quarterly_refunding_statement" in source_doc_type
+
+
+def _has_official_auction_reconstruction_provenance(row: pd.Series) -> bool:
+    auction_source_doc_type = _string_or_empty(
+        row.get("auction_reconstruction_source_doc_type")
+    ).lower()
+    if auction_source_doc_type:
+        return _AUCTION_RECON_SOURCE_DOC_TYPE in auction_source_doc_type
+    source_doc_type = _string_or_empty(row.get("source_doc_type")).lower()
+    return _AUCTION_RECON_SOURCE_DOC_TYPE in source_doc_type
 
 
 def _drop_seed_provenance(value: str) -> str:

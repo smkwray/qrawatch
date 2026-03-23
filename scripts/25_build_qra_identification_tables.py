@@ -16,11 +16,13 @@ from ati_shadow_policy.research.identification import (
     build_event_design_status,
     build_event_usability_table,
     build_leave_one_event_out_table,
+    build_qra_benchmark_blockers_by_event,
     build_qra_event_registry_v2,
     build_qra_release_component_registry,
     build_qra_shock_crosswalk_v1,
     summarize_qra_causal_qa,
 )
+from ati_shadow_policy.research.qra_elasticity import build_qra_review_ledger
 from ati_shadow_policy.specs import spec_registry_frame
 
 
@@ -40,7 +42,9 @@ def main() -> None:
     overlap_annotations = _read_csv_if_exists(MANUAL_DIR / "qra_event_overlap_annotations.csv")
     contamination_reviews = _read_csv_if_exists(MANUAL_DIR / "qra_event_contamination_reviews.csv")
     elasticity = _read_csv_if_exists(TABLES_DIR / "qra_event_elasticity.csv")
-    shock_summary = _read_csv_if_exists(TABLES_DIR / "qra_event_elasticity.csv")
+    shock_summary = build_qra_review_ledger(elasticity, overlap_annotations=overlap_annotations)
+    write_df(shock_summary, PROCESSED_DIR / "qra_event_shock_summary.csv")
+    write_df(shock_summary, TABLES_DIR / "qra_event_shock_summary.csv")
 
     spec_registry = spec_registry_frame()
     write_df(spec_registry, PROCESSED_DIR / "spec_registry.csv")
@@ -55,7 +59,7 @@ def main() -> None:
         contamination_reviews=contamination_reviews,
         release_calendar_source=str(MANUAL_DIR / "qra_release_calendar_seed.csv"),
         overlap_annotations_source=str(MANUAL_DIR / "qra_event_overlap_annotations.csv"),
-        shock_summary_source=str(TABLES_DIR / "qra_event_elasticity.csv"),
+        shock_summary_source=str(TABLES_DIR / "qra_event_shock_summary.csv"),
     )
     write_df(event_registry, PROCESSED_DIR / "qra_event_registry_v2.csv")
     write_df(event_registry, TABLES_DIR / "qra_event_registry_v2.csv")
@@ -76,6 +80,10 @@ def main() -> None:
     event_design_status = build_event_design_status(component_registry)
     write_df(event_design_status, TABLES_DIR / "event_design_status.csv")
 
+    benchmark_blockers = build_qra_benchmark_blockers_by_event(component_registry)
+    write_df(benchmark_blockers, PROCESSED_DIR / "qra_benchmark_blockers_by_event.csv")
+    write_df(benchmark_blockers, TABLES_DIR / "qra_benchmark_blockers_by_event.csv")
+
     shock_crosswalk = build_qra_shock_crosswalk_v1(elasticity)
     write_df(shock_crosswalk, PROCESSED_DIR / "qra_shock_crosswalk_v1.csv")
     write_df(shock_crosswalk, TABLES_DIR / "qra_shock_crosswalk_v1.csv")
@@ -93,6 +101,8 @@ def main() -> None:
         f"event_registry={len(event_registry):,}, "
         f"component_registry={len(component_registry):,}, "
         f"causal_qa={len(causal_qa):,}, "
+        f"benchmark_blockers={len(benchmark_blockers):,}, "
+        f"shock_summary={len(shock_summary):,}, "
         f"shock_crosswalk={len(shock_crosswalk):,}, "
         f"event_usability={len(event_usability):,}, "
         f"leave_one_out={len(leave_one_out):,}"

@@ -10,7 +10,7 @@
     {
       "scope": "current_sample_all_components",
       "metric": "pre_release_external_benchmark_count",
-      "value": 0,
+      "value": 6,
       "notes": "Rows with benchmark timing classified as pre-release external."
     },
     {
@@ -22,19 +22,19 @@
     {
       "scope": "current_sample_all_components",
       "metric": "post_release_invalid_count",
-      "value": 0,
+      "value": 8,
       "notes": "Rows with post-release benchmark timestamps."
     },
     {
       "scope": "current_sample_all_components",
       "metric": "external_timing_unverified_count",
-      "value": 14,
+      "value": 0,
       "notes": "Rows with a benchmark source family attached but no validated pre-release timestamp."
     },
     {
       "scope": "current_sample_all_components",
       "metric": "external_benchmark_ready_count",
-      "value": 0,
+      "value": 6,
       "notes": "Rows structurally ready for causal surprise use."
     },
     {
@@ -46,7 +46,7 @@
     {
       "scope": "current_sample_all_components",
       "metric": "causal_eligible_count",
-      "value": 0,
+      "value": 5,
       "notes": "Rows that currently pass all causal gates."
     },
     {
@@ -58,7 +58,7 @@
     {
       "scope": "current_sample_financing_estimates",
       "metric": "pre_release_external_benchmark_count",
-      "value": 0,
+      "value": 6,
       "notes": "Rows with benchmark timing classified as pre-release external."
     },
     {
@@ -70,19 +70,19 @@
     {
       "scope": "current_sample_financing_estimates",
       "metric": "post_release_invalid_count",
-      "value": 0,
+      "value": 8,
       "notes": "Rows with post-release benchmark timestamps."
     },
     {
       "scope": "current_sample_financing_estimates",
       "metric": "external_timing_unverified_count",
-      "value": 14,
+      "value": 0,
       "notes": "Rows with a benchmark source family attached but no validated pre-release timestamp."
     },
     {
       "scope": "current_sample_financing_estimates",
       "metric": "external_benchmark_ready_count",
-      "value": 0,
+      "value": 6,
       "notes": "Rows structurally ready for causal surprise use."
     },
     {
@@ -94,7 +94,7 @@
     {
       "scope": "current_sample_financing_estimates",
       "metric": "causal_eligible_count",
-      "value": 0,
+      "value": 5,
       "notes": "Rows that currently pass all causal gates."
     }
   ]

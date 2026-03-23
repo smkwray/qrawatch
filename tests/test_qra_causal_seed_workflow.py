@@ -71,7 +71,7 @@ def test_seed_release_component_registry_preserves_existing_manual_rows() -> Non
         "qra_2024_05__policy_statement",
     ]
     assert policy["review_notes"] == "existing manual note"
-    assert financing["review_notes"] == "derived row"
+    assert "derived row" in financing["review_notes"]
 
 
 def test_seed_expectation_and_contamination_templates_use_release_component_placeholders() -> None:
