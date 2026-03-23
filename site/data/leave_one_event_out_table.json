@@ -6,7 +6,7 @@
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS10",
       "window": "d1",
@@ -16,14 +16,17 @@
       "leave_one_out_coefficient": 13.70295244534602,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS10",
       "window": "d3",
@@ -33,14 +36,17 @@
       "leave_one_out_coefficient": 41.6948388550823,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS30",
       "window": "d1",
@@ -50,14 +56,17 @@
       "leave_one_out_coefficient": 16.76808654496276,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS30",
       "window": "d3",
@@ -67,14 +76,17 @@
       "leave_one_out_coefficient": 56.97543385170152,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -84,14 +96,17 @@
       "leave_one_out_coefficient": 4.433626324092843,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -101,14 +116,17 @@
       "leave_one_out_coefficient": 11.648861843587984,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -118,14 +136,17 @@
       "leave_one_out_coefficient": 9.375704304710457,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -135,14 +156,17 @@
       "leave_one_out_coefficient": 49.402749605589385,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS10",
       "window": "d1",
@@ -152,14 +176,17 @@
       "leave_one_out_coefficient": -0.0158336387955025,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS10",
       "window": "d3",
@@ -169,14 +196,17 @@
       "leave_one_out_coefficient": 0.2790295456079255,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS30",
       "window": "d1",
@@ -186,14 +216,17 @@
       "leave_one_out_coefficient": 0.1240708700548361,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS30",
       "window": "d3",
@@ -203,14 +236,17 @@
       "leave_one_out_coefficient": 0.5588385633086042,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -220,14 +256,17 @@
       "leave_one_out_coefficient": -0.0444105404923562,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -237,14 +276,17 @@
       "leave_one_out_coefficient": 0.0024637311669226,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -254,14 +296,17 @@
       "leave_one_out_coefficient": 0.2122358790438427,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -271,14 +316,17 @@
       "leave_one_out_coefficient": 0.6733929702901152,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS10",
       "window": "d1",
@@ -288,14 +336,17 @@
       "leave_one_out_coefficient": -1.5525028242307135,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS10",
       "window": "d3",
@@ -305,14 +356,17 @@
       "leave_one_out_coefficient": 22.418044350397857,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS30",
       "window": "d1",
@@ -322,14 +376,17 @@
       "leave_one_out_coefficient": 10.01697629569125,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS30",
       "window": "d3",
@@ -339,14 +396,17 @@
       "leave_one_out_coefficient": 45.557002590241886,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -356,14 +416,17 @@
       "leave_one_out_coefficient": -3.8066812336141207,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -373,14 +436,17 @@
       "leave_one_out_coefficient": -0.1214893066125295,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -390,14 +456,17 @@
       "leave_one_out_coefficient": 17.372664520772833,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -407,14 +476,17 @@
       "leave_one_out_coefficient": 55.50019552237468,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS10",
       "window": "d1",
@@ -424,14 +496,17 @@
       "leave_one_out_coefficient": -1.0141987829614214,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS10",
       "window": "d3",
@@ -441,14 +516,17 @@
       "leave_one_out_coefficient": 21.36578769438818,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS30",
       "window": "d1",
@@ -458,14 +536,17 @@
       "leave_one_out_coefficient": 9.46585530764022,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS30",
       "window": "d3",
@@ -475,14 +556,17 @@
       "leave_one_out_coefficient": 42.32589587559156,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -492,14 +576,17 @@
       "leave_one_out_coefficient": -3.2319134550372066,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -509,14 +596,17 @@
       "leave_one_out_coefficient": 0.4144692359702304,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -526,14 +616,17 @@
       "leave_one_out_coefficient": 16.024340770791113,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2022_05",
       "left_out_event_id": "qra_2022_05",
       "event_id": "qra_2022_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -543,14 +636,17 @@
       "leave_one_out_coefficient": 50.574712643678176,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS10",
       "window": "d1",
@@ -560,14 +656,17 @@
       "leave_one_out_coefficient": 21.5212655110354,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS10",
       "window": "d3",
@@ -577,14 +676,17 @@
       "leave_one_out_coefficient": 40.61759969688365,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS30",
       "window": "d1",
@@ -594,14 +696,17 @@
       "leave_one_out_coefficient": 19.910959552903233,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS30",
       "window": "d3",
@@ -611,14 +716,17 @@
       "leave_one_out_coefficient": 46.54731457800506,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -628,14 +736,17 @@
       "leave_one_out_coefficient": 9.587382779198617,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -645,14 +756,17 @@
       "leave_one_out_coefficient": 15.614379084967297,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -662,14 +776,17 @@
       "leave_one_out_coefficient": 1.4019134223738778,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -679,14 +796,17 @@
       "leave_one_out_coefficient": 25.831202046035855,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS10",
       "window": "d1",
@@ -696,14 +816,17 @@
       "leave_one_out_coefficient": 0.1552184995840069,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS10",
       "window": "d3",
@@ -713,14 +836,17 @@
       "leave_one_out_coefficient": 0.776092497920031,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS30",
       "window": "d1",
@@ -730,14 +856,17 @@
       "leave_one_out_coefficient": 0.3104369991680097,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS30",
       "window": "d3",
@@ -747,14 +876,17 @@
       "leave_one_out_coefficient": 1.0865294970880406,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -764,14 +896,17 @@
       "leave_one_out_coefficient": 0.0460481548765878,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -781,14 +916,17 @@
       "leave_one_out_coefficient": 0.233862539373235,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -798,14 +936,17 @@
       "leave_one_out_coefficient": 0.3621764990293481,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -815,14 +956,17 @@
       "leave_one_out_coefficient": 0.8795714976426995,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS10",
       "window": "d1",
@@ -832,14 +976,17 @@
       "leave_one_out_coefficient": 12.641372684521988,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS10",
       "window": "d3",
@@ -849,14 +996,17 @@
       "leave_one_out_coefficient": 63.20686342260964,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS30",
       "window": "d1",
@@ -866,14 +1016,17 @@
       "leave_one_out_coefficient": 25.28274536904364,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS30",
       "window": "d3",
@@ -883,14 +1036,17 @@
       "leave_one_out_coefficient": 88.48960879165328,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -900,14 +1056,17 @@
       "leave_one_out_coefficient": 3.750273896408122,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -917,14 +1076,17 @@
       "leave_one_out_coefficient": 19.046334844679624,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -934,14 +1096,17 @@
       "leave_one_out_coefficient": 29.49653626388453,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -951,14 +1116,17 @@
       "leave_one_out_coefficient": 71.63444521229074,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS10",
       "window": "d1",
@@ -968,14 +1136,17 @@
       "leave_one_out_coefficient": 11.76470588235302,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS10",
       "window": "d3",
@@ -985,14 +1156,17 @@
       "leave_one_out_coefficient": 58.823529411764824,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS30",
       "window": "d1",
@@ -1002,14 +1176,17 @@
       "leave_one_out_coefficient": 23.529411764705724,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS30",
       "window": "d3",
@@ -1019,14 +1196,17 @@
       "leave_one_out_coefficient": 82.35294117647055,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -1036,14 +1216,17 @@
       "leave_one_out_coefficient": 3.490196078431333,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -1053,14 +1236,17 @@
       "leave_one_out_coefficient": 17.72549019607839,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -1070,14 +1256,17 @@
       "leave_one_out_coefficient": 27.450980392156943,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_05",
       "left_out_event_id": "qra_2023_05",
       "event_id": "qra_2023_05",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -1087,14 +1276,17 @@
       "leave_one_out_coefficient": 66.66666666666663,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS10",
       "window": "d1",
@@ -1104,14 +1296,17 @@
       "leave_one_out_coefficient": 13.001995734159102,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS10",
       "window": "d3",
@@ -1121,14 +1316,17 @@
       "leave_one_out_coefficient": 15.645771885299215,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS30",
       "window": "d1",
@@ -1138,14 +1336,17 @@
       "leave_one_out_coefficient": 10.535255248192897,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS30",
       "window": "d3",
@@ -1155,14 +1356,17 @@
       "leave_one_out_coefficient": 19.862617710752392,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -1172,14 +1376,17 @@
       "leave_one_out_coefficient": 5.105976423552922,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -1189,14 +1396,17 @@
       "leave_one_out_coefficient": 4.0736984448951885,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -1206,14 +1416,17 @@
       "leave_one_out_coefficient": -6.215846325203341,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -1223,14 +1436,17 @@
       "leave_one_out_coefficient": 15.103232697376884,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS10",
       "window": "d1",
@@ -1240,14 +1456,17 @@
       "leave_one_out_coefficient": -0.186885777175012,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS10",
       "window": "d3",
@@ -1257,14 +1476,17 @@
       "leave_one_out_coefficient": -0.21803340670418,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS30",
       "window": "d1",
@@ -1274,14 +1496,17 @@
       "leave_one_out_coefficient": -0.0622952590583373,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS30",
       "window": "d3",
@@ -1291,14 +1516,17 @@
       "leave_one_out_coefficient": 0.0311476295291677,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -1308,14 +1536,17 @@
       "leave_one_out_coefficient": -0.1348692358613003,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -1325,14 +1556,17 @@
       "leave_one_out_coefficient": -0.2289350770393897,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -1342,14 +1576,17 @@
       "leave_one_out_coefficient": 0.0622952590583373,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -1359,14 +1596,17 @@
       "leave_one_out_coefficient": 0.467214442937531,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS10",
       "window": "d1",
@@ -1376,14 +1616,17 @@
       "leave_one_out_coefficient": -15.746378332983417,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS10",
       "window": "d3",
@@ -1393,14 +1636,17 @@
       "leave_one_out_coefficient": -18.37077472181393,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS30",
       "window": "d1",
@@ -1410,14 +1656,17 @@
       "leave_one_out_coefficient": -5.248792777661138,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS30",
       "window": "d3",
@@ -1427,14 +1676,17 @@
       "leave_one_out_coefficient": 2.6243963888304904,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -1444,14 +1696,17 @@
       "leave_one_out_coefficient": -11.363636363636363,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -1461,14 +1716,17 @@
       "leave_one_out_coefficient": -19.289313457904683,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -1478,14 +1736,17 @@
       "leave_one_out_coefficient": 5.248792777661138,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -1495,14 +1756,17 @@
       "leave_one_out_coefficient": 39.365945832458614,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS10",
       "window": "d1",
@@ -1512,14 +1776,17 @@
       "leave_one_out_coefficient": -13.793103448275865,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS10",
       "window": "d3",
@@ -1529,14 +1796,17 @@
       "leave_one_out_coefficient": -16.09195402298846,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS30",
       "window": "d1",
@@ -1546,14 +1816,17 @@
       "leave_one_out_coefficient": -4.597701149425287,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS30",
       "window": "d3",
@@ -1563,14 +1836,17 @@
       "leave_one_out_coefficient": 2.2988505747125747,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -1580,14 +1856,17 @@
       "leave_one_out_coefficient": -9.954022988505749,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -1597,14 +1876,17 @@
       "leave_one_out_coefficient": -16.89655172413793,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -1614,14 +1896,17 @@
       "leave_one_out_coefficient": 4.597701149425287,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_08",
       "left_out_event_id": "qra_2023_08",
       "event_id": "qra_2023_08",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -1631,14 +1916,17 @@
       "leave_one_out_coefficient": 34.48275862068972,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS10",
       "window": "d1",
@@ -1648,14 +1936,17 @@
       "leave_one_out_coefficient": 2.544479394289809,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS10",
       "window": "d3",
@@ -1665,14 +1956,17 @@
       "leave_one_out_coefficient": 7.802634630397307,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS30",
       "window": "d1",
@@ -1682,14 +1976,17 @@
       "leave_one_out_coefficient": 7.9208761632255245,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "DGS30",
       "window": "d3",
@@ -1699,14 +1996,17 @@
       "leave_one_out_coefficient": 18.55542816826876,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -1716,14 +2016,17 @@
       "leave_one_out_coefficient": -0.318860177754281,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -1733,14 +2036,17 @@
       "leave_one_out_coefficient": -1.390353842686513,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -1750,14 +2056,17 @@
       "leave_one_out_coefficient": 4.241670014665928,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "canonical_shock_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -1767,14 +2076,17 @@
       "leave_one_out_coefficient": 21.63918040979516,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS10",
       "window": "d1",
@@ -1784,14 +2096,17 @@
       "leave_one_out_coefficient": -0.0158336387955025,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS10",
       "window": "d3",
@@ -1801,14 +2116,17 @@
       "leave_one_out_coefficient": 0.2790295456079255,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS30",
       "window": "d1",
@@ -1818,14 +2136,17 @@
       "leave_one_out_coefficient": 0.1240708700548361,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "DGS30",
       "window": "d3",
@@ -1835,14 +2156,17 @@
       "leave_one_out_coefficient": 0.5588385633086042,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -1852,14 +2176,17 @@
       "leave_one_out_coefficient": -0.0444105404923562,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -1869,14 +2196,17 @@
       "leave_one_out_coefficient": 0.0024637311669226,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -1886,14 +2216,17 @@
       "leave_one_out_coefficient": 0.2122358790438427,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dv01_usd",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -1903,14 +2236,17 @@
       "leave_one_out_coefficient": 0.6733929702901152,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS10",
       "window": "d1",
@@ -1920,14 +2256,17 @@
       "leave_one_out_coefficient": -1.5525028242307135,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS10",
       "window": "d3",
@@ -1937,14 +2276,17 @@
       "leave_one_out_coefficient": 22.418044350397857,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS30",
       "window": "d1",
@@ -1954,14 +2296,17 @@
       "leave_one_out_coefficient": 10.01697629569125,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "DGS30",
       "window": "d3",
@@ -1971,14 +2316,17 @@
       "leave_one_out_coefficient": 45.557002590241886,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -1988,14 +2336,17 @@
       "leave_one_out_coefficient": -3.8066812336141207,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -2005,14 +2356,17 @@
       "leave_one_out_coefficient": -0.1214893066125295,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -2022,14 +2376,17 @@
       "leave_one_out_coefficient": 17.372664520772833,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "dynamic_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -2039,14 +2396,17 @@
       "leave_one_out_coefficient": 55.50019552237468,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS10",
       "window": "d1",
@@ -2056,14 +2416,17 @@
       "leave_one_out_coefficient": -1.0141987829614214,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS10",
       "window": "d3",
@@ -2073,14 +2436,17 @@
       "leave_one_out_coefficient": 21.36578769438818,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS30",
       "window": "d1",
@@ -2090,14 +2456,17 @@
       "leave_one_out_coefficient": 9.46585530764022,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "DGS30",
       "window": "d3",
@@ -2107,14 +2476,17 @@
       "leave_one_out_coefficient": 42.32589587559156,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d1",
@@ -2124,14 +2496,17 @@
       "leave_one_out_coefficient": -3.2319134550372066,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "THREEFYTP10",
       "window": "d3",
@@ -2141,14 +2516,17 @@
       "leave_one_out_coefficient": 0.4144692359702304,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d1",
@@ -2158,14 +2536,17 @@
       "leave_one_out_coefficient": 16.024340770791113,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     },
     {
       "leave_one_out_event_id": "qra_2023_11",
       "left_out_event_id": "qra_2023_11",
       "event_id": "qra_2023_11",
       "event_date_type": "official_release_date",
-      "headline_bucket": "headline_usable_pool",
+      "headline_bucket": "pending",
       "treatment_variant": "fixed_10y_eq_bn",
       "series": "slope_10y_2y",
       "window": "d3",
@@ -2175,7 +2556,10 @@
       "leave_one_out_coefficient": 50.574712643678176,
       "leave_one_out_std_err": NaN,
       "leave_one_out_delta": NaN,
-      "spec_id": "spec_duration_treatment_v1"
+      "spec_id": "spec_duration_treatment_v1",
+      "n_events": 3,
+      "p_value": null,
+      "claim_scope": "descriptive_only"
     }
   ]
 }

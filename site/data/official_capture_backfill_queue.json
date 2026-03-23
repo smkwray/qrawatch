@@ -2,6 +2,50 @@
   "title": "Official Capture Backfill Queue",
   "rows": [
     {
+      "quarter": "2009Q1",
+      "source_quality": "exact_official",
+      "readiness_tier": "headline_ready",
+      "numeric_official_capture_ready": true,
+      "financing_provenance_ready": true,
+      "refunding_statement_provenance_ready": true,
+      "auction_reconstruction_ready": true,
+      "missing_numeric_fields": "",
+      "next_action": "complete"
+    },
+    {
+      "quarter": "2009Q2",
+      "source_quality": "exact_official",
+      "readiness_tier": "headline_ready",
+      "numeric_official_capture_ready": true,
+      "financing_provenance_ready": true,
+      "refunding_statement_provenance_ready": true,
+      "auction_reconstruction_ready": true,
+      "missing_numeric_fields": "",
+      "next_action": "complete"
+    },
+    {
+      "quarter": "2009Q3",
+      "source_quality": "exact_official",
+      "readiness_tier": "headline_ready",
+      "numeric_official_capture_ready": true,
+      "financing_provenance_ready": true,
+      "refunding_statement_provenance_ready": true,
+      "auction_reconstruction_ready": true,
+      "missing_numeric_fields": "",
+      "next_action": "complete"
+    },
+    {
+      "quarter": "2009Q4",
+      "source_quality": "exact_official",
+      "readiness_tier": "headline_ready",
+      "numeric_official_capture_ready": true,
+      "financing_provenance_ready": true,
+      "refunding_statement_provenance_ready": true,
+      "auction_reconstruction_ready": true,
+      "missing_numeric_fields": "",
+      "next_action": "complete"
+    },
+    {
       "quarter": "2010Q1",
       "source_quality": "exact_official",
       "readiness_tier": "headline_ready",

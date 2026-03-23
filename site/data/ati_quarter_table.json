@@ -2,6 +2,54 @@
   "title": "ATI Quarter Table",
   "rows": [
     {
+      "quarter": "2009Q1",
+      "financing_need_bn": 493,
+      "net_bills_bn": 131.866,
+      "bill_share": 0.2674766734279919,
+      "missing_coupons_15_bn": 57.91600000000001,
+      "missing_coupons_18_bn": 43.12600000000002,
+      "missing_coupons_20_bn": 33.266000000000005,
+      "ati_baseline_bn": 43.12600000000002,
+      "source_quality": "exact_official_numeric",
+      "public_role": "headline"
+    },
+    {
+      "quarter": "2009Q2",
+      "financing_need_bn": 361,
+      "net_bills_bn": 45.06,
+      "bill_share": 0.1248199445983379,
+      "missing_coupons_15_bn": -9.089999999999996,
+      "missing_coupons_18_bn": -19.92,
+      "missing_coupons_20_bn": -27.14,
+      "ati_baseline_bn": -19.92,
+      "source_quality": "exact_official_numeric",
+      "public_role": "headline"
+    },
+    {
+      "quarter": "2009Q3",
+      "financing_need_bn": 406,
+      "net_bills_bn": -60.0,
+      "bill_share": -0.1477832512315271,
+      "missing_coupons_15_bn": -120.9,
+      "missing_coupons_18_bn": -133.07999999999998,
+      "missing_coupons_20_bn": -141.2,
+      "ati_baseline_bn": -133.07999999999998,
+      "source_quality": "exact_official_numeric",
+      "public_role": "headline"
+    },
+    {
+      "quarter": "2009Q4",
+      "financing_need_bn": 276,
+      "net_bills_bn": -212.067,
+      "bill_share": -0.768358695652174,
+      "missing_coupons_15_bn": -253.467,
+      "missing_coupons_18_bn": -261.747,
+      "missing_coupons_20_bn": -267.267,
+      "ati_baseline_bn": -261.747,
+      "source_quality": "exact_official_numeric",
+      "public_role": "headline"
+    },
+    {
       "quarter": "2010Q1",
       "financing_need_bn": 392,
       "net_bills_bn": 49.943,

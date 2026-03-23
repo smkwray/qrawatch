@@ -16,7 +16,9 @@
       "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 1,
       "n_events": 1,
-      "event_count": 1
+      "event_count": 1,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -33,7 +35,9 @@
       "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 2,
       "n_events": 2,
-      "event_count": 2
+      "event_count": 2,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -50,7 +54,9 @@
       "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 1,
       "n_events": 1,
-      "event_count": 1
+      "event_count": 1,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -67,7 +73,9 @@
       "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 1,
       "n_events": 1,
-      "event_count": 1
+      "event_count": 1,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -84,7 +92,9 @@
       "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 47,
       "n_events": 47,
-      "event_count": 47
+      "event_count": 47,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -101,7 +111,9 @@
       "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 7,
       "n_events": 7,
-      "event_count": 7
+      "event_count": 7,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -118,7 +130,9 @@
       "descriptive_headline_reason": "non_official_event_date_type",
       "n_rows": 2,
       "n_events": 2,
-      "event_count": 2
+      "event_count": 2,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -135,7 +149,9 @@
       "descriptive_headline_reason": "small_denominator",
       "n_rows": 1,
       "n_events": 1,
-      "event_count": 1
+      "event_count": 1,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -152,7 +168,9 @@
       "descriptive_headline_reason": "small_denominator",
       "n_rows": 2,
       "n_events": 2,
-      "event_count": 2
+      "event_count": 2,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -169,7 +187,9 @@
       "descriptive_headline_reason": "usable",
       "n_rows": 1,
       "n_events": 1,
-      "event_count": 1
+      "event_count": 1,
+      "headline_usable_count": 1,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -186,7 +206,9 @@
       "descriptive_headline_reason": "usable",
       "n_rows": 1,
       "n_events": 1,
-      "event_count": 1
+      "event_count": 1,
+      "headline_usable_count": 1,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -203,7 +225,9 @@
       "descriptive_headline_reason": "shock_missing",
       "n_rows": 47,
       "n_events": 47,
-      "event_count": 47
+      "event_count": 47,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -220,7 +244,9 @@
       "descriptive_headline_reason": "small_denominator",
       "n_rows": 7,
       "n_events": 7,
-      "event_count": 7
+      "event_count": 7,
+      "headline_usable_count": 0,
+      "claim_scope": "descriptive_only"
     },
     {
       "spec_id": "spec_qra_event_v2",
@@ -237,7 +263,9 @@
       "descriptive_headline_reason": "usable",
       "n_rows": 2,
       "n_events": 2,
-      "event_count": 2
+      "event_count": 2,
+      "headline_usable_count": 2,
+      "claim_scope": "descriptive_only"
     }
   ]
 }

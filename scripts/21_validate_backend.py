@@ -221,6 +221,40 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "long_rate_pilot_ready",
         "long_rate_pilot_blocker",
         "public_role",
+        "claim_scope",
+    ],
+    "qra_benchmark_evidence_registry.csv": [
+        "release_component_id",
+        "event_id",
+        "quarter",
+        "component_type",
+        "benchmark_source_family",
+        "benchmark_timing_status",
+        "external_benchmark_ready",
+        "expectation_status",
+        "contamination_status",
+        "quality_tier",
+        "causal_eligible",
+        "terminal_disposition",
+        "claim_scope",
+    ],
+    "causal_claims_status.csv": [
+        "claim_id",
+        "claim_name",
+        "claim_scope",
+        "readiness_tier",
+        "public_role",
+        "headline_ready",
+        "causal_pilot_ready",
+        "source_quality",
+        "current_sample_financing_component_count",
+        "benchmark_ready_count",
+        "tier_a_count",
+        "context_only_count",
+        "post_release_invalid_count",
+        "can_claim",
+        "cannot_claim",
+        "boundary_reason",
     ],
     "series_metadata_catalog.csv": [
         "dataset",
@@ -248,6 +282,7 @@ OPTIONAL_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "schedule_diff_dv01_usd",
         "shock_construction",
         "elasticity_bp_per_100bn",
+        "claim_scope",
     ],
     "qra_event_elasticity_diagnostic.csv": [
         "quarter",
@@ -264,6 +299,7 @@ OPTIONAL_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "schedule_diff_dv01_usd",
         "shock_construction",
         "elasticity_bp_per_100bn",
+        "claim_scope",
     ],
     "qra_event_shock_summary.csv": [
         "quarter",
@@ -281,6 +317,7 @@ OPTIONAL_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "descriptive_headline_reason",
         "usable_for_descriptive_headline",
         "usable_for_headline",
+        "claim_scope",
     ],
     "qra_event_shock_components.csv": [
         "event_id",
@@ -345,6 +382,7 @@ QRA_SHOCK_CROSSWALK_V1_COLUMNS = [
     "shock_review_status",
     "treatment_version_id",
     "usable_for_headline_reason",
+    "claim_scope",
 ]
 
 EVENT_USABILITY_TABLE_REQUIRED_GROUPS = [
@@ -383,9 +421,10 @@ OPTIONAL_PUBLISH_SCHEMAS.update(
             "mean_elasticity_value",
             "headline_recommendation_status",
             "primary_treatment_variant",
+            "claim_scope",
         ],
-        "event_usability_table.csv": ["headline_bucket", "event_date_type", "event_count"],
-        "leave_one_event_out_table.csv": ["left_out_event_id", "series", "window", "estimate"],
+        "event_usability_table.csv": ["headline_bucket", "event_date_type", "event_count", "claim_scope"],
+        "leave_one_event_out_table.csv": ["left_out_event_id", "series", "window", "estimate", "claim_scope"],
         "auction_absorption_table.csv": [
             "qra_event_id",
             "quarter",
@@ -397,6 +436,7 @@ OPTIONAL_PUBLISH_SCHEMAS.update(
             "units",
             "source_quality",
             "provenance_summary",
+            "claim_scope",
         ],
         "qra_release_component_registry.csv": [
             "release_component_id",
@@ -475,6 +515,25 @@ QRA_GUIDANCE_VALUES = {"hawkish", "neutral", "dovish", "pending"}
 QRA_HEADLINE_BUCKET_VALUES = {"tightening", "easing", "control_hold", "exclude", "pending"}
 QRA_CONFIDENCE_VALUES = {"exact_statement", "table_diff", "hybrid", "heuristic", "pending"}
 QRA_REVIEW_VALUES = {"reviewed", "provisional", "pending"}
+CLAIM_SCOPE_VALUES = {"descriptive_only", "causal_pilot_only", "headline"}
+SUPPORTING_CLAIM_SCOPE_FILES = {
+    "qra_shock_crosswalk_v1.csv",
+    "qra_event_elasticity.csv",
+    "qra_event_elasticity_diagnostic.csv",
+    "qra_event_shock_summary.csv",
+    "treatment_comparison_table.csv",
+    "event_usability_table.csv",
+    "leave_one_event_out_table.csv",
+    "qra_long_rate_translation_panel.csv",
+    "auction_absorption_table.csv",
+    "qra_benchmark_evidence_registry.csv",
+}
+CLAIM_SCOPE_VALIDATED_NON_QRA_FILES = {
+    "event_usability_table.csv",
+    "leave_one_event_out_table.csv",
+    "treatment_comparison_table.csv",
+    "auction_absorption_table.csv",
+}
 
 
 def _coerce_timestamp(value: object) -> datetime | None:
@@ -1189,6 +1248,7 @@ def _validate_qra_publish_frame(csv_name: str, frame: pd.DataFrame) -> list[str]
         ("classification_confidence", QRA_CONFIDENCE_VALUES),
         ("classification_review_status", QRA_REVIEW_VALUES),
         ("shock_review_status", QRA_REVIEW_VALUES),
+        ("claim_scope", CLAIM_SCOPE_VALUES),
     ):
         invalid = _invalid_enum_values(frame, column, allowed)
         if invalid:
@@ -1229,6 +1289,13 @@ def _validate_qra_publish_frame(csv_name: str, frame: pd.DataFrame) -> list[str]
             if not invalid.empty:
                 errors.append(f"qra_publish_invalid_headline_semantics:{csv_name}")
 
+    if csv_name in SUPPORTING_CLAIM_SCOPE_FILES and "claim_scope" in frame.columns:
+        invalid_headline_scope = frame.loc[
+            frame["claim_scope"].fillna("").astype(str).str.strip().eq("headline")
+        ]
+        if not invalid_headline_scope.empty:
+            errors.append(f"qra_publish_invalid_claim_scope:{csv_name}")
+
     _validate_alias_compatibility(csv_name, frame, errors=errors)
 
     return errors
@@ -1250,16 +1317,19 @@ def _validate_causal_component_registry(component_registry: pd.DataFrame) -> lis
     if component_registry.empty:
         return errors
 
+    indexed_empty_object = pd.Series("", index=component_registry.index)
+    indexed_empty_bool = pd.Series(False, index=component_registry.index)
     exact_time = component_registry.loc[
-        component_registry.get("timestamp_precision", pd.Series(dtype=object))
+        component_registry.get("timestamp_precision", indexed_empty_object)
         .fillna("")
         .astype(str)
         .str.strip()
         .eq("exact_time")
     ].copy()
     if not exact_time.empty:
+        exact_time_empty_object = pd.Series("", index=exact_time.index)
         missing_expectation = exact_time.loc[
-            exact_time.get("expectation_status", pd.Series(dtype=object))
+            exact_time.get("expectation_status", exact_time_empty_object)
             .fillna("")
             .astype(str)
             .str.strip()
@@ -1271,7 +1341,7 @@ def _validate_causal_component_registry(component_registry: pd.DataFrame) -> lis
                 + ",".join(sorted(missing_expectation["release_component_id"].astype(str).unique()))
             )
         missing_contamination = exact_time.loc[
-            exact_time.get("contamination_status", pd.Series(dtype=object))
+            exact_time.get("contamination_status", exact_time_empty_object)
             .fillna("")
             .astype(str)
             .str.strip()
@@ -1387,7 +1457,10 @@ def _validate_causal_component_registry(component_registry: pd.DataFrame) -> lis
     current_sample_financing = component_registry.loc[financing_mask & current_sample_quarter_mask].copy()
     if not current_sample_financing.empty:
         pending_contamination = current_sample_financing.loc[
-            current_sample_financing.get("contamination_status", pd.Series(dtype=object)).fillna("").astype(str).str.strip().eq("pending_review")
+            current_sample_financing.get(
+                "contamination_status",
+                pd.Series("", index=current_sample_financing.index),
+            ).fillna("").astype(str).str.strip().eq("pending_review")
         ]
         if not pending_contamination.empty:
             errors.append(
@@ -1396,7 +1469,7 @@ def _validate_causal_component_registry(component_registry: pd.DataFrame) -> lis
             )
 
     causal_claims = component_registry.loc[
-        component_registry.get("causal_eligible", pd.Series(dtype=bool)).fillna(False).astype(bool)
+        component_registry.get("causal_eligible", indexed_empty_bool).fillna(False).astype(bool)
     ].copy()
     if not causal_claims.empty:
         invalid_claims: list[str] = []
@@ -1440,7 +1513,7 @@ def _validate_causal_component_registry(component_registry: pd.DataFrame) -> lis
             )
 
     tier_a = component_registry.loc[
-        component_registry.get("quality_tier", pd.Series(dtype=object))
+        component_registry.get("quality_tier", indexed_empty_object)
         .fillna("")
         .astype(str)
         .str.strip()
@@ -1448,7 +1521,7 @@ def _validate_causal_component_registry(component_registry: pd.DataFrame) -> lis
     ].copy()
     if not tier_a.empty:
         tier_a_without_flag = tier_a.loc[
-            ~tier_a.get("causal_eligible", pd.Series(dtype=bool)).fillna(False).astype(bool)
+            ~tier_a.get("causal_eligible", pd.Series(False, index=tier_a.index)).fillna(False).astype(bool)
         ]
         if not tier_a_without_flag.empty:
             errors.append(
@@ -1559,6 +1632,120 @@ def _validate_qra_benchmark_coverage_against_components(
     return errors
 
 
+def _validate_qra_benchmark_evidence_registry_against_components(
+    component_registry: pd.DataFrame,
+    benchmark_evidence_registry: pd.DataFrame,
+) -> list[str]:
+    errors: list[str] = []
+    if component_registry.empty or benchmark_evidence_registry.empty:
+        return errors
+
+    financing = component_registry.loc[
+        component_registry.get("component_type", pd.Series(dtype=object)).astype(str).eq("financing_estimates")
+        & component_registry.get("quarter", pd.Series(dtype=object)).map(_normalize_quarter).map(_quarter_to_int).fillna(0).ge(_quarter_to_int("2022Q3") or 0)
+    ].copy()
+    if financing.empty:
+        return errors
+
+    expected_ids = set(financing.get("release_component_id", pd.Series(dtype=object)).dropna().astype(str))
+    actual_ids = set(benchmark_evidence_registry.get("release_component_id", pd.Series(dtype=object)).dropna().astype(str))
+    missing_ids = sorted(expected_ids - actual_ids)
+    extra_ids = sorted(actual_ids - expected_ids)
+    if missing_ids:
+        errors.append("qra_benchmark_evidence_registry_missing_rows:" + ",".join(missing_ids))
+    if extra_ids:
+        errors.append("qra_benchmark_evidence_registry_unexpected_rows:" + ",".join(extra_ids))
+
+    if "release_component_id" not in benchmark_evidence_registry.columns:
+        return errors
+
+    merged = financing.merge(
+        benchmark_evidence_registry,
+        on="release_component_id",
+        how="inner",
+        suffixes=("_component", "_registry"),
+    )
+    if merged.empty:
+        return errors
+
+    mismatched: list[str] = []
+    for base_name in (
+        "benchmark_timing_status",
+        "external_benchmark_ready",
+        "expectation_status",
+        "contamination_status",
+        "quality_tier",
+        "causal_eligible",
+    ):
+        component_col = f"{base_name}_component"
+        registry_col = f"{base_name}_registry"
+        if component_col not in merged.columns or registry_col not in merged.columns:
+            continue
+        component_vals = merged[component_col].fillna("").astype(str).str.strip()
+        registry_vals = merged[registry_col].fillna("").astype(str).str.strip()
+        if base_name in {"external_benchmark_ready", "causal_eligible"}:
+            component_vals = component_vals.str.lower()
+            registry_vals = registry_vals.str.lower()
+        mismatch_rows = merged.loc[component_vals != registry_vals]
+        if not mismatch_rows.empty:
+            mismatched.append(base_name)
+    if "claim_scope" in benchmark_evidence_registry.columns:
+        expected_claim_scope = merged.get("causal_eligible_component", pd.Series(dtype=bool)).fillna(False).astype(bool).map(
+            lambda eligible: "causal_pilot_only" if eligible else "descriptive_only"
+        )
+        actual_claim_scope = merged["claim_scope"].fillna("").astype(str).str.strip()
+        if actual_claim_scope.ne(expected_claim_scope).any():
+            mismatched.append("claim_scope")
+    if mismatched:
+        errors.append("qra_benchmark_evidence_registry_metric_mismatch:" + ",".join(sorted(mismatched)))
+    return errors
+
+
+def _validate_causal_claims_status_against_components(
+    component_registry: pd.DataFrame,
+    causal_claims_status: pd.DataFrame,
+) -> list[str]:
+    errors: list[str] = []
+    if component_registry.empty or causal_claims_status.empty:
+        return errors
+    claim_row = causal_claims_status.loc[
+        causal_claims_status.get("claim_id", pd.Series(dtype=object)).astype(str).eq("current_sample_financing_pilot")
+    ]
+    if claim_row.empty:
+        errors.append("causal_claims_status_missing_current_sample_financing_pilot")
+        return errors
+    row = claim_row.iloc[0]
+    financing = component_registry.loc[
+        component_registry.get("component_type", pd.Series(dtype=object)).astype(str).eq("financing_estimates")
+        & component_registry.get("quarter", pd.Series(dtype=object)).map(_normalize_quarter).map(_quarter_to_int).fillna(0).ge(_quarter_to_int("2022Q3") or 0)
+    ].copy()
+    actual = {
+        "current_sample_financing_component_count": int(len(financing)),
+        "benchmark_ready_count": int(financing.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("reviewed_surprise_ready").sum()),
+        "tier_a_count": int(financing.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier A").sum()),
+        "context_only_count": int(financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_context_only").sum()),
+        "post_release_invalid_count": int(financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("post_release_invalid").sum()),
+    }
+    mismatched = [
+        key
+        for key, expected in actual.items()
+        if _coerce_int(row.get(key)) != expected
+    ]
+    if mismatched:
+        errors.append("causal_claims_status_metric_mismatch:" + ",".join(sorted(mismatched)))
+    expected_claim_scope = "causal_pilot_only" if actual["benchmark_ready_count"] > 0 and actual["tier_a_count"] > 0 else "descriptive_only"
+    actual_claim_scope = str(row.get("claim_scope", "")).strip()
+    if actual_claim_scope != expected_claim_scope:
+        errors.append("causal_claims_status_invalid_claim_scope:current_sample_financing_pilot")
+    if _coerce_bool(row.get("headline_ready")):
+        errors.append("causal_claims_status_invalid_headline_ready:current_sample_financing_pilot")
+    if str(row.get("public_role", "")).strip() != "supporting":
+        errors.append("causal_claims_status_invalid_public_role:current_sample_financing_pilot")
+    if not str(row.get("can_claim", "")).strip() or not str(row.get("cannot_claim", "")).strip():
+        errors.append("causal_claims_status_missing_plain_language_boundary:current_sample_financing_pilot")
+    return errors
+
+
 def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -1629,6 +1816,9 @@ def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], l
                     if any(not value for value in required):
                         incomplete_ids.append(str(row.get("release_component_id", "")))
                         continue
+                    if _cell_text(row.get("expectation_review_status")) != "reviewed":
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
                     if _cell_text(row.get("benchmark_timing_status")) == "pre_release_external":
                         has_benchmark_time = bool(
                             _cell_text(row.get("benchmark_timestamp_et"))
@@ -1655,6 +1845,18 @@ def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], l
                         _cell_text(row.get("contamination_notes")),
                     )
                     if any(not value for value in required):
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if _cell_text(row.get("contamination_review_status")) != "reviewed":
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if not _cell_text(row.get("decision_rule")):
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if not _cell_text(row.get("decision_confidence")):
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if _cell_text(row.get("exclude_from_causal_pool")) == "":
                         incomplete_ids.append(str(row.get("release_component_id", "")))
                         continue
                     status = _cell_text(row.get("contamination_status"))
@@ -1693,17 +1895,22 @@ def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> li
     component_registry = qra_frames.get("qra_release_component_registry.csv", pd.DataFrame())
     event_design_status = qra_frames.get("event_design_status.csv", pd.DataFrame())
     benchmark_coverage = qra_frames.get("qra_benchmark_coverage.csv", pd.DataFrame())
+    benchmark_evidence_registry = qra_frames.get("qra_benchmark_evidence_registry.csv", pd.DataFrame())
+    causal_claims_status = qra_frames.get("causal_claims_status.csv", pd.DataFrame())
     crosswalk = _canonical_qra_review_frame(qra_frames.get("qra_shock_crosswalk_v1.csv", pd.DataFrame()))
     shock_summary = _canonical_qra_review_frame(qra_frames.get("qra_event_shock_summary.csv", pd.DataFrame()))
     elasticity = _canonical_qra_review_frame(qra_frames.get("qra_event_elasticity.csv", pd.DataFrame()))
     usability = qra_frames.get("event_usability_table.csv", pd.DataFrame())
-    if registry.empty or crosswalk.empty or shock_summary.empty or usability.empty:
-        if registry.empty or component_registry.empty:
-            return errors
 
     errors.extend(_validate_causal_component_registry(component_registry))
     errors.extend(_validate_event_design_status_against_components(component_registry, event_design_status))
     errors.extend(_validate_qra_benchmark_coverage_against_components(component_registry, benchmark_coverage))
+    errors.extend(_validate_qra_benchmark_evidence_registry_against_components(component_registry, benchmark_evidence_registry))
+    errors.extend(_validate_causal_claims_status_against_components(component_registry, causal_claims_status))
+
+    if registry.empty or crosswalk.empty or shock_summary.empty or usability.empty:
+        if registry.empty or component_registry.empty:
+            return errors
 
     if not registry.empty and not component_registry.empty:
         registry = registry.drop_duplicates(subset=["event_id"], keep="first").copy()
@@ -1926,13 +2133,13 @@ def validate_publish_artifacts(
             errors.append(
                 f"publish_artifact_missing_columns:{csv_name}:{','.join(missing_cols)}"
             )
-        if csv_name.startswith("qra_event_"):
+        if csv_name.startswith("qra_") or csv_name in CLAIM_SCOPE_VALIDATED_NON_QRA_FILES:
             errors.extend(_validate_qra_publish_frame(csv_name, csv_frame))
         if csv_name in {"qra_event_shock_summary.csv", "qra_event_elasticity.csv", "qra_shock_crosswalk_v1.csv"}:
             _validate_shock_drift_alerts(csv_name, csv_frame, warnings=warnings)
         if csv_name.startswith("qra_event_"):
             _validate_overlap_excluded_for_file(csv_name, csv_frame, errors=errors, warnings=warnings)
-        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv", "event_design_status.csv"}:
+        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv", "event_design_status.csv", "causal_claims_status.csv"}:
             qra_frames[csv_name] = csv_frame.copy()
         if csv_name == "official_capture_readiness.csv":
             readiness_frame = csv_frame
@@ -1962,13 +2169,13 @@ def validate_publish_artifacts(
             errors.append(
                 f"publish_artifact_missing_columns:{csv_name}:{','.join(missing_cols)}"
             )
-        if csv_name.startswith("qra_event_"):
+        if csv_name.startswith("qra_") or csv_name in CLAIM_SCOPE_VALIDATED_NON_QRA_FILES:
             errors.extend(_validate_qra_publish_frame(csv_name, csv_frame))
         if csv_name in {"qra_event_shock_summary.csv", "qra_shock_crosswalk_v1.csv", "qra_event_elasticity.csv"}:
             _validate_shock_drift_alerts(csv_name, csv_frame, warnings=warnings)
         if csv_name.startswith("qra_event_"):
             _validate_overlap_excluded_for_file(csv_name, csv_frame, errors=errors, warnings=warnings)
-        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv", "event_design_status.csv"}:
+        if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv", "event_design_status.csv", "causal_claims_status.csv"}:
             qra_frames[csv_name] = csv_frame.copy()
         if csv_name == "official_capture_readiness.csv":
             readiness_frame = csv_frame

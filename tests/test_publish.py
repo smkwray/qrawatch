@@ -345,6 +345,86 @@ def test_build_qra_long_rate_translation_panel_derives_governed_rows(monkeypatch
     assert fixed_row["translation_value"] == 25.0
     assert bool(fixed_row["long_rate_pilot_ready"])
     assert fixed_row["duration_assumption_source"] == "fixed_duration_weights"
+    assert fixed_row["claim_scope"] == "causal_pilot_only"
+
+
+def test_build_qra_benchmark_evidence_registry_table_derives_terminal_status_and_claim_scope(monkeypatch) -> None:
+    monkeypatch.setattr(
+        publish,
+        "build_qra_release_component_registry_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "release_component_id": "qra_2024_10__financing_estimates",
+                    "event_id": "qra_2024_10",
+                    "quarter": "2025Q1",
+                    "component_type": "financing_estimates",
+                    "benchmark_timing_status": "pre_release_external",
+                    "external_benchmark_ready": True,
+                    "expectation_status": "reviewed_surprise_ready",
+                    "contamination_status": "reviewed_clean",
+                    "quality_tier": "Tier A",
+                    "causal_eligible": True,
+                    "eligibility_blockers": "",
+                },
+                {
+                    "release_component_id": "qra_2024_05__financing_estimates",
+                    "event_id": "qra_2024_05",
+                    "quarter": "2024Q3",
+                    "component_type": "financing_estimates",
+                    "benchmark_timing_status": "pre_release_external",
+                    "external_benchmark_ready": True,
+                    "expectation_status": "reviewed_surprise_ready",
+                    "contamination_status": "reviewed_contaminated_context_only",
+                    "quality_tier": "Tier B",
+                    "causal_eligible": False,
+                    "eligibility_blockers": "contamination_context_only",
+                },
+            ]
+        ),
+    )
+
+    table = publish.build_qra_benchmark_evidence_registry_table()
+
+    pilot_ready = table.loc[table["release_component_id"] == "qra_2024_10__financing_estimates"].iloc[0]
+    context_only = table.loc[table["release_component_id"] == "qra_2024_05__financing_estimates"].iloc[0]
+
+    assert pilot_ready["terminal_disposition"] == "tier_a_causal_pilot_ready"
+    assert pilot_ready["claim_scope"] == "causal_pilot_only"
+    assert context_only["terminal_disposition"] == "reviewed_contaminated_context_only"
+    assert context_only["claim_scope"] == "descriptive_only"
+
+
+def test_build_causal_claims_status_table_summarizes_current_sample_pilot(monkeypatch) -> None:
+    monkeypatch.setattr(
+        publish,
+        "build_event_design_status_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {"metric": "current_sample_financing_component_count", "value": 14, "notes": ""},
+                {"metric": "current_sample_financing_reviewed_surprise_ready_count", "value": 6, "notes": ""},
+                {"metric": "current_sample_financing_tier_a_count", "value": 5, "notes": ""},
+                {"metric": "current_sample_financing_reviewed_contaminated_context_only_count", "value": 1, "notes": ""},
+                {"metric": "current_sample_financing_post_release_invalid_count", "value": 8, "notes": ""},
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "_artifact_mtime",
+        lambda path: "2026-03-23T00:00:00+00:00",
+    )
+
+    table = publish.build_causal_claims_status_table()
+    row = table.iloc[0]
+
+    assert row["claim_id"] == "current_sample_financing_pilot"
+    assert row["claim_scope"] == "causal_pilot_only"
+    assert row["benchmark_ready_count"] == 6
+    assert row["tier_a_count"] == 5
+    assert row["context_only_count"] == 1
+    assert row["post_release_invalid_count"] == 8
+    assert "settled or full-sample causal estimate" in row["cannot_claim"]
 
 
 def test_build_qra_benchmark_coverage_table_tracks_contamination_and_surprise_states(monkeypatch) -> None:
@@ -446,6 +526,7 @@ def test_build_qra_event_elasticity_publish_table_is_optional(tmp_path, monkeypa
         "elasticity_bp_per_100bn",
         "sign_flip_flag",
         "usable_for_headline",
+        "claim_scope",
     ]
 
 

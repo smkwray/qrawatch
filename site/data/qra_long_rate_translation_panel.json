@@ -27,7 +27,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_02",
@@ -55,7 +56,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_02",
@@ -83,7 +85,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_02",
@@ -111,7 +114,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_02",
@@ -139,7 +143,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_02",
@@ -167,7 +172,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_05",
@@ -195,7 +201,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_05",
@@ -223,7 +230,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_05",
@@ -251,7 +259,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_05",
@@ -279,7 +288,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_05",
@@ -307,7 +317,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_05",
@@ -335,7 +346,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_08",
@@ -363,7 +375,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_08",
@@ -391,7 +404,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_08",
@@ -419,7 +433,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_08",
@@ -447,7 +462,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_08",
@@ -475,7 +491,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_08",
@@ -503,7 +520,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_11",
@@ -531,7 +549,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_11",
@@ -559,7 +578,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_11",
@@ -587,7 +607,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_11",
@@ -615,7 +636,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_11",
@@ -643,7 +665,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_11",
@@ -671,7 +694,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_02",
@@ -699,7 +723,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_02",
@@ -727,7 +752,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_02",
@@ -755,7 +781,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_02",
@@ -783,7 +810,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_02",
@@ -811,7 +839,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_02",
@@ -839,7 +868,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_05",
@@ -867,7 +897,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_05",
@@ -895,7 +926,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_05",
@@ -923,7 +955,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_05",
@@ -951,7 +984,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_05",
@@ -979,7 +1013,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_05",
@@ -1007,7 +1042,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_08",
@@ -1035,7 +1071,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_08",
@@ -1063,7 +1100,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_08",
@@ -1091,7 +1129,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_08",
@@ -1119,7 +1158,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_08",
@@ -1147,7 +1187,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_08",
@@ -1175,7 +1216,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_11",
@@ -1203,7 +1245,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_11",
@@ -1231,7 +1274,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_11",
@@ -1259,7 +1303,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_11",
@@ -1287,7 +1332,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_11",
@@ -1315,7 +1361,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_11",
@@ -1343,7 +1390,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_02",
@@ -1371,7 +1419,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_02",
@@ -1399,7 +1448,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_02",
@@ -1427,7 +1477,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_02",
@@ -1455,7 +1506,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_02",
@@ -1483,7 +1535,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_02",
@@ -1511,7 +1564,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_05",
@@ -1539,7 +1593,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_05",
@@ -1567,7 +1622,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_05",
@@ -1595,7 +1651,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_05",
@@ -1623,7 +1680,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_05",
@@ -1651,7 +1709,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_05",
@@ -1679,7 +1738,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_08",
@@ -1707,7 +1767,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_08",
@@ -1735,7 +1796,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_08",
@@ -1763,7 +1825,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_08",
@@ -1791,7 +1854,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_08",
@@ -1819,7 +1883,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_08",
@@ -1847,7 +1912,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_10",
@@ -1875,7 +1941,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_10",
@@ -1903,7 +1970,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_10",
@@ -1931,7 +1999,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_10",
@@ -1959,7 +2028,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_10",
@@ -1987,7 +2057,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_10",
@@ -2015,7 +2086,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_02",
@@ -2043,7 +2115,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_02",
@@ -2071,7 +2144,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_02",
@@ -2099,7 +2173,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_02",
@@ -2127,7 +2202,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_02",
@@ -2155,7 +2231,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_02",
@@ -2183,7 +2260,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_05",
@@ -2211,7 +2289,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_05",
@@ -2239,7 +2318,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_05",
@@ -2267,7 +2347,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_05",
@@ -2295,7 +2376,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_05",
@@ -2323,7 +2405,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_05",
@@ -2351,7 +2434,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_07",
@@ -2379,7 +2463,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_07",
@@ -2407,7 +2492,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_07",
@@ -2435,7 +2521,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_07",
@@ -2463,7 +2550,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_07",
@@ -2491,7 +2579,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_07",
@@ -2519,7 +2608,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_11",
@@ -2547,7 +2637,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_11",
@@ -2575,7 +2666,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_11",
@@ -2603,7 +2695,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_11",
@@ -2631,7 +2724,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_11",
@@ -2659,7 +2753,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_11",
@@ -2687,7 +2782,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_02",
@@ -2715,7 +2811,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_02",
@@ -2743,7 +2840,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_02",
@@ -2771,7 +2869,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_02",
@@ -2799,7 +2898,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_02",
@@ -2827,7 +2927,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_02",
@@ -2855,7 +2956,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_04",
@@ -2883,7 +2985,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_04",
@@ -2911,7 +3014,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_04",
@@ -2939,7 +3043,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_04",
@@ -2967,7 +3072,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_04",
@@ -2995,7 +3101,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_04",
@@ -3023,7 +3130,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_08",
@@ -3051,7 +3159,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_08",
@@ -3079,7 +3188,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_08",
@@ -3107,7 +3217,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_08",
@@ -3135,7 +3246,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_08",
@@ -3163,7 +3275,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_08",
@@ -3191,7 +3304,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_11",
@@ -3219,7 +3333,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_11",
@@ -3247,7 +3362,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_11",
@@ -3275,7 +3391,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_11",
@@ -3303,7 +3420,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_11",
@@ -3331,7 +3449,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_11",
@@ -3359,7 +3478,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_02",
@@ -3387,7 +3507,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_02",
@@ -3415,7 +3536,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_02",
@@ -3443,7 +3565,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_02",
@@ -3471,7 +3594,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_02",
@@ -3499,7 +3623,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_02",
@@ -3527,7 +3652,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_05",
@@ -3555,7 +3681,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_05",
@@ -3583,7 +3710,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_05",
@@ -3611,7 +3739,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_05",
@@ -3639,7 +3768,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_05",
@@ -3667,7 +3797,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_05",
@@ -3695,7 +3826,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_08",
@@ -3723,7 +3855,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_08",
@@ -3751,7 +3884,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_08",
@@ -3779,7 +3913,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_08",
@@ -3807,7 +3942,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_08",
@@ -3835,7 +3971,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_08",
@@ -3863,7 +4000,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_11",
@@ -3891,7 +4029,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_11",
@@ -3919,7 +4058,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_11",
@@ -3947,7 +4087,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_11",
@@ -3975,7 +4116,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_11",
@@ -4003,7 +4145,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_11",
@@ -4031,7 +4174,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_02",
@@ -4059,7 +4203,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_02",
@@ -4087,7 +4232,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_02",
@@ -4115,7 +4261,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_02",
@@ -4143,7 +4290,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_02",
@@ -4171,7 +4319,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_02",
@@ -4199,7 +4348,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_05",
@@ -4227,7 +4377,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_05",
@@ -4255,7 +4406,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_05",
@@ -4283,7 +4435,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_05",
@@ -4311,7 +4464,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_05",
@@ -4339,7 +4493,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_05",
@@ -4367,7 +4522,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_08",
@@ -4395,7 +4551,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_08",
@@ -4423,7 +4580,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_08",
@@ -4451,7 +4609,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_08",
@@ -4479,7 +4638,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_08",
@@ -4507,7 +4667,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_08",
@@ -4535,7 +4696,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_11",
@@ -4563,7 +4725,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_11",
@@ -4591,7 +4754,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_11",
@@ -4619,7 +4783,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_11",
@@ -4647,7 +4812,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_11",
@@ -4675,7 +4841,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_11",
@@ -4703,7 +4870,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_02",
@@ -4731,7 +4899,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_02",
@@ -4759,7 +4928,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_02",
@@ -4787,7 +4957,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_02",
@@ -4815,7 +4986,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_02",
@@ -4843,7 +5015,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_02",
@@ -4871,7 +5044,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_05",
@@ -4899,7 +5073,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_05",
@@ -4927,7 +5102,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_05",
@@ -4955,7 +5131,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_05",
@@ -4983,7 +5160,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_05",
@@ -5011,7 +5189,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_05",
@@ -5039,7 +5218,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_08",
@@ -5067,7 +5247,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_08",
@@ -5095,7 +5276,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_08",
@@ -5123,7 +5305,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_08",
@@ -5151,7 +5334,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_08",
@@ -5179,7 +5363,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_08",
@@ -5207,7 +5392,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_11",
@@ -5235,7 +5421,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_11",
@@ -5263,7 +5450,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_11",
@@ -5291,7 +5479,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_11",
@@ -5319,7 +5508,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_11",
@@ -5347,7 +5537,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_11",
@@ -5375,7 +5566,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_01",
@@ -5403,7 +5595,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_01",
@@ -5431,7 +5624,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_01",
@@ -5459,7 +5653,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_01",
@@ -5487,7 +5682,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_01",
@@ -5515,7 +5711,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_01",
@@ -5543,7 +5740,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_05",
@@ -5571,7 +5769,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_05",
@@ -5599,7 +5798,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_05",
@@ -5627,7 +5827,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_05",
@@ -5655,7 +5856,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_05",
@@ -5683,7 +5885,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_05",
@@ -5711,7 +5914,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_08",
@@ -5739,7 +5943,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_08",
@@ -5767,7 +5972,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_08",
@@ -5795,7 +6001,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_08",
@@ -5823,7 +6030,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_08",
@@ -5851,7 +6059,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_08",
@@ -5879,7 +6088,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_10",
@@ -5907,7 +6117,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_10",
@@ -5935,7 +6146,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_10",
@@ -5963,7 +6175,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_10",
@@ -5991,7 +6204,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_10",
@@ -6019,7 +6233,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_10",
@@ -6047,7 +6262,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_01",
@@ -6075,7 +6291,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_01",
@@ -6103,7 +6320,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_01",
@@ -6131,7 +6349,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_01",
@@ -6159,7 +6378,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_01",
@@ -6187,7 +6407,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_01",
@@ -6215,7 +6436,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_05",
@@ -6243,7 +6465,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_05",
@@ -6271,7 +6494,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_05",
@@ -6299,7 +6523,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_05",
@@ -6327,7 +6552,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_05",
@@ -6355,7 +6581,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_05",
@@ -6383,7 +6610,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_07",
@@ -6411,7 +6639,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_07",
@@ -6439,7 +6668,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_07",
@@ -6467,7 +6697,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_07",
@@ -6495,7 +6726,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_07",
@@ -6523,7 +6755,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_07",
@@ -6551,7 +6784,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_10",
@@ -6579,7 +6813,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_10",
@@ -6607,7 +6842,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_10",
@@ -6635,7 +6871,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_10",
@@ -6663,7 +6900,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_10",
@@ -6691,7 +6929,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_10",
@@ -6719,7 +6958,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_02",
@@ -6747,7 +6987,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_02",
@@ -6775,7 +7016,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_02",
@@ -6803,7 +7045,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_02",
@@ -6831,7 +7074,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_02",
@@ -6859,7 +7103,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_02",
@@ -6887,7 +7132,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_05",
@@ -6915,7 +7161,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_05",
@@ -6943,7 +7190,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_05",
@@ -6971,7 +7219,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_05",
@@ -6999,7 +7248,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_05",
@@ -7027,7 +7277,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_05",
@@ -7055,7 +7306,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_08",
@@ -7083,7 +7335,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_08",
@@ -7111,7 +7364,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_08",
@@ -7139,7 +7393,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_08",
@@ -7167,7 +7422,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_08",
@@ -7195,7 +7451,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_08",
@@ -7223,7 +7480,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_11",
@@ -7251,7 +7509,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_11",
@@ -7279,7 +7538,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_11",
@@ -7307,7 +7567,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_11",
@@ -7335,7 +7596,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_11",
@@ -7363,7 +7625,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_11",
@@ -7391,7 +7654,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_02",
@@ -7419,7 +7683,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_02",
@@ -7447,7 +7712,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_02",
@@ -7475,7 +7741,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_02",
@@ -7503,7 +7770,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_02",
@@ -7531,7 +7799,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_02",
@@ -7559,7 +7828,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_05",
@@ -7587,7 +7857,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_05",
@@ -7615,7 +7886,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_05",
@@ -7643,7 +7915,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_05",
@@ -7671,7 +7944,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_05",
@@ -7699,7 +7973,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_05",
@@ -7727,7 +8002,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_08",
@@ -7755,7 +8031,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_08",
@@ -7783,7 +8060,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_08",
@@ -7811,7 +8089,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_08",
@@ -7839,7 +8118,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_08",
@@ -7867,7 +8147,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_08",
@@ -7895,7 +8176,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|translation_not_reviewed|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_05",
@@ -7923,7 +8205,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_05",
@@ -7951,7 +8234,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_05",
@@ -7979,7 +8263,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_05",
@@ -8007,7 +8292,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_05",
@@ -8035,7 +8321,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_05",
@@ -8063,7 +8350,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_08",
@@ -8091,7 +8379,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_08",
@@ -8119,7 +8408,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_08",
@@ -8147,7 +8437,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_08",
@@ -8175,7 +8466,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_08",
@@ -8203,7 +8495,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_08",
@@ -8231,7 +8524,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_11",
@@ -8259,7 +8553,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_11",
@@ -8287,7 +8582,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_11",
@@ -8315,7 +8611,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_11",
@@ -8343,7 +8640,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2022_11",
@@ -8371,7 +8669,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2022_11",
@@ -8399,7 +8698,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2023_02",
@@ -8427,7 +8727,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_02",
@@ -8455,7 +8756,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_02",
@@ -8483,7 +8785,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_02",
@@ -8511,7 +8814,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_02",
@@ -8539,7 +8843,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_02",
@@ -8567,7 +8872,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_05",
@@ -8595,7 +8901,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_05",
@@ -8623,7 +8930,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_05",
@@ -8651,7 +8959,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_05",
@@ -8679,7 +8988,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2023_05",
@@ -8707,7 +9017,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2023_05",
@@ -8735,7 +9046,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2023_08",
@@ -8763,7 +9075,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_08",
@@ -8791,7 +9104,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_08",
@@ -8819,7 +9133,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_08",
@@ -8847,7 +9162,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_08",
@@ -8875,7 +9191,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_08",
@@ -8903,7 +9220,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_11",
@@ -8931,7 +9249,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_11",
@@ -8959,7 +9278,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_11",
@@ -8987,7 +9307,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|translation_value_missing",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_11",
@@ -9015,7 +9336,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_11",
@@ -9043,7 +9365,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_11",
@@ -9071,7 +9394,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "translation_value_missing",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_01",
@@ -9099,7 +9423,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_01",
@@ -9127,7 +9452,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_01",
@@ -9155,7 +9481,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_01",
@@ -9183,7 +9510,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_01",
@@ -9211,7 +9539,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_01",
@@ -9239,7 +9568,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_05",
@@ -9267,7 +9597,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_05",
@@ -9295,7 +9626,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_05",
@@ -9323,7 +9655,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_05",
@@ -9351,7 +9684,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_05",
@@ -9379,7 +9713,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_05",
@@ -9407,7 +9742,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_07",
@@ -9435,7 +9771,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_07",
@@ -9463,7 +9800,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_07",
@@ -9491,7 +9829,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_07",
@@ -9519,7 +9858,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_07",
@@ -9547,7 +9887,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_07",
@@ -9575,7 +9916,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_10",
@@ -9603,7 +9945,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_10",
@@ -9631,7 +9974,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_10",
@@ -9659,7 +10003,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_10",
@@ -9687,7 +10032,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2024_10",
@@ -9715,7 +10061,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2024_10",
@@ -9743,7 +10090,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2025_02",
@@ -9771,7 +10119,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_02",
@@ -9799,7 +10148,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_02",
@@ -9827,7 +10177,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_02",
@@ -9855,7 +10206,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_02",
@@ -9883,7 +10235,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_02",
@@ -9911,7 +10264,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_04",
@@ -9939,7 +10293,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_04",
@@ -9967,7 +10322,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_04",
@@ -9995,7 +10351,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_04",
@@ -10023,7 +10380,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2025_04",
@@ -10051,7 +10409,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2025_04",
@@ -10079,7 +10438,8 @@
       "causal_eligible_component_count": 1,
       "long_rate_pilot_ready": true,
       "long_rate_pilot_blocker": "",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "causal_pilot_only"
     },
     {
       "event_id": "qra_2025_07",
@@ -10107,7 +10467,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_07",
@@ -10135,7 +10496,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_07",
@@ -10163,7 +10525,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "non_official_event_date_type|event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_07",
@@ -10191,7 +10554,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_07",
@@ -10219,7 +10583,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_07",
@@ -10247,7 +10612,8 @@
       "causal_eligible_component_count": 0,
       "long_rate_pilot_ready": false,
       "long_rate_pilot_blocker": "event_not_tier_a",
-      "public_role": "supporting"
+      "public_role": "supporting",
+      "claim_scope": "descriptive_only"
     }
   ]
 }

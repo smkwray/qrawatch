@@ -1505,6 +1505,94 @@ def test_validate_qra_publish_consistency_flags_benchmark_coverage_metric_mismat
     ) in errors
 
 
+def test_validate_qra_publish_consistency_flags_benchmark_evidence_registry_mismatch() -> None:
+    component_registry = pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2024_10__financing_estimates",
+                "event_id": "qra_2024_10",
+                "quarter": "2025Q1",
+                "component_type": "financing_estimates",
+                "benchmark_timing_status": "pre_release_external",
+                "external_benchmark_ready": True,
+                "expectation_status": "reviewed_surprise_ready",
+                "contamination_status": "reviewed_clean",
+                "quality_tier": "Tier A",
+                "causal_eligible": True,
+            }
+        ]
+    )
+    frames = {
+        "qra_release_component_registry.csv": component_registry,
+        "qra_benchmark_evidence_registry.csv": pd.DataFrame(
+            [
+                {
+                    "release_component_id": "qra_2024_10__financing_estimates",
+                    "benchmark_timing_status": "pre_release_external",
+                    "external_benchmark_ready": True,
+                    "expectation_status": "reviewed_surprise_ready",
+                    "contamination_status": "reviewed_clean",
+                    "quality_tier": "Tier A",
+                    "causal_eligible": True,
+                    "claim_scope": "descriptive_only",
+                }
+            ]
+        ),
+    }
+
+    errors = validate_backend_script._validate_qra_publish_consistency(frames)
+
+    assert "qra_benchmark_evidence_registry_metric_mismatch:claim_scope" in errors
+
+
+def test_validate_qra_publish_consistency_flags_causal_claims_status_mismatch() -> None:
+    component_registry = pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2024_10__financing_estimates",
+                "event_id": "qra_2024_10",
+                "quarter": "2025Q1",
+                "component_type": "financing_estimates",
+                "benchmark_timing_status": "pre_release_external",
+                "external_benchmark_ready": True,
+                "expectation_status": "reviewed_surprise_ready",
+                "contamination_status": "reviewed_clean",
+                "quality_tier": "Tier A",
+                "causal_eligible": True,
+            }
+        ]
+    )
+    frames = {
+        "qra_release_component_registry.csv": component_registry,
+        "causal_claims_status.csv": pd.DataFrame(
+            [
+                {
+                    "claim_id": "current_sample_financing_pilot",
+                    "claim_name": "Current-sample financing pilot",
+                    "claim_scope": "descriptive_only",
+                    "readiness_tier": "supporting_ready",
+                    "public_role": "supporting",
+                    "headline_ready": False,
+                    "causal_pilot_ready": True,
+                    "source_quality": "derived_causal_claims_status",
+                    "current_sample_financing_component_count": 1,
+                    "benchmark_ready_count": 1,
+                    "tier_a_count": 1,
+                    "context_only_count": 0,
+                    "post_release_invalid_count": 0,
+                    "can_claim": "pilot claim",
+                    "cannot_claim": "not full sample",
+                    "boundary_reason": "counts",
+                }
+            ]
+        ),
+    }
+
+    errors = validate_backend_script._validate_qra_publish_consistency(frames)
+
+    assert "causal_claims_status_invalid_claim_scope:current_sample_financing_pilot" in errors
+
+
 def test_validate_manual_causal_review_inputs_requires_current_sample_financing_rows(tmp_path: Path) -> None:
     manual_dir = tmp_path / "manual"
     manual_dir.mkdir()
@@ -1543,6 +1631,86 @@ def test_validate_manual_causal_review_inputs_requires_current_sample_financing_
         "manual_causal_contamination_missing_current_sample_financing_rows:"
         "qra_2024_05__financing_estimates"
     ) in errors
+
+
+def test_validate_manual_causal_review_inputs_requires_reviewed_terminal_financing_rows(tmp_path: Path) -> None:
+    manual_dir = tmp_path / "manual"
+    manual_dir.mkdir()
+    pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2024_05__financing_estimates",
+                "quarter": "2024Q3",
+                "component_type": "financing_estimates",
+            }
+        ]
+    ).to_csv(manual_dir / "qra_release_component_registry.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2024_05__financing_estimates",
+                "benchmark_timing_status": "post_release_invalid",
+                "expectation_review_status": "pending",
+                "expectation_notes": "Still pending.",
+            }
+        ]
+    ).to_csv(manual_dir / "qra_component_expectation_template.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2024_05__financing_estimates",
+                "contamination_status": "reviewed_clean",
+                "contamination_review_status": "reviewed",
+                "contamination_notes": "Reviewed clean.",
+                "decision_rule": "",
+                "exclude_from_causal_pool": "",
+                "decision_confidence": "",
+            }
+        ]
+    ).to_csv(manual_dir / "qra_event_contamination_reviews.csv", index=False)
+
+    errors, warnings = validate_backend_script.validate_manual_causal_review_inputs(manual_dir)
+
+    assert warnings == []
+    assert (
+        "manual_causal_expectation_incomplete_current_sample_financing_rows:"
+        "qra_2024_05__financing_estimates"
+    ) in errors
+    assert (
+        "manual_causal_contamination_incomplete_current_sample_financing_rows:"
+        "qra_2024_05__financing_estimates"
+    ) in errors
+
+
+def test_validate_publish_artifacts_flags_headline_claim_scope_on_supporting_non_qra_table(tmp_path: Path) -> None:
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+    readme_path = tmp_path / "README.md"
+    readme_path.write_text(
+        "# test\nExact official quarter coverage currently spans `2026Q1` through `2026Q1`.\n",
+        encoding="utf-8",
+    )
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="event_usability_table.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "headline_bucket": "tightening",
+                    "event_date_type": "official_release_date",
+                    "event_count": 1,
+                    "claim_scope": "headline",
+                }
+            ]
+        ),
+    )
+
+    errors, warnings, _summary = validate_backend_script.validate_publish_artifacts(
+        publish_path,
+        readme_path=readme_path,
+    )
+
+    assert "qra_publish_invalid_claim_scope:event_usability_table.csv" in errors
 
 
 def test_canonical_qra_review_frame_does_not_collapse_aggregate_usability_rows() -> None:
@@ -1826,6 +1994,7 @@ def test_validate_backend_validates_optional_event_and_absorption_artifacts(tmp_
                     "headline_recommendation_reason": "comparison_fallback_loaded",
                     "primary_treatment_variant": "canonical_shock_bn",
                     "primary_treatment_reason": "canonical_shock_bn remains the headline contract; fixed, dynamic, and DV01 variants are comparison diagnostics.",
+                    "claim_scope": "descriptive_only",
                 }
             ]
         ),
@@ -1843,6 +2012,7 @@ def test_validate_backend_validates_optional_event_and_absorption_artifacts(tmp_
                     "overlap_severity": "none",
                     "headline_usable_count": 1,
                     "event_count": 3,
+                    "claim_scope": "descriptive_only",
                 }
             ]
         ),
@@ -1861,6 +2031,7 @@ def test_validate_backend_validates_optional_event_and_absorption_artifacts(tmp_
                     "estimate": 1.2,
                     "p_value": 0.31,
                     "n_events": 4,
+                    "claim_scope": "descriptive_only",
                 }
             ]
         ),
@@ -1881,6 +2052,7 @@ def test_validate_backend_validates_optional_event_and_absorption_artifacts(tmp_
                     "units": "bps",
                     "source_quality": "summary_ready",
                     "provenance_summary": "bounded_validation_pack",
+                    "claim_scope": "descriptive_only",
                 }
             ]
         ),

@@ -2,6 +2,7 @@
 
 This file defines the readiness and source-quality labels used in publish artifacts and the site.
 It also defines the event-quality vocabulary used to separate descriptive/supporting event surfaces from causal-eligible event surfaces.
+The `qra_benchmark_evidence_registry` and `causal_claims_status` artifacts use these labels to keep benchmark provenance and claim scope explicit.
 
 ## Readiness tiers
 
@@ -34,6 +35,16 @@ It also defines the event-quality vocabulary used to separate descriptive/suppor
 
 Review maturity is not the same as causal eligibility. A dataset can be `supporting_ready` and still be descriptive/supporting only.
 
+## Claim scope
+
+`claim_scope` is the public claim boundary. It is orthogonal to readiness tiers and should be read first when deciding how a row may be cited.
+
+- `descriptive_only` — descriptive/supporting context only; not a causal claim.
+- `causal_pilot_only` — part of the causal pilot, but still narrower than the headline contract.
+- `headline` — the only scope that should be read as the public headline claim.
+
+If a row is not `claim_scope = headline`, it should not be described as the headline result even when it is reviewed or published.
+
 ## Event-quality tiers
 
 The causal-credibility upgrade uses a hard `quality_tier` ladder for event-facing outputs:
@@ -52,6 +63,8 @@ Supporting status fields explain why a row is or is not causal-eligible:
 - `contamination_status` — whether overlap review is still pending or has been cleared
 
 These labels should be used for event-facing outputs, not for quarter-level ATI or plumbing measurement surfaces.
+
+`claim_scope` remains separate from `quality_tier`: a row can be reviewed, published, or causal-eligible and still stay out of the headline lane if its scope is `descriptive_only` or `causal_pilot_only`.
 
 ## ATI terms
 

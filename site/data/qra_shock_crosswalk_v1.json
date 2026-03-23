@@ -19,7 +19,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_02",
@@ -39,7 +40,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_05",
@@ -59,7 +61,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_05",
@@ -79,7 +82,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_08",
@@ -99,7 +103,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_08",
@@ -119,7 +124,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_11",
@@ -139,7 +145,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2010_11",
@@ -159,7 +166,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_02",
@@ -179,7 +187,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_02",
@@ -199,7 +208,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_05",
@@ -219,7 +229,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_05",
@@ -239,7 +250,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_08",
@@ -259,7 +271,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_08",
@@ -279,7 +292,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_11",
@@ -299,7 +313,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2011_11",
@@ -319,7 +334,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_02",
@@ -339,7 +355,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_02",
@@ -359,7 +376,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_05",
@@ -379,7 +397,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_05",
@@ -399,7 +418,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_08",
@@ -419,7 +439,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_08",
@@ -439,7 +460,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_10",
@@ -459,7 +481,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2012_10",
@@ -479,7 +502,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_02",
@@ -499,7 +523,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_02",
@@ -519,7 +544,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_05",
@@ -539,7 +565,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_05",
@@ -559,7 +586,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_07",
@@ -579,7 +607,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_07",
@@ -599,7 +628,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_11",
@@ -619,7 +649,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2013_11",
@@ -639,7 +670,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_02",
@@ -659,7 +691,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_02",
@@ -679,7 +712,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_04",
@@ -699,7 +733,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_04",
@@ -719,7 +754,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_08",
@@ -739,7 +775,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_08",
@@ -759,7 +796,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_11",
@@ -779,7 +817,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2014_11",
@@ -799,7 +838,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_02",
@@ -819,7 +859,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_02",
@@ -839,7 +880,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_05",
@@ -859,7 +901,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_05",
@@ -879,7 +922,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_08",
@@ -899,7 +943,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_08",
@@ -919,7 +964,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_11",
@@ -939,7 +985,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2015_11",
@@ -959,7 +1006,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_02",
@@ -979,7 +1027,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_02",
@@ -999,7 +1048,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_05",
@@ -1019,7 +1069,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_05",
@@ -1039,7 +1090,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_08",
@@ -1059,7 +1111,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_08",
@@ -1079,7 +1132,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_11",
@@ -1099,7 +1153,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2016_11",
@@ -1119,7 +1174,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_02",
@@ -1139,7 +1195,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_02",
@@ -1159,7 +1216,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_05",
@@ -1179,7 +1237,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_05",
@@ -1199,7 +1258,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_08",
@@ -1219,7 +1279,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_08",
@@ -1239,7 +1300,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_11",
@@ -1259,7 +1321,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2017_11",
@@ -1279,7 +1342,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_01",
@@ -1299,7 +1363,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_01",
@@ -1319,7 +1384,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_05",
@@ -1339,7 +1405,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_05",
@@ -1359,7 +1426,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_08",
@@ -1379,7 +1447,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_08",
@@ -1399,7 +1468,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_10",
@@ -1419,7 +1489,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2018_10",
@@ -1439,7 +1510,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_01",
@@ -1459,7 +1531,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_01",
@@ -1479,7 +1552,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_05",
@@ -1499,7 +1573,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_05",
@@ -1519,7 +1594,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_07",
@@ -1539,7 +1615,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_07",
@@ -1559,7 +1636,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_10",
@@ -1579,7 +1657,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2019_10",
@@ -1599,7 +1678,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_02",
@@ -1619,7 +1699,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_02",
@@ -1639,7 +1720,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_05",
@@ -1659,7 +1741,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_05",
@@ -1679,7 +1762,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_08",
@@ -1699,7 +1783,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_08",
@@ -1719,7 +1804,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_11",
@@ -1739,7 +1825,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2020_11",
@@ -1759,7 +1846,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_02",
@@ -1779,7 +1867,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_02",
@@ -1799,7 +1888,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_05",
@@ -1819,7 +1909,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_05",
@@ -1839,7 +1930,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_08",
@@ -1859,7 +1951,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2021_08",
@@ -1879,7 +1972,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "shock_missing"
+      "usable_for_headline_reason": "shock_missing",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_05",
@@ -1899,7 +1993,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_05",
@@ -1919,7 +2014,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "usable"
+      "usable_for_headline_reason": "usable",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_08",
@@ -1939,7 +2035,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_08",
@@ -1959,7 +2056,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_11",
@@ -1979,7 +2077,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2022_11",
@@ -1999,7 +2098,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_02",
@@ -2019,7 +2119,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_02",
@@ -2039,7 +2140,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_05",
@@ -2059,7 +2161,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_05",
@@ -2079,7 +2182,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "usable"
+      "usable_for_headline_reason": "usable",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_08",
@@ -2099,7 +2203,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_08",
@@ -2119,7 +2224,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "usable"
+      "usable_for_headline_reason": "usable",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_11",
@@ -2139,7 +2245,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2023_11",
@@ -2159,7 +2266,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "usable"
+      "usable_for_headline_reason": "usable",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_01",
@@ -2179,7 +2287,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_01",
@@ -2199,7 +2308,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_05",
@@ -2219,7 +2329,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_05",
@@ -2239,7 +2350,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_07",
@@ -2259,7 +2371,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_07",
@@ -2279,7 +2392,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_10",
@@ -2299,7 +2413,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2024_10",
@@ -2319,7 +2434,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_02",
@@ -2339,7 +2455,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_02",
@@ -2359,7 +2476,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_04",
@@ -2379,7 +2497,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_04",
@@ -2399,7 +2518,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_07",
@@ -2419,7 +2539,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "non_official_event_date_type"
+      "usable_for_headline_reason": "non_official_event_date_type",
+      "claim_scope": "descriptive_only"
     },
     {
       "event_id": "qra_2025_07",
@@ -2439,7 +2560,8 @@
       "treatment_version_id": "spec_duration_treatment_v1",
       "spec_id": "spec_qra_event_v2",
       "treatment_variant": "canonical_shock_bn",
-      "usable_for_headline_reason": "small_denominator"
+      "usable_for_headline_reason": "small_denominator",
+      "claim_scope": "descriptive_only"
     }
   ]
 }

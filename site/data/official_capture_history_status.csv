@@ -1,4 +1,8 @@
 quarter,qra_release_date,qa_status,source_quality,readiness_tier,headline_ready,has_financing_estimates_source,has_refunding_statement_source,has_auction_reconstruction,financing_provenance_ready,refunding_statement_provenance_ready,auction_reconstruction_ready,numeric_official_capture_ready,source_completeness
+2009Q1,2009-02-02,manual_official_capture,exact_official,headline_ready,True,True,True,True,True,True,True,True,financing_estimates|refunding_statement|auction_reconstruction
+2009Q2,2009-04-27,manual_official_capture,exact_official,headline_ready,True,True,True,True,True,True,True,True,financing_estimates|refunding_statement|auction_reconstruction
+2009Q3,2009-08-03,manual_official_capture,exact_official,headline_ready,True,True,True,True,True,True,True,True,financing_estimates|refunding_statement|auction_reconstruction
+2009Q4,2009-11-02,manual_official_capture,exact_official,headline_ready,True,True,True,True,True,True,True,True,financing_estimates|refunding_statement|auction_reconstruction
 2010Q1,2010-02-03,manual_official_capture,exact_official,headline_ready,True,True,True,True,True,True,True,True,financing_estimates|refunding_statement|auction_reconstruction
 2010Q2,2010-05-05,manual_official_capture,exact_official,headline_ready,True,True,True,True,True,True,True,True,financing_estimates|refunding_statement|auction_reconstruction
 2010Q3,2010-08-04,manual_official_capture,exact_official,headline_ready,True,True,True,True,True,True,True,True,financing_estimates|refunding_statement|auction_reconstruction

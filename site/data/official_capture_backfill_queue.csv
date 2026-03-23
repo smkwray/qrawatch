@@ -1,4 +1,8 @@
 quarter,source_quality,readiness_tier,numeric_official_capture_ready,financing_provenance_ready,refunding_statement_provenance_ready,auction_reconstruction_ready,missing_numeric_fields,next_action
+2009Q1,exact_official,headline_ready,True,True,True,True,,complete
+2009Q2,exact_official,headline_ready,True,True,True,True,,complete
+2009Q3,exact_official,headline_ready,True,True,True,True,,complete
+2009Q4,exact_official,headline_ready,True,True,True,True,,complete
 2010Q1,exact_official,headline_ready,True,True,True,True,,complete
 2010Q2,exact_official,headline_ready,True,True,True,True,,complete
 2010Q3,exact_official,headline_ready,True,True,True,True,,complete

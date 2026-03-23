@@ -1,0 +1,24 @@
+{
+  "title": "Causal Claims Status",
+  "rows": [
+    {
+      "claim_id": "current_sample_financing_pilot",
+      "claim_name": "Current-sample financing pilot",
+      "claim_scope": "causal_pilot_only",
+      "readiness_tier": "supporting_ready",
+      "public_role": "supporting",
+      "headline_ready": false,
+      "causal_pilot_ready": true,
+      "source_quality": "derived_causal_claims_status",
+      "current_sample_financing_component_count": 14,
+      "benchmark_ready_count": 6,
+      "tier_a_count": 5,
+      "context_only_count": 1,
+      "post_release_invalid_count": 8,
+      "can_claim": "A narrow post-2022Q3 financing-estimates pilot with 14 reviewed current-sample financing components, 6 benchmark-ready rows, and 5 Tier A components.",
+      "cannot_claim": "A settled or full-sample causal estimate of Treasury issuance effects on long rates; 8 financing rows remain post-release-invalid and the long-rate translation layer is still supporting/provisional.",
+      "boundary_reason": "14 current-sample financing rows; 6 benchmark-ready; 5 Tier A; 1 context-only; 8 post-release-invalid.",
+      "last_regenerated_utc": "2026-03-23T13:08:24.905954+00:00"
+    }
+  ]
+}

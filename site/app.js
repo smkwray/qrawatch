@@ -108,6 +108,8 @@
     exact_official_net: 'Official net',
     headline: 'Headline',
     supporting: 'Supporting',
+    descriptive_only: 'Descriptive Only',
+    causal_pilot_only: 'Causal Pilot Only',
     summary_ready: 'Summary',
     headline_ready: 'Headline',
     supporting_ready: 'Supporting Ready',
@@ -354,6 +356,53 @@
     var minN = Math.min.apply(Math, counts);
     var maxN = Math.max.apply(Math, counts);
     return 'Robustness sample sizes range from n=' + minN + ' to n=' + maxN + '. Results remain descriptive unless the sample expands further.';
+  }
+
+  function normalizeCausalClaimsRow(row) {
+    return {
+      subject: row.claim_id || row.dataset || row.artifact || row.surface || row.event_id || row.claim_name || '',
+      claim_scope: row.claim_scope || row.scope || row.public_role || '',
+      readiness_tier: row.readiness_tier || row.review_maturity || row.status || '',
+      public_role: row.public_role || '',
+      headline_ready: row.headline_ready != null ? row.headline_ready : (row.is_headline_ready != null ? row.is_headline_ready : null),
+      causal_pilot_ready: row.causal_pilot_ready != null ? row.causal_pilot_ready : (row.causal_eligible != null ? row.causal_eligible : null),
+      source_quality: row.source_quality || '',
+      reason: row.boundary_reason || row.claim_scope_reason || row.reason || row.notes || '',
+      updated: row.last_regenerated_utc || row.generated_at_utc || row.updated_at_utc || ''
+    };
+  }
+
+  function benchmarkDispositionLabel(value) {
+    var v = String(value || '').trim();
+    var labels = {
+      tier_a_causal_pilot_ready: 'Tier A / pilot ready',
+      reviewed_surprise_ready_not_tier_a: 'Pre-release, not Tier A',
+      reviewed_contaminated_context_only: 'Context only',
+      reviewed_contaminated_exclude: 'Excluded',
+      post_release_invalid: 'Blocked',
+      external_timing_unverified: 'Blocked',
+      same_release_placeholder: 'Blocked',
+      benchmark_verification_incomplete: 'Blocked',
+      pending_contamination_review: 'Pending',
+      review_pending: 'Pending'
+    };
+    return labels[v] || fmtLabel(v);
+  }
+
+  function normalizeBenchmarkEvidenceRow(row) {
+    return {
+      release_component_id: row.release_component_id || '',
+      event_id: row.event_id || '',
+      quarter: row.quarter || '',
+      quality_tier: row.quality_tier || '',
+      benchmark_timing_status: row.benchmark_timing_status || '',
+      external_benchmark_ready: row.external_benchmark_ready,
+      expectation_status: row.expectation_status || '',
+      contamination_status: row.contamination_status || '',
+      terminal_disposition: row.terminal_disposition || '',
+      claim_scope: row.claim_scope || '',
+      benchmark_source_family: row.benchmark_source_family || ''
+    };
   }
 
   // ── Table Builder ──
@@ -1161,11 +1210,14 @@
       fetchJSON('extension_status.json'),
       fetchJSON('series_metadata_catalog.json'),
       fetchJSON('data_sources_summary.json'),
+      fetchJSON('causal_claims_status.json'),
+      fetchJSON('qra_causal_claims_status.json'),
+      fetchJSON('qra_benchmark_evidence_registry.json'),
       fetchJSON('official_capture_readiness.json'),
       fetchJSON('official_capture_completion.json'),
       fetchJSON('official_capture_backfill_queue.json')
     ]);
-    var dsStatus = results[0], extStatus = results[1], catalog = results[2], sources = results[3], captureReadiness = results[4], captureCompletion = results[5], captureBackfillQueue = results[6];
+    var dsStatus = results[0], extStatus = results[1], catalog = results[2], sources = results[3], causalClaims = results[4] || results[5], benchmarkEvidence = results[6], captureReadiness = results[7], captureCompletion = results[8], captureBackfillQueue = results[9];
 
     if (dsStatus) {
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Dataset Readiness' }));
@@ -1179,6 +1231,56 @@
         { key: 'fallback_only', label: 'Fallback Only', format: function (v) { return v ? 'Yes' : 'No'; } },
         { key: 'last_regenerated_utc', label: 'Last Regenerated', format: fmtTimestamp }
       ], dsStatus.rows));
+    }
+
+    if (causalClaims && causalClaims.rows && causalClaims.rows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Causal Claims Status' }));
+      container.appendChild(el('p', { class: 'section-desc',
+        text: 'Claim scope is the public boundary: descriptive_only rows are context, causal_pilot_only rows stay inside the pilot, and headline rows are the only headline claim.'
+      }));
+      var normalizedClaims = causalClaims.rows.map(normalizeCausalClaimsRow);
+      container.appendChild(buildTable([
+        { key: 'subject', label: 'Claim' },
+        { key: 'claim_scope', label: 'Scope', format: fmtLabel },
+        { key: 'readiness_tier', label: 'Readiness', format: function (v) { return v ? statusBadge(v) : dash(); } },
+        { key: 'public_role', label: 'Role', format: function (v) { return v ? fmtLabel(v) : dash(); } },
+        { key: 'headline_ready', label: 'Headline', format: function (v) { return v == null ? dash() : checkMark(v); } },
+        { key: 'causal_pilot_ready', label: 'Pilot', format: function (v) { return v == null ? dash() : checkMark(v); } },
+        { key: 'source_quality', label: 'Source', format: fmtLabel },
+        { key: 'reason', label: 'Reason' },
+        { key: 'updated', label: 'Updated', format: fmtTimestamp }
+      ], normalizedClaims.slice(0, 16)));
+    }
+
+    if (benchmarkEvidence && benchmarkEvidence.rows && benchmarkEvidence.rows.length) {
+      var currentSampleEvidence = benchmarkEvidence.rows
+        .map(normalizeBenchmarkEvidenceRow)
+        .filter(function (row) {
+          return quarterRank(row.quarter) != null && quarterRank(row.quarter) >= quarterRank('2022Q3');
+        })
+        .sort(function (a, b) {
+          var q = quarterCompare(a.quarter, b.quarter);
+          if (q !== 0) return q;
+          return quarterCompare(a.release_component_id, b.release_component_id);
+        });
+      if (currentSampleEvidence.length) {
+        container.appendChild(el('h3', { class: 'section-subtitle', text: 'Benchmark Evidence' }));
+        container.appendChild(el('p', {
+          class: 'section-desc',
+          text: 'Current-sample financing evidence is split by terminal disposition: Tier A rows are pilot-ready, blocked rows still fail benchmark timing, and context-only rows remain publishable only as context.'
+        }));
+        container.appendChild(buildTable([
+          { key: 'release_component_id', label: 'Component' },
+          { key: 'quarter', label: 'Quarter' },
+          { key: 'quality_tier', label: 'Tier', format: fmtLabel },
+          { key: 'benchmark_timing_status', label: 'Timing', format: fmtLabel },
+          { key: 'external_benchmark_ready', label: 'Benchmark Ready', format: checkMark },
+          { key: 'expectation_status', label: 'Expectation', format: fmtLabel },
+          { key: 'contamination_status', label: 'Contamination', format: fmtLabel },
+          { key: 'terminal_disposition', label: 'Outcome', format: benchmarkDispositionLabel },
+          { key: 'claim_scope', label: 'Scope', format: fmtLabel }
+        ], currentSampleEvidence));
+      }
     }
 
     if (captureReadiness) {

@@ -8,7 +8,7 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:47:01.056515+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:23.182003+00:00",
       "review_maturity": "headline_ready",
       "public_role": "supporting"
     },
@@ -19,7 +19,7 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:47:01.646999+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:23.725678+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
     },
@@ -41,7 +41,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:13.989013+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:24.716891+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -52,7 +52,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:14.072675+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:24.803838+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -63,7 +63,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:14.072675+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:24.803838+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -74,7 +74,18 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:14.198206+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:24.919258+00:00",
+      "review_maturity": "supporting_ready",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "qra_benchmark_evidence_registry",
+      "readiness_tier": "supporting_ready",
+      "source_quality": "derived_benchmark_evidence_registry",
+      "headline_ready": false,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-23T13:08:24.803838+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -85,8 +96,19 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:14.179902+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:24.901515+00:00",
       "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "causal_claims_status",
+      "readiness_tier": "supporting_ready",
+      "source_quality": "derived_causal_claims_status",
+      "headline_ready": false,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-23T13:08:24.905954+00:00",
+      "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
     {
@@ -96,7 +118,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:47:01.056515+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:23.182003+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -107,7 +129,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:47:01.056515+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:23.182003+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -118,7 +140,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:14.183678+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:24.905954+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -129,7 +151,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:14.288994+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:25.010567+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -151,7 +173,7 @@
       "headline_ready": false,
       "fallback_only": true,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:14.288994+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:25.010567+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -162,7 +184,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:14.392213+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:25.111825+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -173,7 +195,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T11:35:15.621795+00:00",
+      "last_regenerated_utc": "2026-03-23T13:08:26.352723+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },

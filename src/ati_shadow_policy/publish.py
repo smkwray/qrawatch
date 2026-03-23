@@ -85,6 +85,14 @@ LONG_RATE_TRANSLATION_VARIANTS = (
         "fred_prior_business_day_yield_curve_plus_frn_convention",
     ),
 )
+CLAIM_SCOPE_DESCRIPTIVE_ONLY = "descriptive_only"
+CLAIM_SCOPE_CAUSAL_PILOT_ONLY = "causal_pilot_only"
+CLAIM_SCOPE_HEADLINE = "headline"
+CLAIM_SCOPE_VALUES = {
+    CLAIM_SCOPE_DESCRIPTIVE_ONLY,
+    CLAIM_SCOPE_CAUSAL_PILOT_ONLY,
+    CLAIM_SCOPE_HEADLINE,
+}
 
 
 def _extension_inventory_path(config: dict[str, object]) -> Path:
@@ -226,6 +234,68 @@ def _truthy_text(value: object) -> bool:
         return False
     text = str(value).strip().lower()
     return text not in {"", "0", "false", "none", "nan", "null", "pending", "unknown"}
+
+
+def _coerce_bool_value(value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    if isinstance(value, float) and pd.isna(value):
+        return False
+    return str(value).strip().lower() in {"true", "1", "yes", "y"}
+
+
+def _coerce_int_value(value: object) -> int:
+    numeric = pd.to_numeric(pd.Series([value]), errors="coerce")
+    if numeric.empty or pd.isna(numeric.iloc[0]):
+        return 0
+    return int(numeric.iloc[0])
+
+
+def _claim_scope_for_event_row(row: pd.Series) -> str:
+    existing = str(row.get("claim_scope", "") or "").strip()
+    if existing in CLAIM_SCOPE_VALUES:
+        return existing
+
+    event_date_type = str(row.get("event_date_type", "") or "").strip()
+    if event_date_type and event_date_type != "official_release_date":
+        return CLAIM_SCOPE_DESCRIPTIVE_ONLY
+
+    causal_count = _coerce_int_value(row.get("causal_eligible_component_count"))
+    causal_flag = _coerce_bool_value(row.get("causal_eligible"))
+    usable_for_headline = _coerce_bool_value(
+        row.get("usable_for_headline", row.get("usable_for_descriptive_headline", False))
+    )
+    if (causal_count > 0 or causal_flag) and usable_for_headline:
+        return CLAIM_SCOPE_CAUSAL_PILOT_ONLY
+
+    if (
+        str(row.get("quality_tier", "") or "").strip() == "Tier A"
+        and str(row.get("timestamp_precision", "") or "").strip() == "exact_time"
+        and str(row.get("separability_status", "") or "").strip() == "separable_component"
+        and str(row.get("expectation_status", "") or "").strip() == "reviewed_surprise_ready"
+        and str(row.get("contamination_status", "") or "").strip() == "reviewed_clean"
+        and usable_for_headline
+    ):
+        return CLAIM_SCOPE_CAUSAL_PILOT_ONLY
+    return CLAIM_SCOPE_DESCRIPTIVE_ONLY
+
+
+def _apply_event_claim_scope(df: pd.DataFrame, default: str = CLAIM_SCOPE_DESCRIPTIVE_ONLY) -> pd.DataFrame:
+    out = df.copy()
+    if out.empty:
+        if "claim_scope" not in out.columns:
+            out["claim_scope"] = pd.Series(dtype=str)
+        return out
+    computed = out.apply(_claim_scope_for_event_row, axis=1)
+    if "claim_scope" not in out.columns:
+        out["claim_scope"] = computed
+    else:
+        normalized = out["claim_scope"].fillna("").astype(str).str.strip()
+        out["claim_scope"] = normalized.where(normalized.isin(CLAIM_SCOPE_VALUES), computed)
+    out["claim_scope"] = out["claim_scope"].fillna(default).replace("", default)
+    return out
 
 
 def _qra_overlap_severity(row: pd.Series) -> str:
@@ -1059,6 +1129,164 @@ def build_qra_benchmark_coverage_table() -> pd.DataFrame:
     return pd.DataFrame(rows, columns=columns)
 
 
+def _benchmark_terminal_disposition(row: pd.Series) -> str:
+    if _coerce_bool_value(row.get("causal_eligible")):
+        return "tier_a_causal_pilot_ready"
+    contamination_status = str(row.get("contamination_status", "") or "").strip()
+    if contamination_status == "reviewed_contaminated_context_only":
+        return "reviewed_contaminated_context_only"
+    if contamination_status == "reviewed_contaminated_exclude":
+        return "reviewed_contaminated_exclude"
+    expectation_status = str(row.get("expectation_status", "") or "").strip()
+    if expectation_status == "post_release_invalid":
+        return "post_release_invalid"
+    if expectation_status == "benchmark_timing_unverified":
+        return "external_timing_unverified"
+    if expectation_status == "same_release_placeholder":
+        return "same_release_placeholder"
+    if expectation_status == "benchmark_verification_incomplete":
+        return "benchmark_verification_incomplete"
+    if contamination_status == "pending_review":
+        return "pending_contamination_review"
+    if expectation_status == "reviewed_surprise_ready":
+        return "reviewed_surprise_ready_not_tier_a"
+    return expectation_status or contamination_status or "review_pending"
+
+
+def build_qra_benchmark_evidence_registry_table() -> pd.DataFrame:
+    columns = [
+        "release_component_id",
+        "event_id",
+        "quarter",
+        "component_type",
+        "release_timestamp_et",
+        "benchmark_timestamp_et",
+        "benchmark_source",
+        "benchmark_source_family",
+        "benchmark_document_url",
+        "benchmark_document_local",
+        "benchmark_release_timestamp_et",
+        "benchmark_release_timestamp_precision",
+        "benchmark_timestamp_source_method",
+        "benchmark_pre_release_verified_flag",
+        "benchmark_observed_before_component_flag",
+        "benchmark_timing_status",
+        "external_benchmark_ready",
+        "expectation_review_status",
+        "expectation_status",
+        "expectation_notes",
+        "contamination_flag",
+        "contamination_status",
+        "contamination_review_status",
+        "contamination_label",
+        "confound_release_type",
+        "confound_release_timestamp_et",
+        "decision_rule",
+        "exclude_from_causal_pool",
+        "decision_confidence",
+        "contamination_notes",
+        "quality_tier",
+        "causal_eligible",
+        "terminal_disposition",
+        "terminal_status_reason",
+        "claim_scope",
+    ]
+    registry = build_qra_release_component_registry_publish_table()
+    if registry.empty or "quarter" not in registry.columns:
+        return pd.DataFrame(columns=columns)
+    current_sample = registry.loc[
+        registry["quarter"].map(_quarter_sort_key) >= (2022, 3)
+    ].copy()
+    current_sample = current_sample.loc[
+        current_sample.get("component_type", pd.Series(dtype=object)).astype(str).eq("financing_estimates")
+    ].copy()
+    if current_sample.empty:
+        return pd.DataFrame(columns=columns)
+    current_sample["terminal_disposition"] = current_sample.apply(_benchmark_terminal_disposition, axis=1)
+    current_sample["terminal_status_reason"] = current_sample.get(
+        "eligibility_blockers",
+        pd.Series(index=current_sample.index, dtype=object),
+    ).fillna("")
+    current_sample["claim_scope"] = current_sample.get(
+        "causal_eligible",
+        pd.Series(index=current_sample.index, dtype=bool),
+    ).fillna(False).astype(bool).map(
+        lambda eligible: CLAIM_SCOPE_CAUSAL_PILOT_ONLY if eligible else CLAIM_SCOPE_DESCRIPTIVE_ONLY
+    )
+    for column in columns:
+        if column not in current_sample.columns:
+            current_sample[column] = pd.NA
+    return current_sample[columns].sort_values(
+        ["quarter", "event_id", "release_component_id"],
+        key=lambda s: s.map(_quarter_sort_key) if s.name == "quarter" else s,
+        kind="stable",
+    ).reset_index(drop=True)
+
+
+def build_causal_claims_status_table() -> pd.DataFrame:
+    columns = [
+        "claim_id",
+        "claim_name",
+        "claim_scope",
+        "readiness_tier",
+        "public_role",
+        "headline_ready",
+        "causal_pilot_ready",
+        "source_quality",
+        "current_sample_financing_component_count",
+        "benchmark_ready_count",
+        "tier_a_count",
+        "context_only_count",
+        "post_release_invalid_count",
+        "can_claim",
+        "cannot_claim",
+        "boundary_reason",
+        "last_regenerated_utc",
+    ]
+    event_design_status = build_event_design_status_publish_table()
+    if event_design_status.empty:
+        return pd.DataFrame(columns=columns)
+    component_count = _metric_int(event_design_status, "current_sample_financing_component_count")
+    benchmark_ready_count = _metric_int(event_design_status, "current_sample_financing_reviewed_surprise_ready_count")
+    tier_a_count = _metric_int(event_design_status, "current_sample_financing_tier_a_count")
+    context_only_count = _metric_int(event_design_status, "current_sample_financing_reviewed_contaminated_context_only_count")
+    post_release_invalid_count = _metric_int(event_design_status, "current_sample_financing_post_release_invalid_count")
+    causal_pilot_ready = benchmark_ready_count > 0 and tier_a_count > 0
+    readiness_tier = "supporting_ready" if component_count > 0 else "not_started"
+    can_claim = (
+        f"A narrow post-2022Q3 financing-estimates pilot with {component_count} reviewed current-sample financing components, "
+        f"{benchmark_ready_count} benchmark-ready rows, and {tier_a_count} Tier A components."
+    )
+    cannot_claim = (
+        "A settled or full-sample causal estimate of Treasury issuance effects on long rates; "
+        f"{post_release_invalid_count} financing rows remain post-release-invalid and the long-rate translation layer is still supporting/provisional."
+    )
+    boundary_reason = (
+        f"{component_count} current-sample financing rows; {benchmark_ready_count} benchmark-ready; "
+        f"{tier_a_count} Tier A; {context_only_count} context-only; {post_release_invalid_count} post-release-invalid."
+    )
+    row = {
+        "claim_id": "current_sample_financing_pilot",
+        "claim_name": "Current-sample financing pilot",
+        "claim_scope": CLAIM_SCOPE_CAUSAL_PILOT_ONLY if causal_pilot_ready else CLAIM_SCOPE_DESCRIPTIVE_ONLY,
+        "readiness_tier": readiness_tier,
+        "public_role": "supporting",
+        "headline_ready": False,
+        "causal_pilot_ready": causal_pilot_ready,
+        "source_quality": "derived_causal_claims_status",
+        "current_sample_financing_component_count": component_count,
+        "benchmark_ready_count": benchmark_ready_count,
+        "tier_a_count": tier_a_count,
+        "context_only_count": context_only_count,
+        "post_release_invalid_count": post_release_invalid_count,
+        "can_claim": can_claim,
+        "cannot_claim": cannot_claim,
+        "boundary_reason": boundary_reason,
+        "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "event_design_status.csv"),
+    }
+    return pd.DataFrame([row], columns=columns)
+
+
 def build_official_capture_history_status_table() -> pd.DataFrame:
     columns = [
         "quarter",
@@ -1221,6 +1449,7 @@ def _empty_qra_crosswalk_frame() -> pd.DataFrame:
             "spec_id",
             "treatment_variant",
             "usable_for_headline_reason",
+            "claim_scope",
         ]
     )
 
@@ -1260,6 +1489,7 @@ def build_qra_shock_crosswalk_publish_table() -> pd.DataFrame:
         .fillna(out.get("shock_notes", pd.Series(index=out.index, dtype=object)))
         .fillna("")
     )
+    out = _apply_event_claim_scope(out)
     columns = [
         "event_id",
         "event_date_type",
@@ -1279,6 +1509,7 @@ def build_qra_shock_crosswalk_publish_table() -> pd.DataFrame:
         "spec_id",
         "treatment_variant",
         "usable_for_headline_reason",
+        "claim_scope",
     ]
     for column in columns:
         if column not in out.columns:
@@ -1298,12 +1529,14 @@ def _empty_event_usability_frame() -> pd.DataFrame:
             "descriptive_headline_reason",
             "usable_for_headline",
             "usable_for_headline_reason",
+            "headline_usable_count",
             "n_rows",
             "n_events",
             "event_count",
             "spec_id",
             "treatment_version_id",
             "treatment_variant",
+            "claim_scope",
         ]
     )
 
@@ -1327,11 +1560,15 @@ def build_event_usability_publish_table() -> pd.DataFrame:
         source["n_rows"] = source.get("event_count", pd.NA)
     if "n_events" not in source.columns:
         source["n_events"] = source.get("event_count", pd.NA)
+    if "headline_usable_count" not in source.columns:
+        event_count = pd.to_numeric(source.get("event_count", pd.Series(index=source.index, dtype=object)), errors="coerce").fillna(0)
+        usable_mask = source.get("usable_for_headline", pd.Series(False, index=source.index)).fillna(False).map(_coerce_bool_value)
+        source["headline_usable_count"] = event_count.where(usable_mask, 0).astype(int)
     if "descriptive_headline_reason" not in source.columns:
         source["descriptive_headline_reason"] = source.get("usable_for_headline_reason", pd.NA)
     if "usable_for_descriptive_headline" not in source.columns:
         source["usable_for_descriptive_headline"] = source.get("usable_for_headline", False)
-    return source
+    return _apply_event_claim_scope(source)
 
 
 def _empty_leave_one_out_frame() -> pd.DataFrame:
@@ -1339,14 +1576,18 @@ def _empty_leave_one_out_frame() -> pd.DataFrame:
         columns=[
             "event_id",
             "event_date_type",
+            "headline_bucket",
             "series",
             "window",
+            "n_events",
+            "p_value",
             "n_observations",
             "leave_one_out_coefficient",
             "leave_one_out_std_err",
             "leave_one_out_delta",
             "spec_id",
             "treatment_variant",
+            "claim_scope",
         ]
     )
 
@@ -1366,7 +1607,13 @@ def build_leave_one_event_out_publish_table() -> pd.DataFrame:
         out["left_out_event_id"] = out.get("dropped_event_id", out.get("event_id", pd.NA))
     if "estimate" not in out.columns:
         out["estimate"] = out.get("leave_one_out_coefficient", out.get("mean_elasticity", pd.NA))
-    return out
+    if "n_events" not in out.columns:
+        out["n_events"] = out.get("n_remaining_events", out.get("n_observations", pd.NA))
+    if "p_value" not in out.columns:
+        out["p_value"] = pd.NA
+    if "headline_bucket" in out.columns:
+        out["headline_bucket"] = out["headline_bucket"].replace({"headline_usable_pool": "pending"})
+    return _apply_event_claim_scope(out)
 
 
 def _empty_treatment_comparison_frame() -> pd.DataFrame:
@@ -1398,6 +1645,7 @@ def _empty_treatment_comparison_frame() -> pd.DataFrame:
             "headline_recommendation_reason",
             "primary_treatment_variant",
             "primary_treatment_reason",
+            "claim_scope",
         ]
     )
 
@@ -1408,7 +1656,9 @@ def build_treatment_comparison_publish_table() -> pd.DataFrame:
         elasticity = _augment_qra_elasticity_frame(_qra_elasticity_source_frame())
         if elasticity.empty:
             return _empty_treatment_comparison_frame()
-        return build_treatment_comparison_table(elasticity)
+        out = build_treatment_comparison_table(elasticity)
+        out["claim_scope"] = CLAIM_SCOPE_DESCRIPTIVE_ONLY
+        return out
     return _ensure_columns(
         source,
         {
@@ -1435,6 +1685,7 @@ def build_treatment_comparison_publish_table() -> pd.DataFrame:
             "headline_recommendation_reason": "comparison_fallback_loaded",
             "primary_treatment_variant": "canonical_shock_bn",
             "primary_treatment_reason": "canonical_shock_bn remains the headline contract; fixed, dynamic, and DV01 variants are comparison diagnostics.",
+            "claim_scope": CLAIM_SCOPE_DESCRIPTIVE_ONLY,
         },
     )
 
@@ -1467,6 +1718,7 @@ def build_qra_long_rate_translation_panel() -> pd.DataFrame:
         "long_rate_pilot_ready",
         "long_rate_pilot_blocker",
         "public_role",
+        "claim_scope",
     ]
     crosswalk = build_qra_shock_crosswalk_publish_table()
     if crosswalk.empty:
@@ -1531,6 +1783,11 @@ def build_qra_long_rate_translation_panel() -> pd.DataFrame:
                     "long_rate_pilot_ready": not blockers,
                     "long_rate_pilot_blocker": "|".join(blockers),
                     "public_role": "supporting",
+                    "claim_scope": (
+                        CLAIM_SCOPE_CAUSAL_PILOT_ONLY
+                        if not blockers
+                        else CLAIM_SCOPE_DESCRIPTIVE_ONLY
+                    ),
                 }
             )
     return pd.DataFrame(rows, columns=columns)
@@ -1551,6 +1808,7 @@ def _empty_auction_absorption_frame() -> pd.DataFrame:
             "provenance_summary",
             "source_family",
             "spec_id",
+            "claim_scope",
         ]
     )
 
@@ -1587,15 +1845,17 @@ def _normalize_security_family(label: object) -> str:
 def build_auction_absorption_publish_table() -> pd.DataFrame:
     source = _read_optional_source_csv("auction_absorption_table")
     if not source.empty:
-        return _ensure_columns(
+        out = _ensure_columns(
             source,
             {
                 "spec_id": QRA_AUCTION_SPEC_ID,
                 "source_family": "unknown",
                 "source_quality": "summary_ready",
                 "provenance_summary": "",
+                "claim_scope": CLAIM_SCOPE_DESCRIPTIVE_ONLY,
             },
         )
+        return _apply_event_claim_scope(out, default=CLAIM_SCOPE_DESCRIPTIVE_ONLY)
 
     event_map = _build_event_quarter_map()
     rows: list[pd.DataFrame] = []
@@ -1685,6 +1945,7 @@ def build_auction_absorption_publish_table() -> pd.DataFrame:
 
     out = pd.concat(rows, ignore_index=True)
     out["spec_id"] = QRA_AUCTION_SPEC_ID
+    out["claim_scope"] = CLAIM_SCOPE_DESCRIPTIVE_ONLY
     return out[
         [
             "qra_event_id",
@@ -1699,6 +1960,7 @@ def build_auction_absorption_publish_table() -> pd.DataFrame:
             "provenance_summary",
             "source_family",
             "spec_id",
+            "claim_scope",
         ]
     ].sort_values(["quarter", "qra_event_id", "auction_date", "security_family", "measure"], kind="stable").reset_index(drop=True)
 
@@ -1746,6 +2008,7 @@ def _qra_elasticity_publish_columns() -> list[str]:
         "elasticity_bp_per_100bn",
         "sign_flip_flag",
         "usable_for_headline",
+        "claim_scope",
     ]
 
 
@@ -1792,6 +2055,7 @@ def _qra_event_shock_summary_publish_columns() -> list[str]:
         "usable_for_headline_reason",
         "review_maturity",
         "usable_for_headline",
+        "claim_scope",
     ]
 
 
@@ -1806,6 +2070,7 @@ def build_qra_event_elasticity_publish_table() -> pd.DataFrame:
     df = pd.read_csv(path)
     df = df.loc[df.get("event_date_type", pd.Series(dtype=str)).astype(str) == "official_release_date"].copy()
     df = _augment_qra_elasticity_frame(df)
+    df = _apply_event_claim_scope(df)
     keep = [column for column in _qra_elasticity_publish_columns() if column in df.columns]
     return df[keep].reset_index(drop=True)
 
@@ -1816,6 +2081,7 @@ def build_qra_event_elasticity_diagnostic_publish_table() -> pd.DataFrame:
         return _empty_qra_elasticity_publish_frame()
     df = pd.read_csv(path)
     df = _augment_qra_elasticity_frame(df)
+    df = _apply_event_claim_scope(df)
     keep = [column for column in _qra_elasticity_publish_columns() if column in df.columns]
     return df[keep].copy()
 
@@ -1833,6 +2099,7 @@ def build_qra_event_shock_summary_publish_table() -> pd.DataFrame:
     if df.empty:
         return _empty_qra_event_shock_summary_publish_frame()
     df = _augment_qra_elasticity_frame(df)
+    df = _apply_event_claim_scope(df)
     keep = [column for column in _qra_event_shock_summary_publish_columns() if column in df.columns]
     sort_columns = [column for column in ("event_date_requested", "event_id") if column in keep]
     if not sort_columns:
@@ -2547,7 +2814,9 @@ def build_dataset_status_table() -> pd.DataFrame:
         qra_elasticity_tier = "supporting_provisional"
     qra_event_registry = build_qra_event_registry_publish_table()
     qra_release_component_registry = build_qra_release_component_registry_publish_table()
+    qra_benchmark_evidence_registry = build_qra_benchmark_evidence_registry_table()
     qra_causal_qa = build_qra_causal_qa_publish_table()
+    causal_claims_status = build_causal_claims_status_table()
     event_design_status = build_event_design_status_publish_table()
     qra_benchmark_coverage = build_qra_benchmark_coverage_table()
     qra_benchmark_blockers = build_qra_benchmark_blockers_by_event_publish_table()
@@ -2698,6 +2967,17 @@ def build_dataset_status_table() -> pd.DataFrame:
             "public_role": "supporting",
         },
         {
+            "dataset": "qra_benchmark_evidence_registry",
+            "readiness_tier": "supporting_ready" if not qra_benchmark_evidence_registry.empty else "not_started",
+            "source_quality": "derived_benchmark_evidence_registry",
+            "headline_ready": False,
+            "fallback_only": qra_benchmark_evidence_registry.empty,
+            "missing_critical_fields": "" if not qra_benchmark_evidence_registry.empty else "benchmark_evidence_registry_missing",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_release_component_registry.csv"),
+            "review_maturity": "supporting_ready" if not qra_benchmark_evidence_registry.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
             "dataset": "qra_causal_qa_ledger",
             "readiness_tier": (
                 "supporting_ready"
@@ -2710,6 +2990,17 @@ def build_dataset_status_table() -> pd.DataFrame:
             "missing_critical_fields": causal_design_missing,
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_causal_qa_ledger.csv"),
             "review_maturity": "provisional_supporting" if not qra_causal_qa.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "causal_claims_status",
+            "readiness_tier": "supporting_ready" if not causal_claims_status.empty else "not_started",
+            "source_quality": "derived_causal_claims_status",
+            "headline_ready": False,
+            "fallback_only": causal_claims_status.empty,
+            "missing_critical_fields": "" if not causal_claims_status.empty else "causal_claims_status_missing",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "event_design_status.csv"),
+            "review_maturity": "supporting_ready" if not causal_claims_status.empty else "not_started",
             "public_role": "supporting",
         },
         {
@@ -2893,7 +3184,9 @@ def build_publish_artifacts() -> None:
     publish_table("qra_release_component_registry", "QRA Release Component Registry", build_qra_release_component_registry_publish_table())
     publish_table("qra_benchmark_coverage", "QRA Benchmark Coverage", build_qra_benchmark_coverage_table())
     publish_table("qra_benchmark_blockers_by_event", "QRA Benchmark Blockers By Event", build_qra_benchmark_blockers_by_event_publish_table())
+    publish_table("qra_benchmark_evidence_registry", "QRA Benchmark Evidence Registry", build_qra_benchmark_evidence_registry_table())
     publish_table("qra_causal_qa_ledger", "QRA Causal QA Ledger", build_qra_causal_qa_publish_table())
+    publish_table("causal_claims_status", "Causal Claims Status", build_causal_claims_status_table())
     publish_table("event_design_status", "Event Design Status", build_event_design_status_publish_table())
     publish_table("qra_shock_crosswalk_v1", "QRA Shock Crosswalk V1", build_qra_shock_crosswalk_publish_table())
     publish_table("treatment_comparison_table", "Treatment Comparison Table", build_treatment_comparison_publish_table())

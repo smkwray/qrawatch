@@ -29,11 +29,13 @@ The repo now has a reproducible backend product and public site, with a delibera
 - the official coupon-shortfall rebuild is derived from that capture path
 - the plumbing baseline uses exact net bill and non-bill series, with fallbacks labeled separately
 - the duration headline is a hybrid exact-plus-proxy construction with explicit fallback comparisons
+- `claim_scope` now separates descriptive-only rows, causal-pilot-only rows, and headline rows so the public boundary is machine-readable and hard to misread
 - the publish layer under `output/publish/` is the frontend-facing API
 - investor allotments, primary dealer, and SEC N-MFP are now summary-ready extension modules
 - QRA event, shock-crosswalk, usability, leave-one-out, and absorption bridge tables are published when their source files exist, but they are supporting audit surfaces rather than referee-grade causal estimates
+- the new `qra_benchmark_evidence_registry` and `causal_claims_status` artifacts make benchmark provenance and claim scope explicit for the QRA pilot
 
-Exact official quarter coverage currently spans `2010Q1` through `2025Q4`.
+Exact official quarter coverage currently spans `2009Q1` through `2025Q4`.
 This public release should be read as an in-progress research/data product, not as a finished long-history dataset or a settled causal design.
 
 ## Quickstart
@@ -92,6 +94,7 @@ make regenerate
 - `RESEARCH_DESIGN.md` — equations, identification, outcomes, and robustness
 - `DATA_SOURCES.md` — source registry and why each dataset matters
 - `docs/STATUS_GLOSSARY.md` — readiness/source-quality labels and ATI terminology used in publish artifacts
+- `docs/GPT_PRO_AUDIT_BRIEF.md` — audit-ready snapshot of the current causal-governance state and the questions to ask next
 - `VALIDATION_CHECKLIST.md` — QA before trusting any headline result
 - `data/manual/` — seed quarter inputs and event dates
 - `src/ati_shadow_policy/` — reusable download and research modules
@@ -123,15 +126,15 @@ Some pieces are seeded rather than fully automated:
 - the duration headline still combines exact non-bill net supply with a QT proxy, and publish artifacts keep fallback constructions explicit
 - the SEC N-MFP backend stops at summary analytics depth rather than security-level research depth
 - TIC remains out of scope for the current public release
-- the QRA event and elasticity layers are published as provisional-supporting research infrastructure; `usable_for_descriptive_headline` is not a causal-readiness flag
+- the QRA event and elasticity layers are published as provisional-supporting research infrastructure; `claim_scope` separates descriptive-only, causal-pilot-only, and headline rows, and `usable_for_descriptive_headline` is not a causal-readiness flag
 - QRA downloads now use deterministic filenames of the form `<slug>_<sha1>.pdf|.html` and record provenance in `data/raw/qra/downloads.csv`
 
 ## Current limitations
 
-- the exact official quarter history now spans `2010Q1` through `2025Q4`, but earlier archive history remains out of scope for the current release
+- the exact official quarter history now spans `2009Q1` through `2025Q4`, but earlier archive history before `2009Q1` remains out of scope for the current release
 - the event-study layer is informative but still mostly descriptive/supporting; the causal surface is currently a small post-`2022Q3` financing-estimates pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, and `5` Tier A components rather than a full-sample design
 - extension modules are supporting context, not the headline result
-- the long-history version of the project still needs additional official quarter capture
+- the longer-history version of the project still needs additional official quarter capture before `2009Q1`
 
 ## Backend artifacts
 
@@ -144,6 +147,7 @@ The backend now emits a publish-ready layer under `output/publish/`, derived fro
 - optional QRA event shock-summary and elasticity tables built from the manual shock template plus the event panel, kept as supporting/provisional outputs
 - QRA event registry, release-component registry, causal QA ledger, event-design status, shock crosswalk, event usability, leave-one-out, and auction absorption tables when the source files exist
 - QRA benchmark-coverage and benchmark-blocker tables for the current-sample financing pilot when the source files exist
+- QRA benchmark evidence registry and causal claims status tables when the source files exist
 - plumbing baseline summaries and robustness summaries
 - duration-supply summaries and construction comparisons
 - data-source and extension-status inventories
@@ -184,7 +188,7 @@ If `FRED_API_KEY` is set in `.env`, the FRED downloader uses the official API to
 
 ## What comes next
 
-- extend exact official quarter history backward from `2010Q1` toward the older archive
+- extend exact official quarter history backward from `2009Q1` toward the older archive
 - deepen the post-`2022Q3` causal pilot by finding more genuinely pre-release external benchmarks
 - deepen extensions after the core quarter history is longer
 

@@ -31,7 +31,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2010Q2",
@@ -63,7 +64,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2010Q3",
@@ -95,7 +97,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2010Q4",
@@ -127,7 +130,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2011Q1",
@@ -159,7 +163,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2011Q2",
@@ -191,7 +196,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2011Q3",
@@ -223,7 +229,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2011Q4",
@@ -255,7 +262,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2012Q1",
@@ -287,7 +295,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2012Q2",
@@ -319,7 +328,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2012Q3",
@@ -351,7 +361,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2012Q4",
@@ -383,7 +394,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2013Q1",
@@ -415,7 +427,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2013Q2",
@@ -447,7 +460,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2013Q3",
@@ -479,7 +493,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2013Q4",
@@ -511,7 +526,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2014Q1",
@@ -543,7 +559,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2014Q2",
@@ -575,7 +592,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2014Q3",
@@ -607,7 +625,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2014Q4",
@@ -639,7 +658,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2015Q1",
@@ -671,7 +691,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2015Q2",
@@ -703,7 +724,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2015Q3",
@@ -735,7 +757,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2015Q4",
@@ -767,7 +790,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2016Q1",
@@ -799,7 +823,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2016Q2",
@@ -831,7 +856,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2016Q3",
@@ -863,7 +889,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2016Q4",
@@ -895,7 +922,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2017Q1",
@@ -927,7 +955,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2017Q2",
@@ -959,7 +988,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2017Q3",
@@ -991,7 +1021,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2017Q4",
@@ -1023,7 +1054,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2018Q1",
@@ -1055,7 +1087,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2018Q2",
@@ -1087,7 +1120,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2018Q3",
@@ -1119,7 +1153,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2018Q4",
@@ -1151,7 +1186,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2019Q1",
@@ -1183,7 +1219,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2019Q2",
@@ -1215,7 +1252,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2019Q3",
@@ -1247,7 +1285,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2019Q4",
@@ -1279,7 +1318,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2020Q1",
@@ -1311,7 +1351,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2020Q2",
@@ -1343,7 +1384,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2020Q3",
@@ -1375,7 +1417,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2020Q4",
@@ -1407,7 +1450,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2021Q2",
@@ -1439,7 +1483,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2021Q3",
@@ -1471,7 +1516,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2021Q4",
@@ -1503,7 +1549,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "shock_missing",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2022Q3",
@@ -1535,7 +1582,8 @@
       "usable_for_descriptive_headline": true,
       "usable_for_headline_reason": "usable",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": true
+      "usable_for_headline": true,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2022Q4",
@@ -1567,7 +1615,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2023Q1",
@@ -1599,7 +1648,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2023Q2",
@@ -1631,7 +1681,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2023Q3",
@@ -1663,7 +1714,8 @@
       "usable_for_descriptive_headline": true,
       "usable_for_headline_reason": "usable",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": true
+      "usable_for_headline": true,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2023Q4",
@@ -1695,7 +1747,8 @@
       "usable_for_descriptive_headline": true,
       "usable_for_headline_reason": "usable",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": true
+      "usable_for_headline": true,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2024Q1",
@@ -1727,7 +1780,8 @@
       "usable_for_descriptive_headline": true,
       "usable_for_headline_reason": "usable",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": true
+      "usable_for_headline": true,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2024Q2",
@@ -1759,7 +1813,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2024Q3",
@@ -1791,7 +1846,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2024Q4",
@@ -1823,7 +1879,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2025Q1",
@@ -1855,7 +1912,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2025Q2",
@@ -1887,7 +1945,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2025Q3",
@@ -1919,7 +1978,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     },
     {
       "quarter": "2025Q4",
@@ -1951,7 +2011,8 @@
       "usable_for_descriptive_headline": false,
       "usable_for_headline_reason": "small_denominator",
       "review_maturity": "provisional_supporting",
-      "usable_for_headline": false
+      "usable_for_headline": false,
+      "claim_scope": "descriptive_only"
     }
   ]
 }
