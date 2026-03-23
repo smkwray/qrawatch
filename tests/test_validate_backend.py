@@ -1457,6 +1457,94 @@ def test_validate_qra_publish_consistency_ignores_t_minus_one_usability_rows() -
     assert "qra_publish_consistency_usability_count_mismatch" not in errors
 
 
+def test_validate_qra_publish_consistency_flags_benchmark_coverage_metric_mismatch() -> None:
+    component_registry = pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2024_05__financing_estimates",
+                "event_id": "qra_2024_05",
+                "quarter": "2024Q3",
+                "component_type": "financing_estimates",
+                "benchmark_timing_status": "pre_release_external",
+                "external_benchmark_ready": True,
+                "expectation_status": "reviewed_surprise_ready",
+                "contamination_status": "reviewed_contaminated_context_only",
+                "quality_tier": "Tier B",
+                "causal_eligible": False,
+                "timestamp_precision": "exact_time",
+                "source_url": "https://example.com/financing",
+                "eligibility_blockers": "contamination_context_only",
+            }
+        ]
+    )
+    frames = {
+        "qra_event_registry_v2.csv": pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2024_05",
+                    "release_timestamp_et": "2024-04-29T15:00:00-04:00",
+                    "timestamp_precision": "exact_time",
+                    "headline_eligibility_reason": "usable",
+                }
+            ]
+        ),
+        "qra_release_component_registry.csv": component_registry,
+        "qra_benchmark_coverage.csv": pd.DataFrame(
+            [
+                {"scope": "current_sample_financing_estimates", "metric": "release_component_count", "value": 1},
+                {"scope": "current_sample_financing_estimates", "metric": "reviewed_contaminated_context_only_count", "value": 0},
+            ]
+        ),
+    }
+
+    errors = validate_backend_script._validate_qra_publish_consistency(frames)
+
+    assert (
+        "qra_benchmark_coverage_metric_mismatch:"
+        "current_sample_financing_estimates:reviewed_contaminated_context_only_count"
+    ) in errors
+
+
+def test_validate_manual_causal_review_inputs_requires_current_sample_financing_rows(tmp_path: Path) -> None:
+    manual_dir = tmp_path / "manual"
+    manual_dir.mkdir()
+    pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2024_05__financing_estimates",
+                "quarter": "2024Q3",
+                "component_type": "financing_estimates",
+            }
+        ]
+    ).to_csv(manual_dir / "qra_release_component_registry.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "release_component_id": "qra_2024_05__financing_estimates",
+                "benchmark_timing_status": "pre_release_external",
+                "expectation_review_status": "reviewed",
+                "expectation_notes": "Reviewed.",
+                "benchmark_source": "https://example.com/survey.pdf",
+                "benchmark_source_family": "primary_dealer_auction_size_survey",
+                "benchmark_release_timestamp_et": "2024-04-23T15:32:09-04:00",
+                "benchmark_pre_release_verified_flag": True,
+                "benchmark_observed_before_component_flag": True,
+            }
+        ]
+    ).to_csv(manual_dir / "qra_component_expectation_template.csv", index=False)
+    pd.DataFrame(columns=["release_component_id"]).to_csv(
+        manual_dir / "qra_event_contamination_reviews.csv", index=False
+    )
+
+    errors, warnings = validate_backend_script.validate_manual_causal_review_inputs(manual_dir)
+
+    assert warnings == []
+    assert (
+        "manual_causal_contamination_missing_current_sample_financing_rows:"
+        "qra_2024_05__financing_estimates"
+    ) in errors
+
+
 def test_canonical_qra_review_frame_does_not_collapse_aggregate_usability_rows() -> None:
     frame = pd.DataFrame(
         [

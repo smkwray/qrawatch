@@ -340,6 +340,14 @@ def _is_current_sample_financing_row(row: pd.Series) -> bool:
     ) >= (2022, 3)
 
 
+def _current_sample_financing_components(component_registry: pd.DataFrame) -> pd.DataFrame:
+    if component_registry.empty:
+        return component_registry.copy()
+    return component_registry.loc[
+        component_registry.apply(_is_current_sample_financing_row, axis=1)
+    ].copy()
+
+
 def _has_timestamp_evidence(row: pd.Series) -> bool:
     source_method = _normalize_text(row.get("release_timestamp_source_method"))
     evidence_url = _normalize_text(row.get("timestamp_evidence_url"))
@@ -937,9 +945,7 @@ def build_event_design_status(component_registry: pd.DataFrame) -> pd.DataFrame:
     reviewed_clean = int(component_registry["contamination_status"].astype(str).eq("reviewed_clean").sum())
     exact_time = int(component_registry["timestamp_precision"].astype(str).eq("exact_time").sum())
     surprise_ready = int(component_registry["expectation_status"].astype(str).eq("reviewed_surprise_ready").sum())
-    current_sample_financing = component_registry.loc[
-        component_registry.apply(_is_current_sample_financing_row, axis=1)
-    ].copy()
+    current_sample_financing = _current_sample_financing_components(component_registry)
     rows = [
         {"metric": "release_component_count", "value": int(len(component_registry)), "notes": "Total release components in the current registry."},
         {"metric": "tier_a_count", "value": int(counts.get("Tier A", 0)), "notes": "Causal-eligible components."},
@@ -968,6 +974,41 @@ def build_event_design_status(component_registry: pd.DataFrame) -> pd.DataFrame:
             "metric": "current_sample_financing_pre_release_external_count",
             "value": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("pre_release_external").sum()),
             "notes": "Current-sample financing components with verified pre-release external benchmarks.",
+        },
+        {
+            "metric": "current_sample_financing_reviewed_surprise_ready_count",
+            "value": int(current_sample_financing.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("reviewed_surprise_ready").sum()),
+            "notes": "Current-sample financing components with reviewed surprise inputs ready for causal use.",
+        },
+        {
+            "metric": "current_sample_financing_post_release_invalid_count",
+            "value": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("post_release_invalid").sum()),
+            "notes": "Current-sample financing components blocked by post-release benchmark timing.",
+        },
+        {
+            "metric": "current_sample_financing_external_timing_unverified_count",
+            "value": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("external_timing_unverified").sum()),
+            "notes": "Current-sample financing components with external benchmarks that still lack timing verification.",
+        },
+        {
+            "metric": "current_sample_financing_same_release_placeholder_count",
+            "value": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("same_release_placeholder").sum()),
+            "notes": "Current-sample financing components still relying on same-release placeholder benchmark semantics.",
+        },
+        {
+            "metric": "current_sample_financing_pending_contamination_review_count",
+            "value": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("pending_review").sum()),
+            "notes": "Current-sample financing components still awaiting contamination review.",
+        },
+        {
+            "metric": "current_sample_financing_reviewed_contaminated_context_only_count",
+            "value": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_context_only").sum()),
+            "notes": "Current-sample financing components retained as context-only because contamination was reviewed but not clean.",
+        },
+        {
+            "metric": "current_sample_financing_reviewed_contaminated_exclude_count",
+            "value": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_exclude").sum()),
+            "notes": "Current-sample financing components excluded from the causal pool after reviewed contamination.",
         },
         {
             "metric": "current_sample_financing_tier_a_count",

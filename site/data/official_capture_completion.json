@@ -3,43 +3,43 @@
   "rows": [
     {
       "quarter": "2010Q1",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 49.943,
       "reconstructed_net_bill_issuance_bn": 49.943,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2010Q2",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -39.009,
       "reconstructed_net_bill_issuance_bn": -39.009,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2010Q3",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": 5.906,
       "reconstructed_net_bill_issuance_bn": 5.906,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2010Q4",
-      "completion_tier": "semi_automated_guidance_only",
-      "qa_status": "semi_automated_capture",
+      "completion_tier": "exact_official_numeric",
+      "qa_status": "manual_official_capture",
       "uses_seed_source": false,
       "net_bill_issuance_bn": -16.045,
       "reconstructed_net_bill_issuance_bn": -16.045,
       "reconstruction_status_bill": "complete",
-      "is_headline_ready": false
+      "is_headline_ready": true
     },
     {
       "quarter": "2011Q1",

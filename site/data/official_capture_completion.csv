@@ -1,8 +1,8 @@
 quarter,completion_tier,qa_status,uses_seed_source,net_bill_issuance_bn,reconstructed_net_bill_issuance_bn,reconstruction_status_bill,is_headline_ready
-2010Q1,semi_automated_guidance_only,semi_automated_capture,False,49.943,49.943,complete,False
-2010Q2,semi_automated_guidance_only,semi_automated_capture,False,-39.009,-39.009,complete,False
-2010Q3,semi_automated_guidance_only,semi_automated_capture,False,5.906,5.906,complete,False
-2010Q4,semi_automated_guidance_only,semi_automated_capture,False,-16.045,-16.045,complete,False
+2010Q1,exact_official_numeric,manual_official_capture,False,49.943,49.943,complete,True
+2010Q2,exact_official_numeric,manual_official_capture,False,-39.009,-39.009,complete,True
+2010Q3,exact_official_numeric,manual_official_capture,False,5.906,5.906,complete,True
+2010Q4,exact_official_numeric,manual_official_capture,False,-16.045,-16.045,complete,True
 2011Q1,exact_official_numeric,manual_official_capture,False,-99.075,-99.075,complete,True
 2011Q2,exact_official_numeric,manual_official_capture,False,-127.065,-127.065,complete,True
 2011Q3,exact_official_numeric,manual_official_capture,False,-57.054,-57.054,complete,True

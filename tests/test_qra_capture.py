@@ -16,6 +16,7 @@ from ati_shadow_policy.qra_capture import (
     enrich_capture_with_auction_reconstruction,
     enrich_capture_with_financing_release_map,
     enrich_capture_with_refunding_statement_map,
+    quarter_from_event_seed_row,
     seed_capture_rows_from_local_sources,
 )
 
@@ -109,6 +110,46 @@ def test_build_official_capture_normalizes_project_root_local_paths(monkeypatch,
     )
 
 
+def test_build_official_capture_promotes_complete_semi_automated_rows() -> None:
+    frame = _empty_capture_df()
+    frame.loc[0] = {
+        "quarter": "2010Q1",
+        "qra_release_date": "2010-02-03",
+        "market_pricing_marker_minus_1d": "2010-02-02",
+        "total_financing_need_bn": "392",
+        "net_bill_issuance_bn": "49.943",
+        "financing_source_url": "https://home.treasury.gov/news/press-releases/tg524",
+        "financing_source_doc_local": "data/raw/qra/files/tg524.html",
+        "financing_source_doc_type": "quarterly_refunding_press_release",
+        "refunding_statement_source_url": "https://home.treasury.gov/news/press-releases/tg527",
+        "refunding_statement_source_doc_local": "data/raw/qra/files/tg527.html",
+        "refunding_statement_source_doc_type": "official_quarterly_refunding_statement",
+        "auction_reconstruction_source_url": "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query",
+        "auction_reconstruction_source_doc_local": "data/raw/fiscaldata/auctions_query.csv",
+        "auction_reconstruction_source_doc_type": "official_auction_reconstruction",
+        "source_url": (
+            "https://home.treasury.gov/news/press-releases/tg524|"
+            "https://home.treasury.gov/news/press-releases/tg527|"
+            "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query"
+        ),
+        "source_doc_local": (
+            "data/raw/qra/files/tg524.html|"
+            "data/raw/qra/files/tg527.html|"
+            "data/raw/fiscaldata/auctions_query.csv"
+        ),
+        "source_doc_type": (
+            "quarterly_refunding_press_release|"
+            "official_quarterly_refunding_statement|"
+            "official_auction_reconstruction"
+        ),
+        "qa_status": "semi_automated_capture",
+    }
+
+    result = build_official_capture(frame).dataframe.iloc[0]
+
+    assert result["qa_status"] == "manual_official_capture"
+
+
 def test_seed_capture_rows_from_local_sources_maps_known_quarters() -> None:
     qra_events = pd.DataFrame(
         [
@@ -178,6 +219,12 @@ def test_seed_capture_rows_from_local_sources_maps_known_quarters() -> None:
     assert row_q2["source_doc_type"] == "seed_csv"
     row_2025q2 = seeded.loc[seeded["quarter"] == "2025Q2"].iloc[0]
     assert row_2025q2["total_financing_need_bn"] == ""
+
+
+def test_quarter_from_event_seed_row_prefers_explicit_quarter() -> None:
+    event = pd.Series({"quarter": "2010Q1", "official_release_date": "2010-02-03"})
+
+    assert quarter_from_event_seed_row(event) == "2010Q1"
 
 
 def test_build_official_capture_can_seed_missing_quarters() -> None:
@@ -258,6 +305,48 @@ def test_build_financing_release_source_map_extracts_official_borrowing(tmp_path
     assert source_map.loc[0, "match_status"] == "matched"
 
 
+def test_build_financing_release_source_map_uses_event_quarter_and_html_fallback(tmp_path) -> None:
+    text_dir = tmp_path / "qra_text"
+    text_dir.mkdir()
+    local_html = tmp_path / "tg524_demo.html"
+    local_html.write_text(
+        "\n".join(
+            [
+                "<html><body>",
+                "Treasury Announces Marketable Borrowing Estimates",
+                "Additional financing details relating to Treasury's Quarterly Refunding will be released on Wednesday, February 3, 2010.",
+                "During the January - March 2010 quarter, Treasury expects to borrow $392 billion in privately-held net marketable debt.",
+                "</body></html>",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    events = pd.DataFrame(
+        [
+            {
+                "quarter": "2010Q1",
+                "official_release_date": "2010-02-03",
+                "market_pricing_marker_minus_1d": "2010-02-02",
+            }
+        ]
+    )
+    downloads = pd.DataFrame(
+        [
+            {
+                "href": "https://home.treasury.gov/news/press-releases/tg524",
+                "local_path": str(local_html),
+                "doc_type": "quarterly_refunding_press_release",
+            }
+        ]
+    )
+
+    source_map = build_financing_release_source_map(events, downloads, text_dir)
+
+    assert list(source_map["quarter"]) == ["2010Q1"]
+    assert source_map.loc[0, "announced_borrowing_bn"] == 392.0
+    assert source_map.loc[0, "match_status"] == "matched"
+
+
 def test_enrich_capture_with_financing_release_map_promotes_seed_rows() -> None:
     capture = _empty_capture_df()
     capture.loc[0] = {
@@ -293,6 +382,42 @@ def test_enrich_capture_with_financing_release_map_promotes_seed_rows() -> None:
     assert row["source_url"] == "https://home.treasury.gov/news/press-releases/jy2054"
     assert row["source_doc_local"].startswith("/tmp/jy2054.html|")
     assert "Official borrowing estimate matched to January 31, 2024" in row["notes"]
+
+
+def test_enrich_capture_with_financing_release_map_strips_stale_seed_derived_note() -> None:
+    capture = _empty_capture_df()
+    capture.loc[0] = {
+        "quarter": "2010Q1",
+        "qra_release_date": "2010-02-03",
+        "market_pricing_marker_minus_1d": "2010-02-02",
+        "net_bill_issuance_bn": "49.943",
+        "notes": (
+            "Historical archive scaffold row. "
+            "Official borrowing estimate matched to February 3, 2010 Treasury borrowing-estimate release. "
+            "net_bill_issuance_bn remains seed-derived pending official quarter capture."
+        ),
+        "qa_status": "manual_official_capture",
+    }
+    release_map = pd.DataFrame(
+        [
+            {
+                "quarter": "2010Q1",
+                "qra_release_date": "2010-02-03",
+                "official_release_date_phrase": "February 3, 2010",
+                "source_url": "https://home.treasury.gov/news/press-releases/tg524",
+                "source_doc_local": "/tmp/tg524.html",
+                "source_doc_type": "quarterly_refunding_press_release",
+                "announced_borrowing_bn": 392.0,
+                "match_status": "matched",
+            }
+        ]
+    )
+
+    enriched = enrich_capture_with_financing_release_map(capture, release_map)
+
+    row = enriched.iloc[0]
+    assert row["notes"].count("Official borrowing estimate matched to February 3, 2010") == 1
+    assert "seed-derived pending official quarter capture" not in row["notes"]
 
 
 def test_build_refunding_statement_manifest_maps_archive_links(tmp_path) -> None:

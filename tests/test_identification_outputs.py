@@ -461,6 +461,9 @@ def test_summarize_qra_causal_qa_and_event_design_status() -> None:
     assert int(status.loc[status["metric"] == "tier_a_count", "value"].iloc[0]) == 1
     assert int(status.loc[status["metric"] == "release_component_count", "value"].iloc[0]) == 3
     assert int(status.loc[status["metric"] == "current_sample_financing_component_count", "value"].iloc[0]) == 1
+    assert int(status.loc[status["metric"] == "current_sample_financing_reviewed_surprise_ready_count", "value"].iloc[0]) == 0
+    assert int(status.loc[status["metric"] == "current_sample_financing_external_timing_unverified_count", "value"].iloc[0]) == 1
+    assert int(status.loc[status["metric"] == "current_sample_financing_pending_contamination_review_count", "value"].iloc[0]) == 1
     assert int(status.loc[status["metric"] == "current_sample_financing_tier_a_count", "value"].iloc[0]) == 0
 
 

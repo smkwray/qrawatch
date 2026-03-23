@@ -4,11 +4,11 @@
     {
       "dataset": "official_capture",
       "readiness_tier": "headline_ready",
-      "source_quality": "exact_official_window_plus_seed_history",
+      "source_quality": "exact_official",
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:24:51.325552+00:00",
+      "last_regenerated_utc": "2026-03-23T11:47:01.056515+00:00",
       "review_maturity": "headline_ready",
       "public_role": "supporting"
     },
@@ -19,7 +19,7 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:24:51.988207+00:00",
+      "last_regenerated_utc": "2026-03-23T11:47:01.646999+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
     },
@@ -41,7 +41,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:42.184284+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:13.989013+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -52,7 +52,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:42.355522+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:14.072675+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -63,7 +63,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:42.355522+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:14.072675+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -74,7 +74,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:42.627143+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:14.198206+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -85,7 +85,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:42.555676+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:14.179902+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -96,7 +96,18 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:24:51.325552+00:00",
+      "last_regenerated_utc": "2026-03-23T11:47:01.056515+00:00",
+      "review_maturity": "supporting_ready",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "official_capture_backfill_queue",
+      "readiness_tier": "supporting_ready",
+      "source_quality": "derived_backfill_queue",
+      "headline_ready": false,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-23T11:47:01.056515+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -107,7 +118,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:42.564717+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:14.183678+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -118,7 +129,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:42.761981+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:14.288994+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -134,13 +145,24 @@
       "public_role": "supporting"
     },
     {
+      "dataset": "qra_long_rate_translation_panel",
+      "readiness_tier": "supporting_provisional",
+      "source_quality": "derived_long_rate_translation",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-23T11:35:14.288994+00:00",
+      "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
+    },
+    {
       "dataset": "event_usability_table",
       "readiness_tier": "supporting_ready",
       "source_quality": "derived_qra_usability",
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:42.924503+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:14.392213+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -151,7 +173,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T09:50:45.229839+00:00",
+      "last_regenerated_utc": "2026-03-23T11:35:15.621795+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },

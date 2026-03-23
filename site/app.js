@@ -1162,9 +1162,10 @@
       fetchJSON('series_metadata_catalog.json'),
       fetchJSON('data_sources_summary.json'),
       fetchJSON('official_capture_readiness.json'),
-      fetchJSON('official_capture_completion.json')
+      fetchJSON('official_capture_completion.json'),
+      fetchJSON('official_capture_backfill_queue.json')
     ]);
-    var dsStatus = results[0], extStatus = results[1], catalog = results[2], sources = results[3], captureReadiness = results[4], captureCompletion = results[5];
+    var dsStatus = results[0], extStatus = results[1], catalog = results[2], sources = results[3], captureReadiness = results[4], captureCompletion = results[5], captureBackfillQueue = results[6];
 
     if (dsStatus) {
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Dataset Readiness' }));
@@ -1201,6 +1202,30 @@
         { key: 'is_headline_ready', label: 'Headline', format: checkMark },
         { key: 'uses_seed_source', label: 'Uses Seed', format: checkMark }
       ], captureCompletion.rows.slice(0, 16)));
+    }
+
+    if (captureBackfillQueue) {
+      var pendingRows = captureBackfillQueue.rows.filter(function (row) {
+        return !row.numeric_official_capture_ready;
+      });
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Official Capture Backfill Queue' }));
+      if (!pendingRows.length) {
+        container.appendChild(el('p', {
+          class: 'section-desc',
+          text: 'No remaining official-capture quarter backlog. Every published quarter is currently numeric-official ready.'
+        }));
+      } else {
+        container.appendChild(buildTable([
+          { key: 'quarter', label: 'Quarter' },
+          { key: 'source_quality', label: 'Source Quality', format: fmtLabel },
+          { key: 'readiness_tier', label: 'Readiness', format: function (v) { return statusBadge(v); } },
+          { key: 'missing_numeric_fields', label: 'Missing Numeric Fields', format: function (v) { return v || dash(); } },
+          { key: 'next_action', label: 'Next Action', format: fmtLabel },
+          { key: 'financing_provenance_ready', label: 'Financing', format: checkMark },
+          { key: 'refunding_statement_provenance_ready', label: 'Statement', format: checkMark },
+          { key: 'auction_reconstruction_ready', label: 'Auction', format: checkMark }
+        ], pendingRows));
+      }
     }
 
     if (extStatus) {

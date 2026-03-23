@@ -5,7 +5,11 @@ current_sample_all_components,same_release_placeholder_count,14,Rows still block
 current_sample_all_components,post_release_invalid_count,8,Rows with post-release benchmark timestamps.
 current_sample_all_components,external_timing_unverified_count,0,Rows with a benchmark source family attached but no validated pre-release timestamp.
 current_sample_all_components,external_benchmark_ready_count,6,Rows structurally ready for causal surprise use.
+current_sample_all_components,reviewed_surprise_ready_count,6,Rows with reviewed surprise inputs that pass benchmark-readiness checks.
 current_sample_all_components,reviewed_clean_count,23,Rows with reviewed clean contamination status.
+current_sample_all_components,reviewed_contaminated_context_only_count,1,Rows retained only as context because reviewed contamination was not fully clean.
+current_sample_all_components,reviewed_contaminated_exclude_count,4,Rows excluded from the causal pool after reviewed contamination.
+current_sample_all_components,pending_review_count,0,Rows whose contamination review is still pending.
 current_sample_all_components,causal_eligible_count,5,Rows that currently pass all causal gates.
 current_sample_financing_estimates,release_component_count,14,Components in scope.
 current_sample_financing_estimates,pre_release_external_benchmark_count,6,Rows with benchmark timing classified as pre-release external.
@@ -13,5 +17,9 @@ current_sample_financing_estimates,same_release_placeholder_count,0,Rows still b
 current_sample_financing_estimates,post_release_invalid_count,8,Rows with post-release benchmark timestamps.
 current_sample_financing_estimates,external_timing_unverified_count,0,Rows with a benchmark source family attached but no validated pre-release timestamp.
 current_sample_financing_estimates,external_benchmark_ready_count,6,Rows structurally ready for causal surprise use.
+current_sample_financing_estimates,reviewed_surprise_ready_count,6,Rows with reviewed surprise inputs that pass benchmark-readiness checks.
 current_sample_financing_estimates,reviewed_clean_count,13,Rows with reviewed clean contamination status.
+current_sample_financing_estimates,reviewed_contaminated_context_only_count,1,Rows retained only as context because reviewed contamination was not fully clean.
+current_sample_financing_estimates,reviewed_contaminated_exclude_count,0,Rows excluded from the causal pool after reviewed contamination.
+current_sample_financing_estimates,pending_review_count,0,Rows whose contamination review is still pending.
 current_sample_financing_estimates,causal_eligible_count,5,Rows that currently pass all causal gates.

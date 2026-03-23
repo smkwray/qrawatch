@@ -39,9 +39,33 @@
     },
     {
       "scope": "current_sample_all_components",
+      "metric": "reviewed_surprise_ready_count",
+      "value": 6,
+      "notes": "Rows with reviewed surprise inputs that pass benchmark-readiness checks."
+    },
+    {
+      "scope": "current_sample_all_components",
       "metric": "reviewed_clean_count",
       "value": 23,
       "notes": "Rows with reviewed clean contamination status."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "reviewed_contaminated_context_only_count",
+      "value": 1,
+      "notes": "Rows retained only as context because reviewed contamination was not fully clean."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "reviewed_contaminated_exclude_count",
+      "value": 4,
+      "notes": "Rows excluded from the causal pool after reviewed contamination."
+    },
+    {
+      "scope": "current_sample_all_components",
+      "metric": "pending_review_count",
+      "value": 0,
+      "notes": "Rows whose contamination review is still pending."
     },
     {
       "scope": "current_sample_all_components",
@@ -87,9 +111,33 @@
     },
     {
       "scope": "current_sample_financing_estimates",
+      "metric": "reviewed_surprise_ready_count",
+      "value": 6,
+      "notes": "Rows with reviewed surprise inputs that pass benchmark-readiness checks."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
       "metric": "reviewed_clean_count",
       "value": 13,
       "notes": "Rows with reviewed clean contamination status."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "reviewed_contaminated_context_only_count",
+      "value": 1,
+      "notes": "Rows retained only as context because reviewed contamination was not fully clean."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "reviewed_contaminated_exclude_count",
+      "value": 0,
+      "notes": "Rows excluded from the causal pool after reviewed contamination."
+    },
+    {
+      "scope": "current_sample_financing_estimates",
+      "metric": "pending_review_count",
+      "value": 0,
+      "notes": "Rows whose contamination review is still pending."
     },
     {
       "scope": "current_sample_financing_estimates",

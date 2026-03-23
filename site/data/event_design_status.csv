@@ -11,4 +11,11 @@ current_sample_financing_component_count,14,Current-sample financing-estimates r
 current_sample_financing_exact_time_count,14,Current-sample financing components with exact-time timestamps.
 current_sample_financing_reviewed_clean_count,13,Current-sample financing components with reviewed clean contamination decisions.
 current_sample_financing_pre_release_external_count,6,Current-sample financing components with verified pre-release external benchmarks.
+current_sample_financing_reviewed_surprise_ready_count,6,Current-sample financing components with reviewed surprise inputs ready for causal use.
+current_sample_financing_post_release_invalid_count,8,Current-sample financing components blocked by post-release benchmark timing.
+current_sample_financing_external_timing_unverified_count,0,Current-sample financing components with external benchmarks that still lack timing verification.
+current_sample_financing_same_release_placeholder_count,0,Current-sample financing components still relying on same-release placeholder benchmark semantics.
+current_sample_financing_pending_contamination_review_count,0,Current-sample financing components still awaiting contamination review.
+current_sample_financing_reviewed_contaminated_context_only_count,1,Current-sample financing components retained as context-only because contamination was reviewed but not clean.
+current_sample_financing_reviewed_contaminated_exclude_count,0,Current-sample financing components excluded from the causal pool after reviewed contamination.
 current_sample_financing_tier_a_count,5,Current-sample financing components currently passing all causal gates (Tier A).

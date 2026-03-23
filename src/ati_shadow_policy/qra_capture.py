@@ -168,6 +168,17 @@ def read_quarterly_refunding_seed(path: Path) -> pd.DataFrame:
     return pd.read_csv(path, dtype=str).fillna("")
 
 
+def quarter_from_event_seed_row(event: pd.Series) -> str:
+    explicit_quarter = _string_or_empty(event.get("quarter"))
+    if explicit_quarter and _QUARTER_RE.fullmatch(explicit_quarter):
+        return explicit_quarter
+
+    release_date = _string_or_empty(event.get("official_release_date"))
+    if not release_date:
+        return ""
+    return next_quarter_from_release_date(release_date)
+
+
 def next_quarter_from_release_date(release_date: str) -> str:
     timestamp = pd.to_datetime(release_date, errors="raise")
     current_quarter = (int(timestamp.month) - 1) // 3 + 1
@@ -211,7 +222,9 @@ def seed_capture_rows_from_local_sources(
         if not release_date or not t_minus_1:
             continue
 
-        quarter = next_quarter_from_release_date(release_date)
+        quarter = quarter_from_event_seed_row(event)
+        if not quarter:
+            continue
         financing_need = ""
         net_bills = ""
         seed_comments = "Seeded from local seed CSVs; replace with official quarter capture."
@@ -338,7 +351,9 @@ def build_financing_release_source_map(
             continue
 
         release_ts = pd.to_datetime(release_date, errors="raise")
-        quarter = next_quarter_from_release_date(release_date)
+        quarter = quarter_from_event_seed_row(event)
+        if not quarter:
+            continue
         release_date_phrase = _human_date(release_ts)
         expected_period = _quarter_period_label(quarter)
         matched_row: dict[str, object] | None = None
@@ -349,12 +364,20 @@ def build_financing_release_source_map(
                 continue
 
             local_path = _normalize_repo_local_reference(raw_local_path)
+            download_quarter = _string_or_empty(download.get("quarter"))
             text_path = text_dir / f"{Path(raw_local_path).stem}.txt"
-            if not text_path.exists():
+            if text_path.exists():
+                text = text_path.read_text(encoding="utf-8", errors="ignore")
+            else:
+                resolved_local_path = _resolve_repo_local_path(raw_local_path)
+                if not resolved_local_path.exists():
+                    continue
+                text = _extract_html_text(resolved_local_path)
+            if not text:
                 continue
-
-            text = text_path.read_text(encoding="utf-8", errors="ignore")
-            if _BORROWING_RELEASE_TITLE not in text or release_date_phrase not in text:
+            if _BORROWING_RELEASE_TITLE not in text:
+                continue
+            if download_quarter != quarter and release_date_phrase not in text:
                 continue
 
             matched_row = {
@@ -896,14 +919,14 @@ def enrich_capture_with_financing_release_map(
         if _string_or_empty(capture.at[idx, "qa_status"]) == "seed_only":
             capture.at[idx, "qa_status"] = "semi_automated_capture"
 
-        note_parts = [
-            f"Official borrowing estimate matched to {source.get('official_release_date_phrase')} Treasury borrowing-estimate release."
-        ]
-        if _string_or_empty(capture.at[idx, "net_bill_issuance_bn"]):
-            note_parts.append("net_bill_issuance_bn remains seed-derived pending official quarter capture.")
-        else:
-            note_parts.append("net_bill_issuance_bn is still missing pending official quarter capture.")
-        capture.at[idx, "notes"] = _merge_note(_string_or_empty(capture.at[idx, "notes"]), " ".join(note_parts))
+        note = (
+            f"Official borrowing estimate matched to "
+            f"{source.get('official_release_date_phrase')} Treasury borrowing-estimate release."
+        )
+        existing_notes = _strip_financing_release_note_fragments(
+            _string_or_empty(capture.at[idx, "notes"])
+        )
+        capture.at[idx, "notes"] = _merge_note(existing_notes, note)
 
     return capture
 
@@ -1129,6 +1152,21 @@ def _normalize_capture(df: pd.DataFrame) -> pd.DataFrame:
         ).astype(float).map(lambda value: f"{value:g}")
 
     normalized = normalized.replace({"": pd.NA})
+    for idx, row in normalized.iterrows():
+        qa_status = _string_or_empty(row.get("qa_status"))
+        if qa_status not in {"seed_only", "semi_automated_capture"}:
+            continue
+        if _uses_seed_source(row):
+            continue
+        if _is_missing(row.get("total_financing_need_bn")) or _is_missing(row.get("net_bill_issuance_bn")):
+            continue
+        if not (
+            _has_official_financing_provenance(row)
+            and _has_official_refunding_statement_provenance(row)
+            and _has_official_auction_reconstruction_provenance(row)
+        ):
+            continue
+        normalized.at[idx, "qa_status"] = "manual_official_capture"
     return normalized
 
 
@@ -1645,6 +1683,24 @@ def _merge_note(existing: str, extra: str) -> str:
     if extra in existing:
         return existing
     return f"{existing} {extra}"
+
+
+def _strip_financing_release_note_fragments(note: str) -> str:
+    cleaned = re.sub(
+        r"\s*Official borrowing estimate matched to [A-Za-z]+ \d{1,2}, \d{4} Treasury borrowing-estimate release\.",
+        "",
+        note,
+    )
+    cleaned = cleaned.replace(
+        " net_bill_issuance_bn remains seed-derived pending official quarter capture.",
+        "",
+    )
+    cleaned = cleaned.replace(
+        " net_bill_issuance_bn is still missing pending official quarter capture.",
+        "",
+    )
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return cleaned
 
 
 def _classify_auction_bucket(row: pd.Series) -> str:

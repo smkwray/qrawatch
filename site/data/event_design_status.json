@@ -62,6 +62,41 @@
       "notes": "Current-sample financing components with verified pre-release external benchmarks."
     },
     {
+      "metric": "current_sample_financing_reviewed_surprise_ready_count",
+      "value": 6,
+      "notes": "Current-sample financing components with reviewed surprise inputs ready for causal use."
+    },
+    {
+      "metric": "current_sample_financing_post_release_invalid_count",
+      "value": 8,
+      "notes": "Current-sample financing components blocked by post-release benchmark timing."
+    },
+    {
+      "metric": "current_sample_financing_external_timing_unverified_count",
+      "value": 0,
+      "notes": "Current-sample financing components with external benchmarks that still lack timing verification."
+    },
+    {
+      "metric": "current_sample_financing_same_release_placeholder_count",
+      "value": 0,
+      "notes": "Current-sample financing components still relying on same-release placeholder benchmark semantics."
+    },
+    {
+      "metric": "current_sample_financing_pending_contamination_review_count",
+      "value": 0,
+      "notes": "Current-sample financing components still awaiting contamination review."
+    },
+    {
+      "metric": "current_sample_financing_reviewed_contaminated_context_only_count",
+      "value": 1,
+      "notes": "Current-sample financing components retained as context-only because contamination was reviewed but not clean."
+    },
+    {
+      "metric": "current_sample_financing_reviewed_contaminated_exclude_count",
+      "value": 0,
+      "notes": "Current-sample financing components excluded from the causal pool after reviewed contamination."
+    },
+    {
       "metric": "current_sample_financing_tier_a_count",
       "value": 5,
       "notes": "Current-sample financing components currently passing all causal gates (Tier A)."

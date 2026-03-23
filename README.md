@@ -33,7 +33,7 @@ The repo now has a reproducible backend product and public site, with a delibera
 - investor allotments, primary dealer, and SEC N-MFP are now summary-ready extension modules
 - QRA event, shock-crosswalk, usability, leave-one-out, and absorption bridge tables are published when their source files exist, but they are supporting audit surfaces rather than referee-grade causal estimates
 
-Exact official quarter coverage currently spans `2011Q1` through `2025Q4`.
+Exact official quarter coverage currently spans `2010Q1` through `2025Q4`.
 This public release should be read as an in-progress research/data product, not as a finished long-history dataset or a settled causal design.
 
 ## Quickstart
@@ -128,7 +128,7 @@ Some pieces are seeded rather than fully automated:
 
 ## Current limitations
 
-- the exact official quarter history now spans `2011Q1` through `2025Q4`, but the pre-`2011Q1` archive remains hybrid rather than exact-official
+- the exact official quarter history now spans `2010Q1` through `2025Q4`, but earlier archive history remains out of scope for the current release
 - the event-study layer is informative but still mostly descriptive/supporting; the causal surface is currently a small post-`2022Q3` financing-estimates pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, and `5` Tier A components rather than a full-sample design
 - extension modules are supporting context, not the headline result
 - the long-history version of the project still needs additional official quarter capture
@@ -184,7 +184,7 @@ If `FRED_API_KEY` is set in `.env`, the FRED downloader uses the official API to
 
 ## What comes next
 
-- extend exact official quarter history backward from `2011Q1` toward the older archive
+- extend exact official quarter history backward from `2010Q1` toward the older archive
 - deepen the post-`2022Q3` causal pilot by finding more genuinely pre-release external benchmarks
 - deepen extensions after the core quarter history is longer
 

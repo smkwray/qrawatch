@@ -23,7 +23,7 @@ It also defines the event-quality vocabulary used to separate descriptive/suppor
 - `exact_official_net` — exact official net-flow construction used in the weekly plumbing headline.
 - `official_hybrid` — official sourcing exists, but one or more required fields still depend on fallback or semi-automated capture.
 - `manual_qra_shock_template_plus_event_panel` — event-layer output built from the reviewed/manual shock template joined to the market event panel.
-- `derived_event_ledger`, `derived_shock_crosswalk`, `derived_qra_usability`, `derived_qra_robustness`, `derived_treatment_comparison` — publish-layer projections or summaries built from the underlying research tables.
+- `derived_event_ledger`, `derived_shock_crosswalk`, `derived_qra_usability`, `derived_qra_robustness`, `derived_treatment_comparison`, `derived_backfill_queue`, `derived_long_rate_translation` — publish-layer projections or summaries built from the underlying research tables.
 
 ## Review maturity
 

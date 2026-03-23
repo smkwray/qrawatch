@@ -2,9 +2,69 @@
   "title": "ATI Seed vs Official Comparison",
   "rows": [
     {
+      "quarter": "2010Q1",
+      "ati_seed_bn": NaN,
+      "ati_official_bn": -20.617000000000004,
+      "qa_status": "manual_official_capture",
+      "ati_diff_official_minus_seed": NaN,
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release; qa=manual_official_capture",
+      "comparison_status": "official_matched",
+      "official_capture_present": true
+    },
+    {
+      "quarter": "2010Q2",
+      "ati_seed_bn": NaN,
+      "ati_official_bn": -100.209,
+      "qa_status": "manual_official_capture",
+      "ati_diff_official_minus_seed": NaN,
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release; qa=manual_official_capture",
+      "comparison_status": "official_matched",
+      "official_capture_present": true
+    },
+    {
+      "quarter": "2010Q3",
+      "ati_seed_bn": NaN,
+      "ati_official_bn": -57.094,
+      "qa_status": "manual_official_capture",
+      "ati_diff_official_minus_seed": NaN,
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release; qa=manual_official_capture",
+      "comparison_status": "official_matched",
+      "official_capture_present": true
+    },
+    {
+      "quarter": "2010Q4",
+      "ati_seed_bn": NaN,
+      "ati_official_bn": -81.205,
+      "qa_status": "manual_official_capture",
+      "ati_diff_official_minus_seed": NaN,
+      "readiness_tier": "headline_ready",
+      "source_quality": "exact_official",
+      "headline_ready": true,
+      "fallback_only": false,
+      "missing_critical_fields": "",
+      "provenance_summary": "source=https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query; doc_type=official_auction_reconstruction|official_quarterly_refunding_statement|quarterly_refunding_press_release; qa=manual_official_capture",
+      "comparison_status": "official_matched",
+      "official_capture_present": true
+    },
+    {
       "quarter": "2011Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -152.895,
+      "ati_official_bn": -141.735,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -19,7 +79,7 @@
     {
       "quarter": "2011Q2",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -180.885,
+      "ati_official_bn": -152.625,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -34,7 +94,7 @@
     {
       "quarter": "2011Q3",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -129.954,
+      "ati_official_bn": -116.634,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -49,7 +109,7 @@
     {
       "quarter": "2011Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -8.36,
+      "ati_official_bn": -11.96,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -64,7 +124,7 @@
     {
       "quarter": "2012Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 36.553,
+      "ati_official_bn": 54.01299999999999,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -79,7 +139,7 @@
     {
       "quarter": "2012Q2",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -114.014,
+      "ati_official_bn": -110.774,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -94,7 +154,7 @@
     {
       "quarter": "2012Q3",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 35.30400000000001,
+      "ati_official_bn": 33.324000000000005,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -109,7 +169,7 @@
     {
       "quarter": "2012Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 26.11800000000001,
+      "ati_official_bn": 31.15800000000001,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -124,7 +184,7 @@
     {
       "quarter": "2013Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -4.539999999999992,
+      "ati_official_bn": -2.559999999999995,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -154,7 +214,7 @@
     {
       "quarter": "2013Q3",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -15.112000000000002,
+      "ati_official_bn": -12.592,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -184,7 +244,7 @@
     {
       "quarter": "2014Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -102.685,
+      "ati_official_bn": -106.105,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -214,7 +274,7 @@
     {
       "quarter": "2014Q3",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 7.573000000000004,
+      "ati_official_bn": 3.433,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -229,7 +289,7 @@
     {
       "quarter": "2014Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 13.335,
+      "ati_official_bn": 5.234999999999999,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -244,7 +304,7 @@
     {
       "quarter": "2015Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -17.599999999999998,
+      "ati_official_bn": -7.879999999999999,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -259,7 +319,7 @@
     {
       "quarter": "2015Q2",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -94.786,
+      "ati_official_bn": -93.526,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -289,7 +349,7 @@
     {
       "quarter": "2015Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 61.27799999999999,
+      "ati_official_bn": 29.058,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -304,7 +364,7 @@
     {
       "quarter": "2016Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 74.328,
+      "ati_official_bn": 59.028000000000006,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -334,7 +394,7 @@
     {
       "quarter": "2016Q3",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 111.158,
+      "ati_official_bn": 102.878,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -349,7 +409,7 @@
     {
       "quarter": "2016Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 138.28400000000002,
+      "ati_official_bn": 137.204,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -379,7 +439,7 @@
     {
       "quarter": "2017Q2",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -56.648,
+      "ati_official_bn": -43.688,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -409,7 +469,7 @@
     {
       "quarter": "2017Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 52.899,
+      "ati_official_bn": 95.559,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -424,7 +484,7 @@
     {
       "quarter": "2018Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 230.898,
+      "ati_official_bn": 243.678,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -439,7 +499,7 @@
     {
       "quarter": "2018Q2",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -162.636,
+      "ati_official_bn": -144.456,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -454,7 +514,7 @@
     {
       "quarter": "2018Q3",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 32.906000000000006,
+      "ati_official_bn": 22.826000000000008,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -469,7 +529,7 @@
     {
       "quarter": "2018Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 20.816999999999993,
+      "ati_official_bn": 23.516999999999996,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -484,7 +544,7 @@
     {
       "quarter": "2019Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 52.94800000000001,
+      "ati_official_bn": 51.328,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -499,7 +559,7 @@
     {
       "quarter": "2019Q2",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -243.877,
+      "ati_official_bn": -234.337,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -514,7 +574,7 @@
     {
       "quarter": "2019Q3",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 97.347,
+      "ati_official_bn": 48.20700000000001,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -529,7 +589,7 @@
     {
       "quarter": "2019Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -28.595,
+      "ati_official_bn": -23.375,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -544,7 +604,7 @@
     {
       "quarter": "2020Q1",
       "ati_seed_bn": NaN,
-      "ati_official_bn": 170.594,
+      "ati_official_bn": 174.554,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -574,7 +634,7 @@
     {
       "quarter": "2020Q3",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -172.559,
+      "ati_official_bn": -221.159,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",
@@ -589,7 +649,7 @@
     {
       "quarter": "2020Q4",
       "ati_seed_bn": NaN,
-      "ati_official_bn": -283.7,
+      "ati_official_bn": -175.88,
       "qa_status": "manual_official_capture",
       "ati_diff_official_minus_seed": NaN,
       "readiness_tier": "headline_ready",

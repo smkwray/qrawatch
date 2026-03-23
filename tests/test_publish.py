@@ -231,6 +231,173 @@ def test_build_official_capture_readiness_table_distinguishes_exact_and_hybrid(t
     assert "net_bill_issuance_bn" in hybrid["missing_critical_fields"]
 
 
+def test_build_official_capture_backfill_queue_table_tracks_missing_numeric_fields(tmp_path, monkeypatch):
+    processed_dir = tmp_path / "processed"
+    processed_dir.mkdir(parents=True)
+    pd.DataFrame(
+        {
+            "quarter": ["2010Q1", "2010Q2"],
+            "qra_release_date": ["2010-02-03", "2010-05-05"],
+            "market_pricing_marker_minus_1d": ["2010-02-02", "2010-05-04"],
+            "total_financing_need_bn": [392, ""],
+            "net_bill_issuance_bn": [49.943, -39.009],
+            "financing_source_url": [
+                "https://home.treasury.gov/news/press-releases/tg524",
+                "",
+            ],
+            "financing_source_doc_local": ["/tmp/tg524.html", ""],
+            "financing_source_doc_type": ["quarterly_refunding_press_release", ""],
+            "refunding_statement_source_url": [
+                "https://home.treasury.gov/news/press-releases/tg527",
+                "https://home.treasury.gov/news/press-releases/tg679",
+            ],
+            "refunding_statement_source_doc_local": ["/tmp/tg527.html", "/tmp/tg679.html"],
+            "refunding_statement_source_doc_type": [
+                "official_quarterly_refunding_statement",
+                "official_quarterly_refunding_statement",
+            ],
+            "auction_reconstruction_source_url": [
+                "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query",
+                "https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query",
+            ],
+            "auction_reconstruction_source_doc_local": [
+                "data/raw/fiscaldata/auctions_query.csv",
+                "data/raw/fiscaldata/auctions_query.csv",
+            ],
+            "auction_reconstruction_source_doc_type": [
+                "official_auction_reconstruction",
+                "official_auction_reconstruction",
+            ],
+            "source_url": [
+                "https://home.treasury.gov/news/press-releases/tg524|https://home.treasury.gov/news/press-releases/tg527|https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query",
+                "https://home.treasury.gov/news/press-releases/tg679|https://fiscaldata.treasury.gov/datasets/treasury-securities-auctions-data/auctions-query",
+            ],
+            "source_doc_local": [
+                "/tmp/tg524.html|/tmp/tg527.html|data/raw/fiscaldata/auctions_query.csv",
+                "/tmp/tg679.html|data/raw/fiscaldata/auctions_query.csv",
+            ],
+            "source_doc_type": [
+                "quarterly_refunding_press_release|official_quarterly_refunding_statement|official_auction_reconstruction",
+                "official_quarterly_refunding_statement|official_auction_reconstruction",
+            ],
+            "qa_status": ["manual_official_capture", "semi_automated_capture"],
+        }
+    ).to_csv(processed_dir / "official_quarterly_refunding_capture.csv", index=False)
+    monkeypatch.setattr(publish, "PROCESSED_DIR", processed_dir)
+
+    table = publish.build_official_capture_backfill_queue_table()
+
+    ready = table.loc[table["quarter"] == "2010Q1"].iloc[0]
+    pending = table.loc[table["quarter"] == "2010Q2"].iloc[0]
+
+    assert bool(ready["numeric_official_capture_ready"])
+    assert ready["next_action"] == "complete"
+    assert pending["missing_numeric_fields"] == "total_financing_need_bn"
+    assert pending["next_action"] == "attach_financing_release_and_populate_total_financing_need"
+
+
+def test_build_qra_long_rate_translation_panel_derives_governed_rows(monkeypatch) -> None:
+    monkeypatch.setattr(
+        publish,
+        "build_qra_shock_crosswalk_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2024_10",
+                    "event_date_type": "official_release_date",
+                    "schedule_diff_10y_eq_bn": 25.0,
+                    "schedule_diff_dynamic_10y_eq_bn": 27.5,
+                    "schedule_diff_dv01_usd": 2_600_000.0,
+                    "gross_notional_delta_bn": 40.0,
+                    "shock_source": "manual_schedule_diff",
+                    "shock_review_status": "reviewed",
+                    "alternative_treatment_complete": True,
+                    "alternative_treatment_missing_fields": "",
+                    "alternative_treatment_missing_reason": "",
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        publish,
+        "build_qra_event_registry_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "event_id": "qra_2024_10",
+                    "quarter": "2024Q4",
+                    "quality_tier": "Tier A",
+                    "eligibility_blockers": "policy_statement_descriptive_only",
+                    "timestamp_precision": "exact_time",
+                    "separability_status": "separable_component",
+                    "expectation_status": "reviewed_surprise_ready",
+                    "contamination_status": "reviewed_clean",
+                    "causal_eligible_component_count": 1,
+                }
+            ]
+        ),
+    )
+
+    panel = publish.build_qra_long_rate_translation_panel()
+
+    assert set(panel["translation_variant"]) == {"fixed_10y_eq_bn", "dynamic_10y_eq_bn", "dv01_usd"}
+    fixed_row = panel.loc[panel["translation_variant"] == "fixed_10y_eq_bn"].iloc[0]
+    assert fixed_row["translation_value"] == 25.0
+    assert bool(fixed_row["long_rate_pilot_ready"])
+    assert fixed_row["duration_assumption_source"] == "fixed_duration_weights"
+
+
+def test_build_qra_benchmark_coverage_table_tracks_contamination_and_surprise_states(monkeypatch) -> None:
+    monkeypatch.setattr(
+        publish,
+        "build_qra_release_component_registry_publish_table",
+        lambda: pd.DataFrame(
+            [
+                {
+                    "release_component_id": "qra_2024_05__financing_estimates",
+                    "quarter": "2024Q3",
+                    "component_type": "financing_estimates",
+                    "benchmark_timing_status": "pre_release_external",
+                    "external_benchmark_ready": True,
+                    "expectation_status": "reviewed_surprise_ready",
+                    "contamination_status": "reviewed_contaminated_context_only",
+                    "causal_eligible": False,
+                },
+                {
+                    "release_component_id": "qra_2024_10__financing_estimates",
+                    "quarter": "2025Q1",
+                    "component_type": "financing_estimates",
+                    "benchmark_timing_status": "post_release_invalid",
+                    "external_benchmark_ready": False,
+                    "expectation_status": "post_release_invalid",
+                    "contamination_status": "reviewed_clean",
+                    "causal_eligible": False,
+                },
+                {
+                    "release_component_id": "qra_2024_10__policy_statement",
+                    "quarter": "2025Q1",
+                    "component_type": "policy_statement",
+                    "benchmark_timing_status": "same_release_placeholder",
+                    "external_benchmark_ready": False,
+                    "expectation_status": "same_release_placeholder",
+                    "contamination_status": "pending_review",
+                    "causal_eligible": False,
+                },
+            ]
+        ),
+    )
+
+    table = publish.build_qra_benchmark_coverage_table()
+
+    def metric(scope: str, name: str) -> int:
+        return int(table.loc[(table["scope"] == scope) & (table["metric"] == name), "value"].iloc[0])
+
+    assert metric("current_sample_financing_estimates", "reviewed_surprise_ready_count") == 1
+    assert metric("current_sample_financing_estimates", "reviewed_contaminated_context_only_count") == 1
+    assert metric("current_sample_financing_estimates", "reviewed_clean_count") == 1
+    assert metric("current_sample_all_components", "pending_review_count") == 1
+
+
 def test_build_qra_event_elasticity_publish_table_is_optional(tmp_path, monkeypatch):
     tables_dir = tmp_path / "tables"
     tables_dir.mkdir(parents=True)
@@ -996,15 +1163,22 @@ def test_dataset_status_keeps_official_capture_headline_ready_with_seed_history(
         "_official_ati_headline_table",
         lambda: pd.DataFrame([{"quarter": "2024Q3", "ati_baseline_bn": 1.0}]),
     )
+    monkeypatch.setattr(
+        publish,
+        "build_official_capture_backfill_queue_table",
+        lambda: pd.DataFrame(),
+    )
 
     table = publish.build_dataset_status_table()
     official_capture = table.loc[table["dataset"] == "official_capture"].iloc[0]
+    backfill_queue = table.loc[table["dataset"] == "official_capture_backfill_queue"].iloc[0]
 
     assert bool(official_capture["headline_ready"])
     assert not bool(official_capture["fallback_only"])
     assert official_capture["readiness_tier"] == "headline_ready"
     assert official_capture["source_quality"] == "exact_official_window_plus_seed_history"
     assert official_capture["missing_critical_fields"] == ""
+    assert backfill_queue["readiness_tier"] == "not_started"
 
 
 def test_dataset_status_marks_qra_elasticity_provisional_when_published(monkeypatch, tmp_path) -> None:

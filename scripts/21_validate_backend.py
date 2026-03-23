@@ -96,6 +96,17 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "numeric_official_capture_ready",
         "source_completeness",
     ],
+    "official_capture_backfill_queue.csv": [
+        "quarter",
+        "source_quality",
+        "readiness_tier",
+        "numeric_official_capture_ready",
+        "financing_provenance_ready",
+        "refunding_statement_provenance_ready",
+        "auction_reconstruction_ready",
+        "missing_numeric_fields",
+        "next_action",
+    ],
     "ati_seed_vs_official.csv": [
         "quarter",
         "ati_seed_bn",
@@ -194,6 +205,21 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "source_quality",
         "headline_ready",
         "fallback_only",
+        "public_role",
+    ],
+    "qra_long_rate_translation_panel.csv": [
+        "event_id",
+        "quarter",
+        "event_date_type",
+        "translation_variant",
+        "translation_value",
+        "translation_value_units",
+        "translation_method",
+        "duration_assumption_source",
+        "translation_review_status",
+        "quality_tier",
+        "long_rate_pilot_ready",
+        "long_rate_pilot_blocker",
         "public_role",
     ],
     "series_metadata_catalog.csv": [
@@ -1457,6 +1483,13 @@ def _validate_event_design_status_against_components(
         "current_sample_financing_exact_time_count": int(current_sample_financing.get("timestamp_precision", pd.Series(dtype=object)).astype(str).eq("exact_time").sum()),
         "current_sample_financing_reviewed_clean_count": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_clean").sum()),
         "current_sample_financing_pre_release_external_count": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("pre_release_external").sum()),
+        "current_sample_financing_reviewed_surprise_ready_count": int(current_sample_financing.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("reviewed_surprise_ready").sum()),
+        "current_sample_financing_post_release_invalid_count": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("post_release_invalid").sum()),
+        "current_sample_financing_external_timing_unverified_count": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("external_timing_unverified").sum()),
+        "current_sample_financing_same_release_placeholder_count": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("same_release_placeholder").sum()),
+        "current_sample_financing_pending_contamination_review_count": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("pending_review").sum()),
+        "current_sample_financing_reviewed_contaminated_context_only_count": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_context_only").sum()),
+        "current_sample_financing_reviewed_contaminated_exclude_count": int(current_sample_financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_exclude").sum()),
         "current_sample_financing_tier_a_count": int(current_sample_financing.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier A").sum()),
     }
     reported = {
@@ -1473,6 +1506,59 @@ def _validate_event_design_status_against_components(
     return errors
 
 
+def _validate_qra_benchmark_coverage_against_components(
+    component_registry: pd.DataFrame,
+    benchmark_coverage: pd.DataFrame,
+) -> list[str]:
+    errors: list[str] = []
+    if component_registry.empty or benchmark_coverage.empty:
+        return errors
+
+    current_sample = component_registry.loc[
+        component_registry.get("quarter", pd.Series(dtype=object)).map(_normalize_quarter).map(_quarter_to_int).fillna(0).ge(_quarter_to_int("2022Q3") or 0)
+    ].copy()
+    if current_sample.empty:
+        return errors
+
+    scopes = {
+        "current_sample_all_components": current_sample,
+        "current_sample_financing_estimates": current_sample.loc[
+            current_sample.get("component_type", pd.Series(dtype=object)).astype(str).eq("financing_estimates")
+        ].copy(),
+    }
+    reported = {
+        (str(row.get("scope", "")).strip(), str(row.get("metric", "")).strip()): int(
+            pd.to_numeric(pd.Series([row.get("value")]), errors="coerce").fillna(0).iloc[0]
+        )
+        for _, row in benchmark_coverage.iterrows()
+    }
+    mismatched: list[str] = []
+    for scope, frame in scopes.items():
+        if frame.empty:
+            continue
+        actual_metrics = {
+            "release_component_count": int(len(frame)),
+            "pre_release_external_benchmark_count": int(frame.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("pre_release_external").sum()),
+            "same_release_placeholder_count": int(frame.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("same_release_placeholder").sum()),
+            "post_release_invalid_count": int(frame.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("post_release_invalid").sum()),
+            "external_timing_unverified_count": int(frame.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("external_timing_unverified").sum()),
+            "external_benchmark_ready_count": int(frame.get("external_benchmark_ready", pd.Series(dtype=bool)).fillna(False).astype(bool).sum()),
+            "reviewed_surprise_ready_count": int(frame.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("reviewed_surprise_ready").sum()),
+            "reviewed_clean_count": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_clean").sum()),
+            "reviewed_contaminated_context_only_count": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_context_only").sum()),
+            "reviewed_contaminated_exclude_count": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_exclude").sum()),
+            "pending_review_count": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("pending_review").sum()),
+            "causal_eligible_count": int(frame.get("causal_eligible", pd.Series(dtype=bool)).fillna(False).astype(bool).sum()),
+        }
+        for metric, actual in actual_metrics.items():
+            key = (scope, metric)
+            if key in reported and reported[key] != actual:
+                mismatched.append(f"{scope}:{metric}")
+    if mismatched:
+        errors.append("qra_benchmark_coverage_metric_mismatch:" + ",".join(sorted(mismatched)))
+    return errors
+
+
 def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -1486,7 +1572,24 @@ def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], l
     if status is not None:
         warnings.append(f"manual_causal_registry_{status.replace(':', '_')}")
         return errors, warnings
+    def _cell_text(value: object) -> str:
+        if value is None:
+            return ""
+        try:
+            if pd.isna(value):
+                return ""
+        except TypeError:
+            pass
+        return str(value).strip()
+
     registry_ids = set(registry.get("release_component_id", pd.Series(dtype=object)).dropna().astype(str))
+    current_sample_financing_ids = set(
+        registry.loc[
+            registry.get("component_type", pd.Series(dtype=object)).fillna("").astype(str).str.strip().eq("financing_estimates")
+            & registry.get("quarter", pd.Series(dtype=object)).map(_normalize_quarter).map(_quarter_to_int).fillna(0).ge(_quarter_to_int("2022Q3") or 0),
+            "release_component_id",
+        ].dropna().astype(str)
+    )
     for name, path in (
         ("expectation", expectation_path),
         ("contamination", contamination_path),
@@ -1505,6 +1608,64 @@ def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], l
         orphan_ids = sorted(frame_ids - registry_ids)
         if orphan_ids:
             errors.append(f"manual_causal_{name}_orphans:" + ",".join(orphan_ids))
+        if current_sample_financing_ids:
+            missing_financing_ids = sorted(current_sample_financing_ids - frame_ids)
+            if missing_financing_ids:
+                errors.append(
+                    f"manual_causal_{name}_missing_current_sample_financing_rows:"
+                    + ",".join(missing_financing_ids)
+                )
+            financing_rows = frame.loc[
+                frame.get("release_component_id", pd.Series(dtype=object)).astype(str).isin(current_sample_financing_ids)
+            ].copy()
+            incomplete_ids: list[str] = []
+            if name == "expectation":
+                for _, row in financing_rows.iterrows():
+                    required = (
+                        _cell_text(row.get("benchmark_timing_status")),
+                        _cell_text(row.get("expectation_review_status")),
+                        _cell_text(row.get("expectation_notes")),
+                    )
+                    if any(not value for value in required):
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if _cell_text(row.get("benchmark_timing_status")) == "pre_release_external":
+                        has_benchmark_time = bool(
+                            _cell_text(row.get("benchmark_timestamp_et"))
+                            or _cell_text(row.get("benchmark_release_timestamp_et"))
+                        )
+                        if (
+                            not has_benchmark_time
+                            or not _cell_text(row.get("benchmark_source"))
+                            or not _cell_text(row.get("benchmark_source_family"))
+                            or not _coerce_bool(row.get("benchmark_pre_release_verified_flag"))
+                            or not _coerce_bool(row.get("benchmark_observed_before_component_flag"))
+                        ):
+                            incomplete_ids.append(str(row.get("release_component_id", "")))
+                if incomplete_ids:
+                    errors.append(
+                        "manual_causal_expectation_incomplete_current_sample_financing_rows:"
+                        + ",".join(sorted(set(incomplete_ids)))
+                    )
+            if name == "contamination":
+                for _, row in financing_rows.iterrows():
+                    required = (
+                        _cell_text(row.get("contamination_status")),
+                        _cell_text(row.get("contamination_review_status")),
+                        _cell_text(row.get("contamination_notes")),
+                    )
+                    if any(not value for value in required):
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    status = _cell_text(row.get("contamination_status"))
+                    if status in {"reviewed_contaminated", "reviewed_contaminated_exclude", "reviewed_contaminated_context_only"}:
+                        if not _cell_text(row.get("decision_rule")):
+                            incomplete_ids.append(str(row.get("release_component_id", "")))
+                if incomplete_ids:
+                    errors.append(
+                        "manual_causal_contamination_incomplete_current_sample_financing_rows:"
+                        + ",".join(sorted(set(incomplete_ids)))
+                    )
     return errors, warnings
 
 
@@ -1531,6 +1692,7 @@ def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> li
     registry = qra_frames.get("qra_event_registry_v2.csv", pd.DataFrame())
     component_registry = qra_frames.get("qra_release_component_registry.csv", pd.DataFrame())
     event_design_status = qra_frames.get("event_design_status.csv", pd.DataFrame())
+    benchmark_coverage = qra_frames.get("qra_benchmark_coverage.csv", pd.DataFrame())
     crosswalk = _canonical_qra_review_frame(qra_frames.get("qra_shock_crosswalk_v1.csv", pd.DataFrame()))
     shock_summary = _canonical_qra_review_frame(qra_frames.get("qra_event_shock_summary.csv", pd.DataFrame()))
     elasticity = _canonical_qra_review_frame(qra_frames.get("qra_event_elasticity.csv", pd.DataFrame()))
@@ -1541,6 +1703,7 @@ def _validate_qra_publish_consistency(qra_frames: dict[str, pd.DataFrame]) -> li
 
     errors.extend(_validate_causal_component_registry(component_registry))
     errors.extend(_validate_event_design_status_against_components(component_registry, event_design_status))
+    errors.extend(_validate_qra_benchmark_coverage_against_components(component_registry, benchmark_coverage))
 
     if not registry.empty and not component_registry.empty:
         registry = registry.drop_duplicates(subset=["event_id"], keep="first").copy()

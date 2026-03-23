@@ -28,6 +28,10 @@ OFFICIAL_CAPTURE_REQUIRED_FIELDS = [
     "source_doc_type",
     "qa_status",
 ]
+OFFICIAL_CAPTURE_NUMERIC_FIELDS = [
+    "total_financing_need_bn",
+    "net_bill_issuance_bn",
+]
 OFFICIAL_QA_STATUSES = {"manual_official_capture", "parser_verified"}
 EXTENSION_REGISTRY = {
     "investor_allotments": {
@@ -58,6 +62,29 @@ EXTENSION_REGISTRY = {
 QRA_EVENT_SPEC_ID = "spec_qra_event_v2"
 QRA_DURATION_SPEC_ID = "spec_duration_treatment_v1"
 QRA_AUCTION_SPEC_ID = "spec_auction_absorption_v1"
+LONG_RATE_TRANSLATION_VARIANTS = (
+    (
+        "fixed_10y_eq_bn",
+        "schedule_diff_10y_eq_bn",
+        "USD billions",
+        "fixed_10y_eq_from_schedule_diff",
+        "fixed_duration_weights",
+    ),
+    (
+        "dynamic_10y_eq_bn",
+        "schedule_diff_dynamic_10y_eq_bn",
+        "USD billions",
+        "dynamic_10y_eq_from_schedule_diff",
+        "fred_prior_business_day_yield_curve_plus_frn_convention",
+    ),
+    (
+        "dv01_usd",
+        "schedule_diff_dv01_usd",
+        "USD",
+        "dv01_from_schedule_diff",
+        "fred_prior_business_day_yield_curve_plus_frn_convention",
+    ),
+)
 
 
 def _extension_inventory_path(config: dict[str, object]) -> Path:
@@ -993,9 +1020,33 @@ def build_qra_benchmark_coverage_table() -> pd.DataFrame:
                 },
                 {
                     "scope": scope,
+                    "metric": "reviewed_surprise_ready_count",
+                    "value": int(frame.get("expectation_status", pd.Series(dtype=object)).astype(str).eq("reviewed_surprise_ready").sum()),
+                    "notes": "Rows with reviewed surprise inputs that pass benchmark-readiness checks.",
+                },
+                {
+                    "scope": scope,
                     "metric": "reviewed_clean_count",
                     "value": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_clean").sum()),
                     "notes": "Rows with reviewed clean contamination status.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "reviewed_contaminated_context_only_count",
+                    "value": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_context_only").sum()),
+                    "notes": "Rows retained only as context because reviewed contamination was not fully clean.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "reviewed_contaminated_exclude_count",
+                    "value": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_exclude").sum()),
+                    "notes": "Rows excluded from the causal pool after reviewed contamination.",
+                },
+                {
+                    "scope": scope,
+                    "metric": "pending_review_count",
+                    "value": int(frame.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("pending_review").sum()),
+                    "notes": "Rows whose contamination review is still pending.",
                 },
                 {
                     "scope": scope,
@@ -1035,27 +1086,27 @@ def build_official_capture_history_status_table() -> pd.DataFrame:
 
     out = capture.copy()
     out["financing_provenance_ready"] = out.apply(
-        lambda row: bool(str(row.get("financing_source_doc_type", "") or "").strip())
+        lambda row: _truthy_text(row.get("financing_source_doc_type"))
         and (
-            bool(str(row.get("financing_source_url", "") or "").strip())
-            or bool(str(row.get("financing_source_doc_local", "") or "").strip())
+            _truthy_text(row.get("financing_source_url"))
+            or _truthy_text(row.get("financing_source_doc_local"))
         ),
         axis=1,
     )
     out["refunding_statement_provenance_ready"] = out.apply(
-        lambda row: bool(str(row.get("refunding_statement_source_doc_type", "") or "").strip())
+        lambda row: _truthy_text(row.get("refunding_statement_source_doc_type"))
         and (
-            bool(str(row.get("refunding_statement_source_url", "") or "").strip())
-            or bool(str(row.get("refunding_statement_source_doc_local", "") or "").strip())
+            _truthy_text(row.get("refunding_statement_source_url"))
+            or _truthy_text(row.get("refunding_statement_source_doc_local"))
         ),
         axis=1,
     )
     out["auction_reconstruction_ready"] = out.apply(
         lambda row: (
-            bool(str(row.get("auction_reconstruction_source_doc_type", "") or "").strip())
+            _truthy_text(row.get("auction_reconstruction_source_doc_type"))
             and (
-                bool(str(row.get("auction_reconstruction_source_url", "") or "").strip())
-                or bool(str(row.get("auction_reconstruction_source_doc_local", "") or "").strip())
+                _truthy_text(row.get("auction_reconstruction_source_url"))
+                or _truthy_text(row.get("auction_reconstruction_source_doc_local"))
             )
         )
         or pd.notna(pd.to_numeric(pd.Series([row.get("reconstructed_net_bill_issuance_bn")]), errors="coerce").iloc[0]),
@@ -1089,6 +1140,65 @@ def build_official_capture_history_status_table() -> pd.DataFrame:
     out["source_completeness"] = completeness
     keep = [column for column in columns if column in out.columns]
     return out[keep].sort_values("quarter", key=lambda s: s.map(_quarter_sort_key)).reset_index(drop=True)
+
+
+def _official_capture_missing_numeric_fields(row: pd.Series) -> str:
+    missing = []
+    for field in OFFICIAL_CAPTURE_NUMERIC_FIELDS:
+        value = row.get(field)
+        if field not in row.index or pd.isna(value) or str(value).strip() == "":
+            missing.append(field)
+    return "|".join(missing)
+
+
+def _official_capture_next_action(row: pd.Series) -> str:
+    missing_numeric = _split_pipe_values(row.get("missing_numeric_fields"))
+    if bool(row.get("numeric_official_capture_ready")):
+        return "complete"
+    if "total_financing_need_bn" in missing_numeric and not bool(row.get("financing_provenance_ready")):
+        return "attach_financing_release_and_populate_total_financing_need"
+    if "total_financing_need_bn" in missing_numeric:
+        return "populate_total_financing_need"
+    if "net_bill_issuance_bn" in missing_numeric and not bool(row.get("auction_reconstruction_ready")):
+        return "add_auction_reconstruction_and_populate_net_bill_issuance"
+    if "net_bill_issuance_bn" in missing_numeric:
+        return "populate_net_bill_issuance"
+    if not bool(row.get("refunding_statement_provenance_ready")):
+        return "attach_refunding_statement_provenance"
+    if not bool(row.get("financing_provenance_ready")):
+        return "attach_financing_release_provenance"
+    if not bool(row.get("auction_reconstruction_ready")):
+        return "attach_auction_reconstruction_provenance"
+    if str(row.get("source_quality", "")).strip() == "official_hybrid":
+        return "promote_manual_official_capture"
+    return "review_row"
+
+
+def build_official_capture_backfill_queue_table() -> pd.DataFrame:
+    columns = [
+        "quarter",
+        "source_quality",
+        "readiness_tier",
+        "numeric_official_capture_ready",
+        "financing_provenance_ready",
+        "refunding_statement_provenance_ready",
+        "auction_reconstruction_ready",
+        "missing_numeric_fields",
+        "next_action",
+    ]
+    history = build_official_capture_history_status_table()
+    capture = _official_capture_with_status_columns()
+    if history.empty or capture.empty:
+        return pd.DataFrame(columns=columns)
+
+    out = history.merge(
+        capture[["quarter"] + OFFICIAL_CAPTURE_NUMERIC_FIELDS],
+        on="quarter",
+        how="left",
+    )
+    out["missing_numeric_fields"] = out.apply(_official_capture_missing_numeric_fields, axis=1)
+    out["next_action"] = out.apply(_official_capture_next_action, axis=1)
+    return out[columns].sort_values("quarter", key=lambda s: s.map(_quarter_sort_key)).reset_index(drop=True)
 
 
 def _empty_qra_crosswalk_frame() -> pd.DataFrame:
@@ -1327,6 +1437,103 @@ def build_treatment_comparison_publish_table() -> pd.DataFrame:
             "primary_treatment_reason": "canonical_shock_bn remains the headline contract; fixed, dynamic, and DV01 variants are comparison diagnostics.",
         },
     )
+
+
+def build_qra_long_rate_translation_panel() -> pd.DataFrame:
+    columns = [
+        "event_id",
+        "quarter",
+        "event_date_type",
+        "translation_variant",
+        "translation_value",
+        "translation_value_units",
+        "translation_source_field",
+        "translation_method",
+        "duration_assumption_source",
+        "translation_review_status",
+        "shock_source",
+        "shock_review_status",
+        "alternative_treatment_complete",
+        "alternative_treatment_missing_fields",
+        "alternative_treatment_missing_reason",
+        "gross_notional_delta_bn",
+        "quality_tier",
+        "eligibility_blockers",
+        "timestamp_precision",
+        "separability_status",
+        "expectation_status",
+        "contamination_status",
+        "causal_eligible_component_count",
+        "long_rate_pilot_ready",
+        "long_rate_pilot_blocker",
+        "public_role",
+    ]
+    crosswalk = build_qra_shock_crosswalk_publish_table()
+    if crosswalk.empty:
+        return pd.DataFrame(columns=columns)
+
+    registry = build_qra_event_registry_publish_table()
+    registry_columns = [
+        "event_id",
+        "quarter",
+        "quality_tier",
+        "eligibility_blockers",
+        "timestamp_precision",
+        "separability_status",
+        "expectation_status",
+        "contamination_status",
+        "causal_eligible_component_count",
+    ]
+    if registry.empty:
+        registry = pd.DataFrame(columns=registry_columns)
+    else:
+        registry = registry[[column for column in registry_columns if column in registry.columns]].copy()
+
+    merged = crosswalk.merge(registry, on="event_id", how="left")
+    rows: list[dict[str, object]] = []
+    for _, row in merged.iterrows():
+        for variant, source_field, units, method, duration_source in LONG_RATE_TRANSLATION_VARIANTS:
+            value = pd.to_numeric(pd.Series([row.get(source_field)]), errors="coerce").iloc[0]
+            blockers: list[str] = []
+            if str(row.get("event_date_type", "")).strip() != "official_release_date":
+                blockers.append("non_official_event_date_type")
+            if pd.isna(value):
+                blockers.append("translation_value_missing")
+            if str(row.get("shock_review_status", "")).strip().lower() != "reviewed":
+                blockers.append("translation_not_reviewed")
+            if str(row.get("quality_tier", "")).strip() != "Tier A":
+                blockers.append("event_not_tier_a")
+            rows.append(
+                {
+                    "event_id": row.get("event_id", pd.NA),
+                    "quarter": row.get("quarter", pd.NA),
+                    "event_date_type": row.get("event_date_type", pd.NA),
+                    "translation_variant": variant,
+                    "translation_value": value if not pd.isna(value) else pd.NA,
+                    "translation_value_units": units,
+                    "translation_source_field": source_field,
+                    "translation_method": method,
+                    "duration_assumption_source": duration_source,
+                    "translation_review_status": row.get("shock_review_status", pd.NA),
+                    "shock_source": row.get("shock_source", pd.NA),
+                    "shock_review_status": row.get("shock_review_status", pd.NA),
+                    "alternative_treatment_complete": row.get("alternative_treatment_complete", pd.NA),
+                    "alternative_treatment_missing_fields": row.get("alternative_treatment_missing_fields", pd.NA),
+                    "alternative_treatment_missing_reason": row.get("alternative_treatment_missing_reason", pd.NA),
+                    "gross_notional_delta_bn": row.get("gross_notional_delta_bn", pd.NA),
+                    "quality_tier": row.get("quality_tier", pd.NA),
+                    "eligibility_blockers": row.get("eligibility_blockers", pd.NA),
+                    "timestamp_precision": row.get("timestamp_precision", pd.NA),
+                    "separability_status": row.get("separability_status", pd.NA),
+                    "expectation_status": row.get("expectation_status", pd.NA),
+                    "contamination_status": row.get("contamination_status", pd.NA),
+                    "causal_eligible_component_count": row.get("causal_eligible_component_count", pd.NA),
+                    "long_rate_pilot_ready": not blockers,
+                    "long_rate_pilot_blocker": "|".join(blockers),
+                    "public_role": "supporting",
+                }
+            )
+    return pd.DataFrame(rows, columns=columns)
 
 
 def _empty_auction_absorption_frame() -> pd.DataFrame:
@@ -2330,6 +2537,7 @@ def _qra_review_surface_integrity(
 def build_dataset_status_table() -> pd.DataFrame:
     official_capture = build_official_capture_readiness_table()
     official_capture_history_status = build_official_capture_history_status_table()
+    official_capture_backfill_queue = build_official_capture_backfill_queue_table()
     extension_status = build_extension_status_table()
     official_ati_headline = _official_ati_headline_table()
     official_ati_headline_ready = not official_ati_headline.empty
@@ -2349,6 +2557,7 @@ def build_dataset_status_table() -> pd.DataFrame:
     qra_shock_summary = build_qra_event_shock_summary_publish_table()
     qra_event_robustness = build_qra_robustness_publish_table()
     treatment_comparison = build_treatment_comparison_publish_table()
+    qra_long_rate_translation = build_qra_long_rate_translation_panel()
     event_usability = build_event_usability_publish_table()
     leave_one_out = build_leave_one_event_out_publish_table()
     auction_absorption = build_auction_absorption_publish_table()
@@ -2519,6 +2728,17 @@ def build_dataset_status_table() -> pd.DataFrame:
             "public_role": "supporting",
         },
         {
+            "dataset": "official_capture_backfill_queue",
+            "readiness_tier": "supporting_ready" if not official_capture_backfill_queue.empty else "not_started",
+            "source_quality": "derived_backfill_queue",
+            "headline_ready": False,
+            "fallback_only": official_capture_backfill_queue.empty,
+            "missing_critical_fields": "" if not official_capture_backfill_queue.empty else "official_capture_backfill_queue_missing",
+            "last_regenerated_utc": _artifact_mtime(PROCESSED_DIR / "official_quarterly_refunding_capture.csv"),
+            "review_maturity": "supporting_ready" if not official_capture_backfill_queue.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
             "dataset": "event_design_status",
             "readiness_tier": (
                 "supporting_ready"
@@ -2553,6 +2773,17 @@ def build_dataset_status_table() -> pd.DataFrame:
             "missing_critical_fields": "",
             "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "treatment_comparison_table.csv"),
             "review_maturity": "supporting_ready" if not treatment_comparison.empty else "provisional_supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "qra_long_rate_translation_panel",
+            "readiness_tier": "supporting_provisional" if not qra_long_rate_translation.empty else "not_started",
+            "source_quality": "derived_long_rate_translation",
+            "headline_ready": False,
+            "fallback_only": True,
+            "missing_critical_fields": "" if not qra_long_rate_translation.empty else "qra_long_rate_translation_missing",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "qra_shock_crosswalk_v1.csv"),
+            "review_maturity": "provisional_supporting" if not qra_long_rate_translation.empty else "not_started",
             "public_role": "supporting",
         },
         {
@@ -2653,6 +2884,7 @@ def build_publish_artifacts() -> None:
     publish_table("official_capture_readiness", "Official Capture Readiness", build_official_capture_readiness_table())
     publish_table("official_capture_completion", "Official Capture Completion", build_official_capture_completion_publish_table())
     publish_table("official_capture_history_status", "Official Capture History Status", build_official_capture_history_status_table())
+    publish_table("official_capture_backfill_queue", "Official Capture Backfill Queue", build_official_capture_backfill_queue_table())
     publish_table("ati_seed_vs_official", "ATI Seed vs Official Comparison", build_ati_seed_vs_official_comparison())
     publish_table("qra_event_table", "QRA Event Table", build_qra_event_publish_table())
     publish_table("qra_event_summary", "QRA Event Summary", build_qra_summary_publish_table())
@@ -2665,6 +2897,7 @@ def build_publish_artifacts() -> None:
     publish_table("event_design_status", "Event Design Status", build_event_design_status_publish_table())
     publish_table("qra_shock_crosswalk_v1", "QRA Shock Crosswalk V1", build_qra_shock_crosswalk_publish_table())
     publish_table("treatment_comparison_table", "Treatment Comparison Table", build_treatment_comparison_publish_table())
+    publish_table("qra_long_rate_translation_panel", "QRA Long-Rate Translation Panel", build_qra_long_rate_translation_panel())
     publish_table("event_usability_table", "Event Usability Table", build_event_usability_publish_table())
     publish_table("leave_one_event_out_table", "Leave One Event Out Table", build_leave_one_event_out_publish_table())
     publish_table("auction_absorption_table", "Auction Absorption Table", build_auction_absorption_publish_table())
