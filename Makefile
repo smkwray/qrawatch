@@ -3,7 +3,7 @@ SHELL := /bin/zsh
 EXPECTED_VENV := $(HOME)/venvs/qrawatch
 RUN = source .env && "$(MAKE)" --no-print-directory guard-env >/dev/null && "$(PYTHON)" -B
 
-.PHONY: guard-env bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity causal-review identification identification-refresh absorption test download-core qra investor primary sec event plumbing duration publish qra-quality backend-validate regenerate site
+.PHONY: guard-env bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity causal-review identification identification-refresh absorption test download-core qra investor primary sec event plumbing duration publish qra-quality backend-validate regenerate pricing-figures site
 
 guard-env:
 	@source .env && \
@@ -88,6 +88,9 @@ duration: guard-env
 publish: guard-env
 	$(RUN) scripts/15_build_publish_artifacts.py
 
+pricing-figures: guard-env
+	$(RUN) scripts/31_build_pricing_figures.py
+
 qra-quality: guard-env
 	$(RUN) scripts/14_qra_quality_report.py
 
@@ -101,4 +104,8 @@ site: guard-env publish
 	@mkdir -p site/data
 	@cp output/publish/*.json site/data/
 	@cp output/publish/*.csv site/data/
+	@if [[ -d output/figures ]]; then \
+		mkdir -p site/figures; \
+		cp output/figures/* site/figures/ 2>/dev/null || true; \
+	fi
 	@echo "Site ready. Serve with: cd site && python3 -m http.server 8000"

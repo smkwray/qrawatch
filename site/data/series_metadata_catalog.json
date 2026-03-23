@@ -52,6 +52,96 @@
       "public_role": "supporting"
     },
     {
+      "dataset": "pricing",
+      "series_id": "ati_baseline_bn",
+      "frequency": "monthly (release-carried)",
+      "value_units": "USD billions",
+      "sign_convention": "Positive values imply a more bill-heavy maturity tilt relative to the 18% bill-share baseline.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing",
+      "series_id": "stock_excess_bills_bn",
+      "frequency": "monthly",
+      "value_units": "USD billions",
+      "sign_convention": "Positive values imply a larger stock of bills relative to the 18% marketable bill-share baseline.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing",
+      "series_id": "headline_public_duration_supply",
+      "frequency": "weekly (W-WED)",
+      "value_units": "USD billions",
+      "sign_convention": "Positive values imply more duration supply reaching the public in that week.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing",
+      "series_id": "THREEFYTP10",
+      "frequency": "monthly / weekly",
+      "value_units": "basis points",
+      "sign_convention": "Higher values imply a higher 10-year term-premium proxy.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing",
+      "series_id": "DGS10",
+      "frequency": "monthly / weekly",
+      "value_units": "basis points",
+      "sign_convention": "Higher values imply a higher 10-year Treasury yield.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing_scenario_translation",
+      "series_id": "implied_bp_change_threefytp10",
+      "frequency": "scenario",
+      "value_units": "basis points",
+      "sign_convention": "Positive values imply a higher 10-year term-premium proxy under the translated scenario.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing_spec_registry",
+      "series_id": "pricing_spec_registry",
+      "frequency": "artifact",
+      "value_units": "registry rows",
+      "sign_convention": "One row per locked pricing specification and headline outcome.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing_subsample_grid",
+      "series_id": "pricing_subsample_grid",
+      "frequency": "artifact",
+      "value_units": "regression rows",
+      "sign_convention": "Subsample rows report primary-predictor coefficients under the named sample restriction.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing_scenario_translation",
+      "series_id": "implied_bp_change_dgs10",
+      "frequency": "scenario",
+      "value_units": "basis points",
+      "sign_convention": "Positive values imply a higher 10-year Treasury yield under the translated scenario.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
       "dataset": "qra_event_elasticity",
       "series_id": "elasticity_bp_per_100bn",
       "frequency": "QRA event window",

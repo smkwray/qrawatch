@@ -113,6 +113,7 @@
     summary_ready: 'Summary',
     headline_ready: 'Headline',
     supporting_ready: 'Supporting Ready',
+    supporting_provisional: 'Supporting Provisional',
     provisional_supporting: 'Provisional Supporting',
     not_started: 'Not started',
     manual_official_capture: 'Official capture',
@@ -158,6 +159,7 @@
       headline_ready: 'Headline Ready',
       summary_ready: 'Summary Ready',
       supporting_ready: 'Supporting Ready',
+      supporting_provisional: 'Supporting Provisional',
       provisional_supporting: 'Provisional Supporting',
       not_started: 'Not Started'
     };
@@ -1101,6 +1103,146 @@
     }
   }
 
+  async function renderPricing() {
+    var container = $('#pricing-content');
+    var results = await Promise.all([
+      fetchJSON('pricing_spec_registry.json'),
+      fetchJSON('pricing_regression_summary.json'),
+      fetchJSON('pricing_subsample_grid.json'),
+      fetchJSON('pricing_regression_robustness.json'),
+      fetchJSON('pricing_scenario_translation.json'),
+      fetchJSON('dataset_status.json')
+    ]);
+    var specRegistry = results[0], summary = results[1], subsample = results[2], robustness = results[3], scenarios = results[4], dsStatus = results[5];
+
+    if (!summary || !summary.rows || !summary.rows.length) {
+      sectionError(container, 'Pricing regression data unavailable.');
+      return;
+    }
+
+    var pricingRow = null;
+    if (dsStatus && dsStatus.rows) {
+      pricingRow = dsStatus.rows.find(function (row) { return row.dataset === 'pricing'; }) || null;
+    }
+    if (pricingRow) {
+      container.appendChild(el('p', { class: 'section-desc',
+        text: 'This pricing layer is published as supporting/provisional reduced-form evidence. It is the repo’s main path toward neutral maturity-to-rates estimation, but not yet a settled structural claim.'
+      }));
+      container.appendChild(el('p', { class: 'card-meta',
+        text: 'Current status: ' + fmtLabel(pricingRow.readiness_tier) + '. Source: ' + fmtSnake(pricingRow.source_quality) + '.'
+      }));
+    }
+
+    if (specRegistry && specRegistry.rows && specRegistry.rows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Locked Baseline Specs' }));
+      container.appendChild(buildTable([
+        { key: 'spec_id', label: 'Spec', format: fmtSnake },
+        { key: 'outcome', label: 'Outcome', format: fmtSnake },
+        { key: 'predictor_set', label: 'Predictor', format: fmtSnake },
+        { key: 'control_set', label: 'Controls', format: fmtSnake },
+        { key: 'sample_start', label: 'Start' },
+        { key: 'sample_end', label: 'End' }
+      ], specRegistry.rows));
+    }
+
+    var primaryRows = summary.rows
+      .filter(function (row) {
+        return row.term_role === 'primary_predictor' && row.outcome_role === 'headline';
+      })
+      .sort(function (a, b) {
+        return String(a.model_id).localeCompare(String(b.model_id)) || String(a.dependent_variable).localeCompare(String(b.dependent_variable));
+      });
+
+    container.appendChild(el('h3', { class: 'section-subtitle', text: 'Primary Coefficients' }));
+    container.appendChild(buildTable([
+      { key: 'model_id', label: 'Model', format: fmtSnake },
+      { key: 'dependent_label', label: 'Outcome' },
+      { key: 'term_label', label: 'Shock / Input' },
+      { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+      { key: 'std_err', label: 'SE', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+      { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval },
+      { key: 'nobs', label: 'N', numeric: true }
+    ], primaryRows));
+    container.appendChild(el('p', { class: 'card-meta',
+      text: 'Headline quantity coefficients are scaled to read as basis points per $100bn on the named input. HAC / Newey-West standard errors are used throughout.'
+    }));
+
+    if (subsample && subsample.rows && subsample.rows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Subsample Grid' }));
+      container.appendChild(buildTable([
+        { key: 'spec_id', label: 'Spec', format: fmtSnake },
+        { key: 'variant_family', label: 'Variant', format: fmtSnake },
+        { key: 'dependent_label', label: 'Outcome' },
+        { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+        { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval },
+        { key: 'sample_start', label: 'Start' },
+        { key: 'sample_end', label: 'End' }
+      ], subsample.rows));
+    }
+
+    if (robustness && robustness.rows && robustness.rows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Robustness Pack' }));
+      container.appendChild(buildTable([
+        { key: 'variant_family', label: 'Family', format: fmtSnake },
+        { key: 'dependent_label', label: 'Outcome' },
+        { key: 'term_label', label: 'Term' },
+        { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+        { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval },
+        { key: 'term_mode', label: 'Mode', format: fmtSnake }
+      ], robustness.rows.slice(0, 20)));
+    }
+
+    if (scenarios && scenarios.rows && scenarios.rows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Scenario Translation' }));
+      container.appendChild(buildTable([
+        { key: 'scenario_label', label: 'Scenario' },
+        { key: 'dependent_label', label: 'Outcome' },
+        { key: 'coef_bp_per_100bn', label: 'bp per $100bn', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+        { key: 'implied_bp_change', label: 'Implied bp', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+        { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval }
+      ], scenarios.rows));
+    }
+
+    container.appendChild(el('h3', { class: 'section-subtitle', text: 'Figures' }));
+    [
+      {
+        src: 'figures/maturity_tilt_flow_vs_dgs10.svg',
+        title: 'Maturity-Tilt Flow vs 10Y Yield',
+        note: 'Standardized time-series overlay from 2009 onward.'
+      },
+      {
+        src: 'figures/excess_bills_stock_vs_threefytp10.svg',
+        title: 'Excess Bills Stock vs 10Y Term Premium',
+        note: 'Standardized time-series overlay from 2009 onward.'
+      },
+      {
+        src: 'figures/pricing_headline_coefficients.svg',
+        title: 'Headline Coefficients and Subsamples',
+        note: 'Baseline and subsample coefficients for the locked pricing specs.'
+      },
+      {
+        src: 'figures/pricing_scenario_translation.svg',
+        title: 'Scenario Translation',
+        note: 'Implied basis-point changes for the published stylized scenarios.'
+      }
+    ].forEach(function (figure) {
+      var card = el('div', { class: 'artifact-card' });
+      var img = document.createElement('img');
+      img.src = figure.src;
+      img.alt = figure.title;
+      img.loading = 'lazy';
+      img.style.width = '100%';
+      img.style.border = '1px solid var(--border)';
+      img.style.borderRadius = '12px';
+      img.style.background = '#fff';
+      img.style.marginBottom = '0.75rem';
+      card.appendChild(el('h3', { class: 'section-subtitle', text: figure.title }));
+      card.appendChild(img);
+      card.appendChild(el('p', { class: 'card-meta', text: figure.note }));
+      container.appendChild(card);
+    });
+  }
+
   async function renderExtensions() {
     var container = $('#extensions-content');
     var results = await Promise.all([
@@ -1423,6 +1565,7 @@
       renderMethods(),
       renderPlumbing(),
       renderDuration(),
+      renderPricing(),
       renderExtensions(),
       renderProvenance()
     ]);

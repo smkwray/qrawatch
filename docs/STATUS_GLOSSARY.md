@@ -71,17 +71,18 @@ Supporting status fields explain why a row is or is not causal-eligible:
   - `local_only_absent` means local Treasury-bundle review exists, but no separate external macro crosswalk artifact is attached
   - `pending_external_crosswalk` means the broader macro crosswalk has not been completed yet
 
-These labels should be used for event-facing outputs, not for quarter-level ATI or plumbing measurement surfaces.
+These labels should be used for event-facing outputs, not for quarter-level Maturity Tilt or plumbing measurement surfaces.
 
 `claim_scope` remains separate from `quality_tier`: a row can be reviewed, published, or causal-eligible and still stay out of the headline lane if its scope is `descriptive_only` or `causal_pilot_only`.
 
-## ATI terms
+## Maturity Tilt Terms
 
-- `ATI_q(tau) = NetBills_q - tau * FinancingNeed_q`
+- public label: `Maturity Tilt`; internal arithmetic identity: `ATI_q(tau) = NetBills_q - tau * FinancingNeed_q`
+- public flow label: `Maturity-Tilt Flow`; internal field: `ati_baseline_bn`
 - Baseline `tau` is `0.18`; robustness uses `0.15` and `0.20`.
 - `bill_share = NetBills_q / FinancingNeed_q`
 - `bill_share` is a signed financing-composition ratio, not a bounded literal share. It can exceed `1` or be negative when net bills exceed financing need or move opposite financing need.
-- Positive ATI / missing-coupons values mean more bills and fewer coupons than the chosen target share.
+- Positive Maturity-Tilt / missing-coupons values mean more bills and fewer coupons than the chosen target share.
 
 ## Headline flags
 

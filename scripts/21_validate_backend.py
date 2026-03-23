@@ -162,6 +162,63 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "construction_family",
         "value",
     ],
+    "pricing_regression_summary.csv": [
+        "model_id",
+        "model_family",
+        "panel_key",
+        "dependent_variable",
+        "outcome_role",
+        "term",
+        "coef",
+        "std_err",
+        "p_value",
+        "nobs",
+    ],
+    "pricing_spec_registry.csv": [
+        "spec_id",
+        "spec_family",
+        "headline_flag",
+        "sample_start",
+        "sample_end",
+        "outcome",
+        "predictor_set",
+        "control_set",
+        "frequency",
+        "notes",
+    ],
+    "pricing_subsample_grid.csv": [
+        "spec_id",
+        "spec_family",
+        "variant_id",
+        "variant_family",
+        "frequency",
+        "dependent_variable",
+        "term",
+        "coef",
+        "p_value",
+        "nobs",
+    ],
+    "pricing_regression_robustness.csv": [
+        "dependent_variable",
+        "model_id",
+        "model_family",
+        "variant_id",
+        "variant_family",
+        "term",
+        "coef",
+        "p_value",
+    ],
+    "pricing_scenario_translation.csv": [
+        "scenario_id",
+        "scenario_label",
+        "scenario_shock_bn",
+        "model_id",
+        "dependent_variable",
+        "term",
+        "coef_bp_per_100bn",
+        "implied_bp_change",
+        "p_value",
+    ],
     "data_sources_summary.csv": [
         "source_family",
         "raw_dir_exists",
@@ -1024,6 +1081,32 @@ def _validate_readme_causal_claims_consistency(
     mismatched = [key for key, value in expected.items() if counts.get(key) != value]
     if mismatched:
         errors.append("readme_current_sample_financing_pilot_mismatch:" + ",".join(sorted(mismatched)))
+
+
+def _validate_neutral_maturity_tilt_language(
+    readme_path: Path,
+    pricing_methods_path: Path,
+    *,
+    errors: list[str],
+    warnings: list[str],
+) -> None:
+    targets = (
+        ("README", readme_path),
+        ("PRICING_METHODS", pricing_methods_path),
+    )
+    for label, path in targets:
+        if not path.exists():
+            warnings.append(f"validation_doc_missing:{path}")
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        relevant = True
+        if label == "README":
+            lowered = text.lower()
+            relevant = any(token in lowered for token in ("pricing", "maturity", "term premium", "yield", "ati"))
+        if relevant and "Maturity Tilt" not in text:
+            errors.append(f"{label.lower()}_missing_maturity_tilt_label")
+        if re.search(r"\bATI\b", text):
+            errors.append(f"{label.lower()}_uses_ati_as_primary_public_label")
 
 
 def _has_seed_dependency(*values: object) -> bool:
@@ -2444,6 +2527,28 @@ def validate_publish_artifacts(
                 invalid_public_role = match.loc[match["public_role"].astype(str).str.strip() != "supporting"]
                 if not invalid_public_role.empty:
                     errors.append(f"series_metadata_extension_public_role_invalid:{name}")
+        for dataset_name, series_ids in {
+            "pricing": {"ati_baseline_bn", "stock_excess_bills_bn", "headline_public_duration_supply", "THREEFYTP10", "DGS10"},
+            "pricing_spec_registry": {"pricing_spec_registry"},
+            "pricing_subsample_grid": {"pricing_subsample_grid"},
+        }.items():
+            match = series_catalog.loc[series_catalog.get("dataset", pd.Series(dtype=str)) == dataset_name]
+            if match.empty:
+                errors.append(f"series_metadata_missing_dataset:{dataset_name}")
+                continue
+            present = set(match.get("series_id", pd.Series(dtype=str)).astype(str))
+            if not series_ids.issubset(present):
+                errors.append(f"series_metadata_missing_series:{dataset_name}:{','.join(sorted(series_ids - present))}")
+
+    if dataset_status_path.exists() and 'dataset_status' in locals():
+        for dataset_name in ("pricing", "pricing_spec_registry", "pricing_subsample_grid", "pricing_scenario_translation"):
+            match = dataset_status.loc[dataset_status.get("dataset", pd.Series(dtype=str)) == dataset_name]
+            if match.empty:
+                errors.append(f"dataset_status_missing:{dataset_name}")
+                continue
+            readiness = str(match.iloc[0].get("readiness_tier", "")).strip()
+            if readiness not in {"supporting_provisional", "not_started"}:
+                errors.append(f"dataset_status_invalid_pricing_readiness:{dataset_name}:{readiness}")
 
     readiness_exact, completion_exact = _validate_exact_coverages(readiness_frame, completion_frame)
     errors.extend(_validate_qra_publish_consistency(qra_frames))
@@ -2457,6 +2562,12 @@ def validate_publish_artifacts(
     _validate_readme_causal_claims_consistency(
         readme_path=readme_path,
         causal_claims_status=qra_frames.get("causal_claims_status.csv", pd.DataFrame()),
+        errors=errors,
+        warnings=warnings,
+    )
+    _validate_neutral_maturity_tilt_language(
+        readme_path=readme_path,
+        pricing_methods_path=ROOT / "docs" / "PRICING_METHODS.md",
         errors=errors,
         warnings=warnings,
     )

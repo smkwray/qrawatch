@@ -9,6 +9,13 @@ import pandas as pd
 
 from .io_utils import ensure_dir, write_df, write_json
 from .paths import OUTPUT_DIR, PROCESSED_DIR, RAW_DIR, TABLES_DIR
+from .research.pricing_models import (
+    PRICING_REGRESSION_ROBUSTNESS_COLUMNS,
+    PRICING_REGRESSION_SUMMARY_COLUMNS,
+    PRICING_SPEC_REGISTRY_COLUMNS,
+    PRICING_SUBSAMPLE_GRID_COLUMNS,
+    SCENARIO_TRANSLATION_COLUMNS as PRICING_SCENARIO_TRANSLATION_COLUMNS,
+)
 from .research.qra_classification import SUMMARY_HEADLINE_BUCKETS
 from .research.qra_elasticity import build_treatment_comparison_table
 
@@ -2238,6 +2245,41 @@ def build_duration_comparison_publish_table() -> pd.DataFrame:
     return df
 
 
+def build_pricing_regression_summary_publish_table() -> pd.DataFrame:
+    return _read_optional_source_csv(
+        "pricing_regression_summary",
+        columns=list(PRICING_REGRESSION_SUMMARY_COLUMNS),
+    )
+
+
+def build_pricing_spec_registry_publish_table() -> pd.DataFrame:
+    return _read_optional_source_csv(
+        "pricing_spec_registry",
+        columns=list(PRICING_SPEC_REGISTRY_COLUMNS),
+    )
+
+
+def build_pricing_subsample_grid_publish_table() -> pd.DataFrame:
+    return _read_optional_source_csv(
+        "pricing_subsample_grid",
+        columns=list(PRICING_SUBSAMPLE_GRID_COLUMNS),
+    )
+
+
+def build_pricing_regression_robustness_publish_table() -> pd.DataFrame:
+    return _read_optional_source_csv(
+        "pricing_regression_robustness",
+        columns=list(PRICING_REGRESSION_ROBUSTNESS_COLUMNS),
+    )
+
+
+def build_pricing_scenario_translation_publish_table() -> pd.DataFrame:
+    return _read_optional_source_csv(
+        "pricing_scenario_translation",
+        columns=list(PRICING_SCENARIO_TRANSLATION_COLUMNS),
+    )
+
+
 def _raw_file_count(path: Path) -> int:
     if not path.exists():
         return 0
@@ -2569,6 +2611,96 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "public_role": "supporting",
         },
         {
+            "dataset": "pricing",
+            "series_id": "ati_baseline_bn",
+            "frequency": "monthly (release-carried)",
+            "value_units": "USD billions",
+            "sign_convention": "Positive values imply a more bill-heavy maturity tilt relative to the 18% bill-share baseline.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing",
+            "series_id": "stock_excess_bills_bn",
+            "frequency": "monthly",
+            "value_units": "USD billions",
+            "sign_convention": "Positive values imply a larger stock of bills relative to the 18% marketable bill-share baseline.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing",
+            "series_id": "headline_public_duration_supply",
+            "frequency": "weekly (W-WED)",
+            "value_units": "USD billions",
+            "sign_convention": "Positive values imply more duration supply reaching the public in that week.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing",
+            "series_id": "THREEFYTP10",
+            "frequency": "monthly / weekly",
+            "value_units": "basis points",
+            "sign_convention": "Higher values imply a higher 10-year term-premium proxy.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing",
+            "series_id": "DGS10",
+            "frequency": "monthly / weekly",
+            "value_units": "basis points",
+            "sign_convention": "Higher values imply a higher 10-year Treasury yield.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_scenario_translation",
+            "series_id": "implied_bp_change_threefytp10",
+            "frequency": "scenario",
+            "value_units": "basis points",
+            "sign_convention": "Positive values imply a higher 10-year term-premium proxy under the translated scenario.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_spec_registry",
+            "series_id": "pricing_spec_registry",
+            "frequency": "artifact",
+            "value_units": "registry rows",
+            "sign_convention": "One row per locked pricing specification and headline outcome.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_subsample_grid",
+            "series_id": "pricing_subsample_grid",
+            "frequency": "artifact",
+            "value_units": "regression rows",
+            "sign_convention": "Subsample rows report primary-predictor coefficients under the named sample restriction.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_scenario_translation",
+            "series_id": "implied_bp_change_dgs10",
+            "frequency": "scenario",
+            "value_units": "basis points",
+            "sign_convention": "Positive values imply a higher 10-year Treasury yield under the translated scenario.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
             "dataset": "qra_event_elasticity",
             "series_id": "elasticity_bp_per_100bn",
             "frequency": "QRA event window",
@@ -2853,6 +2985,11 @@ def build_dataset_status_table() -> pd.DataFrame:
     event_usability = build_event_usability_publish_table()
     leave_one_out = build_leave_one_event_out_publish_table()
     auction_absorption = build_auction_absorption_publish_table()
+    pricing_spec_registry = build_pricing_spec_registry_publish_table()
+    pricing_regression_summary = build_pricing_regression_summary_publish_table()
+    pricing_subsample_grid = build_pricing_subsample_grid_publish_table()
+    pricing_regression_robustness = build_pricing_regression_robustness_publish_table()
+    pricing_scenario_translation = build_pricing_scenario_translation_publish_table()
     qra_review_surface = _qra_review_surface_integrity(
         qra_event_registry=qra_event_registry,
         qra_shock_crosswalk=qra_shock_crosswalk,
@@ -2860,6 +2997,17 @@ def build_dataset_status_table() -> pd.DataFrame:
         qra_shock_summary=qra_shock_summary,
         qra_event_robustness=qra_event_robustness,
     )
+    pricing_missing: list[str] = []
+    if pricing_spec_registry.empty:
+        pricing_missing.append("pricing_spec_registry_missing")
+    if pricing_regression_summary.empty:
+        pricing_missing.append("pricing_regression_summary_missing")
+    if pricing_subsample_grid.empty:
+        pricing_missing.append("pricing_subsample_grid_missing")
+    if pricing_regression_robustness.empty:
+        pricing_missing.append("pricing_regression_robustness_missing")
+    if pricing_scenario_translation.empty:
+        pricing_missing.append("pricing_scenario_translation_missing")
     rows = [
         {
             "dataset": "official_capture",
@@ -3155,6 +3303,50 @@ def build_dataset_status_table() -> pd.DataFrame:
             "review_maturity": "headline_ready",
             "public_role": "headline",
         },
+        {
+            "dataset": "pricing",
+            "readiness_tier": "supporting_provisional" if not pricing_regression_summary.empty else "not_started",
+            "source_quality": "derived_pricing_reduced_form",
+            "headline_ready": False,
+            "fallback_only": True,
+            "missing_critical_fields": "|".join(pricing_missing),
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "pricing_regression_summary.csv"),
+            "review_maturity": "provisional_supporting" if not pricing_regression_summary.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_spec_registry",
+            "readiness_tier": "supporting_provisional" if not pricing_spec_registry.empty else "not_started",
+            "source_quality": "derived_pricing_reduced_form",
+            "headline_ready": False,
+            "fallback_only": True,
+            "missing_critical_fields": "pricing_spec_registry_missing" if pricing_spec_registry.empty else "",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "pricing_spec_registry.csv"),
+            "review_maturity": "provisional_supporting" if not pricing_spec_registry.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_subsample_grid",
+            "readiness_tier": "supporting_provisional" if not pricing_subsample_grid.empty else "not_started",
+            "source_quality": "derived_pricing_reduced_form",
+            "headline_ready": False,
+            "fallback_only": True,
+            "missing_critical_fields": "pricing_subsample_grid_missing" if pricing_subsample_grid.empty else "",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "pricing_subsample_grid.csv"),
+            "review_maturity": "provisional_supporting" if not pricing_subsample_grid.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_scenario_translation",
+            "readiness_tier": "supporting_provisional" if not pricing_scenario_translation.empty else "not_started",
+            "source_quality": "derived_pricing_reduced_form",
+            "headline_ready": False,
+            "fallback_only": True,
+            "missing_critical_fields": "pricing_scenario_translation_missing" if pricing_scenario_translation.empty else "",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "pricing_scenario_translation.csv"),
+            "review_maturity": "provisional_supporting" if not pricing_scenario_translation.empty else "not_started",
+            "public_role": "supporting",
+        },
     ]
     for _, row in extension_status.iterrows():
         extension_name = str(row["extension"])
@@ -3240,6 +3432,11 @@ def build_publish_artifacts() -> None:
     publish_table("plumbing_robustness", "Plumbing Robustness", build_plumbing_robustness_publish_table())
     publish_table("duration_supply_summary", "Duration Supply Summary", build_duration_publish_table())
     publish_table("duration_supply_comparison", "Duration Supply Comparison", build_duration_comparison_publish_table())
+    publish_table("pricing_spec_registry", "Pricing Spec Registry", build_pricing_spec_registry_publish_table())
+    publish_table("pricing_regression_summary", "Pricing Regression Summary", build_pricing_regression_summary_publish_table())
+    publish_table("pricing_subsample_grid", "Pricing Subsample Grid", build_pricing_subsample_grid_publish_table())
+    publish_table("pricing_regression_robustness", "Pricing Regression Robustness", build_pricing_regression_robustness_publish_table())
+    publish_table("pricing_scenario_translation", "Pricing Scenario Translation", build_pricing_scenario_translation_publish_table())
     publish_table("data_sources_summary", "Data Sources Summary", build_data_sources_publish_table())
     publish_table("investor_allotments_summary", "Investor Allotments Summary", build_investor_allotments_summary_table())
     publish_table("primary_dealer_summary", "Primary Dealer Summary", build_primary_dealer_summary_table())

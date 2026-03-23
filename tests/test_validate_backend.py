@@ -68,6 +68,38 @@ def _build_publish_artifacts(
             frame = pd.DataFrame(
                 [
                     {
+                        "dataset": "pricing",
+                        "readiness_tier": "supporting_provisional",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "headline_ready": False,
+                        "fallback_only": True,
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing_spec_registry",
+                        "readiness_tier": "supporting_provisional",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "headline_ready": False,
+                        "fallback_only": True,
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing_subsample_grid",
+                        "readiness_tier": "supporting_provisional",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "headline_ready": False,
+                        "fallback_only": True,
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing_scenario_translation",
+                        "readiness_tier": "supporting_provisional",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "headline_ready": False,
+                        "fallback_only": True,
+                        "public_role": "supporting",
+                    },
+                    {
                         "dataset": "extension_investor_allotments",
                         "readiness_tier": "summary_ready",
                         "source_quality": "summary_ready",
@@ -145,6 +177,69 @@ def _build_publish_artifacts(
         elif csv_name == "series_metadata_catalog.csv":
             frame = pd.DataFrame(
                 [
+                    {
+                        "dataset": "pricing",
+                        "series_id": "ati_baseline_bn",
+                        "frequency": "monthly",
+                        "value_units": "USD bn",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "series_role": "supporting",
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing",
+                        "series_id": "stock_excess_bills_bn",
+                        "frequency": "monthly",
+                        "value_units": "USD bn",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "series_role": "supporting",
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing",
+                        "series_id": "headline_public_duration_supply",
+                        "frequency": "weekly",
+                        "value_units": "USD bn",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "series_role": "supporting",
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing",
+                        "series_id": "THREEFYTP10",
+                        "frequency": "mixed",
+                        "value_units": "bp",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "series_role": "supporting",
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing",
+                        "series_id": "DGS10",
+                        "frequency": "mixed",
+                        "value_units": "bp",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "series_role": "supporting",
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing_spec_registry",
+                        "series_id": "pricing_spec_registry",
+                        "frequency": "artifact",
+                        "value_units": "rows",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "series_role": "supporting",
+                        "public_role": "supporting",
+                    },
+                    {
+                        "dataset": "pricing_subsample_grid",
+                        "series_id": "pricing_subsample_grid",
+                        "frequency": "artifact",
+                        "value_units": "rows",
+                        "source_quality": "derived_pricing_reduced_form",
+                        "series_role": "supporting",
+                        "public_role": "supporting",
+                    },
                     {
                         "dataset": "investor_allotments",
                         "series_id": "investor_allotments_summary",
@@ -1788,6 +1883,27 @@ def test_validate_publish_artifacts_flags_headline_claim_scope_on_supporting_non
     )
 
     assert "qra_publish_invalid_claim_scope:event_usability_table.csv" in errors
+
+
+def test_validate_neutral_maturity_tilt_language_flags_standalone_ati_label(tmp_path: Path) -> None:
+    readme_path = tmp_path / "README.md"
+    pricing_methods_path = tmp_path / "PRICING_METHODS.md"
+    readme_path.write_text("ATI is the primary public label.\n", encoding="utf-8")
+    pricing_methods_path.write_text("ATI remains the main framing.\n", encoding="utf-8")
+
+    errors: list[str] = []
+    warnings: list[str] = []
+    validate_backend_script._validate_neutral_maturity_tilt_language(
+        readme_path=readme_path,
+        pricing_methods_path=pricing_methods_path,
+        errors=errors,
+        warnings=warnings,
+    )
+
+    assert "readme_missing_maturity_tilt_label" in errors
+    assert "readme_uses_ati_as_primary_public_label" in errors
+    assert "pricing_methods_missing_maturity_tilt_label" in errors
+    assert "pricing_methods_uses_ati_as_primary_public_label" in errors
 
 
 def test_canonical_qra_review_frame_does_not_collapse_aggregate_usability_rows() -> None:

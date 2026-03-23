@@ -2,41 +2,73 @@
 
 [Project website](https://smkwray.github.io/qrawatch/)
 
-This repo is a reproducible research and data product for the project:
+This repo is a reproducible research and data product for a neutral question:
 
-**Do shifts in Treasury's bill-versus-coupon mix operate like a shadow form of balance-sheet policy by changing public duration supply, term premia, and market plumbing?**
+**Do shifts in Treasury’s bill-versus-coupon mix operate like a shadow form of balance-sheet policy by changing public duration supply, term premia, and market plumbing?**
 
-The design is intentionally **neutral about motive**. The repo treats the “activist Treasury issuance” framing (Miran) as a source of testable claims, then maps those claims into public-data measurement, descriptive event monitoring, and plumbing exercises. The measure itself is presented as Treasury maturity composition — a neutral measurement construct.
+Public-facing terminology in this round:
 
-## What is already seeded
+- `Maturity Tilt` = the quarter-level bill-versus-coupon composition object built from official Treasury financing arithmetic
+- `Maturity-Tilt Flow` = the signed quarterly flow object published through internal field `ati_baseline_bn`
+- `Excess Bills Stock` = the stock object published through internal field `stock_excess_bills_bn`
+- `Public Duration Supply` = the weekly duration-supply construction used in the duration and pricing layers
 
-- a clear project framing and research brief
-- manual seed files for the core quarter-level “missing coupons” arithmetic
-- key QRA event dates drawn from the note
-- download scripts for official Treasury, FiscalData, FRED, SEC, and New York Fed sources
-- initial Python modules for:
-  - coupon-shortfall / missing-coupons construction
-  - auction classification
-  - generic event-window work
-  - generic download helpers
-- tests for the core arithmetic
+The design stays neutral about motive. The repo treats the Miran-style claim as a testable empirical proposition, then maps it into official measurement, duration/plumbing mechanisms, and reduced-form pricing. The QRA event layer remains a supporting audit surface rather than the headline engine.
+
+## Current research lanes
+
+- official Maturity Tilt measurement (`missing_coupons_*`, bill share, financing composition by quarter)
+- public duration-supply measurement (Treasury non-bill supply + QT proxy - buybacks)
+- plumbing mechanism tests (bills vs coupons, ON RRP, reserves, TGA controls)
+- pricing regressions (10-year yield and term premium proxy vs Maturity-Tilt Flow, Excess Bills Stock, and Public Duration Supply)
+- supporting QRA event and causal-pilot audit surfaces (non-headline)
 
 ## Current status
 
-The repo now has a reproducible backend product and public site, with a deliberately narrow first-release scope:
+The repo now has a reproducible backend product and public site, with headline focus on official Maturity Tilt measurement, duration supply, plumbing, and pricing:
 
-- the official quarter capture is exact and non-seed for the current quarters in scope
-- the official coupon-shortfall rebuild is derived from that capture path
+- exact official quarter capture is live for the current public history window
+- quarter-level Maturity Tilt arithmetic is rebuilt from that official capture path
 - the plumbing baseline uses exact net bill and non-bill series, with fallbacks labeled separately
 - the duration headline is a hybrid exact-plus-proxy construction with explicit fallback comparisons
-- `claim_scope` now separates descriptive-only rows, causal-pilot-only rows, and headline rows so the public boundary is machine-readable and hard to misread
+- the pricing layer now publishes a locked `pricing_spec_registry`, a `pricing_subsample_grid`, scenario translations, and four paper-style figures
+- `claim_scope` separates descriptive-only rows, causal-pilot-only rows, and headline rows so the public boundary is machine-readable
 - the publish layer under `output/publish/` is the frontend-facing API
-- investor allotments, primary dealer, and SEC N-MFP are now summary-ready extension modules
+- investor allotments, primary dealer, and SEC N-MFP remain summary-ready supporting extensions
 - QRA event, shock-crosswalk, usability, leave-one-out, and absorption bridge tables are published when their source files exist, but they are supporting audit surfaces rather than referee-grade causal estimates
-- the new `qra_benchmark_evidence_registry` and `causal_claims_status` artifacts make benchmark provenance and claim scope explicit for the QRA pilot
 
 Exact official quarter coverage currently spans `2009Q1` through `2025Q4`.
-This public release should be read as an in-progress research/data product, not as a finished long-history dataset or a settled causal design.
+This public release should be read as an in-progress research/data product, not as a settled full-sample event-causal design.
+
+## Pricing credibility pack
+
+The pricing layer now centers on three locked baseline specs:
+
+- `monthly_flow_baseline` for `DGS10` and `THREEFYTP10` on Maturity-Tilt Flow plus `DFF` and a debt-limit dummy, starting in `2009Q1`
+- `monthly_stock_baseline` for `DGS10` and `THREEFYTP10` on Excess Bills Stock plus `DFF` and a debt-limit dummy, starting in `2009Q1`
+- `weekly_duration_baseline` for `DGS10` and `THREEFYTP10` on Public Duration Supply plus QT, buybacks, TGA, and `DFF`
+
+Headline quantity coefficients are published in **basis points per `$100bn`** on the named input.
+
+The pricing credibility pack now includes:
+
+- `output/publish/pricing_spec_registry.{csv,json,md}`
+- `output/publish/pricing_regression_summary.{csv,json,md}`
+- `output/publish/pricing_subsample_grid.{csv,json,md}`
+- `output/publish/pricing_regression_robustness.{csv,json,md}`
+- `output/publish/pricing_scenario_translation.{csv,json,md}`
+- `output/figures/maturity_tilt_flow_vs_dgs10.svg`
+- `output/figures/excess_bills_stock_vs_threefytp10.svg`
+- `output/figures/pricing_headline_coefficients.svg`
+- `output/figures/pricing_scenario_translation.svg`
+
+See [docs/PRICING_METHODS.md](/Users/shanewray/Library/CloudStorage/GoogleDrive-wray7830@gmail.com/My%20Drive/proj/qrawatch/docs/PRICING_METHODS.md) for the estimand and spec details, [docs/PRICING_RESULTS_MEMO.md](/Users/shanewray/Library/CloudStorage/GoogleDrive-wray7830@gmail.com/My%20Drive/proj/qrawatch/docs/PRICING_RESULTS_MEMO.md) for the current coefficients, and [docs/GPT_PRO_PRICING_AUDIT_PROMPT.md](/Users/shanewray/Library/CloudStorage/GoogleDrive-wray7830@gmail.com/My%20Drive/proj/qrawatch/docs/GPT_PRO_PRICING_AUDIT_PROMPT.md) for the next GPT Pro audit packet.
+
+## QRA causal boundary
+
+The event-causal layer stays explicitly bounded. The causal surface is currently a small post-`2022Q3` current-sample financing pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, `5` Tier A components, `8` source-family-exhausted blocked rows, and `0` open benchmark candidates rather than a full-sample design.
+
+The benchmark-search closure memo is in [docs/BENCHMARK_SEARCH_CLOSURE.md](/Users/shanewray/Library/CloudStorage/GoogleDrive-wray7830@gmail.com/My%20Drive/proj/qrawatch/docs/BENCHMARK_SEARCH_CLOSURE.md). The repo does **not** treat that event lane as the headline pricing coefficient source in this round.
 
 ## Quickstart
 
@@ -60,21 +92,14 @@ source .env
 "$HOME/venvs/qrawatch/bin/python" scripts/02_download_fred.py --preset core
 "$HOME/venvs/qrawatch/bin/python" scripts/03_download_qra_materials.py --download-files
 "$HOME/venvs/qrawatch/bin/python" scripts/04_extract_qra_text.py
-"$HOME/venvs/qrawatch/bin/python" scripts/22_seed_forward_official_quarters.py --direction backward
 "$HOME/venvs/qrawatch/bin/python" scripts/20_enrich_official_qra_capture.py
 "$HOME/venvs/qrawatch/bin/python" scripts/13_build_official_qra_capture.py
 "$HOME/venvs/qrawatch/bin/python" scripts/17_build_official_ati.py
-"$HOME/venvs/qrawatch/bin/python" scripts/09_build_qra_event_panel.py
-"$HOME/venvs/qrawatch/bin/python" scripts/10_run_event_study.py
-"$HOME/venvs/qrawatch/bin/python" scripts/23_seed_qra_shock_template.py
-"$HOME/venvs/qrawatch/bin/python" scripts/24_build_qra_event_elasticity.py
-"$HOME/venvs/qrawatch/bin/python" scripts/25_build_qra_identification_tables.py
-"$HOME/venvs/qrawatch/bin/python" scripts/28_seed_qra_causal_review_inputs.py
 "$HOME/venvs/qrawatch/bin/python" scripts/11_run_plumbing_regressions.py
 "$HOME/venvs/qrawatch/bin/python" scripts/12_build_public_duration_supply.py
-"$HOME/venvs/qrawatch/bin/python" scripts/16_build_investor_allotments_inventory.py
-"$HOME/venvs/qrawatch/bin/python" scripts/18_build_primary_dealer_inventory.py
-"$HOME/venvs/qrawatch/bin/python" scripts/19_build_sec_nmfp_inventory.py
+"$HOME/venvs/qrawatch/bin/python" scripts/29_build_pricing_panels.py
+"$HOME/venvs/qrawatch/bin/python" scripts/30_run_pricing_regressions.py
+"$HOME/venvs/qrawatch/bin/python" scripts/31_build_pricing_figures.py
 "$HOME/venvs/qrawatch/bin/python" scripts/15_build_publish_artifacts.py
 "$HOME/venvs/qrawatch/bin/python" scripts/21_validate_backend.py
 ```
@@ -83,117 +108,45 @@ Or use:
 
 ```bash
 make bootstrap
-make seed
 make test
 make regenerate
+make pricing-figures
+make site
 ```
 
 ## Repository map
 
-- `PROJECT_BRIEF.md` — the paper question, scope, hypotheses, and contribution
+- `PROJECT_BRIEF.md` — project question, scope, hypotheses, and contribution
 - `RESEARCH_DESIGN.md` — equations, identification, outcomes, and robustness
 - `DATA_SOURCES.md` — source registry and why each dataset matters
-- `docs/STATUS_GLOSSARY.md` — readiness/source-quality labels and ATI terminology used in publish artifacts
-- `docs/GPT_PRO_AUDIT_BRIEF.md` — audit-ready snapshot of the current causal-governance state and the questions to ask next
-- `VALIDATION_CHECKLIST.md` — QA before trusting any headline result
-- `data/manual/` — seed quarter inputs and event dates
+- `docs/STATUS_GLOSSARY.md` — readiness/source-quality labels and public terminology
+- `docs/GPT_PRO_AUDIT_BRIEF.md` — audit-ready snapshot of the current causal-governance state
+- `docs/PRICING_METHODS.md` — pricing estimands, panel design, and reduced-form interpretation boundaries
+- `docs/PRICING_RESULTS_MEMO.md` — current pricing coefficients, robustness, and claim boundary
+- `docs/GPT_PRO_PRICING_AUDIT_PROMPT.md` — ready-to-send GPT Pro audit prompt for the pricing pack
+- `docs/BENCHMARK_SEARCH_CLOSURE.md` — bounded benchmark-search closure memo for the current QRA causal pilot
 - `src/ati_shadow_policy/` — reusable download and research modules
 - `scripts/` — task-oriented entry points
 - `tests/` — unit tests for the core logic
-- `references/source_note/` — the uploaded note and a distilled testable-claims memo
 
-## Sign conventions used here
+## Sign conventions
 
-The repo uses the following baseline sign convention:
-
-- **positive coupon shortfall / missing coupons** = more bills and fewer coupons than the chosen target share
-- **positive public duration supply** = more duration pushed into private hands
-- **positive QT contribution** = Fed Treasury holdings falling
-- **positive buyback contribution** = duration removed from public hands is recorded with a minus sign in the duration-supply construction
-
-## Baseline targets
-
-The baseline bill-share target is **18%**, with robustness at **15%** and **20%**.
+- positive `missing_coupons_*` / `ati_baseline_bn` means a more bill-heavy maturity tilt relative to the chosen target share
+- positive Public Duration Supply means more duration pushed into private hands
+- positive QT contribution means Fed Treasury holdings falling
+- buybacks enter the duration construction with the opposite sign because they remove duration from public hands
 
 ## What is intentionally provisional
 
-Some pieces are seeded rather than fully automated:
-
-- the seed shortfall path still exists for comparison, but the headline official coupon-shortfall path is now exact and non-seed
-- the QRA download and parsing scripts are designed to collect official documents first, then support later automation
-- the QRA enrichment step now pairs each capture quarter with both the Treasury borrowing-estimate release and the matching official quarterly refunding statement, writing intermediate maps under `data/processed/`
-- the manual official-capture template now carries explicit role-based provenance fields for financing releases, refunding statements, and auction reconstruction
+- the pricing layer is still reduced-form and published as `supporting_provisional`
+- extension modules remain supporting context, not headline evidence
 - the duration headline still combines exact non-bill net supply with a QT proxy, and publish artifacts keep fallback constructions explicit
-- the SEC N-MFP backend stops at summary analytics depth rather than security-level research depth
-- TIC remains out of scope for the current public release
-- the QRA event and elasticity layers are published as provisional-supporting research infrastructure; `claim_scope` separates descriptive-only, causal-pilot-only, and headline rows, and `usable_for_descriptive_headline` is not a causal-readiness flag
-- QRA downloads now use deterministic filenames of the form `<slug>_<sha1>.pdf|.html` and record provenance in `data/raw/qra/downloads.csv`
-
-## Current limitations
-
-- the exact official quarter history now spans `2009Q1` through `2025Q4`, but earlier archive history before `2009Q1` remains out of scope for the current release
-- the event-study layer is informative but still mostly descriptive/supporting; the causal surface is currently a small post-`2022Q3` current-sample financing pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, `5` Tier A components, `8` source-family-exhausted blocked rows, and `0` open benchmark candidates rather than a full-sample design
-- extension modules are supporting context, not the headline result
-- the longer-history version of the project still needs additional official quarter capture before `2009Q1`
-
-## Backend artifacts
-
-The backend now emits a publish-ready layer under `output/publish/`, derived from processed outputs rather than raw files. Core artifacts include:
-
-- coupon-shortfall quarter tables
-- official QRA quarter capture tables
-- seed-vs-official shortfall comparisons
-- QRA event tables, baseline summaries, and robustness summaries for descriptive monitoring
-- optional QRA event shock-summary and elasticity tables built from the manual shock template plus the event panel, kept as supporting/provisional outputs
-- QRA event registry, release-component registry, causal QA ledger, event-design status, shock crosswalk, event usability, leave-one-out, and auction absorption tables when the source files exist
-- QRA benchmark-coverage and benchmark-blocker tables for the current-sample financing pilot when the source files exist
-- QRA benchmark evidence registry and causal claims status tables when the source files exist
-- plumbing baseline summaries and robustness summaries
-- duration-supply summaries and construction comparisons
-- data-source and extension-status inventories
-
-Useful backend commands:
-
-```bash
-source .env
-"$HOME/venvs/qrawatch/bin/python" scripts/13_build_official_qra_capture.py
-"$HOME/venvs/qrawatch/bin/python" scripts/17_build_official_ati.py
-"$HOME/venvs/qrawatch/bin/python" scripts/14_qra_quality_report.py
-"$HOME/venvs/qrawatch/bin/python" scripts/15_build_publish_artifacts.py
-"$HOME/venvs/qrawatch/bin/python" scripts/20_enrich_official_qra_capture.py
-"$HOME/venvs/qrawatch/bin/python" scripts/22_seed_forward_official_quarters.py --direction backward
-"$HOME/venvs/qrawatch/bin/python" scripts/23_seed_qra_shock_template.py
-"$HOME/venvs/qrawatch/bin/python" scripts/24_build_qra_event_elasticity.py
-"$HOME/venvs/qrawatch/bin/python" scripts/25_build_qra_identification_tables.py
-"$HOME/venvs/qrawatch/bin/python" scripts/28_seed_qra_causal_review_inputs.py
-"$HOME/venvs/qrawatch/bin/python" scripts/27_build_qra_intraday_event_panel.py
-"$HOME/venvs/qrawatch/bin/python" scripts/16_build_investor_allotments_inventory.py
-"$HOME/venvs/qrawatch/bin/python" scripts/18_build_primary_dealer_inventory.py
-"$HOME/venvs/qrawatch/bin/python" scripts/19_build_sec_nmfp_inventory.py
-"$HOME/venvs/qrawatch/bin/python" scripts/21_validate_backend.py
-```
-
-Public site consumers should read only from `output/publish/`. The key site-facing status tables are:
-
-- `output/publish/dataset_status.csv`
-- `output/publish/extension_status.csv`
-- `output/publish/series_metadata_catalog.csv`
-- `output/publish/investor_allotments_summary.{csv,json,md}`
-- `output/publish/primary_dealer_summary.{csv,json,md}`
-- `output/publish/sec_nmfp_summary.{csv,json,md}`
-- `output/publish/qra_event_shock_summary.{csv,json,md}` when manual shock inputs have been filled, for supporting analysis only
-- `output/publish/qra_event_elasticity.{csv,json,md}` when manual shock inputs have been filled, for supporting analysis only
-
-If `FRED_API_KEY` is set in `.env`, the FRED downloader uses the official API to avoid flaky public CSV fetches for larger series.
+- the QRA event and elasticity layers remain supporting/provisional infrastructure; they are not promoted into headline pricing evidence here
+- the longer historical extension before `2009Q1` remains out of scope for the current public release
 
 ## What comes next
 
-- extend exact official quarter history backward from `2009Q1` toward the older archive
-- deepen the post-`2022Q3` causal pilot by finding more genuinely pre-release external benchmarks
-- deepen extensions after the core quarter history is longer
-
-The current workflow emphasizes reproducibility:
-
-- start from the cleanest observable objects,
-- get the first pricing and plumbing results,
-- then automate the brittle parts.
+- keep the QRA causal lane bounded and documented as a narrow audited pilot rather than reopening broad benchmark hunts
+- pressure-test the locked pricing specs with one more GPT Pro audit focused on design strength, numerical credibility, and the highest-return next improvement
+- decide whether the current baseline pricing design is strong enough to anchor the project’s neutral maturity-to-rates claim
+- only after that, choose between spec refinement, additional controls, or a broader design pivot

@@ -19,7 +19,7 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T13:08:23.725678+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:47.144614+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
     },
@@ -41,7 +41,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:47.860151+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.167124+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -52,7 +52,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:47.951930+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.267271+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -63,7 +63,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:47.951930+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.267271+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -74,7 +74,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:48.055231+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.383349+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -85,7 +85,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:47.951930+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.267271+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -96,7 +96,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:48.037887+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.362989+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -107,7 +107,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:48.042059+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.368189+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -140,7 +140,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:48.042059+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.368189+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -151,7 +151,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:48.144425+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.474405+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -173,7 +173,7 @@
       "headline_ready": false,
       "fallback_only": true,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:48.144425+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.474405+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -184,7 +184,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:48.240444+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:48.572940+00:00",
       "review_maturity": "supporting_ready",
       "public_role": "supporting"
     },
@@ -195,7 +195,7 @@
       "headline_ready": false,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-23T19:57:49.489050+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:49.847917+00:00",
       "review_maturity": "provisional_supporting",
       "public_role": "supporting"
     },
@@ -217,7 +217,7 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T22:29:47.101963+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:56.051029+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
     },
@@ -228,9 +228,53 @@
       "headline_ready": true,
       "fallback_only": false,
       "missing_critical_fields": "",
-      "last_regenerated_utc": "2026-03-21T22:29:48.896755+00:00",
+      "last_regenerated_utc": "2026-03-23T22:59:57.831228+00:00",
       "review_maturity": "headline_ready",
       "public_role": "headline"
+    },
+    {
+      "dataset": "pricing",
+      "readiness_tier": "supporting_provisional",
+      "source_quality": "derived_pricing_reduced_form",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-23T22:59:52.881020+00:00",
+      "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing_spec_registry",
+      "readiness_tier": "supporting_provisional",
+      "source_quality": "derived_pricing_reduced_form",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-23T22:59:52.879818+00:00",
+      "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing_subsample_grid",
+      "readiness_tier": "supporting_provisional",
+      "source_quality": "derived_pricing_reduced_form",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-23T22:59:52.881998+00:00",
+      "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing_scenario_translation",
+      "readiness_tier": "supporting_provisional",
+      "source_quality": "derived_pricing_reduced_form",
+      "headline_ready": false,
+      "fallback_only": true,
+      "missing_critical_fields": "",
+      "last_regenerated_utc": "2026-03-23T22:59:52.883154+00:00",
+      "review_maturity": "provisional_supporting",
+      "public_role": "supporting"
     },
     {
       "dataset": "extension_investor_allotments",

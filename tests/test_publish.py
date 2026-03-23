@@ -1827,3 +1827,182 @@ def test_series_metadata_catalog_marks_extensions_supporting() -> None:
     assert not extensions.empty
     assert set(extensions["series_role"]) == {"supporting"}
     assert set(extensions["public_role"]) == {"supporting"}
+
+
+def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) -> None:
+    tables_dir = tmp_path / "tables"
+    processed_dir = tmp_path / "processed"
+    output_dir = tmp_path / "output"
+    raw_dir = tmp_path / "raw"
+    tables_dir.mkdir(parents=True)
+    processed_dir.mkdir(parents=True)
+    output_dir.mkdir(parents=True)
+    raw_dir.mkdir(parents=True)
+
+    pd.DataFrame(
+        [
+            {
+                "spec_id": "monthly_flow_baseline",
+                "spec_family": "monthly_flow",
+                "headline_flag": True,
+                "sample_start": "2009-01-31",
+                "sample_end": "2026-03-31",
+                "outcome": "DGS10",
+                "predictor_set": "ati_baseline_bn",
+                "control_set": "DFF|debt_limit_dummy",
+                "frequency": "monthly",
+                "notes": "Baseline monthly reduced-form specification using Maturity-Tilt Flow.",
+            }
+        ]
+    ).to_csv(tables_dir / "pricing_spec_registry.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "model_id": "monthly_flow_baseline",
+                "model_family": "monthly_flow",
+                "model_mode": "headline_baseline",
+                "panel_key": "official_ati_price_panel",
+                "panel_frequency": "monthly",
+                "dependent_variable": "DGS10",
+                "dependent_label": "10-year Treasury constant maturity yield",
+                "outcome_role": "headline",
+                "term": "ati_baseline_bn",
+                "coef": -0.05,
+                "std_err": 0.02,
+                "t_stat": -2.5,
+                "p_value": 0.03,
+                "nobs": 200,
+                "rsquared": 0.2,
+                "term_role": "primary_predictor",
+                "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+                "term_units": "USD bn",
+                "outcome_units": "basis points",
+                "cov_type": "HAC",
+                "cov_maxlags": 4,
+                "term_mode": "baseline",
+                "sample_start": "2009-01-31",
+                "sample_end": "2026-03-31",
+                "notes": "Baseline monthly reduced-form specification using Maturity-Tilt Flow.",
+            }
+        ]
+    ).to_csv(tables_dir / "pricing_regression_summary.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "spec_id": "monthly_flow_baseline",
+                "spec_family": "monthly_flow",
+                "variant_id": "post_2014",
+                "variant_family": "post_2014",
+                "frequency": "monthly",
+                "dependent_variable": "DGS10",
+                "dependent_label": "10-year Treasury constant maturity yield",
+                "outcome_role": "headline",
+                "term": "ati_baseline_bn",
+                "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+                "coef": -0.04,
+                "std_err": 0.02,
+                "t_stat": -2.0,
+                "p_value": 0.05,
+                "nobs": 150,
+                "rsquared": 0.18,
+                "cov_type": "HAC",
+                "cov_maxlags": 4,
+                "sample_start": "2014-01-31",
+                "sample_end": "2026-03-31",
+                "notes": "Post-2014 monthly flow baseline.",
+            }
+        ]
+    ).to_csv(tables_dir / "pricing_subsample_grid.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "dependent_variable": "DGS10",
+                "dependent_label": "10-year Treasury constant maturity yield",
+                "model_id": "monthly_stock_baseline_standardized",
+                "model_family": "monthly_stock",
+                "variant_id": "standardized_predictors",
+                "variant_family": "standardized_predictors",
+                "panel_frequency": "monthly",
+                "term": "stock_excess_bills_bn",
+                "coef": 0.01,
+                "std_err": 0.01,
+                "t_stat": 1.0,
+                "p_value": 0.30,
+                "nobs": 200,
+                "rsquared": 0.2,
+                "term_role": "primary_predictor",
+                "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn) (1 SD)",
+                "term_units": "standard deviations",
+                "outcome_units": "basis points",
+                "cov_type": "HAC",
+                "cov_maxlags": 4,
+                "term_mode": "standardized_predictors",
+                "model_mode": "robustness",
+                "sample_start": "2009-01-31",
+                "sample_end": "2026-03-31",
+                "notes": "Monthly stock baseline standardized.",
+            }
+        ]
+    ).to_csv(tables_dir / "pricing_regression_robustness.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "scenario_id": "plus_100bn_duration_supply",
+                "scenario_label": "Plus $100bn Public Duration Supply shock",
+                "scenario_shock_bn": 100.0,
+                "scenario_shock_scale_bn": 100.0,
+                "model_id": "weekly_duration_baseline",
+                "model_family": "weekly_duration",
+                "dependent_variable": "DGS10",
+                "dependent_label": "10-year Treasury constant maturity yield",
+                "outcome_role": "headline",
+                "term": "headline_public_duration_supply",
+                "term_label": "Public Duration Supply (USD bn)",
+                "coef_bp_per_100bn": -0.05,
+                "implied_bp_change": -0.05,
+                "nobs": 200,
+                "p_value": 0.03,
+                "notes": "Weekly duration baseline.",
+            }
+        ]
+    ).to_csv(tables_dir / "pricing_scenario_translation.csv", index=False)
+
+    monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
+    monkeypatch.setattr(publish, "PROCESSED_DIR", processed_dir)
+    monkeypatch.setattr(publish, "OUTPUT_DIR", output_dir)
+    monkeypatch.setattr(publish, "RAW_DIR", raw_dir)
+
+    spec_registry = publish.build_pricing_spec_registry_publish_table()
+    summary = publish.build_pricing_regression_summary_publish_table()
+    subsample = publish.build_pricing_subsample_grid_publish_table()
+    robustness = publish.build_pricing_regression_robustness_publish_table()
+    scenarios = publish.build_pricing_scenario_translation_publish_table()
+
+    assert list(spec_registry["spec_id"]) == ["monthly_flow_baseline"]
+    assert list(summary["model_id"]) == ["monthly_flow_baseline"]
+    assert list(subsample["variant_id"]) == ["post_2014"]
+    assert list(robustness["term"]) == ["stock_excess_bills_bn"]
+    assert list(scenarios["scenario_id"]) == ["plus_100bn_duration_supply"]
+
+    dataset_status = publish.build_dataset_status_table()
+    pricing_row = dataset_status.loc[dataset_status["dataset"] == "pricing"].iloc[0]
+    assert pricing_row["readiness_tier"] == "supporting_provisional"
+    assert pricing_row["public_role"] == "supporting"
+    assert bool(pricing_row["fallback_only"])
+    assert "pricing_spec_registry" in set(dataset_status["dataset"])
+    assert "pricing_subsample_grid" in set(dataset_status["dataset"])
+
+
+def test_series_metadata_catalog_includes_pricing_series() -> None:
+    catalog = publish.build_series_metadata_catalog()
+
+    pricing_rows = catalog.loc[
+        catalog["dataset"].isin(["pricing", "pricing_scenario_translation", "pricing_spec_registry", "pricing_subsample_grid"])
+    ].copy()
+
+    assert not pricing_rows.empty
+    assert {"ati_baseline_bn", "stock_excess_bills_bn", "headline_public_duration_supply", "THREEFYTP10", "DGS10"}.issubset(
+        set(pricing_rows["series_id"])
+    )
+    assert {"pricing_spec_registry", "pricing_subsample_grid"}.issubset(set(pricing_rows["series_id"]))
+    assert set(pricing_rows["public_role"]) == {"supporting"}

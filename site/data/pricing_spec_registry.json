@@ -1,0 +1,77 @@
+{
+  "title": "Pricing Spec Registry",
+  "rows": [
+    {
+      "spec_id": "monthly_flow_baseline",
+      "spec_family": "monthly_flow",
+      "headline_flag": true,
+      "sample_start": "2009-02-28",
+      "sample_end": "2026-03-31",
+      "outcome": "THREEFYTP10",
+      "predictor_set": "ati_baseline_bn",
+      "control_set": "DFF|debt_limit_dummy",
+      "frequency": "monthly",
+      "notes": "Baseline monthly reduced-form specification using Maturity-Tilt Flow (public label; internal field `ati_baseline_bn`)."
+    },
+    {
+      "spec_id": "monthly_flow_baseline",
+      "spec_family": "monthly_flow",
+      "headline_flag": true,
+      "sample_start": "2009-02-28",
+      "sample_end": "2026-03-31",
+      "outcome": "DGS10",
+      "predictor_set": "ati_baseline_bn",
+      "control_set": "DFF|debt_limit_dummy",
+      "frequency": "monthly",
+      "notes": "Baseline monthly reduced-form specification using Maturity-Tilt Flow (public label; internal field `ati_baseline_bn`)."
+    },
+    {
+      "spec_id": "monthly_stock_baseline",
+      "spec_family": "monthly_stock",
+      "headline_flag": true,
+      "sample_start": "2009-01-31",
+      "sample_end": "2026-03-31",
+      "outcome": "THREEFYTP10",
+      "predictor_set": "stock_excess_bills_bn",
+      "control_set": "DFF|debt_limit_dummy",
+      "frequency": "monthly",
+      "notes": "Baseline monthly reduced-form specification using Excess Bills Stock (public label; internal field `stock_excess_bills_bn`)."
+    },
+    {
+      "spec_id": "monthly_stock_baseline",
+      "spec_family": "monthly_stock",
+      "headline_flag": true,
+      "sample_start": "2009-01-31",
+      "sample_end": "2026-03-31",
+      "outcome": "DGS10",
+      "predictor_set": "stock_excess_bills_bn",
+      "control_set": "DFF|debt_limit_dummy",
+      "frequency": "monthly",
+      "notes": "Baseline monthly reduced-form specification using Excess Bills Stock (public label; internal field `stock_excess_bills_bn`)."
+    },
+    {
+      "spec_id": "weekly_duration_baseline",
+      "spec_family": "weekly_duration",
+      "headline_flag": true,
+      "sample_start": "2003-01-08",
+      "sample_end": "2026-03-11",
+      "outcome": "THREEFYTP10",
+      "predictor_set": "headline_public_duration_supply",
+      "control_set": "qt_proxy|buybacks_accepted|delta_wdtgal|DFF",
+      "frequency": "weekly (W-WED)",
+      "notes": "Baseline weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
+    },
+    {
+      "spec_id": "weekly_duration_baseline",
+      "spec_family": "weekly_duration",
+      "headline_flag": true,
+      "sample_start": "2003-01-08",
+      "sample_end": "2026-03-18",
+      "outcome": "DGS10",
+      "predictor_set": "headline_public_duration_supply",
+      "control_set": "qt_proxy|buybacks_accepted|delta_wdtgal|DFF",
+      "frequency": "weekly (W-WED)",
+      "notes": "Baseline weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
+    }
+  ]
+}
