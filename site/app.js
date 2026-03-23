@@ -379,6 +379,8 @@
       reviewed_surprise_ready_not_tier_a: 'Pre-release, not Tier A',
       reviewed_contaminated_context_only: 'Context only',
       reviewed_contaminated_exclude: 'Excluded',
+      blocked_source_family_exhausted: 'Blocked / exhausted',
+      blocked_open_candidate: 'Blocked / open',
       post_release_invalid: 'Blocked',
       external_timing_unverified: 'Blocked',
       same_release_placeholder: 'Blocked',
@@ -398,7 +400,9 @@
       benchmark_timing_status: row.benchmark_timing_status || '',
       external_benchmark_ready: row.external_benchmark_ready,
       expectation_status: row.expectation_status || '',
+      benchmark_search_disposition: row.benchmark_search_disposition || '',
       contamination_status: row.contamination_status || '',
+      macro_crosswalk_status: row.macro_crosswalk_status || '',
       terminal_disposition: row.terminal_disposition || '',
       claim_scope: row.claim_scope || '',
       benchmark_source_family: row.benchmark_source_family || ''
@@ -1267,16 +1271,18 @@
         container.appendChild(el('h3', { class: 'section-subtitle', text: 'Benchmark Evidence' }));
         container.appendChild(el('p', {
           class: 'section-desc',
-          text: 'Current-sample financing evidence is split by terminal disposition: Tier A rows are pilot-ready, blocked rows still fail benchmark timing, and context-only rows remain publishable only as context.'
+          text: 'Current-sample financing evidence is split by terminal disposition: Tier A rows are pilot-ready, blocked rows are separated into exhausted versus still-open benchmark hunts, and context-only rows remain publishable only as context.'
         }));
         container.appendChild(buildTable([
           { key: 'release_component_id', label: 'Component' },
           { key: 'quarter', label: 'Quarter' },
           { key: 'quality_tier', label: 'Tier', format: fmtLabel },
           { key: 'benchmark_timing_status', label: 'Timing', format: fmtLabel },
+          { key: 'benchmark_search_disposition', label: 'Search', format: fmtLabel },
           { key: 'external_benchmark_ready', label: 'Benchmark Ready', format: checkMark },
           { key: 'expectation_status', label: 'Expectation', format: fmtLabel },
           { key: 'contamination_status', label: 'Contamination', format: fmtLabel },
+          { key: 'macro_crosswalk_status', label: 'Macro Crosswalk', format: fmtLabel },
           { key: 'terminal_disposition', label: 'Outcome', format: benchmarkDispositionLabel },
           { key: 'claim_scope', label: 'Scope', format: fmtLabel }
         ], currentSampleEvidence));

@@ -59,6 +59,8 @@ _COMPONENT_REGISTRY_COLUMNS = [
     "benchmark_stale_flag",
     "expectation_review_status",
     "expectation_notes",
+    "benchmark_search_disposition",
+    "benchmark_search_note",
     "expectation_status",
     "contamination_flag",
     "contamination_status",
@@ -72,6 +74,8 @@ _COMPONENT_REGISTRY_COLUMNS = [
     "exclude_from_causal_pool",
     "decision_confidence",
     "contamination_notes",
+    "macro_crosswalk_status",
+    "macro_crosswalk_note",
     "separability_status",
     "eligibility_blockers",
     "quality_tier",
@@ -430,6 +434,8 @@ def _component_default_rows(event_registry: pd.DataFrame) -> pd.DataFrame:
                     "separable_component_flag": separable_default,
                     "review_status": review_status or "pending",
                     "review_notes": review_notes,
+                    "macro_crosswalk_status": row.get("macro_crosswalk_status", pd.NA),
+                    "macro_crosswalk_note": row.get("macro_crosswalk_note", pd.NA),
                 }
             )
         if emitted:
@@ -456,6 +462,8 @@ def _component_default_rows(event_registry: pd.DataFrame) -> pd.DataFrame:
                 "separable_component_flag": False,
                 "review_status": review_status or "pending",
                 "review_notes": review_notes,
+                "macro_crosswalk_status": row.get("macro_crosswalk_status", pd.NA),
+                "macro_crosswalk_note": row.get("macro_crosswalk_note", pd.NA),
             }
         )
     return pd.DataFrame(rows)
@@ -526,6 +534,8 @@ def _merge_component_expectations(
         "benchmark_stale_flag": False,
         "expectation_review_status": "pending",
         "expectation_notes": pd.NA,
+        "benchmark_search_disposition": pd.NA,
+        "benchmark_search_note": pd.NA,
     }
     out = components.copy()
     for column, default in defaults.items():
@@ -560,6 +570,8 @@ def _merge_component_expectations(
             "benchmark_stale_flag",
             "expectation_review_status",
             "expectation_notes",
+            "benchmark_search_disposition",
+            "benchmark_search_note",
         )
         if column in prepared.columns
     ]
@@ -592,6 +604,8 @@ def _merge_component_contamination(
         "exclude_from_causal_pool": pd.NA,
         "decision_confidence": pd.NA,
         "contamination_notes": pd.NA,
+        "macro_crosswalk_status": pd.NA,
+        "macro_crosswalk_note": pd.NA,
     }
     out = components.copy()
     for column, default in defaults.items():
@@ -618,6 +632,8 @@ def _merge_component_contamination(
             "exclude_from_causal_pool",
             "decision_confidence",
             "contamination_notes",
+            "macro_crosswalk_status",
+            "macro_crosswalk_note",
         )
         if column in prepared.columns
     ]
@@ -986,6 +1002,16 @@ def build_event_design_status(component_registry: pd.DataFrame) -> pd.DataFrame:
             "notes": "Current-sample financing components blocked by post-release benchmark timing.",
         },
         {
+            "metric": "current_sample_financing_source_family_exhausted_count",
+            "value": int(current_sample_financing.get("benchmark_search_disposition", pd.Series(dtype=object)).astype(str).eq("blocked_source_family_exhausted").sum()),
+            "notes": "Current-sample financing components whose reviewed benchmark search exhausted the documented Treasury-hosted source families without finding credible pre-release evidence.",
+        },
+        {
+            "metric": "current_sample_financing_open_candidate_count",
+            "value": int(current_sample_financing.get("benchmark_search_disposition", pd.Series(dtype=object)).astype(str).eq("blocked_open_candidate").sum()),
+            "notes": "Current-sample financing components that remain blocked but still have a named Treasury-hosted benchmark family left to adjudicate.",
+        },
+        {
             "metric": "current_sample_financing_external_timing_unverified_count",
             "value": int(current_sample_financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("external_timing_unverified").sum()),
             "notes": "Current-sample financing components with external benchmarks that still lack timing verification.",
@@ -1119,6 +1145,8 @@ def build_qra_event_registry_v2(
                 "overlap_note",
                 "overlap_annotation_present",
                 "overlap_annotation_source",
+                "macro_crosswalk_status",
+                "macro_crosswalk_note",
                 "financing_need_news_flag",
                 "composition_news_flag",
                 "forward_guidance_flag",
@@ -1191,7 +1219,15 @@ def build_qra_event_registry_v2(
         overlap = overlap_annotations.copy()
         keep = [
             column
-            for column in ("event_id", "overlap_flag", "overlap_label", "overlap_note", "overlap_severity")
+            for column in (
+                "event_id",
+                "overlap_flag",
+                "overlap_label",
+                "overlap_note",
+                "overlap_severity",
+                "macro_crosswalk_status",
+                "macro_crosswalk_note",
+            )
             if column in overlap.columns
         ]
         event_rows = event_rows.merge(overlap[keep], on="event_id", how="left")
@@ -1206,6 +1242,8 @@ def build_qra_event_registry_v2(
         ("overlap_label", ""),
         ("overlap_note", ""),
         ("overlap_severity", ""),
+        ("macro_crosswalk_status", ""),
+        ("macro_crosswalk_note", ""),
     ):
         if column not in event_rows.columns:
             event_rows[column] = default
@@ -1531,6 +1569,8 @@ def build_qra_event_registry_v2(
         "overlap_note",
         "overlap_annotation_present",
         "overlap_annotation_source",
+        "macro_crosswalk_status",
+        "macro_crosswalk_note",
         "financing_need_news_flag",
         "composition_news_flag",
         "forward_guidance_flag",

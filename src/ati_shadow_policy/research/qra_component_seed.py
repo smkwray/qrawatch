@@ -49,6 +49,8 @@ EXPECTATION_TEMPLATE_COLUMNS = [
     "benchmark_stale_flag",
     "expectation_review_status",
     "expectation_notes",
+    "benchmark_search_disposition",
+    "benchmark_search_note",
 ]
 
 CONTAMINATION_TEMPLATE_COLUMNS = [
@@ -234,6 +236,8 @@ def seed_expectation_template(
                 "benchmark_stale_flag": False,
                 "expectation_review_status": "pending",
                 "expectation_notes": " ".join(note_parts),
+                "benchmark_search_disposition": pd.NA,
+                "benchmark_search_note": pd.NA,
             }
         )
     seeded = pd.DataFrame(rows)

@@ -1,15 +1,15 @@
-event_id,overlap_flag,overlap_label,overlap_note
-qra_2022_05,true,FOMC_same_day,Reviewed explicit multi-stage Treasury release; the policy statement shares the day with the FOMC statement.
-qra_2022_08,false,,Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.
-qra_2022_11,false,,Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.
-qra_2023_02,false,,Reviewed false; hawkish guidance is handled in classification and no separate external macro overlap is recorded locally.
-qra_2023_05,true,FOMC_and_BLS_same_day,Reviewed explicit multi-stage Treasury release; the policy statement shares the day with BLS and the FOMC statement.
-qra_2023_08,true,BLS_same_day,Reviewed same-day Treasury financing and statement bundle; the policy statement shares the day with the BLS release.
-qra_2023_11,false,,Local materials show a same-day Treasury bundle only; external macro overlap crosswalk is still absent.
-qra_2024_01,false,,Local materials show a same-day Treasury bundle only; external macro overlap crosswalk is still absent.
-qra_2024_05,true,Beige_Book_FOMC_BLS_same_day,Reviewed same-day Treasury bundle; financing coincides with the Beige Book and the policy statement shares the day with BLS and the FOMC statement.
-qra_2024_07,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded
-qra_2024_10,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded
-qra_2025_02,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded
-qra_2025_04,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded
-qra_2025_07,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded
+event_id,overlap_flag,overlap_label,overlap_note,macro_crosswalk_status,macro_crosswalk_note
+qra_2022_05,true,FOMC_same_day,Reviewed explicit multi-stage Treasury release; the policy statement shares the day with the FOMC statement.,reviewed_external_overlap,Explicit same-day FOMC overlap is already cross-walked in local audit materials.
+qra_2022_08,false,,Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.,local_only_absent,Only the local Treasury bundle review is recorded; no separate external macro crosswalk artifact is attached.
+qra_2022_11,false,,Reviewed explicit multi-stage Treasury release; no separate external macro overlap is recorded in local materials.,local_only_absent,Only the local Treasury bundle review is recorded; no separate external macro crosswalk artifact is attached.
+qra_2023_02,false,,Reviewed false; hawkish guidance is handled in classification and no separate external macro overlap is recorded locally.,local_only_absent,Only the local Treasury bundle review is recorded; no separate external macro crosswalk artifact is attached.
+qra_2023_05,true,FOMC_and_BLS_same_day,Reviewed explicit multi-stage Treasury release; the policy statement shares the day with BLS and the FOMC statement.,reviewed_external_overlap,Explicit same-day BLS and FOMC overlaps are already cross-walked in local audit materials.
+qra_2023_08,true,BLS_same_day,Reviewed same-day Treasury financing and statement bundle; the policy statement shares the day with the BLS release.,reviewed_external_overlap,Explicit same-day BLS overlap is already cross-walked in local audit materials.
+qra_2023_11,false,,Local materials show a same-day Treasury bundle only; external macro overlap crosswalk is still absent.,local_only_absent,Local Treasury bundle review is recorded but no external macro crosswalk artifact has been attached yet.
+qra_2024_01,false,,Local materials show a same-day Treasury bundle only; external macro overlap crosswalk is still absent.,local_only_absent,Local Treasury bundle review is recorded but no external macro crosswalk artifact has been attached yet.
+qra_2024_05,true,Beige_Book_FOMC_BLS_same_day,Reviewed same-day Treasury bundle; financing coincides with the Beige Book and the policy statement shares the day with BLS and the FOMC statement.,reviewed_external_overlap,Explicit Beige Book and same-day policy-side BLS/FOMC overlaps are already cross-walked in local audit materials.
+qra_2024_07,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,pending_external_crosswalk,External macro crosswalk remains pending for this current same-day Treasury bundle.
+qra_2024_10,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,pending_external_crosswalk,External macro crosswalk remains pending for this current same-day Treasury bundle.
+qra_2025_02,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,pending_external_crosswalk,External macro crosswalk remains pending for this current same-day Treasury bundle.
+qra_2025_04,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,pending_external_crosswalk,External macro crosswalk remains pending for this current same-day Treasury bundle.
+qra_2025_07,false,,overlap review pending for current same-day Treasury bundle; no local macro-event crosswalk recorded,pending_external_crosswalk,External macro crosswalk remains pending for this current same-day Treasury bundle.

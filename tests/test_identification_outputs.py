@@ -112,6 +112,7 @@ def test_build_qra_event_registry_v2_adds_overlap_and_headline_decomposition_lin
     assert pd.isna(out.loc[0, "release_time_et"])
     assert out.loc[0, "overlap_annotation_source"] == "data/manual/qra_event_overlap_annotations.csv"
     assert bool(out.loc[0, "overlap_annotation_present"]) is True
+    assert out.loc[0, "macro_crosswalk_status"] == ""
     assert bool(out.loc[0, "headline_eligible"]) is False
     assert out.loc[0, "headline_eligibility_blockers"] == "classification_not_reviewed|shock_not_reviewed|missing_shock|small_denominator"
     assert out.loc[0, "headline_eligibility_reason"] == "shock_missing"
@@ -247,6 +248,8 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
             "multi_stage_release_flag": [True],
             "review_status": ["reviewed"],
             "review_notes": ["Reviewed component split."],
+            "macro_crosswalk_status": ["pending_external_crosswalk"],
+            "macro_crosswalk_note": ["Crosswalk pending."],
             "policy_statement_release_timestamp_et": ["2024-01-31T08:30:00-05:00"],
             "policy_statement_release_timestamp_kind": ["timestamp_with_time"],
             "policy_statement_url": ["https://example.com/policy"],
@@ -272,6 +275,8 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
             "benchmark_stale_flag": [False],
             "expectation_review_status": ["reviewed"],
             "expectation_notes": ["Reviewed survey benchmark."],
+            "benchmark_search_disposition": ["upgraded_pre_release_external"],
+            "benchmark_search_note": ["Treasury-hosted pre-release benchmark evidence confirmed."],
         }
     )
     release_components = pd.DataFrame(
@@ -307,6 +312,8 @@ def test_build_qra_release_component_registry_tracks_causal_gates() -> None:
     assert financing["expectation_status"] == "reviewed_surprise_ready"
     assert financing["contamination_status"] == "reviewed_clean"
     assert financing["benchmark_timing_status"] == "pre_release_external"
+    assert financing["benchmark_search_disposition"] == "upgraded_pre_release_external"
+    assert financing["macro_crosswalk_status"] == "pending_external_crosswalk"
     assert policy["quality_tier"] == "Tier B"
     assert "policy_statement_descriptive_only" in policy["eligibility_blockers"]
 
@@ -444,6 +451,7 @@ def test_summarize_qra_causal_qa_and_event_design_status() -> None:
             "timestamp_precision": ["exact_time", "exact_time", "date_only"],
             "separability_status": ["separable_component", "separable_component", "same_day_inseparable_bundle"],
             "expectation_status": ["reviewed_surprise_ready", "missing_benchmark", "missing_benchmark"],
+            "benchmark_search_disposition": ["upgraded_pre_release_external", "blocked_source_family_exhausted", ""],
             "contamination_status": ["reviewed_clean", "pending_review", "pending_review"],
             "benchmark_timing_status": ["same_release_placeholder", "external_timing_unverified", "same_release_placeholder"],
             "causal_eligible": [True, False, False],
@@ -463,6 +471,8 @@ def test_summarize_qra_causal_qa_and_event_design_status() -> None:
     assert int(status.loc[status["metric"] == "current_sample_financing_component_count", "value"].iloc[0]) == 1
     assert int(status.loc[status["metric"] == "current_sample_financing_reviewed_surprise_ready_count", "value"].iloc[0]) == 0
     assert int(status.loc[status["metric"] == "current_sample_financing_external_timing_unverified_count", "value"].iloc[0]) == 1
+    assert int(status.loc[status["metric"] == "current_sample_financing_source_family_exhausted_count", "value"].iloc[0]) == 1
+    assert int(status.loc[status["metric"] == "current_sample_financing_open_candidate_count", "value"].iloc[0]) == 0
     assert int(status.loc[status["metric"] == "current_sample_financing_pending_contamination_review_count", "value"].iloc[0]) == 1
     assert int(status.loc[status["metric"] == "current_sample_financing_tier_a_count", "value"].iloc[0]) == 0
 

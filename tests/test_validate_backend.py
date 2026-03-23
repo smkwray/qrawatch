@@ -1580,6 +1580,8 @@ def test_validate_qra_publish_consistency_flags_causal_claims_status_mismatch() 
                     "tier_a_count": 1,
                     "context_only_count": 0,
                     "post_release_invalid_count": 0,
+                    "source_family_exhausted_count": 0,
+                    "open_candidate_count": 0,
                     "can_claim": "pilot claim",
                     "cannot_claim": "not full sample",
                     "boundary_reason": "counts",
@@ -1617,12 +1619,24 @@ def test_validate_manual_causal_review_inputs_requires_current_sample_financing_
                 "benchmark_release_timestamp_et": "2024-04-23T15:32:09-04:00",
                 "benchmark_pre_release_verified_flag": True,
                 "benchmark_observed_before_component_flag": True,
+                "benchmark_search_disposition": "upgraded_pre_release_external",
+                "benchmark_search_note": "Treasury-hosted pre-release benchmark evidence confirmed.",
             }
         ]
     ).to_csv(manual_dir / "qra_component_expectation_template.csv", index=False)
     pd.DataFrame(columns=["release_component_id"]).to_csv(
         manual_dir / "qra_event_contamination_reviews.csv", index=False
     )
+    pd.DataFrame(
+        [
+            {
+                "event_id": "qra_2024_05",
+                "overlap_flag": True,
+                "macro_crosswalk_status": "reviewed_external_overlap",
+                "macro_crosswalk_note": "Explicit same-day overlap is recorded.",
+            }
+        ]
+    ).to_csv(manual_dir / "qra_event_overlap_annotations.csv", index=False)
 
     errors, warnings = validate_backend_script.validate_manual_causal_review_inputs(manual_dir)
 
@@ -1652,6 +1666,8 @@ def test_validate_manual_causal_review_inputs_requires_reviewed_terminal_financi
                 "benchmark_timing_status": "post_release_invalid",
                 "expectation_review_status": "pending",
                 "expectation_notes": "Still pending.",
+                "benchmark_search_disposition": "",
+                "benchmark_search_note": "",
             }
         ]
     ).to_csv(manual_dir / "qra_component_expectation_template.csv", index=False)
@@ -1668,6 +1684,16 @@ def test_validate_manual_causal_review_inputs_requires_reviewed_terminal_financi
             }
         ]
     ).to_csv(manual_dir / "qra_event_contamination_reviews.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "event_id": "qra_2024_05",
+                "overlap_flag": False,
+                "macro_crosswalk_status": "",
+                "macro_crosswalk_note": "",
+            }
+        ]
+    ).to_csv(manual_dir / "qra_event_overlap_annotations.csv", index=False)
 
     errors, warnings = validate_backend_script.validate_manual_causal_review_inputs(manual_dir)
 
@@ -1680,6 +1706,57 @@ def test_validate_manual_causal_review_inputs_requires_reviewed_terminal_financi
         "manual_causal_contamination_incomplete_current_sample_financing_rows:"
         "qra_2024_05__financing_estimates"
     ) in errors
+    assert (
+        "manual_causal_overlap_incomplete_current_sample_financing_events:"
+        "qra_2024_05"
+    ) in errors
+
+
+def test_validate_publish_artifacts_flags_readme_pilot_count_mismatch(tmp_path: Path) -> None:
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+    _add_publish_artifact(
+        publish_path=publish_path,
+        csv_name="causal_claims_status.csv",
+        frame=pd.DataFrame(
+            [
+                {
+                    "claim_id": "current_sample_financing_pilot",
+                    "claim_name": "Current-sample financing pilot",
+                    "claim_scope": "causal_pilot_only",
+                    "readiness_tier": "supporting_ready",
+                    "public_role": "supporting",
+                    "headline_ready": False,
+                    "causal_pilot_ready": True,
+                    "source_quality": "derived_causal_claims_status",
+                    "current_sample_financing_component_count": 14,
+                    "benchmark_ready_count": 6,
+                    "tier_a_count": 5,
+                    "context_only_count": 1,
+                    "post_release_invalid_count": 8,
+                    "source_family_exhausted_count": 8,
+                    "open_candidate_count": 0,
+                    "can_claim": "pilot",
+                    "cannot_claim": "not full sample",
+                    "boundary_reason": "counts",
+                }
+            ]
+        ),
+    )
+    readme_path = tmp_path / "README.md"
+    readme_path.write_text(
+        "# test\n"
+        "Exact official quarter coverage currently spans `2026Q1` through `2026Q1`.\n"
+        "The causal surface is currently a small post-`2022Q3` current-sample financing pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, `4` Tier A components, `8` source-family-exhausted blocked rows, and `0` open benchmark candidates rather than a full-sample design.\n",
+        encoding="utf-8",
+    )
+
+    errors, warnings, _summary = validate_backend_script.validate_publish_artifacts(
+        publish_path,
+        readme_path=readme_path,
+    )
+
+    assert "readme_current_sample_financing_pilot_mismatch:tier_a_count" in errors
 
 
 def test_validate_publish_artifacts_flags_headline_claim_scope_on_supporting_non_qra_table(tmp_path: Path) -> None:

@@ -72,6 +72,16 @@
       "notes": "Current-sample financing components blocked by post-release benchmark timing."
     },
     {
+      "metric": "current_sample_financing_source_family_exhausted_count",
+      "value": 8,
+      "notes": "Current-sample financing components whose reviewed benchmark search exhausted the documented Treasury-hosted source families without finding credible pre-release evidence."
+    },
+    {
+      "metric": "current_sample_financing_open_candidate_count",
+      "value": 0,
+      "notes": "Current-sample financing components that remain blocked but still have a named Treasury-hosted benchmark family left to adjudicate."
+    },
+    {
       "metric": "current_sample_financing_external_timing_unverified_count",
       "value": 0,
       "notes": "Current-sample financing components with external benchmarks that still lack timing verification."

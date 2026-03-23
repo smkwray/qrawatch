@@ -362,7 +362,9 @@ def test_build_qra_benchmark_evidence_registry_table_derives_terminal_status_and
                     "benchmark_timing_status": "pre_release_external",
                     "external_benchmark_ready": True,
                     "expectation_status": "reviewed_surprise_ready",
+                    "benchmark_search_disposition": "upgraded_pre_release_external",
                     "contamination_status": "reviewed_clean",
+                    "macro_crosswalk_status": "pending_external_crosswalk",
                     "quality_tier": "Tier A",
                     "causal_eligible": True,
                     "eligibility_blockers": "",
@@ -375,7 +377,9 @@ def test_build_qra_benchmark_evidence_registry_table_derives_terminal_status_and
                     "benchmark_timing_status": "pre_release_external",
                     "external_benchmark_ready": True,
                     "expectation_status": "reviewed_surprise_ready",
+                    "benchmark_search_disposition": "upgraded_pre_release_external",
                     "contamination_status": "reviewed_contaminated_context_only",
+                    "macro_crosswalk_status": "reviewed_external_overlap",
                     "quality_tier": "Tier B",
                     "causal_eligible": False,
                     "eligibility_blockers": "contamination_context_only",
@@ -391,8 +395,10 @@ def test_build_qra_benchmark_evidence_registry_table_derives_terminal_status_and
 
     assert pilot_ready["terminal_disposition"] == "tier_a_causal_pilot_ready"
     assert pilot_ready["claim_scope"] == "causal_pilot_only"
+    assert pilot_ready["benchmark_search_disposition"] == "upgraded_pre_release_external"
     assert context_only["terminal_disposition"] == "reviewed_contaminated_context_only"
     assert context_only["claim_scope"] == "descriptive_only"
+    assert context_only["macro_crosswalk_status"] == "reviewed_external_overlap"
 
 
 def test_build_causal_claims_status_table_summarizes_current_sample_pilot(monkeypatch) -> None:
@@ -406,6 +412,8 @@ def test_build_causal_claims_status_table_summarizes_current_sample_pilot(monkey
                 {"metric": "current_sample_financing_tier_a_count", "value": 5, "notes": ""},
                 {"metric": "current_sample_financing_reviewed_contaminated_context_only_count", "value": 1, "notes": ""},
                 {"metric": "current_sample_financing_post_release_invalid_count", "value": 8, "notes": ""},
+                {"metric": "current_sample_financing_source_family_exhausted_count", "value": 8, "notes": ""},
+                {"metric": "current_sample_financing_open_candidate_count", "value": 0, "notes": ""},
             ]
         ),
     )
@@ -424,6 +432,8 @@ def test_build_causal_claims_status_table_summarizes_current_sample_pilot(monkey
     assert row["tier_a_count"] == 5
     assert row["context_only_count"] == 1
     assert row["post_release_invalid_count"] == 8
+    assert row["source_family_exhausted_count"] == 8
+    assert row["open_candidate_count"] == 0
     assert "settled or full-sample causal estimate" in row["cannot_claim"]
 
 

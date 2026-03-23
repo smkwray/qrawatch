@@ -953,6 +953,8 @@ def build_qra_release_component_registry_publish_table() -> pd.DataFrame:
         "benchmark_stale_flag",
         "expectation_review_status",
         "expectation_notes",
+        "benchmark_search_disposition",
+        "benchmark_search_note",
         "expectation_status",
         "contamination_flag",
         "contamination_status",
@@ -966,6 +968,8 @@ def build_qra_release_component_registry_publish_table() -> pd.DataFrame:
         "exclude_from_causal_pool",
         "decision_confidence",
         "contamination_notes",
+        "macro_crosswalk_status",
+        "macro_crosswalk_note",
         "separability_status",
         "eligibility_blockers",
         "quality_tier",
@@ -1139,6 +1143,11 @@ def _benchmark_terminal_disposition(row: pd.Series) -> str:
         return "reviewed_contaminated_exclude"
     expectation_status = str(row.get("expectation_status", "") or "").strip()
     if expectation_status == "post_release_invalid":
+        search_disposition = str(row.get("benchmark_search_disposition", "")).strip()
+        if search_disposition.lower() in {"", "nan", "<na>"}:
+            search_disposition = ""
+        if search_disposition in {"blocked_source_family_exhausted", "blocked_open_candidate"}:
+            return search_disposition
         return "post_release_invalid"
     if expectation_status == "benchmark_timing_unverified":
         return "external_timing_unverified"
@@ -1175,6 +1184,8 @@ def build_qra_benchmark_evidence_registry_table() -> pd.DataFrame:
         "expectation_review_status",
         "expectation_status",
         "expectation_notes",
+        "benchmark_search_disposition",
+        "benchmark_search_note",
         "contamination_flag",
         "contamination_status",
         "contamination_review_status",
@@ -1185,6 +1196,8 @@ def build_qra_benchmark_evidence_registry_table() -> pd.DataFrame:
         "exclude_from_causal_pool",
         "decision_confidence",
         "contamination_notes",
+        "macro_crosswalk_status",
+        "macro_crosswalk_note",
         "quality_tier",
         "causal_eligible",
         "terminal_disposition",
@@ -1238,6 +1251,8 @@ def build_causal_claims_status_table() -> pd.DataFrame:
         "tier_a_count",
         "context_only_count",
         "post_release_invalid_count",
+        "source_family_exhausted_count",
+        "open_candidate_count",
         "can_claim",
         "cannot_claim",
         "boundary_reason",
@@ -1251,6 +1266,8 @@ def build_causal_claims_status_table() -> pd.DataFrame:
     tier_a_count = _metric_int(event_design_status, "current_sample_financing_tier_a_count")
     context_only_count = _metric_int(event_design_status, "current_sample_financing_reviewed_contaminated_context_only_count")
     post_release_invalid_count = _metric_int(event_design_status, "current_sample_financing_post_release_invalid_count")
+    source_family_exhausted_count = _metric_int(event_design_status, "current_sample_financing_source_family_exhausted_count")
+    open_candidate_count = _metric_int(event_design_status, "current_sample_financing_open_candidate_count")
     causal_pilot_ready = benchmark_ready_count > 0 and tier_a_count > 0
     readiness_tier = "supporting_ready" if component_count > 0 else "not_started"
     can_claim = (
@@ -1259,11 +1276,15 @@ def build_causal_claims_status_table() -> pd.DataFrame:
     )
     cannot_claim = (
         "A settled or full-sample causal estimate of Treasury issuance effects on long rates; "
-        f"{post_release_invalid_count} financing rows remain post-release-invalid and the long-rate translation layer is still supporting/provisional."
+        f"{post_release_invalid_count} financing rows remain post-release-invalid, "
+        f"{source_family_exhausted_count} are source-family-exhausted, "
+        f"{open_candidate_count} remain open benchmark candidates, "
+        "and the long-rate translation layer is still supporting/provisional."
     )
     boundary_reason = (
         f"{component_count} current-sample financing rows; {benchmark_ready_count} benchmark-ready; "
-        f"{tier_a_count} Tier A; {context_only_count} context-only; {post_release_invalid_count} post-release-invalid."
+        f"{tier_a_count} Tier A; {context_only_count} context-only; {post_release_invalid_count} post-release-invalid; "
+        f"{source_family_exhausted_count} source-family-exhausted; {open_candidate_count} open candidates."
     )
     row = {
         "claim_id": "current_sample_financing_pilot",
@@ -1279,6 +1300,8 @@ def build_causal_claims_status_table() -> pd.DataFrame:
         "tier_a_count": tier_a_count,
         "context_only_count": context_only_count,
         "post_release_invalid_count": post_release_invalid_count,
+        "source_family_exhausted_count": source_family_exhausted_count,
+        "open_candidate_count": open_candidate_count,
         "can_claim": can_claim,
         "cannot_claim": cannot_claim,
         "boundary_reason": boundary_reason,

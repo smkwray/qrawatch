@@ -61,6 +61,15 @@ Supporting status fields explain why a row is or is not causal-eligible:
 - `separability_status` — whether the release component is separable from same-day bundled Treasury communication
 - `expectation_status` — whether a reviewed expectation benchmark exists
 - `contamination_status` — whether overlap review is still pending or has been cleared
+- `benchmark_search_disposition` — the current benchmark-hunt outcome for current-sample financing rows:
+  - `upgraded_pre_release_external` means a credible Treasury-hosted pre-release public benchmark was verified
+  - `blocked_source_family_exhausted` means the documented Treasury-hosted benchmark families were reviewed and no credible pre-release public benchmark was found
+  - `blocked_open_candidate` means the row is still blocked, but a specific Treasury-hosted public source family remains to be adjudicated
+- `macro_crosswalk_status` — whether broader same-day macro-overlap crosswalking is finished:
+  - `reviewed_external_overlap` means a same-day external macro overlap is explicitly recorded
+  - `reviewed_no_external_overlap` means the broader macro crosswalk was reviewed and found clean
+  - `local_only_absent` means local Treasury-bundle review exists, but no separate external macro crosswalk artifact is attached
+  - `pending_external_crosswalk` means the broader macro crosswalk has not been completed yet
 
 These labels should be used for event-facing outputs, not for quarter-level ATI or plumbing measurement surfaces.
 

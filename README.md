@@ -132,7 +132,7 @@ Some pieces are seeded rather than fully automated:
 ## Current limitations
 
 - the exact official quarter history now spans `2009Q1` through `2025Q4`, but earlier archive history before `2009Q1` remains out of scope for the current release
-- the event-study layer is informative but still mostly descriptive/supporting; the causal surface is currently a small post-`2022Q3` financing-estimates pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, and `5` Tier A components rather than a full-sample design
+- the event-study layer is informative but still mostly descriptive/supporting; the causal surface is currently a small post-`2022Q3` current-sample financing pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, `5` Tier A components, `8` source-family-exhausted blocked rows, and `0` open benchmark candidates rather than a full-sample design
 - extension modules are supporting context, not the headline result
 - the longer-history version of the project still needs additional official quarter capture before `2009Q1`
 

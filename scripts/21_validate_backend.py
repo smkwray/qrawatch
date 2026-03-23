@@ -232,7 +232,9 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "benchmark_timing_status",
         "external_benchmark_ready",
         "expectation_status",
+        "benchmark_search_disposition",
         "contamination_status",
+        "macro_crosswalk_status",
         "quality_tier",
         "causal_eligible",
         "terminal_disposition",
@@ -252,6 +254,8 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "tier_a_count",
         "context_only_count",
         "post_release_invalid_count",
+        "source_family_exhausted_count",
+        "open_candidate_count",
         "can_claim",
         "cannot_claim",
         "boundary_reason",
@@ -450,7 +454,9 @@ OPTIONAL_PUBLISH_SCHEMAS.update(
             "benchmark_timing_status",
             "external_benchmark_ready",
             "expectation_status",
+            "benchmark_search_disposition",
             "contamination_status",
+            "macro_crosswalk_status",
             "quality_tier",
             "eligibility_blockers",
         ],
@@ -503,6 +509,12 @@ QRA_README_COVERAGE_PATTERNS = (
         re.IGNORECASE,
     ),
 )
+QRA_README_PILOT_PATTERNS = (
+    re.compile(
+        r"current-sample financing pilot with\s+(\d+)\s+current-sample financing components,\s+(\d+)\s+verified pre-release external benchmarks,\s+(\d+)\s+Tier A components,\s+(\d+)\s+source-family-exhausted blocked rows,\s+and\s+(\d+)\s+open benchmark candidates",
+        re.IGNORECASE,
+    ),
+)
 REQUIRED_EXTENSION_SUMMARY_READY = ("investor_allotments", "primary_dealer", "sec_nmfp")
 PUBLIC_HYGIENE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"/Users/", "absolute_local_path"),
@@ -516,6 +528,17 @@ QRA_HEADLINE_BUCKET_VALUES = {"tightening", "easing", "control_hold", "exclude",
 QRA_CONFIDENCE_VALUES = {"exact_statement", "table_diff", "hybrid", "heuristic", "pending"}
 QRA_REVIEW_VALUES = {"reviewed", "provisional", "pending"}
 CLAIM_SCOPE_VALUES = {"descriptive_only", "causal_pilot_only", "headline"}
+BENCHMARK_SEARCH_DISPOSITION_VALUES = {
+    "upgraded_pre_release_external",
+    "blocked_source_family_exhausted",
+    "blocked_open_candidate",
+}
+MACRO_CROSSWALK_STATUS_VALUES = {
+    "reviewed_no_external_overlap",
+    "reviewed_external_overlap",
+    "local_only_absent",
+    "pending_external_crosswalk",
+}
 SUPPORTING_CLAIM_SCOPE_FILES = {
     "qra_shock_crosswalk_v1.csv",
     "qra_event_elasticity.csv",
@@ -715,6 +738,22 @@ def _parse_exact_coverage_statement(statement: str) -> set[str]:
     declared |= set(re.findall(UNANCHORED_QUARTER_PATTERN, cleaned))
 
     return {quarter for quarter in declared if QUARTER_PATTERN.match(quarter)}
+
+
+def _extract_readme_current_sample_pilot_counts(readme_text: str) -> dict[str, int] | None:
+    cleaned = str(readme_text).replace("`", "")
+    for pattern in QRA_README_PILOT_PATTERNS:
+        match = pattern.search(cleaned)
+        if not match:
+            continue
+        return {
+            "current_sample_financing_component_count": int(match.group(1)),
+            "benchmark_ready_count": int(match.group(2)),
+            "tier_a_count": int(match.group(3)),
+            "source_family_exhausted_count": int(match.group(4)),
+            "open_candidate_count": int(match.group(5)),
+        }
+    return None
 
 
 def _validate_exact_coverages(
@@ -948,6 +987,43 @@ def _validate_readme_exact_coverage_consistency(
         # Non-contiguous coverage can’t be represented by a single-through span.
         if "through" in statement.lower() and len(statement_ranges) == 1:
             warnings.append("official_coverage_statement_contiguous_while_data_noncontiguous")
+
+
+def _validate_readme_causal_claims_consistency(
+    readme_path: Path,
+    causal_claims_status: pd.DataFrame,
+    *,
+    errors: list[str],
+    warnings: list[str],
+) -> None:
+    if causal_claims_status.empty:
+        return
+    if not readme_path.exists():
+        warnings.append(f"validation_readme_missing:{readme_path}")
+        return
+    claim_row = causal_claims_status.loc[
+        causal_claims_status.get("claim_id", pd.Series(dtype=object)).astype(str).eq("current_sample_financing_pilot")
+    ]
+    if claim_row.empty:
+        return
+
+    readme_text = readme_path.read_text(encoding="utf-8", errors="replace")
+    counts = _extract_readme_current_sample_pilot_counts(readme_text)
+    if counts is None:
+        errors.append("readme_missing_current_sample_financing_pilot_counts")
+        return
+
+    row = claim_row.iloc[0]
+    expected = {
+        "current_sample_financing_component_count": _coerce_int(row.get("current_sample_financing_component_count")) or 0,
+        "benchmark_ready_count": _coerce_int(row.get("benchmark_ready_count")) or 0,
+        "tier_a_count": _coerce_int(row.get("tier_a_count")) or 0,
+        "source_family_exhausted_count": _coerce_int(row.get("source_family_exhausted_count")) or 0,
+        "open_candidate_count": _coerce_int(row.get("open_candidate_count")) or 0,
+    }
+    mismatched = [key for key, value in expected.items() if counts.get(key) != value]
+    if mismatched:
+        errors.append("readme_current_sample_financing_pilot_mismatch:" + ",".join(sorted(mismatched)))
 
 
 def _has_seed_dependency(*values: object) -> bool:
@@ -1673,7 +1749,9 @@ def _validate_qra_benchmark_evidence_registry_against_components(
         "benchmark_timing_status",
         "external_benchmark_ready",
         "expectation_status",
+        "benchmark_search_disposition",
         "contamination_status",
+        "macro_crosswalk_status",
         "quality_tier",
         "causal_eligible",
     ):
@@ -1725,6 +1803,8 @@ def _validate_causal_claims_status_against_components(
         "tier_a_count": int(financing.get("quality_tier", pd.Series(dtype=object)).astype(str).eq("Tier A").sum()),
         "context_only_count": int(financing.get("contamination_status", pd.Series(dtype=object)).astype(str).eq("reviewed_contaminated_context_only").sum()),
         "post_release_invalid_count": int(financing.get("benchmark_timing_status", pd.Series(dtype=object)).astype(str).eq("post_release_invalid").sum()),
+        "source_family_exhausted_count": int(financing.get("benchmark_search_disposition", pd.Series(dtype=object)).astype(str).eq("blocked_source_family_exhausted").sum()),
+        "open_candidate_count": int(financing.get("benchmark_search_disposition", pd.Series(dtype=object)).astype(str).eq("blocked_open_candidate").sum()),
     }
     mismatched = [
         key
@@ -1752,6 +1832,7 @@ def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], l
     registry_path = manual_dir / "qra_release_component_registry.csv"
     expectation_path = manual_dir / "qra_component_expectation_template.csv"
     contamination_path = manual_dir / "qra_event_contamination_reviews.csv"
+    overlap_path = manual_dir / "qra_event_overlap_annotations.csv"
     if not registry_path.exists():
         warnings.append(f"manual_causal_registry_missing:{registry_path}")
         return errors, warnings
@@ -1775,6 +1856,17 @@ def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], l
             registry.get("component_type", pd.Series(dtype=object)).fillna("").astype(str).str.strip().eq("financing_estimates")
             & registry.get("quarter", pd.Series(dtype=object)).map(_normalize_quarter).map(_quarter_to_int).fillna(0).ge(_quarter_to_int("2022Q3") or 0),
             "release_component_id",
+        ].dropna().astype(str)
+    )
+    current_sample_financing_event_ids = set(
+        (
+            registry.get("event_id", pd.Series(index=registry.index, dtype=object))
+            if "event_id" in registry.columns
+            else registry.get("release_component_id", pd.Series(index=registry.index, dtype=object)).astype(str).map(
+                lambda value: value.split("__", 1)[0] if "__" in value else ""
+            )
+        ).loc[
+            registry.get("release_component_id", pd.Series(dtype=object)).astype(str).isin(current_sample_financing_ids)
         ].dropna().astype(str)
     )
     for name, path in (
@@ -1819,6 +1911,25 @@ def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], l
                     if _cell_text(row.get("expectation_review_status")) != "reviewed":
                         incomplete_ids.append(str(row.get("release_component_id", "")))
                         continue
+                    disposition = _cell_text(row.get("benchmark_search_disposition"))
+                    status = _cell_text(row.get("benchmark_timing_status"))
+                    if disposition not in BENCHMARK_SEARCH_DISPOSITION_VALUES:
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if status == "pre_release_external" and disposition != "upgraded_pre_release_external":
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if status != "pre_release_external" and disposition == "upgraded_pre_release_external":
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if disposition in {"blocked_source_family_exhausted", "blocked_open_candidate"} and not _cell_text(row.get("benchmark_search_note")):
+                        incomplete_ids.append(str(row.get("release_component_id", "")))
+                        continue
+                    if disposition == "blocked_open_candidate":
+                        note = _cell_text(row.get("benchmark_search_note")).lower()
+                        if not any(token in note for token in ("primary dealer", "tbac", "treasury")):
+                            incomplete_ids.append(str(row.get("release_component_id", "")))
+                            continue
                     if _cell_text(row.get("benchmark_timing_status")) == "pre_release_external":
                         has_benchmark_time = bool(
                             _cell_text(row.get("benchmark_timestamp_et"))
@@ -1868,6 +1979,43 @@ def validate_manual_causal_review_inputs(manual_dir: Path) -> tuple[list[str], l
                         "manual_causal_contamination_incomplete_current_sample_financing_rows:"
                         + ",".join(sorted(set(incomplete_ids)))
                     )
+    if current_sample_financing_event_ids:
+        if not overlap_path.exists():
+            warnings.append(f"manual_causal_overlap_missing:{overlap_path}")
+            return errors, warnings
+        overlap, status = _safe_read_csv(overlap_path)
+        if status is not None:
+            warnings.append(f"manual_causal_overlap_{status.replace(':', '_')}")
+            return errors, warnings
+        if "event_id" not in overlap.columns:
+            errors.append("manual_causal_overlap_missing_event_id")
+            return errors, warnings
+        overlap_ids = set(overlap["event_id"].dropna().astype(str))
+        missing_event_ids = sorted(current_sample_financing_event_ids - overlap_ids)
+        if missing_event_ids:
+            errors.append("manual_causal_overlap_missing_current_sample_financing_events:" + ",".join(missing_event_ids))
+        overlap_rows = overlap.loc[
+            overlap.get("event_id", pd.Series(dtype=object)).astype(str).isin(current_sample_financing_event_ids)
+        ].copy()
+        invalid_overlap_ids: list[str] = []
+        for _, row in overlap_rows.iterrows():
+            event_id = _cell_text(row.get("event_id"))
+            macro_status = _cell_text(row.get("macro_crosswalk_status"))
+            macro_note = _cell_text(row.get("macro_crosswalk_note"))
+            overlap_flag = _coerce_bool(row.get("overlap_flag"))
+            if macro_status not in MACRO_CROSSWALK_STATUS_VALUES or not macro_note:
+                invalid_overlap_ids.append(event_id)
+                continue
+            if overlap_flag and macro_status != "reviewed_external_overlap":
+                invalid_overlap_ids.append(event_id)
+                continue
+            if not overlap_flag and macro_status == "reviewed_external_overlap":
+                invalid_overlap_ids.append(event_id)
+        if invalid_overlap_ids:
+            errors.append(
+                "manual_causal_overlap_incomplete_current_sample_financing_events:"
+                + ",".join(sorted(set(invalid_overlap_ids)))
+            )
     return errors, warnings
 
 
@@ -2303,6 +2451,12 @@ def validate_publish_artifacts(
         readme_path=readme_path,
         readiness_exact=readiness_exact,
         completion_exact=completion_exact,
+        errors=errors,
+        warnings=warnings,
+    )
+    _validate_readme_causal_claims_consistency(
+        readme_path=readme_path,
+        causal_claims_status=qra_frames.get("causal_claims_status.csv", pd.DataFrame()),
         errors=errors,
         warnings=warnings,
     )

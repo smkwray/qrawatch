@@ -13,6 +13,8 @@ current_sample_financing_reviewed_clean_count,13,Current-sample financing compon
 current_sample_financing_pre_release_external_count,6,Current-sample financing components with verified pre-release external benchmarks.
 current_sample_financing_reviewed_surprise_ready_count,6,Current-sample financing components with reviewed surprise inputs ready for causal use.
 current_sample_financing_post_release_invalid_count,8,Current-sample financing components blocked by post-release benchmark timing.
+current_sample_financing_source_family_exhausted_count,8,Current-sample financing components whose reviewed benchmark search exhausted the documented Treasury-hosted source families without finding credible pre-release evidence.
+current_sample_financing_open_candidate_count,0,Current-sample financing components that remain blocked but still have a named Treasury-hosted benchmark family left to adjudicate.
 current_sample_financing_external_timing_unverified_count,0,Current-sample financing components with external benchmarks that still lack timing verification.
 current_sample_financing_same_release_placeholder_count,0,Current-sample financing components still relying on same-release placeholder benchmark semantics.
 current_sample_financing_pending_contamination_review_count,0,Current-sample financing components still awaiting contamination review.
