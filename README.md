@@ -66,13 +66,13 @@ The pricing credibility pack now includes:
 - `output/figures/pricing_headline_coefficients.svg`
 - `output/figures/pricing_scenario_translation.svg`
 
-See [docs/PRICING_METHODS.md](/Users/shanewray/Library/CloudStorage/GoogleDrive-wray7830@gmail.com/My%20Drive/proj/qrawatch/docs/PRICING_METHODS.md) for the estimand and spec details, [docs/PRICING_RESULTS_MEMO.md](/Users/shanewray/Library/CloudStorage/GoogleDrive-wray7830@gmail.com/My%20Drive/proj/qrawatch/docs/PRICING_RESULTS_MEMO.md) for the current coefficients, and [docs/GPT_PRO_PRICING_AUDIT_PROMPT.md](/Users/shanewray/Library/CloudStorage/GoogleDrive-wray7830@gmail.com/My%20Drive/proj/qrawatch/docs/GPT_PRO_PRICING_AUDIT_PROMPT.md) for the next GPT Pro audit packet.
+See `docs/PRICING_METHODS.md` for the estimand and spec details and `docs/PRICING_RESULTS_MEMO.md` for the current coefficients.
 
 ## QRA causal boundary
 
 The event-causal layer stays explicitly bounded. The causal surface is currently a small post-`2022Q3` current-sample financing pilot with `14` current-sample financing components, `6` verified pre-release external benchmarks, `5` Tier A components, `8` source-family-exhausted blocked rows, and `0` open benchmark candidates rather than a full-sample design.
 
-The benchmark-search closure memo is in [docs/BENCHMARK_SEARCH_CLOSURE.md](/Users/shanewray/Library/CloudStorage/GoogleDrive-wray7830@gmail.com/My%20Drive/proj/qrawatch/docs/BENCHMARK_SEARCH_CLOSURE.md). The repo does **not** treat that event lane as the headline pricing coefficient source in this round.
+The benchmark-search closure memo is in `docs/BENCHMARK_SEARCH_CLOSURE.md`. The repo does **not** treat that event lane as the headline pricing coefficient source in this round.
 
 ## Quickstart
 
@@ -124,10 +124,8 @@ make site
 - `RESEARCH_DESIGN.md` — equations, identification, outcomes, and robustness
 - `DATA_SOURCES.md` — source registry and why each dataset matters
 - `docs/STATUS_GLOSSARY.md` — readiness/source-quality labels and public terminology
-- `docs/GPT_PRO_AUDIT_BRIEF.md` — audit-ready snapshot of the current causal-governance state
 - `docs/PRICING_METHODS.md` — pricing estimands, panel design, and reduced-form interpretation boundaries
 - `docs/PRICING_RESULTS_MEMO.md` — current pricing coefficients, robustness, and claim boundary
-- `docs/GPT_PRO_PRICING_AUDIT_PROMPT.md` — ready-to-send GPT Pro audit prompt for the pricing pack
 - `docs/BENCHMARK_SEARCH_CLOSURE.md` — bounded benchmark-search closure memo for the current QRA causal pilot
 - `src/ati_shadow_policy/` — reusable download and research modules
 - `scripts/` — task-oriented entry points
