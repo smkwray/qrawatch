@@ -5,6 +5,7 @@ from collections.abc import Mapping, Sequence
 import pandas as pd
 import statsmodels.api as sm
 
+
 HEADLINE_OUTCOMES = ("THREEFYTP10", "DGS10")
 SUPPORTING_OUTCOMES = ("DGS30", "slope_10y_2y", "slope_30y_2y")
 OUTCOME_VARIABLES = (*HEADLINE_OUTCOMES, *SUPPORTING_OUTCOMES)
@@ -14,11 +15,13 @@ PANEL_KEYS = (
     "official_ati_price_panel",
     "mspd_stock_excess_bills_panel",
     "weekly_supply_price_panel",
+    "pricing_release_flow_panel",
 )
 
 OFFICIAL_ATI_PRICE_PANEL = PANEL_KEYS[0]
 MSPD_STOCK_PANEL = PANEL_KEYS[1]
 WEEKLY_SUPPLY_PANEL = PANEL_KEYS[2]
+RELEASE_FLOW_PANEL = PANEL_KEYS[3]
 
 OUTCOME_LABELS = {
     "THREEFYTP10": "10-year term premium proxy (THREEFYTP10)",
@@ -38,6 +41,8 @@ PREDICTOR_LABELS = {
     "buybacks_accepted": "Buybacks accepted (USD bn)",
     "delta_wdtgal": "Change in WDTGAL (USD bn)",
     "DFF": "Effective federal funds rate",
+    "delta_dff_release_to_next_release": "Change in DFF from release marker to next release",
+    "delta_dff_release_plus_21bd": "Change in DFF from release marker to +21 business days",
     "debt_limit_dummy": "Debt-limit period dummy",
 }
 
@@ -51,17 +56,23 @@ PREDICTOR_UNITS = {
     "buybacks_accepted": "USD bn",
     "delta_wdtgal": "USD bn",
     "DFF": "Percent",
+    "delta_dff_release_to_next_release": "Percent",
+    "delta_dff_release_plus_21bd": "Percent",
     "debt_limit_dummy": "Indicator",
 }
 
 NEWEY_WEST_MAXLAGS = 4
 SCENARIO_SCALE_BN = 100.0
 SCALED_100BN_TERMS = {"ati_baseline_bn", "stock_excess_bills_bn", "headline_public_duration_supply"}
+TAU_GRID = (0.15, 0.18, 0.20)
+DATE_CANDIDATES = ("date", "qra_release_date", "market_pricing_marker_minus_1d")
 
 PRICING_SPEC_REGISTRY_COLUMNS = (
     "spec_id",
     "spec_family",
     "headline_flag",
+    "anchor_role",
+    "window_definition",
     "sample_start",
     "sample_end",
     "outcome",
@@ -77,6 +88,8 @@ PRICING_REGRESSION_SUMMARY_COLUMNS = (
     "model_mode",
     "panel_key",
     "panel_frequency",
+    "window_definition",
+    "anchor_role",
     "dependent_variable",
     "dependent_label",
     "outcome_role",
@@ -86,6 +99,7 @@ PRICING_REGRESSION_SUMMARY_COLUMNS = (
     "t_stat",
     "p_value",
     "nobs",
+    "effective_shock_count",
     "rsquared",
     "term_role",
     "term_label",
@@ -107,12 +121,14 @@ PRICING_REGRESSION_ROBUSTNESS_COLUMNS = (
     "variant_id",
     "variant_family",
     "panel_frequency",
+    "window_definition",
     "term",
     "coef",
     "std_err",
     "t_stat",
     "p_value",
     "nobs",
+    "effective_shock_count",
     "rsquared",
     "term_role",
     "term_label",
@@ -133,6 +149,7 @@ PRICING_SUBSAMPLE_GRID_COLUMNS = (
     "variant_id",
     "variant_family",
     "frequency",
+    "window_definition",
     "dependent_variable",
     "dependent_label",
     "outcome_role",
@@ -143,6 +160,7 @@ PRICING_SUBSAMPLE_GRID_COLUMNS = (
     "t_stat",
     "p_value",
     "nobs",
+    "effective_shock_count",
     "rsquared",
     "cov_type",
     "cov_maxlags",
@@ -154,6 +172,7 @@ PRICING_SUBSAMPLE_GRID_COLUMNS = (
 SCENARIO_TRANSLATION_COLUMNS = (
     "scenario_id",
     "scenario_label",
+    "scenario_role",
     "scenario_shock_bn",
     "scenario_shock_scale_bn",
     "model_id",
@@ -166,52 +185,123 @@ SCENARIO_TRANSLATION_COLUMNS = (
     "coef_bp_per_100bn",
     "implied_bp_change",
     "nobs",
+    "effective_shock_count",
     "p_value",
+    "notes",
+)
+
+PRICING_RELEASE_FLOW_LEAVE_ONE_OUT_COLUMNS = (
+    "spec_id",
+    "window_definition",
+    "dependent_variable",
+    "dependent_label",
+    "omitted_release_id",
+    "coef",
+    "std_err",
+    "t_stat",
+    "p_value",
+    "nobs",
+    "effective_shock_count",
+    "sample_start",
+    "sample_end",
+    "notes",
+)
+
+PRICING_TAU_SENSITIVITY_GRID_COLUMNS = (
+    "tau",
+    "model_id",
+    "model_family",
+    "dependent_variable",
+    "dependent_label",
+    "term",
+    "term_label",
+    "coef",
+    "std_err",
+    "t_stat",
+    "p_value",
+    "nobs",
+    "effective_shock_count",
+    "rsquared",
+    "sample_start",
+    "sample_end",
     "notes",
 )
 
 BASELINE_SPECS = (
     {
+        "spec_id": "release_flow_baseline_next_release",
+        "spec_family": "release_flow",
+        "headline_flag": True,
+        "anchor_role": "credibility_anchor",
+        "window_definition": "release_to_next_release",
+        "panel_key": RELEASE_FLOW_PANEL,
+        "panel_frequency": "release-event",
+        "predictor_terms": ("ati_baseline_bn",),
+        "control_terms": ("delta_dff_release_to_next_release", "debt_limit_dummy"),
+        "dependent_by_outcome": {
+            "THREEFYTP10": "delta_threefytp10_release_to_next_release",
+            "DGS10": "delta_dgs10_release_to_next_release",
+            "DGS30": "delta_dgs30_release_to_next_release",
+        },
+        "sample_start": "2009-01-01",
+        "notes": "Primary release-level Maturity-Tilt Flow specification from the market-pricing marker before each release to the next release marker.",
+    },
+    {
+        "spec_id": "release_flow_baseline_21bd",
+        "spec_family": "release_flow",
+        "headline_flag": True,
+        "anchor_role": "supporting",
+        "window_definition": "release_plus_21bd",
+        "panel_key": RELEASE_FLOW_PANEL,
+        "panel_frequency": "release-event",
+        "predictor_terms": ("ati_baseline_bn",),
+        "control_terms": ("delta_dff_release_plus_21bd", "debt_limit_dummy"),
+        "dependent_by_outcome": {
+            "THREEFYTP10": "delta_threefytp10_release_plus_21bd",
+            "DGS10": "delta_dgs10_release_plus_21bd",
+            "DGS30": "delta_dgs30_release_plus_21bd",
+        },
+        "sample_start": "2009-01-01",
+        "notes": "Supporting release-level Maturity-Tilt Flow specification from the market-pricing marker before each release to the first FRED observation on or after 21 business days.",
+    },
+    {
         "spec_id": "monthly_flow_baseline",
         "spec_family": "monthly_flow",
         "headline_flag": True,
+        "anchor_role": "headline_context",
+        "window_definition": "carry_forward_monthly",
         "panel_key": OFFICIAL_ATI_PRICE_PANEL,
         "panel_frequency": "monthly",
         "predictor_terms": ("ati_baseline_bn",),
         "control_terms": ("DFF", "debt_limit_dummy"),
         "sample_start": "2009-01-01",
-        "notes": (
-            "Baseline monthly reduced-form specification using Maturity-Tilt Flow "
-            "(public label; internal field `ati_baseline_bn`)."
-        ),
+        "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor.",
     },
     {
         "spec_id": "monthly_stock_baseline",
         "spec_family": "monthly_stock",
         "headline_flag": True,
+        "anchor_role": "supporting",
+        "window_definition": "carry_forward_monthly",
         "panel_key": OFFICIAL_ATI_PRICE_PANEL,
         "panel_frequency": "monthly",
         "predictor_terms": ("stock_excess_bills_bn",),
         "control_terms": ("DFF", "debt_limit_dummy"),
         "sample_start": "2009-01-01",
-        "notes": (
-            "Baseline monthly reduced-form specification using Excess Bills Stock "
-            "(public label; internal field `stock_excess_bills_bn`)."
-        ),
+        "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls.",
     },
     {
         "spec_id": "weekly_duration_baseline",
         "spec_family": "weekly_duration",
         "headline_flag": True,
+        "anchor_role": "supporting",
+        "window_definition": "weekly_duration_window",
         "panel_key": WEEKLY_SUPPLY_PANEL,
         "panel_frequency": "weekly (W-WED)",
         "predictor_terms": ("headline_public_duration_supply",),
         "control_terms": ("qt_proxy", "buybacks_accepted", "delta_wdtgal", "DFF"),
         "sample_start": None,
-        "notes": (
-            "Baseline weekly reduced-form specification using Public Duration Supply "
-            "with QT, buybacks, TGA, and policy-rate controls."
-        ),
+        "notes": "Weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls.",
     },
 )
 
@@ -223,10 +313,10 @@ ROBUSTNESS_SPECS = (
         "spec_family": "monthly_flow_vs_stock",
         "panel_key": OFFICIAL_ATI_PRICE_PANEL,
         "panel_frequency": "monthly",
+        "window_definition": "carry_forward_monthly",
         "predictor_terms": ("ati_baseline_bn", "stock_excess_bills_bn"),
         "control_terms": ("DFF", "debt_limit_dummy"),
         "sample_start": "2009-01-01",
-        "standardize_predictors": False,
         "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together.",
     },
     {
@@ -236,6 +326,7 @@ ROBUSTNESS_SPECS = (
         "spec_family": "monthly_flow",
         "panel_key": OFFICIAL_ATI_PRICE_PANEL,
         "panel_frequency": "monthly",
+        "window_definition": "carry_forward_monthly",
         "predictor_terms": ("ati_baseline_bn",),
         "control_terms": ("DFF", "debt_limit_dummy"),
         "sample_start": "2009-01-01",
@@ -249,6 +340,7 @@ ROBUSTNESS_SPECS = (
         "spec_family": "monthly_stock",
         "panel_key": OFFICIAL_ATI_PRICE_PANEL,
         "panel_frequency": "monthly",
+        "window_definition": "carry_forward_monthly",
         "predictor_terms": ("stock_excess_bills_bn",),
         "control_terms": ("DFF", "debt_limit_dummy"),
         "sample_start": "2009-01-01",
@@ -262,6 +354,7 @@ ROBUSTNESS_SPECS = (
         "spec_family": "weekly_duration",
         "panel_key": WEEKLY_SUPPLY_PANEL,
         "panel_frequency": "weekly (W-WED)",
+        "window_definition": "weekly_duration_window",
         "predictor_terms": ("headline_public_duration_supply",),
         "control_terms": ("qt_proxy", "buybacks_accepted", "delta_wdtgal", "DFF"),
         "sample_start": None,
@@ -281,6 +374,7 @@ SCENARIO_DEFINITIONS = (
     {
         "scenario_id": "plus_100bn_duration_supply",
         "scenario_label": "Plus $100bn Public Duration Supply shock",
+        "scenario_role": "supporting",
         "scenario_shock_bn": 100.0,
         "model_id": "weekly_duration_baseline",
         "term": "headline_public_duration_supply",
@@ -288,6 +382,7 @@ SCENARIO_DEFINITIONS = (
     {
         "scenario_id": "plus_500bn_term_out",
         "scenario_label": "Plus $500bn term-out translation via Excess Bills Stock",
+        "scenario_role": "illustrative_only",
         "scenario_shock_bn": 500.0,
         "model_id": "monthly_stock_baseline",
         "term": "stock_excess_bills_bn",
@@ -295,6 +390,7 @@ SCENARIO_DEFINITIONS = (
     {
         "scenario_id": "plus_1000bn_term_out",
         "scenario_label": "Plus $1000bn term-out translation via Excess Bills Stock",
+        "scenario_role": "illustrative_only",
         "scenario_shock_bn": 1000.0,
         "model_id": "monthly_stock_baseline",
         "term": "stock_excess_bills_bn",
@@ -304,11 +400,12 @@ SCENARIO_DEFINITIONS = (
 
 def _as_float_series(frame: pd.DataFrame, columns: Sequence[str]) -> pd.DataFrame:
     out = frame.copy()
+    for column in out.columns:
+        if column in DATE_CANDIDATES or column.endswith("_date"):
+            out[column] = pd.to_datetime(out[column], errors="coerce")
     for column in columns:
-        if column in out.columns:
+        if column in out.columns and column not in DATE_CANDIDATES and not column.endswith("_date"):
             out[column] = pd.to_numeric(out[column], errors="coerce")
-    if "date" in out.columns:
-        out["date"] = pd.to_datetime(out["date"], errors="coerce")
     return out
 
 
@@ -329,23 +426,50 @@ def _ensure_required_columns(
     return out
 
 
+def _panel_date_column(panel: pd.DataFrame) -> str | None:
+    for column in DATE_CANDIDATES:
+        if column in panel.columns:
+            return column
+    return None
+
+
 def _build_sample_bounds(panel: pd.DataFrame) -> tuple[str | None, str | None]:
-    if "date" not in panel.columns:
+    date_col = _panel_date_column(panel)
+    if not date_col:
         return None, None
-    dates = pd.to_datetime(panel["date"], errors="coerce")
+    dates = pd.to_datetime(panel[date_col], errors="coerce")
     if dates.empty or dates.notna().sum() == 0:
         return None, None
     return dates.min().strftime("%Y-%m-%d"), dates.max().strftime("%Y-%m-%d")
+
+
+def _effective_shock_count(panel: pd.DataFrame) -> int:
+    if "release_id" in panel.columns:
+        return int(panel["release_id"].dropna().astype(str).nunique())
+    date_col = _panel_date_column(panel)
+    if date_col:
+        return int(pd.to_datetime(panel[date_col], errors="coerce").dropna().nunique())
+    return int(len(panel))
 
 
 def implied_bp_change(coef: float, shock_bn: float, shock_scale_bn: float = SCENARIO_SCALE_BN) -> float:
     return float(coef) * (float(shock_bn) / float(shock_scale_bn))
 
 
+def _dependent_column(spec: Mapping[str, object], outcome: str) -> str:
+    dependent_map = spec.get("dependent_by_outcome")
+    if isinstance(dependent_map, Mapping):
+        return str(dependent_map.get(outcome, outcome))
+    return outcome
+
+
 def _regression_sample(panel: pd.DataFrame, dependent_variable: str, x_vars: Sequence[str]) -> pd.DataFrame:
     keep = [dependent_variable, *x_vars]
-    if "date" in panel.columns:
-        keep = ["date", *keep]
+    date_col = _panel_date_column(panel)
+    if date_col:
+        keep = [date_col, *keep]
+    if "release_id" in panel.columns:
+        keep = [*keep, "release_id"]
     keep = [column for column in keep if column in panel.columns]
     reg_data = panel.loc[:, keep].dropna().copy()
     if dependent_variable not in reg_data.columns:
@@ -359,25 +483,21 @@ def run_hac_regression(
     x_vars: Sequence[str],
     *,
     maxlags: int = NEWEY_WEST_MAXLAGS,
-) -> tuple[pd.DataFrame, str | None, str | None]:
+) -> tuple[pd.DataFrame, str | None, str | None, int]:
     reg_data = _regression_sample(panel, dependent_variable, x_vars)
-    if reg_data.empty:
+    if reg_data.empty or len(reg_data) < max(8, len(x_vars) + 3):
         return (
-            pd.DataFrame(columns=["dependent_variable", "term", "coef", "std_err", "t_stat", "p_value", "nobs", "rsquared"]),
+            pd.DataFrame(
+                columns=["dependent_variable", "term", "coef", "std_err", "t_stat", "p_value", "nobs", "rsquared", "cov_type", "cov_maxlags"]
+            ),
             None,
             None,
-        )
-    if len(reg_data) < 10:
-        return (
-            pd.DataFrame(columns=["dependent_variable", "term", "coef", "std_err", "t_stat", "p_value", "nobs", "rsquared"]),
-            None,
-            None,
+            0,
         )
 
     y = reg_data[dependent_variable]
     X = sm.add_constant(reg_data[list(x_vars)], prepend=True)
     result = sm.OLS(y, X).fit(cov_type="HAC", cov_kwds={"maxlags": int(maxlags)})
-
     out = pd.DataFrame(
         {
             "dependent_variable": dependent_variable,
@@ -393,7 +513,7 @@ def run_hac_regression(
         }
     )
     sample_start, sample_end = _build_sample_bounds(reg_data)
-    return out, sample_start, sample_end
+    return out, sample_start, sample_end, _effective_shock_count(reg_data)
 
 
 def _resolve_sample_start(spec: Mapping[str, object], variant_start: str | None = None) -> str | None:
@@ -411,39 +531,40 @@ def _prepare_regression_panel(
     variant_start: str | None = None,
     exclude_debt_limit: bool = False,
     standardize_predictors: bool = False,
-) -> pd.DataFrame:
+) -> tuple[pd.DataFrame, str]:
+    dependent_variable = _dependent_column(spec, outcome)
     predictors = list(spec["predictor_terms"])
     controls = list(spec["control_terms"])
-    required = [outcome, *predictors, *controls]
+    required = [dependent_variable, *predictors, *controls]
     filtered = _ensure_required_columns(
         _as_float_series(panel, required),
         required,
         optional_defaults={"debt_limit_dummy": 0.0},
     )
     if filtered.empty:
-        return filtered
-    if "date" in filtered.columns:
-        filtered = filtered.dropna(subset=["date"]).sort_values("date").reset_index(drop=True)
+        return filtered, dependent_variable
+
+    date_col = _panel_date_column(filtered)
+    if date_col:
+        filtered = filtered.dropna(subset=[date_col]).sort_values(date_col).reset_index(drop=True)
         sample_start = _resolve_sample_start(spec, variant_start)
         if sample_start is not None:
-            filtered = filtered.loc[filtered["date"] >= pd.Timestamp(sample_start)].copy()
+            filtered = filtered.loc[pd.to_datetime(filtered[date_col], errors="coerce") >= pd.Timestamp(sample_start)].copy()
     if exclude_debt_limit and "debt_limit_dummy" in filtered.columns:
         filtered = filtered.loc[filtered["debt_limit_dummy"].fillna(0) != 1].copy()
     if filtered.empty:
-        return filtered
-    if standardize_predictors:
-        for term in predictors:
-            series = pd.to_numeric(filtered[term], errors="coerce")
+        return filtered, dependent_variable
+
+    for term in predictors:
+        series = pd.to_numeric(filtered[term], errors="coerce")
+        if standardize_predictors:
             std = float(series.std(ddof=0))
-            if std > 0:
-                filtered[term] = (series - float(series.mean())) / std
-            else:
-                filtered[term] = 0.0
-    else:
-        for term in predictors:
-            if term in SCALED_100BN_TERMS:
-                filtered[term] = pd.to_numeric(filtered[term], errors="coerce") / SCENARIO_SCALE_BN
-    return filtered
+            filtered[term] = 0.0 if std <= 0 else (series - float(series.mean())) / std
+        elif term in SCALED_100BN_TERMS:
+            filtered[term] = series / SCENARIO_SCALE_BN
+        else:
+            filtered[term] = series
+    return filtered, dependent_variable
 
 
 def _term_role(term: str, predictors: Sequence[str], controls: Sequence[str]) -> str:
@@ -489,11 +610,8 @@ def _run_spec_rows(
     rows: list[pd.DataFrame] = []
     predictors = list(spec["predictor_terms"])
     controls = list(spec["control_terms"])
-    panel_frequency = str(spec["panel_frequency"])
     for outcome in outcomes:
-        if outcome not in panel.columns:
-            continue
-        prepared = _prepare_regression_panel(
+        prepared, dependent_variable = _prepare_regression_panel(
             panel,
             spec,
             outcome,
@@ -503,7 +621,11 @@ def _run_spec_rows(
         )
         if prepared.empty:
             continue
-        reg, sample_start, sample_end = run_hac_regression(prepared, outcome, [*predictors, *controls])
+        reg, sample_start, sample_end, effective_shock_count = run_hac_regression(
+            prepared,
+            dependent_variable,
+            [*predictors, *controls],
+        )
         if reg.empty:
             continue
         reg = reg.copy()
@@ -511,7 +633,10 @@ def _run_spec_rows(
         reg["model_family"] = spec["spec_family"]
         reg["model_mode"] = model_mode
         reg["panel_key"] = spec["panel_key"]
-        reg["panel_frequency"] = panel_frequency
+        reg["panel_frequency"] = spec["panel_frequency"]
+        reg["window_definition"] = spec["window_definition"]
+        reg["anchor_role"] = spec.get("anchor_role", "supporting")
+        reg["dependent_variable"] = outcome
         reg["dependent_label"] = OUTCOME_LABELS.get(outcome, outcome)
         reg["outcome_role"] = "headline" if outcome in HEADLINE_OUTCOMES else "supporting"
         reg["term_role"] = reg["term"].map(lambda term: _term_role(str(term), predictors, controls))
@@ -525,12 +650,20 @@ def _run_spec_rows(
         reg["term_mode"] = term_mode
         reg["sample_start"] = sample_start
         reg["sample_end"] = sample_end
+        reg["effective_shock_count"] = effective_shock_count
         reg["notes"] = spec["notes"]
         rows.append(reg[list(PRICING_REGRESSION_SUMMARY_COLUMNS)])
 
     if not rows:
         return pd.DataFrame(columns=PRICING_REGRESSION_SUMMARY_COLUMNS)
     return pd.concat(rows, ignore_index=True)
+
+
+def _baseline_spec(spec_id: str) -> Mapping[str, object]:
+    for spec in BASELINE_SPECS:
+        if spec["spec_id"] == spec_id:
+            return spec
+    raise KeyError(spec_id)
 
 
 def build_pricing_spec_registry(pricing_panels: Mapping[str, pd.DataFrame]) -> pd.DataFrame:
@@ -540,18 +673,18 @@ def build_pricing_spec_registry(pricing_panels: Mapping[str, pd.DataFrame]) -> p
         if panel is None or panel.empty:
             continue
         for outcome in HEADLINE_OUTCOMES:
-            if outcome not in panel.columns:
-                continue
-            prepared = _prepare_regression_panel(panel, spec, outcome)
+            prepared, dependent_variable = _prepare_regression_panel(panel, spec, outcome)
             if prepared.empty:
                 continue
-            sample = _regression_sample(prepared, outcome, [*spec["predictor_terms"], *spec["control_terms"]])
+            sample = _regression_sample(prepared, dependent_variable, [*spec["predictor_terms"], *spec["control_terms"]])
             sample_start, sample_end = _build_sample_bounds(sample)
             rows.append(
                 {
                     "spec_id": spec["spec_id"],
                     "spec_family": spec["spec_family"],
                     "headline_flag": bool(spec["headline_flag"]),
+                    "anchor_role": spec["anchor_role"],
+                    "window_definition": spec["window_definition"],
                     "sample_start": sample_start,
                     "sample_end": sample_end,
                     "outcome": outcome,
@@ -565,17 +698,16 @@ def build_pricing_spec_registry(pricing_panels: Mapping[str, pd.DataFrame]) -> p
 
 
 def build_pricing_regression_summary(pricing_panels: Mapping[str, pd.DataFrame]) -> pd.DataFrame:
-    rows: list[pd.DataFrame] = []
-    for spec in BASELINE_SPECS:
-        rows.append(
-            _run_spec_rows(
-                spec,
-                pricing_panels,
-                HEADLINE_OUTCOMES,
-                model_mode="headline_baseline",
-                term_mode="baseline",
-            )
+    rows = [
+        _run_spec_rows(
+            spec,
+            pricing_panels,
+            HEADLINE_OUTCOMES,
+            model_mode="headline_baseline",
+            term_mode="baseline",
         )
+        for spec in BASELINE_SPECS
+    ]
     rows = [row for row in rows if not row.empty]
     if not rows:
         return pd.DataFrame(columns=PRICING_REGRESSION_SUMMARY_COLUMNS)
@@ -620,7 +752,6 @@ def build_pricing_regression_robustness(pricing_panels: Mapping[str, pd.DataFram
 
     if not rows:
         return pd.DataFrame(columns=PRICING_REGRESSION_ROBUSTNESS_COLUMNS)
-
     combined = pd.concat(rows, ignore_index=True)
     return combined[list(PRICING_REGRESSION_ROBUSTNESS_COLUMNS)].copy()
 
@@ -652,33 +783,109 @@ def build_pricing_subsample_grid(pricing_panels: Mapping[str, pd.DataFrame]) -> 
 
     if not rows:
         return pd.DataFrame(columns=PRICING_SUBSAMPLE_GRID_COLUMNS)
-
     combined = pd.concat(rows, ignore_index=True)
-    return combined[
-        [
-            "spec_id",
-            "spec_family",
-            "variant_id",
-            "variant_family",
-            "frequency",
-            "dependent_variable",
-            "dependent_label",
-            "outcome_role",
-            "term",
-            "term_label",
-            "coef",
-            "std_err",
-            "t_stat",
-            "p_value",
-            "nobs",
-            "rsquared",
-            "cov_type",
-            "cov_maxlags",
-            "sample_start",
-            "sample_end",
-            "notes",
-        ]
-    ].copy()
+    return combined[list(PRICING_SUBSAMPLE_GRID_COLUMNS)].copy()
+
+
+def build_pricing_release_flow_leave_one_out(pricing_panels: Mapping[str, pd.DataFrame]) -> pd.DataFrame:
+    panel = pricing_panels.get(RELEASE_FLOW_PANEL)
+    spec = _baseline_spec("release_flow_baseline_next_release")
+    if panel is None or panel.empty or "release_id" not in panel.columns:
+        return pd.DataFrame(columns=PRICING_RELEASE_FLOW_LEAVE_ONE_OUT_COLUMNS)
+
+    rows: list[dict[str, object]] = []
+    for outcome in HEADLINE_OUTCOMES:
+        prepared, dependent_variable = _prepare_regression_panel(panel, spec, outcome)
+        if prepared.empty or "release_id" not in prepared.columns:
+            continue
+        release_ids = [str(value) for value in prepared["release_id"].dropna().astype(str).unique()]
+        for omitted_release_id in release_ids:
+            reduced = prepared.loc[prepared["release_id"].astype(str) != omitted_release_id].copy()
+            reg, sample_start, sample_end, effective_shock_count = run_hac_regression(
+                reduced,
+                dependent_variable,
+                [*spec["predictor_terms"], *spec["control_terms"]],
+            )
+            if reg.empty:
+                continue
+            primary = reg.loc[reg["term"] == "ati_baseline_bn"]
+            if primary.empty:
+                continue
+            row = primary.iloc[0]
+            rows.append(
+                {
+                    "spec_id": spec["spec_id"],
+                    "window_definition": spec["window_definition"],
+                    "dependent_variable": outcome,
+                    "dependent_label": OUTCOME_LABELS.get(outcome, outcome),
+                    "omitted_release_id": omitted_release_id,
+                    "coef": float(row["coef"]),
+                    "std_err": float(row["std_err"]),
+                    "t_stat": float(row["t_stat"]),
+                    "p_value": float(row["p_value"]),
+                    "nobs": int(row["nobs"]),
+                    "effective_shock_count": effective_shock_count,
+                    "sample_start": sample_start,
+                    "sample_end": sample_end,
+                    "notes": "Leave-one-release-out diagnostic for the release-to-next-release Maturity-Tilt Flow anchor.",
+                }
+            )
+    return pd.DataFrame(rows, columns=PRICING_RELEASE_FLOW_LEAVE_ONE_OUT_COLUMNS)
+
+
+def build_pricing_tau_sensitivity_grid(pricing_panels: Mapping[str, pd.DataFrame]) -> pd.DataFrame:
+    panel = pricing_panels.get(OFFICIAL_ATI_PRICE_PANEL)
+    if panel is None or panel.empty:
+        return pd.DataFrame(columns=PRICING_TAU_SENSITIVITY_GRID_COLUMNS)
+    if "marketable_bill_share" not in panel.columns or "marketable_outstanding_bn" not in panel.columns:
+        return pd.DataFrame(columns=PRICING_TAU_SENSITIVITY_GRID_COLUMNS)
+
+    rows: list[dict[str, object]] = []
+    spec = _baseline_spec("monthly_stock_baseline")
+    for tau in TAU_GRID:
+        tau_panel = panel.copy()
+        tau_panel["stock_excess_bills_share"] = pd.to_numeric(tau_panel["marketable_bill_share"], errors="coerce") - float(tau)
+        tau_panel["stock_excess_bills_bn"] = tau_panel["stock_excess_bills_share"] * pd.to_numeric(
+            tau_panel["marketable_outstanding_bn"],
+            errors="coerce",
+        )
+        for outcome in (*HEADLINE_OUTCOMES, SUPPORTING_PRICING_OUTCOME):
+            prepared, dependent_variable = _prepare_regression_panel(tau_panel, spec, outcome)
+            if prepared.empty:
+                continue
+            reg, sample_start, sample_end, effective_shock_count = run_hac_regression(
+                prepared,
+                dependent_variable,
+                [*spec["predictor_terms"], *spec["control_terms"]],
+            )
+            if reg.empty:
+                continue
+            primary = reg.loc[reg["term"] == "stock_excess_bills_bn"]
+            if primary.empty:
+                continue
+            row = primary.iloc[0]
+            rows.append(
+                {
+                    "tau": tau,
+                    "model_id": f"monthly_stock_tau_{int(round(tau * 100)):02d}",
+                    "model_family": "monthly_stock_tau_sensitivity",
+                    "dependent_variable": outcome,
+                    "dependent_label": OUTCOME_LABELS.get(outcome, outcome),
+                    "term": "stock_excess_bills_bn",
+                    "term_label": PREDICTOR_LABELS["stock_excess_bills_bn"],
+                    "coef": float(row["coef"]),
+                    "std_err": float(row["std_err"]),
+                    "t_stat": float(row["t_stat"]),
+                    "p_value": float(row["p_value"]),
+                    "nobs": int(row["nobs"]),
+                    "effective_shock_count": effective_shock_count,
+                    "rsquared": float(row["rsquared"]),
+                    "sample_start": sample_start,
+                    "sample_end": sample_end,
+                    "notes": f"Monthly stock-only pricing sensitivity using target tau={tau:.2f}.",
+                }
+            )
+    return pd.DataFrame(rows, columns=PRICING_TAU_SENSITIVITY_GRID_COLUMNS)
 
 
 def build_pricing_scenario_translation(
@@ -708,6 +915,7 @@ def build_pricing_scenario_translation(
                 {
                     "scenario_id": scenario["scenario_id"],
                     "scenario_label": scenario["scenario_label"],
+                    "scenario_role": scenario.get("scenario_role", "supporting"),
                     "scenario_shock_bn": scenario_shock,
                     "scenario_shock_scale_bn": float(shock_scale_bn),
                     "model_id": model_id,
@@ -720,11 +928,10 @@ def build_pricing_scenario_translation(
                     "coef_bp_per_100bn": coef,
                     "implied_bp_change": implied_bp_change(coef, scenario_shock, shock_scale_bn),
                     "nobs": int(row["nobs"]),
+                    "effective_shock_count": int(row.get("effective_shock_count", row["nobs"])),
                     "p_value": float(row["p_value"]),
                     "notes": row["notes"],
                 }
             )
 
-    if not rows:
-        return pd.DataFrame(columns=SCENARIO_TRANSLATION_COLUMNS)
     return pd.DataFrame(rows, columns=SCENARIO_TRANSLATION_COLUMNS)

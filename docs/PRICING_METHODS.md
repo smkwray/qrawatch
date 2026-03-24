@@ -26,13 +26,32 @@ The locked public estimand in this round is:
 
 **basis-point change in `DGS10` and `THREEFYTP10` per `$100bn` shock on the named quantity input.**
 
-That is implemented three ways:
+That is implemented with one primary design and supporting context designs:
 
-- Maturity-Tilt Flow baseline: bp change in rates per `$100bn` change in `ati_baseline_bn`
-- Excess Bills Stock baseline: bp change in rates per `$100bn` change in `stock_excess_bills_bn`
-- Public Duration Supply baseline: bp change in rates per `$100bn` change in `headline_public_duration_supply`
+- release-level Maturity-Tilt Flow anchor: bp change in release-window rates per `$100bn` change in `ati_baseline_bn`
+- monthly carry-forward Maturity-Tilt Flow context: bp change in month-end rates per `$100bn` change in `ati_baseline_bn`
+- Excess Bills Stock context: bp change in month-end rates per `$100bn` change in `stock_excess_bills_bn`
+- Public Duration Supply context: bp change in weekly rates per `$100bn` change in `headline_public_duration_supply`
 
 ## Locked baseline specifications
+
+`release_flow_baseline_next_release`
+
+`delta_Y_release_to_next_release = a + b1 * ati_baseline_bn_release + b2 * delta_dff_release_to_next_release + b3 * debt_limit_dummy_release + e`
+
+- outcomes: `DGS10`, `THREEFYTP10`
+- sample start: `2009Q1`
+- role: `credibility_anchor`
+- interpretation: one-row-per-release pricing test using the pre-release market marker and the next release marker
+
+`release_flow_baseline_21bd`
+
+`delta_Y_release_plus_21bd = a + b1 * ati_baseline_bn_release + b2 * delta_dff_release_plus_21bd + b3 * debt_limit_dummy_release + e`
+
+- outcomes: `DGS10`, `THREEFYTP10`
+- sample start: `2009Q1`
+- role: `supporting`
+- interpretation: fixed-horizon supporting release-window check
 
 `monthly_flow_baseline`
 
@@ -40,7 +59,8 @@ That is implemented three ways:
 
 - outcomes: `DGS10`, `THREEFYTP10`
 - sample start: `2009Q1`
-- interpretation: Maturity-Tilt Flow relationship with long rates after policy-rate and debt-limit controls
+- role: `headline_context`
+- interpretation: carry-forward monthly context spec; useful for scale and persistence, but not the main effective-shock design
 
 `monthly_stock_baseline`
 
@@ -48,6 +68,7 @@ That is implemented three ways:
 
 - outcomes: `DGS10`, `THREEFYTP10`
 - sample start: `2009Q1`
+- role: `supporting`
 - interpretation: stock relationship between excess bills and long rates after policy-rate and debt-limit controls
 
 `weekly_duration_baseline`
@@ -56,6 +77,7 @@ That is implemented three ways:
 
 - outcomes: `DGS10`, `THREEFYTP10`
 - sample: non-missing weekly control window
+- role: `supporting`
 - interpretation: reduced-form weekly relationship between supply reaching the public and long rates, with major balance-sheet/plumbing controls included
 
 Inference uses HAC / Newey-West standard errors in every published pricing table.
@@ -71,6 +93,8 @@ Published robustness families in this round:
 - `flow_vs_stock_horse_race`
 - `standardized_predictors`
 - supporting `DGS30` outcome check
+- release-flow leave-one-out diagnostics
+- tau sensitivity for the stock object at `0.15 / 0.18 / 0.20`
 
 Artifacts:
 
@@ -78,6 +102,9 @@ Artifacts:
 - `pricing_regression_summary`
 - `pricing_subsample_grid`
 - `pricing_regression_robustness`
+- `pricing_release_flow_panel`
+- `pricing_release_flow_leave_one_out`
+- `pricing_tau_sensitivity_grid`
 - `pricing_scenario_translation`
 
 ## Figure pack
@@ -113,6 +140,8 @@ Pricing coefficients should be interpreted as reduced-form relationships in this
 
 In practice:
 
-- the monthly Maturity-Tilt Flow coefficient is the cleaner current headline quantity for quarter-level maturity composition
+- the release-level Maturity-Tilt Flow design is now the main credibility test because it avoids repeating the same quarterly shock across many monthly rows
+- the monthly Maturity-Tilt Flow coefficient remains important context because it is currently the strongest negative reduced-form signal in the public outputs
 - the weekly Public Duration Supply coefficient is a useful duration-style pricing bridge, but it still needs careful sample scrutiny
 - the Excess Bills Stock coefficient is published because it is substantively important, not because it is already the strongest signal
+- stock scenario arithmetic is illustrative only unless the stock coefficient becomes more stable and persuasive

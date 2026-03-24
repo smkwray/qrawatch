@@ -1,9 +1,1 @@
 summary_type,dataset_type,series_id,measure,value,units,as_of_date,frequency,source_quality,source_file
-available_series,latest_series_snapshot,all,series_count,1363,count,2026-03-11,weekly,csv_canonical,primary_dealer_panel.csv
-available_series,quarterly_marketshare,all,series_count,123,count,2026-01-08,quarterly,json_repaired,primary_dealer_panel.csv
-available_series,ytd_marketshare,all,series_count,123,count,2026-01-08,ytd,json_canonical,primary_dealer_panel.csv
-latest_snapshot,latest_series_snapshot,all,latest_row_count,977,count,2026-03-11,weekly,csv_canonical,primary_dealer_panel.csv
-latest_snapshot,quarterly_marketshare,all,latest_row_count,700,count,2026-01-08,quarterly,json_repaired,primary_dealer_panel.csv
-latest_snapshot,ytd_marketshare,all,latest_row_count,702,count,2026-01-08,ytd,json_canonical,primary_dealer_panel.csv
-marketshare_coverage,quarterly_marketshare,all,series_count,123,count,2026-01-08,quarterly,json_repaired,primary_dealer_panel.csv
-marketshare_coverage,ytd_marketshare,all,series_count,123,count,2026-01-08,ytd,json_canonical,primary_dealer_panel.csv

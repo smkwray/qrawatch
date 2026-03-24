@@ -7,6 +7,9 @@ duration,provisional_public_duration_supply,weekly (W-WED),USD notional (weekly 
 pricing,ati_baseline_bn,monthly (release-carried),USD billions,Positive values imply a more bill-heavy maturity tilt relative to the 18% bill-share baseline.,derived_pricing_reduced_form,supporting,supporting
 pricing,stock_excess_bills_bn,monthly,USD billions,Positive values imply a larger stock of bills relative to the 18% marketable bill-share baseline.,derived_pricing_reduced_form,supporting,supporting
 pricing,headline_public_duration_supply,weekly (W-WED),USD billions,Positive values imply more duration supply reaching the public in that week.,derived_pricing_reduced_form,supporting,supporting
+pricing,pricing_release_flow_panel,release-event,release rows,One row per official QRA release with release-level yield and policy-rate deltas.,derived_pricing_reduced_form,supporting,supporting
+pricing,pricing_release_flow_leave_one_out,artifact,diagnostic rows,One row per omitted release and outcome for the release-level flow anchor.,derived_pricing_reduced_form,supporting,supporting
+pricing,pricing_tau_sensitivity_grid,artifact,regression rows,Rows report stock-only coefficients under alternate target bill-share anchors.,derived_pricing_reduced_form,supporting,supporting
 pricing,THREEFYTP10,monthly / weekly,basis points,Higher values imply a higher 10-year term-premium proxy.,derived_pricing_reduced_form,supporting,supporting
 pricing,DGS10,monthly / weekly,basis points,Higher values imply a higher 10-year Treasury yield.,derived_pricing_reduced_form,supporting,supporting
 pricing_scenario_translation,implied_bp_change_threefytp10,scenario,basis points,Positive values imply a higher 10-year term-premium proxy under the translated scenario.,derived_pricing_reduced_form,supporting,supporting

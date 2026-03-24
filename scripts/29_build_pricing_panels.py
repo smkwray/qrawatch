@@ -16,6 +16,7 @@ from ati_shadow_policy.paths import PROCESSED_DIR, RAW_DIR, ensure_project_dirs
 from ati_shadow_policy.research.pricing_panels import (
     build_mspd_stock_excess_bills_panel,
     build_official_ati_price_panel,
+    build_pricing_release_flow_panel,
     build_weekly_supply_price_panel,
 )
 
@@ -27,13 +28,14 @@ DEFAULT_PLUMBING_WEEKLY_PANEL = PROCESSED_DIR / "plumbing_weekly_panel.csv"
 DEFAULT_MSPD_PANEL = PROCESSED_DIR / "mspd_stock_excess_bills_panel.csv"
 DEFAULT_OFFICIAL_ATI_PANEL = PROCESSED_DIR / "official_ati_price_panel.csv"
 DEFAULT_WEEKLY_PANEL = PROCESSED_DIR / "weekly_supply_price_panel.csv"
+DEFAULT_RELEASE_FLOW_PANEL = PROCESSED_DIR / "pricing_release_flow_panel.csv"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Build pricing input panels for MSPD stock, official ATI monthly outcomes, "
-            "and weekly public-duration supply outcomes."
+            "release-level flow windows, and weekly public-duration supply outcomes."
         )
     )
     parser.add_argument("--official-capture", default=str(DEFAULT_OFFICIAL_CAPTURE), help="Official quarterly capture CSV.")
@@ -64,6 +66,11 @@ def parse_args() -> argparse.Namespace:
         default=str(DEFAULT_WEEKLY_PANEL),
         help="Output weekly duration-price panel CSV.",
     )
+    parser.add_argument(
+        "--release-flow-panel-output",
+        default=str(DEFAULT_RELEASE_FLOW_PANEL),
+        help="Output one-row-per-release pricing flow panel CSV.",
+    )
     return parser.parse_args()
 
 
@@ -79,6 +86,7 @@ def main() -> None:
 
     mspd_stock_panel = build_mspd_stock_excess_bills_panel(mspd_frame)
     official_ati_panel = build_official_ati_price_panel(official_capture, fred, mspd_stock_panel=mspd_stock_panel)
+    release_flow_panel = build_pricing_release_flow_panel(official_capture, fred)
     weekly_supply_panel = build_weekly_supply_price_panel(
         public_duration_supply,
         fred,
@@ -89,14 +97,17 @@ def main() -> None:
     mspd_output = Path(args.mspd_panel_output)
     official_ati_output = Path(args.official_ati_price_panel_output)
     weekly_output = Path(args.weekly_supply_panel_output)
+    release_flow_output = Path(args.release_flow_panel_output)
 
     write_df(mspd_stock_panel, mspd_output)
     write_df(official_ati_panel, official_ati_output)
+    write_df(release_flow_panel, release_flow_output)
     write_df(weekly_supply_panel, weekly_output)
     print(
         "Pricing panel artifacts written: "
         f"mspd_stock={len(mspd_stock_panel):,}, "
         f"official_ati_price={len(official_ati_panel):,}, "
+        f"release_flow={len(release_flow_panel):,}, "
         f"weekly_supply={len(weekly_supply_panel):,}"
     )
 

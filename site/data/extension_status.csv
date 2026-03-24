@@ -1,5 +1,5 @@
 extension,raw_dir_exists,manifest_exists,downloads_exists,processed_exists,processed_rows,panel_exists,panel_rows,publish_exists,backend_status,readiness_tier,headline_ready,public_role
 investor_allotments,True,True,True,True,5,True,63180,True,summary_ready,summary_ready,False,supporting
-primary_dealer,True,True,True,True,10,True,2765,True,summary_ready,summary_ready,False,supporting
+primary_dealer,True,True,True,True,10,True,0,True,summary_ready,summary_ready,False,supporting
 sec_nmfp,True,True,True,True,94,True,1858,True,summary_ready,summary_ready,False,supporting
 tic,False,False,False,False,0,False,0,False,not_started,not_started,False,supporting

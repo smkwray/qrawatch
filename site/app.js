@@ -1110,10 +1110,12 @@
       fetchJSON('pricing_regression_summary.json'),
       fetchJSON('pricing_subsample_grid.json'),
       fetchJSON('pricing_regression_robustness.json'),
+      fetchJSON('pricing_release_flow_leave_one_out.json'),
+      fetchJSON('pricing_tau_sensitivity_grid.json'),
       fetchJSON('pricing_scenario_translation.json'),
       fetchJSON('dataset_status.json')
     ]);
-    var specRegistry = results[0], summary = results[1], subsample = results[2], robustness = results[3], scenarios = results[4], dsStatus = results[5];
+    var specRegistry = results[0], summary = results[1], subsample = results[2], robustness = results[3], leaveOneOut = results[4], tauGrid = results[5], scenarios = results[6], dsStatus = results[7];
 
     if (!summary || !summary.rows || !summary.rows.length) {
       sectionError(container, 'Pricing regression data unavailable.');
@@ -1137,6 +1139,8 @@
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Locked Baseline Specs' }));
       container.appendChild(buildTable([
         { key: 'spec_id', label: 'Spec', format: fmtSnake },
+        { key: 'anchor_role', label: 'Role', format: fmtSnake },
+        { key: 'window_definition', label: 'Window', format: fmtSnake },
         { key: 'outcome', label: 'Outcome', format: fmtSnake },
         { key: 'predictor_set', label: 'Predictor', format: fmtSnake },
         { key: 'control_set', label: 'Controls', format: fmtSnake },
@@ -1153,25 +1157,42 @@
         return String(a.model_id).localeCompare(String(b.model_id)) || String(a.dependent_variable).localeCompare(String(b.dependent_variable));
       });
 
-    container.appendChild(el('h3', { class: 'section-subtitle', text: 'Primary Coefficients' }));
+    var releaseAnchorRows = primaryRows.filter(function (row) { return row.anchor_role === 'credibility_anchor'; });
+    var contextRows = primaryRows.filter(function (row) { return row.anchor_role !== 'credibility_anchor'; });
+
+    container.appendChild(el('h3', { class: 'section-subtitle', text: 'Release-Level Flow Anchor' }));
     container.appendChild(buildTable([
       { key: 'model_id', label: 'Model', format: fmtSnake },
+      { key: 'window_definition', label: 'Window', format: fmtSnake },
       { key: 'dependent_label', label: 'Outcome' },
       { key: 'term_label', label: 'Shock / Input' },
       { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
       { key: 'std_err', label: 'SE', numeric: true, format: function (v) { return fmtNum(v, 3); } },
       { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval },
-      { key: 'nobs', label: 'N', numeric: true }
-    ], primaryRows));
+      { key: 'effective_shock_count', label: 'Shocks', numeric: true }
+    ], releaseAnchorRows));
     container.appendChild(el('p', { class: 'card-meta',
-      text: 'Headline quantity coefficients are scaled to read as basis points per $100bn on the named input. HAC / Newey-West standard errors are used throughout.'
+      text: 'The release-level flow rows are the current credibility anchor. Coefficients are reported in basis points per $100bn on the named input, with HAC / Newey-West standard errors.'
     }));
+
+    if (contextRows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Supporting Context Specs' }));
+      container.appendChild(buildTable([
+        { key: 'model_id', label: 'Model', format: fmtSnake },
+        { key: 'window_definition', label: 'Window', format: fmtSnake },
+        { key: 'dependent_label', label: 'Outcome' },
+        { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+        { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval },
+        { key: 'effective_shock_count', label: 'Shocks', numeric: true }
+      ], contextRows));
+    }
 
     if (subsample && subsample.rows && subsample.rows.length) {
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Subsample Grid' }));
       container.appendChild(buildTable([
         { key: 'spec_id', label: 'Spec', format: fmtSnake },
         { key: 'variant_family', label: 'Variant', format: fmtSnake },
+        { key: 'window_definition', label: 'Window', format: fmtSnake },
         { key: 'dependent_label', label: 'Outcome' },
         { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
         { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval },
@@ -1184,6 +1205,7 @@
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Robustness Pack' }));
       container.appendChild(buildTable([
         { key: 'variant_family', label: 'Family', format: fmtSnake },
+        { key: 'window_definition', label: 'Window', format: fmtSnake },
         { key: 'dependent_label', label: 'Outcome' },
         { key: 'term_label', label: 'Term' },
         { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
@@ -1192,10 +1214,32 @@
       ], robustness.rows.slice(0, 20)));
     }
 
+    if (leaveOneOut && leaveOneOut.rows && leaveOneOut.rows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Leave-One-Release-Out' }));
+      container.appendChild(buildTable([
+        { key: 'dependent_label', label: 'Outcome' },
+        { key: 'omitted_release_id', label: 'Omitted Release', format: fmtSnake },
+        { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+        { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval },
+        { key: 'effective_shock_count', label: 'Shocks', numeric: true }
+      ], leaveOneOut.rows.slice(0, 20)));
+    }
+
+    if (tauGrid && tauGrid.rows && tauGrid.rows.length) {
+      container.appendChild(el('h3', { class: 'section-subtitle', text: 'Stock Tau Sensitivity' }));
+      container.appendChild(buildTable([
+        { key: 'tau', label: 'Tau', numeric: true, format: function (v) { return fmtNum(v, 2); } },
+        { key: 'dependent_label', label: 'Outcome' },
+        { key: 'coef', label: 'Coef', numeric: true, format: function (v) { return fmtNum(v, 3); } },
+        { key: 'p_value', label: 'p-value', numeric: true, format: fmtPval }
+      ], tauGrid.rows));
+    }
+
     if (scenarios && scenarios.rows && scenarios.rows.length) {
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Scenario Translation' }));
       container.appendChild(buildTable([
         { key: 'scenario_label', label: 'Scenario' },
+        { key: 'scenario_role', label: 'Role', format: fmtSnake },
         { key: 'dependent_label', label: 'Outcome' },
         { key: 'coef_bp_per_100bn', label: 'bp per $100bn', numeric: true, format: function (v) { return fmtNum(v, 3); } },
         { key: 'implied_bp_change', label: 'Implied bp', numeric: true, format: function (v) { return fmtNum(v, 3); } },
@@ -1217,13 +1261,13 @@
       },
       {
         src: 'figures/pricing_headline_coefficients.svg',
-        title: 'Headline Coefficients and Subsamples',
-        note: 'Baseline and subsample coefficients for the locked pricing specs.'
+        title: 'Release-Level and Context Coefficients',
+        note: 'The release-level flow anchor is shown first; monthly carry-forward and supporting windows stay in view as context.'
       },
       {
         src: 'figures/pricing_scenario_translation.svg',
         title: 'Scenario Translation',
-        note: 'Implied basis-point changes for the published stylized scenarios.'
+        note: 'Stock-based term-out scenarios are illustrative only in this round.'
       }
     ].forEach(function (figure) {
       var card = el('div', { class: 'artifact-card' });

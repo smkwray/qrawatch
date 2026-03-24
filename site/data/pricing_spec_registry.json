@@ -2,76 +2,144 @@
   "title": "Pricing Spec Registry",
   "rows": [
     {
+      "spec_id": "release_flow_baseline_next_release",
+      "spec_family": "release_flow",
+      "headline_flag": true,
+      "anchor_role": "credibility_anchor",
+      "window_definition": "release_to_next_release",
+      "sample_start": "2010-02-03",
+      "sample_end": "2025-04-30",
+      "outcome": "THREEFYTP10",
+      "predictor_set": "ati_baseline_bn",
+      "control_set": "delta_dff_release_to_next_release|debt_limit_dummy",
+      "frequency": "release-event",
+      "notes": "Primary release-level Maturity-Tilt Flow specification from the market-pricing marker before each release to the next release marker."
+    },
+    {
+      "spec_id": "release_flow_baseline_next_release",
+      "spec_family": "release_flow",
+      "headline_flag": true,
+      "anchor_role": "credibility_anchor",
+      "window_definition": "release_to_next_release",
+      "sample_start": "2010-02-03",
+      "sample_end": "2025-04-30",
+      "outcome": "DGS10",
+      "predictor_set": "ati_baseline_bn",
+      "control_set": "delta_dff_release_to_next_release|debt_limit_dummy",
+      "frequency": "release-event",
+      "notes": "Primary release-level Maturity-Tilt Flow specification from the market-pricing marker before each release to the next release marker."
+    },
+    {
+      "spec_id": "release_flow_baseline_21bd",
+      "spec_family": "release_flow",
+      "headline_flag": true,
+      "anchor_role": "supporting",
+      "window_definition": "release_plus_21bd",
+      "sample_start": "2010-02-03",
+      "sample_end": "2025-07-30",
+      "outcome": "THREEFYTP10",
+      "predictor_set": "ati_baseline_bn",
+      "control_set": "delta_dff_release_plus_21bd|debt_limit_dummy",
+      "frequency": "release-event",
+      "notes": "Supporting release-level Maturity-Tilt Flow specification from the market-pricing marker before each release to the first FRED observation on or after 21 business days."
+    },
+    {
+      "spec_id": "release_flow_baseline_21bd",
+      "spec_family": "release_flow",
+      "headline_flag": true,
+      "anchor_role": "supporting",
+      "window_definition": "release_plus_21bd",
+      "sample_start": "2010-02-03",
+      "sample_end": "2025-07-30",
+      "outcome": "DGS10",
+      "predictor_set": "ati_baseline_bn",
+      "control_set": "delta_dff_release_plus_21bd|debt_limit_dummy",
+      "frequency": "release-event",
+      "notes": "Supporting release-level Maturity-Tilt Flow specification from the market-pricing marker before each release to the first FRED observation on or after 21 business days."
+    },
+    {
       "spec_id": "monthly_flow_baseline",
       "spec_family": "monthly_flow",
       "headline_flag": true,
+      "anchor_role": "headline_context",
+      "window_definition": "carry_forward_monthly",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
       "outcome": "THREEFYTP10",
       "predictor_set": "ati_baseline_bn",
       "control_set": "DFF|debt_limit_dummy",
       "frequency": "monthly",
-      "notes": "Baseline monthly reduced-form specification using Maturity-Tilt Flow (public label; internal field `ati_baseline_bn`)."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
     },
     {
       "spec_id": "monthly_flow_baseline",
       "spec_family": "monthly_flow",
       "headline_flag": true,
+      "anchor_role": "headline_context",
+      "window_definition": "carry_forward_monthly",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
       "outcome": "DGS10",
       "predictor_set": "ati_baseline_bn",
       "control_set": "DFF|debt_limit_dummy",
       "frequency": "monthly",
-      "notes": "Baseline monthly reduced-form specification using Maturity-Tilt Flow (public label; internal field `ati_baseline_bn`)."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
     },
     {
       "spec_id": "monthly_stock_baseline",
       "spec_family": "monthly_stock",
       "headline_flag": true,
+      "anchor_role": "supporting",
+      "window_definition": "carry_forward_monthly",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
       "outcome": "THREEFYTP10",
       "predictor_set": "stock_excess_bills_bn",
       "control_set": "DFF|debt_limit_dummy",
       "frequency": "monthly",
-      "notes": "Baseline monthly reduced-form specification using Excess Bills Stock (public label; internal field `stock_excess_bills_bn`)."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
     },
     {
       "spec_id": "monthly_stock_baseline",
       "spec_family": "monthly_stock",
       "headline_flag": true,
+      "anchor_role": "supporting",
+      "window_definition": "carry_forward_monthly",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
       "outcome": "DGS10",
       "predictor_set": "stock_excess_bills_bn",
       "control_set": "DFF|debt_limit_dummy",
       "frequency": "monthly",
-      "notes": "Baseline monthly reduced-form specification using Excess Bills Stock (public label; internal field `stock_excess_bills_bn`)."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
     },
     {
       "spec_id": "weekly_duration_baseline",
       "spec_family": "weekly_duration",
       "headline_flag": true,
+      "anchor_role": "supporting",
+      "window_definition": "weekly_duration_window",
       "sample_start": "2003-01-08",
       "sample_end": "2026-03-11",
       "outcome": "THREEFYTP10",
       "predictor_set": "headline_public_duration_supply",
       "control_set": "qt_proxy|buybacks_accepted|delta_wdtgal|DFF",
       "frequency": "weekly (W-WED)",
-      "notes": "Baseline weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
+      "notes": "Weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
     },
     {
       "spec_id": "weekly_duration_baseline",
       "spec_family": "weekly_duration",
       "headline_flag": true,
+      "anchor_role": "supporting",
+      "window_definition": "weekly_duration_window",
       "sample_start": "2003-01-08",
       "sample_end": "2026-03-18",
       "outcome": "DGS10",
       "predictor_set": "headline_public_duration_supply",
       "control_set": "qt_proxy|buybacks_accepted|delta_wdtgal|DFF",
       "frequency": "weekly (W-WED)",
-      "notes": "Baseline weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
+      "notes": "Weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
     }
   ]
 }

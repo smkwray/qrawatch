@@ -1842,27 +1842,31 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
     pd.DataFrame(
         [
             {
-                "spec_id": "monthly_flow_baseline",
-                "spec_family": "monthly_flow",
+                "spec_id": "release_flow_baseline_next_release",
+                "spec_family": "release_flow",
                 "headline_flag": True,
+                "anchor_role": "credibility_anchor",
+                "window_definition": "release_to_next_release",
                 "sample_start": "2009-01-31",
                 "sample_end": "2026-03-31",
                 "outcome": "DGS10",
                 "predictor_set": "ati_baseline_bn",
-                "control_set": "DFF|debt_limit_dummy",
-                "frequency": "monthly",
-                "notes": "Baseline monthly reduced-form specification using Maturity-Tilt Flow.",
+                "control_set": "delta_dff_release_to_next_release|debt_limit_dummy",
+                "frequency": "release-event",
+                "notes": "Primary release-level reduced-form specification using Maturity-Tilt Flow.",
             }
         ]
     ).to_csv(tables_dir / "pricing_spec_registry.csv", index=False)
     pd.DataFrame(
         [
             {
-                "model_id": "monthly_flow_baseline",
-                "model_family": "monthly_flow",
+                "model_id": "release_flow_baseline_next_release",
+                "model_family": "release_flow",
                 "model_mode": "headline_baseline",
-                "panel_key": "official_ati_price_panel",
-                "panel_frequency": "monthly",
+                "panel_key": "pricing_release_flow_panel",
+                "panel_frequency": "release-event",
+                "window_definition": "release_to_next_release",
+                "anchor_role": "credibility_anchor",
                 "dependent_variable": "DGS10",
                 "dependent_label": "10-year Treasury constant maturity yield",
                 "outcome_role": "headline",
@@ -1871,29 +1875,31 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
                 "std_err": 0.02,
                 "t_stat": -2.5,
                 "p_value": 0.03,
-                "nobs": 200,
+                "nobs": 68,
+                "effective_shock_count": 68,
                 "rsquared": 0.2,
                 "term_role": "primary_predictor",
                 "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
-                "term_units": "USD bn",
+                "term_units": "USD 100bn",
                 "outcome_units": "basis points",
                 "cov_type": "HAC",
                 "cov_maxlags": 4,
                 "term_mode": "baseline",
                 "sample_start": "2009-01-31",
                 "sample_end": "2026-03-31",
-                "notes": "Baseline monthly reduced-form specification using Maturity-Tilt Flow.",
+                "notes": "Primary release-level reduced-form specification using Maturity-Tilt Flow.",
             }
         ]
     ).to_csv(tables_dir / "pricing_regression_summary.csv", index=False)
     pd.DataFrame(
         [
             {
-                "spec_id": "monthly_flow_baseline",
-                "spec_family": "monthly_flow",
+                "spec_id": "release_flow_baseline_next_release",
+                "spec_family": "release_flow",
                 "variant_id": "post_2014",
                 "variant_family": "post_2014",
-                "frequency": "monthly",
+                "frequency": "release-event",
+                "window_definition": "release_to_next_release",
                 "dependent_variable": "DGS10",
                 "dependent_label": "10-year Treasury constant maturity yield",
                 "outcome_role": "headline",
@@ -1903,13 +1909,14 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
                 "std_err": 0.02,
                 "t_stat": -2.0,
                 "p_value": 0.05,
-                "nobs": 150,
+                "nobs": 45,
+                "effective_shock_count": 45,
                 "rsquared": 0.18,
                 "cov_type": "HAC",
                 "cov_maxlags": 4,
                 "sample_start": "2014-01-31",
                 "sample_end": "2026-03-31",
-                "notes": "Post-2014 monthly flow baseline.",
+                "notes": "Post-2014 release-level flow baseline.",
             }
         ]
     ).to_csv(tables_dir / "pricing_subsample_grid.csv", index=False)
@@ -1923,12 +1930,14 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
                 "variant_id": "standardized_predictors",
                 "variant_family": "standardized_predictors",
                 "panel_frequency": "monthly",
+                "window_definition": "carry_forward_monthly",
                 "term": "stock_excess_bills_bn",
                 "coef": 0.01,
                 "std_err": 0.01,
                 "t_stat": 1.0,
                 "p_value": 0.30,
                 "nobs": 200,
+                "effective_shock_count": 200,
                 "rsquared": 0.2,
                 "term_role": "primary_predictor",
                 "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn) (1 SD)",
@@ -1949,6 +1958,7 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
             {
                 "scenario_id": "plus_100bn_duration_supply",
                 "scenario_label": "Plus $100bn Public Duration Supply shock",
+                "scenario_role": "supporting",
                 "scenario_shock_bn": 100.0,
                 "scenario_shock_scale_bn": 100.0,
                 "model_id": "weekly_duration_baseline",
@@ -1961,11 +1971,83 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
                 "coef_bp_per_100bn": -0.05,
                 "implied_bp_change": -0.05,
                 "nobs": 200,
+                "effective_shock_count": 200,
                 "p_value": 0.03,
                 "notes": "Weekly duration baseline.",
             }
         ]
     ).to_csv(tables_dir / "pricing_scenario_translation.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "release_id": "2024Q1__2024-01-15",
+                "quarter": "2024Q1",
+                "qra_release_date": "2024-01-15",
+                "market_pricing_marker_minus_1d": "2024-01-12",
+                "release_to_next_release_end_date": "2024-04-11",
+                "release_plus_21bd_end_date": "2024-02-13",
+                "bill_share": 0.20,
+                "ati_baseline_bn": 2.0,
+                "ati_baseline_bn_posonly": 2.0,
+                "debt_limit_dummy": 0,
+                "target_tau": 0.18,
+                "DGS10": 400.0,
+                "THREEFYTP10": 120.0,
+                "DGS30": 430.0,
+                "delta_dgs10_release_to_next_release": -4.0,
+                "delta_threefytp10_release_to_next_release": -2.0,
+                "delta_dgs30_release_to_next_release": -3.0,
+                "delta_dff_release_to_next_release": 0.1,
+                "delta_dgs10_release_plus_21bd": -2.0,
+                "delta_threefytp10_release_plus_21bd": -1.0,
+                "delta_dgs30_release_plus_21bd": -1.5,
+                "delta_dff_release_plus_21bd": 0.05,
+            }
+        ]
+    ).to_csv(processed_dir / "pricing_release_flow_panel.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "spec_id": "release_flow_baseline_next_release",
+                "window_definition": "release_to_next_release",
+                "dependent_variable": "DGS10",
+                "dependent_label": "10-year Treasury constant maturity yield",
+                "omitted_release_id": "2024Q1__2024-01-15",
+                "coef": -0.05,
+                "std_err": 0.02,
+                "t_stat": -2.5,
+                "p_value": 0.03,
+                "nobs": 40,
+                "effective_shock_count": 40,
+                "sample_start": "2009-01-31",
+                "sample_end": "2026-03-31",
+                "notes": "Release leave-one-out diagnostic.",
+            }
+        ]
+    ).to_csv(tables_dir / "pricing_release_flow_leave_one_out.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "tau": 0.18,
+                "model_id": "monthly_stock_tau_18",
+                "model_family": "monthly_stock_tau_sensitivity",
+                "dependent_variable": "DGS10",
+                "dependent_label": "10-year Treasury constant maturity yield",
+                "term": "stock_excess_bills_bn",
+                "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+                "coef": 0.01,
+                "std_err": 0.02,
+                "t_stat": 0.5,
+                "p_value": 0.61,
+                "nobs": 200,
+                "effective_shock_count": 200,
+                "rsquared": 0.2,
+                "sample_start": "2009-01-31",
+                "sample_end": "2026-03-31",
+                "notes": "Tau sensitivity.",
+            }
+        ]
+    ).to_csv(tables_dir / "pricing_tau_sensitivity_grid.csv", index=False)
 
     monkeypatch.setattr(publish, "TABLES_DIR", tables_dir)
     monkeypatch.setattr(publish, "PROCESSED_DIR", processed_dir)
@@ -1977,12 +2059,18 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
     subsample = publish.build_pricing_subsample_grid_publish_table()
     robustness = publish.build_pricing_regression_robustness_publish_table()
     scenarios = publish.build_pricing_scenario_translation_publish_table()
+    release_flow_panel = publish.build_pricing_release_flow_panel_publish_table()
+    leave_one_out = publish.build_pricing_release_flow_leave_one_out_publish_table()
+    tau_grid = publish.build_pricing_tau_sensitivity_grid_publish_table()
 
-    assert list(spec_registry["spec_id"]) == ["monthly_flow_baseline"]
-    assert list(summary["model_id"]) == ["monthly_flow_baseline"]
+    assert list(spec_registry["spec_id"]) == ["release_flow_baseline_next_release"]
+    assert list(summary["model_id"]) == ["release_flow_baseline_next_release"]
     assert list(subsample["variant_id"]) == ["post_2014"]
     assert list(robustness["term"]) == ["stock_excess_bills_bn"]
     assert list(scenarios["scenario_id"]) == ["plus_100bn_duration_supply"]
+    assert list(release_flow_panel["release_id"]) == ["2024Q1__2024-01-15"]
+    assert list(leave_one_out["omitted_release_id"]) == ["2024Q1__2024-01-15"]
+    assert list(tau_grid["tau"]) == [0.18]
 
     dataset_status = publish.build_dataset_status_table()
     pricing_row = dataset_status.loc[dataset_status["dataset"] == "pricing"].iloc[0]
@@ -1991,6 +2079,8 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
     assert bool(pricing_row["fallback_only"])
     assert "pricing_spec_registry" in set(dataset_status["dataset"])
     assert "pricing_subsample_grid" in set(dataset_status["dataset"])
+    assert "pricing_release_flow_panel" in set(dataset_status["dataset"])
+    assert "pricing_tau_sensitivity_grid" in set(dataset_status["dataset"])
 
 
 def test_series_metadata_catalog_includes_pricing_series() -> None:
@@ -2004,5 +2094,11 @@ def test_series_metadata_catalog_includes_pricing_series() -> None:
     assert {"ati_baseline_bn", "stock_excess_bills_bn", "headline_public_duration_supply", "THREEFYTP10", "DGS10"}.issubset(
         set(pricing_rows["series_id"])
     )
-    assert {"pricing_spec_registry", "pricing_subsample_grid"}.issubset(set(pricing_rows["series_id"]))
+    assert {
+        "pricing_spec_registry",
+        "pricing_subsample_grid",
+        "pricing_release_flow_panel",
+        "pricing_release_flow_leave_one_out",
+        "pricing_tau_sensitivity_grid",
+    }.issubset(set(pricing_rows["series_id"]))
     assert set(pricing_rows["public_role"]) == {"supporting"}

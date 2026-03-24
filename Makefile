@@ -102,10 +102,11 @@ regenerate: download-core qra qra-enrich official-capture official-ati investor 
 site: guard-env publish
 	@echo "Copying publish artifacts to site/data/..."
 	@mkdir -p site/data
-	@cp output/publish/*.json site/data/
-	@cp output/publish/*.csv site/data/
+	@find site/data -maxdepth 1 -type f \( -name '*.json' -o -name '*.csv' \) -delete
+	@rsync -a --ignore-existing --include='*.json' --include='*.csv' --exclude='*' output/publish/ site/data/
 	@if [[ -d output/figures ]]; then \
 		mkdir -p site/figures; \
-		cp output/figures/* site/figures/ 2>/dev/null || true; \
+		find site/figures -maxdepth 1 -type f -delete 2>/dev/null || true; \
+		rsync -a --ignore-existing output/figures/ site/figures/ 2>/dev/null || true; \
 	fi
 	@echo "Site ready. Serve with: cd site && python3 -m http.server 8000"

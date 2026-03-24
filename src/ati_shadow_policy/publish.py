@@ -12,8 +12,10 @@ from .paths import OUTPUT_DIR, PROCESSED_DIR, RAW_DIR, TABLES_DIR
 from .research.pricing_models import (
     PRICING_REGRESSION_ROBUSTNESS_COLUMNS,
     PRICING_REGRESSION_SUMMARY_COLUMNS,
+    PRICING_RELEASE_FLOW_LEAVE_ONE_OUT_COLUMNS,
     PRICING_SPEC_REGISTRY_COLUMNS,
     PRICING_SUBSAMPLE_GRID_COLUMNS,
+    PRICING_TAU_SENSITIVITY_GRID_COLUMNS,
     SCENARIO_TRANSLATION_COLUMNS as PRICING_SCENARIO_TRANSLATION_COLUMNS,
 )
 from .research.qra_classification import SUMMARY_HEADLINE_BUCKETS
@@ -2280,6 +2282,50 @@ def build_pricing_scenario_translation_publish_table() -> pd.DataFrame:
     )
 
 
+def build_pricing_release_flow_panel_publish_table() -> pd.DataFrame:
+    return _read_processed_csv(
+        PROCESSED_DIR / "pricing_release_flow_panel.csv",
+        columns=[
+            "release_id",
+            "quarter",
+            "qra_release_date",
+            "market_pricing_marker_minus_1d",
+            "release_to_next_release_end_date",
+            "release_plus_21bd_end_date",
+            "bill_share",
+            "ati_baseline_bn",
+            "ati_baseline_bn_posonly",
+            "debt_limit_dummy",
+            "target_tau",
+            "DGS10",
+            "THREEFYTP10",
+            "DGS30",
+            "delta_dgs10_release_to_next_release",
+            "delta_threefytp10_release_to_next_release",
+            "delta_dgs30_release_to_next_release",
+            "delta_dff_release_to_next_release",
+            "delta_dgs10_release_plus_21bd",
+            "delta_threefytp10_release_plus_21bd",
+            "delta_dgs30_release_plus_21bd",
+            "delta_dff_release_plus_21bd",
+        ],
+    )
+
+
+def build_pricing_release_flow_leave_one_out_publish_table() -> pd.DataFrame:
+    return _read_optional_source_csv(
+        "pricing_release_flow_leave_one_out",
+        columns=list(PRICING_RELEASE_FLOW_LEAVE_ONE_OUT_COLUMNS),
+    )
+
+
+def build_pricing_tau_sensitivity_grid_publish_table() -> pd.DataFrame:
+    return _read_optional_source_csv(
+        "pricing_tau_sensitivity_grid",
+        columns=list(PRICING_TAU_SENSITIVITY_GRID_COLUMNS),
+    )
+
+
 def _raw_file_count(path: Path) -> int:
     if not path.exists():
         return 0
@@ -2394,7 +2440,10 @@ def build_investor_allotments_summary_table() -> pd.DataFrame:
     ]
     if not path.exists():
         return pd.DataFrame(columns=columns)
-    panel = pd.read_csv(path)
+    try:
+        panel = pd.read_csv(path)
+    except pd.errors.EmptyDataError:
+        return pd.DataFrame(columns=columns)
     if panel.empty:
         return pd.DataFrame(columns=columns)
     amount = panel.loc[panel.get("measure", pd.Series(dtype=str)).eq("allotment_amount")].copy()
@@ -2464,7 +2513,10 @@ def build_primary_dealer_summary_table() -> pd.DataFrame:
     ]
     if not path.exists():
         return pd.DataFrame(columns=columns)
-    panel = pd.read_csv(path)
+    try:
+        panel = pd.read_csv(path)
+    except pd.errors.EmptyDataError:
+        return pd.DataFrame(columns=columns)
     if panel.empty:
         return pd.DataFrame(columns=columns)
     available = (
@@ -2636,6 +2688,36 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "frequency": "weekly (W-WED)",
             "value_units": "USD billions",
             "sign_convention": "Positive values imply more duration supply reaching the public in that week.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing",
+            "series_id": "pricing_release_flow_panel",
+            "frequency": "release-event",
+            "value_units": "release rows",
+            "sign_convention": "One row per official QRA release with release-level yield and policy-rate deltas.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing",
+            "series_id": "pricing_release_flow_leave_one_out",
+            "frequency": "artifact",
+            "value_units": "diagnostic rows",
+            "sign_convention": "One row per omitted release and outcome for the release-level flow anchor.",
+            "source_quality": "derived_pricing_reduced_form",
+            "series_role": "supporting",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing",
+            "series_id": "pricing_tau_sensitivity_grid",
+            "frequency": "artifact",
+            "value_units": "regression rows",
+            "sign_convention": "Rows report stock-only coefficients under alternate target bill-share anchors.",
             "source_quality": "derived_pricing_reduced_form",
             "series_role": "supporting",
             "public_role": "supporting",
@@ -2990,6 +3072,9 @@ def build_dataset_status_table() -> pd.DataFrame:
     pricing_subsample_grid = build_pricing_subsample_grid_publish_table()
     pricing_regression_robustness = build_pricing_regression_robustness_publish_table()
     pricing_scenario_translation = build_pricing_scenario_translation_publish_table()
+    pricing_release_flow_panel = build_pricing_release_flow_panel_publish_table()
+    pricing_release_flow_leave_one_out = build_pricing_release_flow_leave_one_out_publish_table()
+    pricing_tau_sensitivity_grid = build_pricing_tau_sensitivity_grid_publish_table()
     qra_review_surface = _qra_review_surface_integrity(
         qra_event_registry=qra_event_registry,
         qra_shock_crosswalk=qra_shock_crosswalk,
@@ -3008,6 +3093,12 @@ def build_dataset_status_table() -> pd.DataFrame:
         pricing_missing.append("pricing_regression_robustness_missing")
     if pricing_scenario_translation.empty:
         pricing_missing.append("pricing_scenario_translation_missing")
+    if pricing_release_flow_panel.empty:
+        pricing_missing.append("pricing_release_flow_panel_missing")
+    if pricing_release_flow_leave_one_out.empty:
+        pricing_missing.append("pricing_release_flow_leave_one_out_missing")
+    if pricing_tau_sensitivity_grid.empty:
+        pricing_missing.append("pricing_tau_sensitivity_grid_missing")
     rows = [
         {
             "dataset": "official_capture",
@@ -3337,6 +3428,39 @@ def build_dataset_status_table() -> pd.DataFrame:
             "public_role": "supporting",
         },
         {
+            "dataset": "pricing_release_flow_panel",
+            "readiness_tier": "supporting_provisional" if not pricing_release_flow_panel.empty else "not_started",
+            "source_quality": "derived_pricing_reduced_form",
+            "headline_ready": False,
+            "fallback_only": True,
+            "missing_critical_fields": "pricing_release_flow_panel_missing" if pricing_release_flow_panel.empty else "",
+            "last_regenerated_utc": _artifact_mtime(PROCESSED_DIR / "pricing_release_flow_panel.csv"),
+            "review_maturity": "provisional_supporting" if not pricing_release_flow_panel.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_release_flow_leave_one_out",
+            "readiness_tier": "supporting_provisional" if not pricing_release_flow_leave_one_out.empty else "not_started",
+            "source_quality": "derived_pricing_reduced_form",
+            "headline_ready": False,
+            "fallback_only": True,
+            "missing_critical_fields": "pricing_release_flow_leave_one_out_missing" if pricing_release_flow_leave_one_out.empty else "",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "pricing_release_flow_leave_one_out.csv"),
+            "review_maturity": "provisional_supporting" if not pricing_release_flow_leave_one_out.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
+            "dataset": "pricing_tau_sensitivity_grid",
+            "readiness_tier": "supporting_provisional" if not pricing_tau_sensitivity_grid.empty else "not_started",
+            "source_quality": "derived_pricing_reduced_form",
+            "headline_ready": False,
+            "fallback_only": True,
+            "missing_critical_fields": "pricing_tau_sensitivity_grid_missing" if pricing_tau_sensitivity_grid.empty else "",
+            "last_regenerated_utc": _artifact_mtime(TABLES_DIR / "pricing_tau_sensitivity_grid.csv"),
+            "review_maturity": "provisional_supporting" if not pricing_tau_sensitivity_grid.empty else "not_started",
+            "public_role": "supporting",
+        },
+        {
             "dataset": "pricing_scenario_translation",
             "readiness_tier": "supporting_provisional" if not pricing_scenario_translation.empty else "not_started",
             "source_quality": "derived_pricing_reduced_form",
@@ -3436,6 +3560,17 @@ def build_publish_artifacts() -> None:
     publish_table("pricing_regression_summary", "Pricing Regression Summary", build_pricing_regression_summary_publish_table())
     publish_table("pricing_subsample_grid", "Pricing Subsample Grid", build_pricing_subsample_grid_publish_table())
     publish_table("pricing_regression_robustness", "Pricing Regression Robustness", build_pricing_regression_robustness_publish_table())
+    publish_table("pricing_release_flow_panel", "Pricing Release Flow Panel", build_pricing_release_flow_panel_publish_table())
+    publish_table(
+        "pricing_release_flow_leave_one_out",
+        "Pricing Release Flow Leave One Out",
+        build_pricing_release_flow_leave_one_out_publish_table(),
+    )
+    publish_table(
+        "pricing_tau_sensitivity_grid",
+        "Pricing Tau Sensitivity Grid",
+        build_pricing_tau_sensitivity_grid_publish_table(),
+    )
     publish_table("pricing_scenario_translation", "Pricing Scenario Translation", build_pricing_scenario_translation_publish_table())
     publish_table("data_sources_summary", "Data Sources Summary", build_data_sources_publish_table())
     publish_table("investor_allotments_summary", "Investor Allotments Summary", build_investor_allotments_summary_table())

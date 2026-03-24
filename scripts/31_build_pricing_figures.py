@@ -49,7 +49,10 @@ def _coefficient_labels(frame: pd.DataFrame) -> tuple[list[str], list[float]]:
         spec = str(row.get("model_id") or row.get("spec_id"))
         variant = str(row.get("variant_family", "baseline"))
         spec_label = (
-            spec.replace("monthly_flow_baseline", "Flow baseline")
+            spec
+            .replace("release_flow_baseline_next_release", "Release flow (next release)")
+            .replace("release_flow_baseline_21bd", "Release flow (+21bd)")
+            .replace("monthly_flow_baseline", "Flow baseline")
             .replace("monthly_stock_baseline", "Stock baseline")
             .replace("weekly_duration_baseline", "Duration baseline")
         )
@@ -108,13 +111,13 @@ def main(argv: list[str] | None = None) -> None:
     build_horizontal_bar_svg(
         coeff_labels,
         coeff_values,
-        title="Headline Pricing Coefficients and Subsamples",
-        subtitle="All coefficients reported in basis points per $100bn shock on the named input.",
+        title="Release-Level Flow Anchor and Context Specs",
+        subtitle="Coefficients are reported in basis points per $100bn on the named input; release-level flow rows are the current anchor.",
         output_path=figures_dir / COEFFICIENT_PLOT,
     )
 
     scenario_labels = [
-        f"{row['scenario_label']} | {'10Y Yield' if row['dependent_variable'] == 'DGS10' else '10Y Term Premium'}"
+        f"{row['scenario_label']} | {row.get('scenario_role', 'supporting').replace('_', ' ')} | {'10Y Yield' if row['dependent_variable'] == 'DGS10' else '10Y Term Premium'}"
         for _, row in scenario.iterrows()
     ]
     scenario_values = [float(value) for value in scenario["implied_bp_change"]]

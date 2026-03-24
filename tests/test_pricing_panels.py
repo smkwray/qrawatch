@@ -169,3 +169,46 @@ def test_build_pricing_panels_monthly_and_weekly_outcomes_are_aligned() -> None:
     assert weekly_panel["delta_wdtgal"].iloc[1:].notna().all()
     assert official_panel.loc[official_panel["date"] == pd.Timestamp("2024-04-30"), "debt_limit_dummy"].iloc[0] == 1
     assert weekly_panel["debt_limit_dummy"].sum() > 0
+
+
+def test_build_pricing_release_flow_panel_maps_release_windows_and_deltas() -> None:
+    official_capture = pd.DataFrame(
+        {
+            "quarter": ["2024Q1", "2024Q2", "2024Q3"],
+            "qra_release_date": ["2024-01-15", "2024-04-12", "2024-07-15"],
+            "market_pricing_marker_minus_1d": ["2024-01-12", "2024-04-11", "2024-07-12"],
+            "total_financing_need_bn": [100.0, 120.0, 140.0],
+            "net_bill_issuance_bn": [20.0, 24.0, 28.0],
+            "notes": ["", "Debt limit and extraordinary measures.", ""],
+        }
+    )
+    fred = _monthly_fred_frame()
+    release_panel = pricing_panels.build_pricing_release_flow_panel(official_capture, fred)
+
+    assert len(release_panel) == 3
+    first = release_panel.iloc[0]
+    assert first["release_id"] == "2024Q1__2024-01-15"
+    assert first["market_pricing_marker_minus_1d"] == pd.Timestamp("2024-01-12")
+    assert first["release_to_next_release_end_date"] == pd.Timestamp("2024-04-11")
+    assert first["release_plus_21bd_end_date"] == pd.Timestamp("2024-02-13")
+
+    expected_next = (
+        fred.loc[fred["date"] == pd.Timestamp("2024-04-11"), "DGS10"].iloc[0]
+        - fred.loc[fred["date"] == pd.Timestamp("2024-01-12"), "DGS10"].iloc[0]
+    ) * pricing_panels.RATE_PERCENT_TO_BPS
+    expected_21bd = (
+        fred.loc[fred["date"] == pd.Timestamp("2024-02-13"), "DGS10"].iloc[0]
+        - fred.loc[fred["date"] == pd.Timestamp("2024-01-12"), "DGS10"].iloc[0]
+    ) * pricing_panels.RATE_PERCENT_TO_BPS
+    expected_dff = (
+        fred.loc[fred["date"] == pd.Timestamp("2024-04-11"), "DFF"].iloc[0]
+        - fred.loc[fred["date"] == pd.Timestamp("2024-01-12"), "DFF"].iloc[0]
+    )
+    assert first["delta_dgs10_release_to_next_release"] == pytest.approx(expected_next)
+    assert first["delta_dgs10_release_plus_21bd"] == pytest.approx(expected_21bd)
+    assert first["delta_dff_release_to_next_release"] == pytest.approx(expected_dff)
+    assert release_panel.loc[release_panel["quarter"] == "2024Q2", "debt_limit_dummy"].iloc[0] == 1
+
+    last = release_panel.iloc[-1]
+    assert pd.isna(last["delta_dgs10_release_to_next_release"])
+    assert pd.notna(last["delta_dgs10_release_plus_21bd"])

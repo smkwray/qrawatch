@@ -20,10 +20,13 @@ leave_one_event_out_table,supporting_ready,derived_qra_robustness,False,False,,2
 auction_absorption_table,supporting_ready,derived_absorption_bridge,False,False,,2026-03-22T21:49:02.707978+00:00,supporting_ready,supporting
 plumbing,headline_ready,headline_exact_net_with_labeled_fallbacks,True,False,,2026-03-23T22:59:56.051029+00:00,headline_ready,headline
 duration,headline_ready,headline_hybrid_exact_with_labeled_fallbacks,True,False,,2026-03-23T22:59:57.831228+00:00,headline_ready,headline
-pricing,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-23T22:59:52.881020+00:00,provisional_supporting,supporting
-pricing_spec_registry,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-23T22:59:52.879818+00:00,provisional_supporting,supporting
-pricing_subsample_grid,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-23T22:59:52.881998+00:00,provisional_supporting,supporting
-pricing_scenario_translation,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-23T22:59:52.883154+00:00,provisional_supporting,supporting
+pricing,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-24T11:25:28.510332+00:00,provisional_supporting,supporting
+pricing_spec_registry,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-24T11:25:28.508748+00:00,provisional_supporting,supporting
+pricing_subsample_grid,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-24T11:25:28.511514+00:00,provisional_supporting,supporting
+pricing_release_flow_panel,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-24T11:25:26.481279+00:00,provisional_supporting,supporting
+pricing_release_flow_leave_one_out,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-24T11:25:28.514201+00:00,provisional_supporting,supporting
+pricing_tau_sensitivity_grid,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-24T11:25:28.514566+00:00,provisional_supporting,supporting
+pricing_scenario_translation,supporting_provisional,derived_pricing_reduced_form,False,True,,2026-03-24T11:25:28.513260+00:00,provisional_supporting,supporting
 extension_investor_allotments,summary_ready,summary_ready,False,False,,2026-03-20T23:08:31.389494+00:00,summary_ready,supporting
 extension_primary_dealer,summary_ready,summary_ready,False,False,,2026-03-20T23:08:33.595202+00:00,summary_ready,supporting
 extension_sec_nmfp,summary_ready,summary_ready,False,False,,2026-03-20T23:08:36.355040+00:00,summary_ready,supporting

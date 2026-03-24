@@ -42,11 +42,12 @@ This public release should be read as an in-progress research/data product, not 
 
 ## Pricing credibility pack
 
-The pricing layer now centers on three locked baseline specs:
+The pricing layer now centers on a release-level flow pivot:
 
-- `monthly_flow_baseline` for `DGS10` and `THREEFYTP10` on Maturity-Tilt Flow plus `DFF` and a debt-limit dummy, starting in `2009Q1`
-- `monthly_stock_baseline` for `DGS10` and `THREEFYTP10` on Excess Bills Stock plus `DFF` and a debt-limit dummy, starting in `2009Q1`
-- `weekly_duration_baseline` for `DGS10` and `THREEFYTP10` on Public Duration Supply plus QT, buybacks, TGA, and `DFF`
+- `release_flow_baseline_next_release` for release-level changes in `DGS10` and `THREEFYTP10` from the pre-release pricing marker to the next release marker, on Maturity-Tilt Flow plus matching-horizon `delta_DFF` and a debt-limit dummy
+- `release_flow_baseline_21bd` as a supporting fixed-horizon release window out to `+21` business days
+- `monthly_flow_baseline` is still published side-by-side as a carry-forward context spec
+- `monthly_stock_baseline` and `weekly_duration_baseline` remain supporting reduced-form context rather than the main credibility anchor
 
 Headline quantity coefficients are published in **basis points per `$100bn`** on the named input.
 
@@ -56,6 +57,9 @@ The pricing credibility pack now includes:
 - `output/publish/pricing_regression_summary.{csv,json,md}`
 - `output/publish/pricing_subsample_grid.{csv,json,md}`
 - `output/publish/pricing_regression_robustness.{csv,json,md}`
+- `output/publish/pricing_release_flow_panel.{csv,json,md}`
+- `output/publish/pricing_release_flow_leave_one_out.{csv,json,md}`
+- `output/publish/pricing_tau_sensitivity_grid.{csv,json,md}`
 - `output/publish/pricing_scenario_translation.{csv,json,md}`
 - `output/figures/maturity_tilt_flow_vs_dgs10.svg`
 - `output/figures/excess_bills_stock_vs_threefytp10.svg`
@@ -147,6 +151,6 @@ make site
 ## What comes next
 
 - keep the QRA causal lane bounded and documented as a narrow audited pilot rather than reopening broad benchmark hunts
-- pressure-test the locked pricing specs with one more GPT Pro audit focused on design strength, numerical credibility, and the highest-return next improvement
-- decide whether the current baseline pricing design is strong enough to anchor the project’s neutral maturity-to-rates claim
-- only after that, choose between spec refinement, additional controls, or a broader design pivot
+- pressure-test the release-level flow anchor with leave-one-release-out diagnostics and a GPT Pro audit focused on numerical credibility
+- decide whether the release-level flow design can earn headline status or whether monthly flow should remain the strongest published reduced-form result
+- only after that, choose between richer release controls, a stronger event bridge, or a broader design pivot

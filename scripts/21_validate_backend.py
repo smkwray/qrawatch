@@ -166,6 +166,7 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "model_id",
         "model_family",
         "panel_key",
+        "window_definition",
         "dependent_variable",
         "outcome_role",
         "term",
@@ -173,11 +174,14 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "std_err",
         "p_value",
         "nobs",
+        "effective_shock_count",
     ],
     "pricing_spec_registry.csv": [
         "spec_id",
         "spec_family",
         "headline_flag",
+        "anchor_role",
+        "window_definition",
         "sample_start",
         "sample_end",
         "outcome",
@@ -192,11 +196,13 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "variant_id",
         "variant_family",
         "frequency",
+        "window_definition",
         "dependent_variable",
         "term",
         "coef",
         "p_value",
         "nobs",
+        "effective_shock_count",
     ],
     "pricing_regression_robustness.csv": [
         "dependent_variable",
@@ -211,6 +217,7 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
     "pricing_scenario_translation.csv": [
         "scenario_id",
         "scenario_label",
+        "scenario_role",
         "scenario_shock_bn",
         "model_id",
         "dependent_variable",
@@ -218,6 +225,35 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "coef_bp_per_100bn",
         "implied_bp_change",
         "p_value",
+    ],
+    "pricing_release_flow_panel.csv": [
+        "release_id",
+        "quarter",
+        "qra_release_date",
+        "market_pricing_marker_minus_1d",
+        "delta_dgs10_release_to_next_release",
+        "delta_threefytp10_release_to_next_release",
+        "delta_dff_release_to_next_release",
+    ],
+    "pricing_release_flow_leave_one_out.csv": [
+        "spec_id",
+        "window_definition",
+        "dependent_variable",
+        "omitted_release_id",
+        "coef",
+        "p_value",
+        "nobs",
+        "effective_shock_count",
+    ],
+    "pricing_tau_sensitivity_grid.csv": [
+        "tau",
+        "model_id",
+        "dependent_variable",
+        "term",
+        "coef",
+        "p_value",
+        "nobs",
+        "effective_shock_count",
     ],
     "data_sources_summary.csv": [
         "source_family",
@@ -1086,6 +1122,7 @@ def _validate_readme_causal_claims_consistency(
 def _validate_neutral_maturity_tilt_language(
     readme_path: Path,
     pricing_methods_path: Path,
+    pricing_results_path: Path | None = None,
     *,
     errors: list[str],
     warnings: list[str],
@@ -1093,8 +1130,11 @@ def _validate_neutral_maturity_tilt_language(
     targets = (
         ("README", readme_path),
         ("PRICING_METHODS", pricing_methods_path),
+        ("PRICING_RESULTS", pricing_results_path),
     )
     for label, path in targets:
+        if path is None:
+            continue
         if not path.exists():
             warnings.append(f"validation_doc_missing:{path}")
             continue
@@ -1107,6 +1147,26 @@ def _validate_neutral_maturity_tilt_language(
             errors.append(f"{label.lower()}_missing_maturity_tilt_label")
         if re.search(r"\bATI\b", text):
             errors.append(f"{label.lower()}_uses_ati_as_primary_public_label")
+
+
+def _validate_release_level_anchor_language(
+    readme_path: Path,
+    pricing_results_path: Path,
+    *,
+    errors: list[str],
+    warnings: list[str],
+) -> None:
+    targets = (
+        ("README", readme_path),
+        ("PRICING_RESULTS", pricing_results_path),
+    )
+    for label, path in targets:
+        if not path.exists():
+            warnings.append(f"validation_doc_missing:{path}")
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace").lower()
+        if "release-level" not in text and "release level" not in text:
+            errors.append(f"{label.lower()}_missing_release_level_anchor_language")
 
 
 def _has_seed_dependency(*values: object) -> bool:
@@ -2528,7 +2588,16 @@ def validate_publish_artifacts(
                 if not invalid_public_role.empty:
                     errors.append(f"series_metadata_extension_public_role_invalid:{name}")
         for dataset_name, series_ids in {
-            "pricing": {"ati_baseline_bn", "stock_excess_bills_bn", "headline_public_duration_supply", "THREEFYTP10", "DGS10"},
+            "pricing": {
+                "ati_baseline_bn",
+                "stock_excess_bills_bn",
+                "headline_public_duration_supply",
+                "THREEFYTP10",
+                "DGS10",
+                "pricing_release_flow_panel",
+                "pricing_release_flow_leave_one_out",
+                "pricing_tau_sensitivity_grid",
+            },
             "pricing_spec_registry": {"pricing_spec_registry"},
             "pricing_subsample_grid": {"pricing_subsample_grid"},
         }.items():
@@ -2541,7 +2610,15 @@ def validate_publish_artifacts(
                 errors.append(f"series_metadata_missing_series:{dataset_name}:{','.join(sorted(series_ids - present))}")
 
     if dataset_status_path.exists() and 'dataset_status' in locals():
-        for dataset_name in ("pricing", "pricing_spec_registry", "pricing_subsample_grid", "pricing_scenario_translation"):
+        for dataset_name in (
+            "pricing",
+            "pricing_spec_registry",
+            "pricing_subsample_grid",
+            "pricing_scenario_translation",
+            "pricing_release_flow_panel",
+            "pricing_release_flow_leave_one_out",
+            "pricing_tau_sensitivity_grid",
+        ):
             match = dataset_status.loc[dataset_status.get("dataset", pd.Series(dtype=str)) == dataset_name]
             if match.empty:
                 errors.append(f"dataset_status_missing:{dataset_name}")
@@ -2568,9 +2645,32 @@ def validate_publish_artifacts(
     _validate_neutral_maturity_tilt_language(
         readme_path=readme_path,
         pricing_methods_path=ROOT / "docs" / "PRICING_METHODS.md",
+        pricing_results_path=ROOT / "docs" / "PRICING_RESULTS_MEMO.md",
         errors=errors,
         warnings=warnings,
     )
+    _validate_release_level_anchor_language(
+        readme_path=readme_path,
+        pricing_results_path=ROOT / "docs" / "PRICING_RESULTS_MEMO.md",
+        errors=errors,
+        warnings=warnings,
+    )
+
+    pricing_scenario_publish = publish_dir / "pricing_scenario_translation.csv"
+    if pricing_scenario_publish.exists():
+        try:
+            pricing_scenarios = pd.read_csv(pricing_scenario_publish)
+            if "scenario_role" not in pricing_scenarios.columns:
+                errors.append("publish_artifact_missing_columns:pricing_scenario_translation.csv:scenario_role")
+            else:
+                stock_mask = pricing_scenarios.get("scenario_id", pd.Series(dtype=str)).astype(str).isin(
+                    ["plus_500bn_term_out", "plus_1000bn_term_out"]
+                )
+                invalid_stock = pricing_scenarios.loc[stock_mask & (pricing_scenarios["scenario_role"].astype(str) != "illustrative_only")]
+                if not invalid_stock.empty:
+                    errors.append("pricing_stock_scenarios_not_illustrative_only")
+        except Exception as exc:
+            errors.append(f"publish_artifact_read_error:pricing_scenario_translation.csv:{exc}")
 
     return errors, warnings, {"missing_files": missing_files, "index_artifacts": len(artifacts)}
 

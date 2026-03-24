@@ -83,6 +83,36 @@
     },
     {
       "dataset": "pricing",
+      "series_id": "pricing_release_flow_panel",
+      "frequency": "release-event",
+      "value_units": "release rows",
+      "sign_convention": "One row per official QRA release with release-level yield and policy-rate deltas.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing",
+      "series_id": "pricing_release_flow_leave_one_out",
+      "frequency": "artifact",
+      "value_units": "diagnostic rows",
+      "sign_convention": "One row per omitted release and outcome for the release-level flow anchor.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing",
+      "series_id": "pricing_tau_sensitivity_grid",
+      "frequency": "artifact",
+      "value_units": "regression rows",
+      "sign_convention": "Rows report stock-only coefficients under alternate target bill-share anchors.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing",
       "series_id": "THREEFYTP10",
       "frequency": "monthly / weekly",
       "value_units": "basis points",
