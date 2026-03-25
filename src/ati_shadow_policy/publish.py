@@ -2242,6 +2242,7 @@ def build_duration_publish_table() -> pd.DataFrame:
         "headline_source_quality",
         "fallback_source_quality",
         "qt_proxy",
+        "qt_proxy_is_zero_filled",
         "buybacks_accepted",
         "value_units",
         "frequency",

@@ -14,11 +14,11 @@
       "outcome_role": "headline",
       "term": "headline_public_duration_supply",
       "term_label": "Public Duration Supply (USD bn)",
-      "coef_bp_per_100bn": -26.080875357385892,
-      "implied_bp_change": -26.080875357385892,
+      "coef_bp_per_100bn": -24.265736976157584,
+      "implied_bp_change": -24.265736976157584,
       "nobs": 1197,
       "effective_shock_count": 1197,
-      "p_value": 3.355563123000163e-09,
+      "p_value": 1.2896531880183977e-07,
       "notes": "Weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
     },
     {
@@ -34,11 +34,11 @@
       "outcome_role": "headline",
       "term": "headline_public_duration_supply",
       "term_label": "Public Duration Supply (USD bn)",
-      "coef_bp_per_100bn": -44.05425599407576,
-      "implied_bp_change": -44.05425599407576,
+      "coef_bp_per_100bn": -40.65067879375648,
+      "implied_bp_change": -40.65067879375648,
       "nobs": 1197,
       "effective_shock_count": 1197,
-      "p_value": 4.918331207862477e-08,
+      "p_value": 1.540826989074141e-06,
       "notes": "Weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
     },
     {

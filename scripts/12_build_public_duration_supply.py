@@ -30,7 +30,10 @@ FREQUENCY = "weekly (W-WED)"
 
 def add_duration_supply_variants(panel: pd.DataFrame) -> pd.DataFrame:
     out = panel.copy()
+    qt_missing = out["qt_proxy"].isna()
     qt = out["qt_proxy"].fillna(0)
+    out["qt_proxy"] = qt  # publish the zero-filled value, not the raw NaN
+    out["qt_proxy_is_zero_filled"] = qt_missing
     buybacks = out["buybacks_accepted"].fillna(0)
     if "nonbill_net_exact" not in out.columns:
         out["nonbill_net_exact"] = out["coupon_like_total"]
@@ -49,6 +52,7 @@ def add_duration_supply_variants(panel: pd.DataFrame) -> pd.DataFrame:
     out["sign_convention"] = SIGN_CONVENTION
     out["notes"] = (
         "Headline measure = exact combined non-bill net issuance + QT proxy - buybacks accepted. "
+        "QT proxy is zero-filled when the FRED TREAST series is unavailable (see qt_proxy_is_zero_filled). "
         "Gross coupon-flow constructions remain explicit fallback columns."
     )
     return out

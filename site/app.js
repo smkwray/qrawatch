@@ -10,13 +10,16 @@
       var resp = await fetch(DATA_PATH + '/' + filename);
       if (!resp.ok) return null;
       var text = await resp.text();
-      var clean = text
-        .replace(/\bNaN\b/g, 'null')
-        .replace(/\b-Infinity\b/g, 'null')
-        .replace(/\bInfinity\b/g, 'null');
-      return JSON.parse(clean);
+      if (/\bNaN\b|\bInfinity\b/.test(text)) {
+        console.error('Artifact ' + filename + ' contains NaN or Infinity — backend should emit valid JSON. Attempting parse with repair.');
+        text = text
+          .replace(/\bNaN\b/g, 'null')
+          .replace(/\b-Infinity\b/g, 'null')
+          .replace(/\bInfinity\b/g, 'null');
+      }
+      return JSON.parse(text);
     } catch (e) {
-      console.warn('Failed to load ' + filename + ':', e);
+      console.error('Failed to parse ' + filename + ':', e);
       return null;
     }
   }
@@ -1418,7 +1421,7 @@
       var durHeaderText = el('div', { class: 'chart-header-text' });
       var durWeekCount = recent.length;
       durHeaderText.appendChild(el('div', { class: 'chart-title', text: 'Public Duration Supply (Recent ' + durWeekCount + ' Weeks)' }));
-      var qtMissing = recent.some(function (r) { return r.qt_proxy == null || (typeof r.qt_proxy === 'number' && isNaN(r.qt_proxy)); });
+      var qtMissing = recent.some(function (r) { return r.qt_proxy_is_zero_filled === true; });
       var durCaptionText = 'Weekly USD. Higher = more duration supply to private hands. Headline = exact non-bill net + QT proxy \u2212 buybacks.';
       if (qtMissing) durCaptionText += ' Note: QT proxy is unavailable for some weeks and zero-filled in the headline construction.';
       var durCaptionEl = el('div', { class: 'chart-caption', text: durCaptionText });

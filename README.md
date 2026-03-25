@@ -45,17 +45,18 @@ The public site at `site/index.html` is a static frontend (HTML + CSS + vanilla 
 - **`site/figures/`** — SVG figures mirrored from `output/figures/`
 - **`site/data/index.json`** — the artifact manifest used for conditional rendering
 
-The frontend never accesses raw or interim backend data. All numeric values, status text, coverage windows, and claim boundaries displayed on the site are loaded from backend-generated artifacts at runtime. `make site` mirrors the current `output/publish/` artifacts into the site bundle.
+The frontend never accesses raw or interim backend data. Numeric values, status counts, coverage windows, claim boundaries, and evidence-hierarchy roles are loaded from backend-generated artifacts at runtime. Some display labels, section prose, and model display ordering remain in frontend code. `make site` mirrors the current `output/publish/` artifacts into the site bundle.
 
 ## Quickstart
 
 ```bash
 python3 -m venv ~/venvs/qrawatch
-source .env
 "$HOME/venvs/qrawatch/bin/python" -m ensurepip --upgrade
 "$HOME/venvs/qrawatch/bin/python" -m pip install -r requirements.txt
 "$HOME/venvs/qrawatch/bin/python" -m pip install -e .
 ```
+
+If you have a local `.env` file with environment overrides (e.g. `VIRTUAL_ENV`), source it before running `make` commands.
 
 With network access:
 
