@@ -28,30 +28,30 @@ The locked public estimand in this round is:
 
 That is implemented with one primary design and supporting context designs:
 
-- release-level Maturity-Tilt Flow anchor: bp change in release-window rates per `$100bn` change in `ati_baseline_bn`
+- unique-release fixed-horizon Maturity-Tilt Flow profile: bp change in release-window rates per `$100bn` change in `ati_baseline_bn`
 - monthly carry-forward Maturity-Tilt Flow context: bp change in month-end rates per `$100bn` change in `ati_baseline_bn`
 - Excess Bills Stock context: bp change in month-end rates per `$100bn` change in `stock_excess_bills_bn`
 - Public Duration Supply context: bp change in weekly rates per `$100bn` change in `headline_public_duration_supply`
 
 ## Locked baseline specifications
 
-`release_flow_baseline_next_release`
+`release_flow_baseline_63bd`
 
-`delta_Y_release_to_next_release = a + b1 * ati_baseline_bn_release + b2 * delta_dff_release_to_next_release + b3 * debt_limit_dummy_release + e`
+`delta_Y_release_plus_63bd = a + b1 * ati_baseline_bn_release + b2 * delta_dff_release_plus_63bd + b3 * debt_limit_dummy_release + e`
 
 - outcomes: `DGS10`, `THREEFYTP10`
 - sample start: `2009Q1`
 - role: `credibility_anchor`
-- interpretation: one-row-per-release pricing test using the pre-release market marker and the next release marker
+- interpretation: one-row-per-unique market-pricing marker pricing test using cumulative changes from the pre-release market marker to `+63` business days after release
 
-`release_flow_baseline_21bd`
+`release_flow_horizon_{1,5,10,21,42}bd`
 
-`delta_Y_release_plus_21bd = a + b1 * ati_baseline_bn_release + b2 * delta_dff_release_plus_21bd + b3 * debt_limit_dummy_release + e`
+`delta_Y_release_plus_hbd = a + b1 * ati_baseline_bn_release + b2 * delta_dff_release_plus_hbd + b3 * debt_limit_dummy_release + e`
 
 - outcomes: `DGS10`, `THREEFYTP10`
 - sample start: `2009Q1`
 - role: `supporting`
-- interpretation: fixed-horizon supporting release-window check
+- interpretation: supporting horizon-profile checkpoints at `h ∈ {1, 5, 10, 21, 42}` business days
 
 `monthly_flow_baseline`
 
@@ -92,6 +92,7 @@ Published robustness families in this round:
 - `exclude_debt_limit`
 - `flow_vs_stock_horse_race`
 - `standardized_predictors`
+- release-flow placebo windows `[-21,-1]` and `[-5,-1]` business days
 - supporting `DGS30` outcome check
 - release-flow leave-one-out diagnostics
 - tau sensitivity for the stock object at `0.15 / 0.18 / 0.20`
@@ -109,11 +110,12 @@ Artifacts:
 
 ## Figure pack
 
-This round also publishes four SVG figures:
+This round also publishes five SVG figures:
 
 - `maturity_tilt_flow_vs_dgs10.svg`
 - `excess_bills_stock_vs_threefytp10.svg`
 - `pricing_headline_coefficients.svg`
+- `pricing_release_flow_horizon_profile.svg`
 - `pricing_scenario_translation.svg`
 
 The two overlay charts are standardized time-series comparisons. They are meant to show timing and sign patterns, not literal level equivalence.
@@ -140,7 +142,7 @@ Pricing coefficients should be interpreted as reduced-form relationships in this
 
 In practice:
 
-- the release-level Maturity-Tilt Flow design is now the main credibility test because it avoids repeating the same quarterly shock across many monthly rows
+- the release-level Maturity-Tilt Flow design is now a unique-release fixed-horizon credibility test because it avoids repeating the same quarterly shock across many monthly rows and avoids variable next-release endpoints
 - the monthly Maturity-Tilt Flow coefficient remains important context because it is currently the strongest negative reduced-form signal in the public outputs
 - the weekly Public Duration Supply coefficient is a useful duration-style pricing bridge, but it still needs careful sample scrutiny
 - the Excess Bills Stock coefficient is published because it is substantively important, not because it is already the strongest signal

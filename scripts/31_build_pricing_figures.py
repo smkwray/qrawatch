@@ -12,7 +12,11 @@ if str(SRC) not in sys.path:
 import pandas as pd
 
 from ati_shadow_policy.paths import FIGURES_DIR, PROCESSED_DIR, TABLES_DIR, ensure_project_dirs
-from ati_shadow_policy.research.pricing_figures import build_horizontal_bar_svg, build_overlay_svg
+from ati_shadow_policy.research.pricing_figures import (
+    build_horizon_profile_svg,
+    build_horizontal_bar_svg,
+    build_overlay_svg,
+)
 
 DEFAULT_OFFICIAL_PANEL = PROCESSED_DIR / "official_ati_price_panel.csv"
 DEFAULT_SUMMARY = TABLES_DIR / "pricing_regression_summary.csv"
@@ -22,6 +26,7 @@ DEFAULT_SCENARIO = TABLES_DIR / "pricing_scenario_translation.csv"
 OVERLAY_FLOW = "maturity_tilt_flow_vs_dgs10.svg"
 OVERLAY_STOCK = "excess_bills_stock_vs_threefytp10.svg"
 COEFFICIENT_PLOT = "pricing_headline_coefficients.svg"
+HORIZON_PROFILE_PLOT = "pricing_release_flow_horizon_profile.svg"
 SCENARIO_PLOT = "pricing_scenario_translation.svg"
 
 
@@ -50,8 +55,12 @@ def _coefficient_labels(frame: pd.DataFrame) -> tuple[list[str], list[float]]:
         variant = str(row.get("variant_family", "baseline"))
         spec_label = (
             spec
-            .replace("release_flow_baseline_next_release", "Release flow (next release)")
-            .replace("release_flow_baseline_21bd", "Release flow (+21bd)")
+            .replace("release_flow_baseline_63bd", "Release flow (+63bd anchor)")
+            .replace("release_flow_horizon_1bd", "Release flow (+1bd)")
+            .replace("release_flow_horizon_5bd", "Release flow (+5bd)")
+            .replace("release_flow_horizon_10bd", "Release flow (+10bd)")
+            .replace("release_flow_horizon_21bd", "Release flow (+21bd)")
+            .replace("release_flow_horizon_42bd", "Release flow (+42bd)")
             .replace("monthly_flow_baseline", "Flow baseline")
             .replace("monthly_stock_baseline", "Stock baseline")
             .replace("weekly_duration_baseline", "Duration baseline")
@@ -60,6 +69,26 @@ def _coefficient_labels(frame: pd.DataFrame) -> tuple[list[str], list[float]]:
         labels.append(f"{spec_label}{variant_label} | {outcome}")
         values.append(float(row.get("coef", 0.0)))
     return labels, values
+
+
+def _release_flow_horizon_frame(summary: pd.DataFrame) -> pd.DataFrame:
+    frame = summary.loc[
+        summary.get("term_role", pd.Series(dtype=str)).astype(str).eq("primary_predictor")
+        & summary.get("dependent_variable", pd.Series(dtype=str)).astype(str).isin(["DGS10", "THREEFYTP10"])
+        & summary.get("window_definition", pd.Series(dtype=str)).astype(str).str.match(r"release_plus_\d+bd")
+    ].copy()
+    if frame.empty:
+        return frame
+    frame["horizon_bd"] = (
+        frame["window_definition"]
+        .astype(str)
+        .str.extract(r"release_plus_(\d+)bd")[0]
+        .astype(float)
+    )
+    frame["series_label"] = frame["dependent_variable"].map(
+        {"DGS10": "10Y Treasury yield", "THREEFYTP10": "10Y term premium proxy"}
+    ).fillna(frame["dependent_variable"].astype(str))
+    return frame.sort_values(["series_label", "horizon_bd"]).reset_index(drop=True)
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -111,9 +140,20 @@ def main(argv: list[str] | None = None) -> None:
     build_horizontal_bar_svg(
         coeff_labels,
         coeff_values,
-        title="Release-Level Flow Anchor and Context Specs",
-        subtitle="Coefficients are reported in basis points per $100bn on the named input; release-level flow rows are the current anchor.",
+        title="Pricing Context Coefficients",
+        subtitle="Coefficients are reported in basis points per $100bn on the named input; +63bd is the primary release-level scalar.",
         output_path=figures_dir / COEFFICIENT_PLOT,
+    )
+
+    horizon_frame = _release_flow_horizon_frame(summary)
+    build_horizon_profile_svg(
+        horizon_frame,
+        horizon_col="horizon_bd",
+        value_col="coef",
+        series_col="series_label",
+        title="Release-Flow Horizon Profile",
+        subtitle="Unique-release fixed-horizon coefficients in basis points per $100bn from the pre-release marker to the named horizon.",
+        output_path=figures_dir / HORIZON_PROFILE_PLOT,
     )
 
     scenario_labels = [
@@ -131,7 +171,10 @@ def main(argv: list[str] | None = None) -> None:
 
     print(
         "Saved pricing figures: "
-        + ", ".join(str(figures_dir / name) for name in (OVERLAY_FLOW, OVERLAY_STOCK, COEFFICIENT_PLOT, SCENARIO_PLOT))
+        + ", ".join(
+            str(figures_dir / name)
+            for name in (OVERLAY_FLOW, OVERLAY_STOCK, COEFFICIENT_PLOT, HORIZON_PROFILE_PLOT, SCENARIO_PLOT)
+        )
     )
 
 

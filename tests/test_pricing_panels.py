@@ -187,12 +187,12 @@ def test_build_pricing_release_flow_panel_maps_release_windows_and_deltas() -> N
 
     assert len(release_panel) == 3
     first = release_panel.iloc[0]
-    assert first["release_id"] == "2024Q1__2024-01-15"
+    assert first["release_id"] == "2024-01-15__2024Q1"
     assert first["market_pricing_marker_minus_1d"] == pd.Timestamp("2024-01-12")
-    assert first["release_to_next_release_end_date"] == pd.Timestamp("2024-04-11")
-    assert first["release_plus_21bd_end_date"] == pd.Timestamp("2024-02-13")
+    assert first[pricing_panels.release_flow_end_date_column(21)] == pd.Timestamp("2024-02-13")
+    assert first[pricing_panels.release_flow_end_date_column(63)] == pd.Timestamp("2024-04-11")
 
-    expected_next = (
+    expected_63bd = (
         fred.loc[fred["date"] == pd.Timestamp("2024-04-11"), "DGS10"].iloc[0]
         - fred.loc[fred["date"] == pd.Timestamp("2024-01-12"), "DGS10"].iloc[0]
     ) * pricing_panels.RATE_PERCENT_TO_BPS
@@ -204,11 +204,42 @@ def test_build_pricing_release_flow_panel_maps_release_windows_and_deltas() -> N
         fred.loc[fred["date"] == pd.Timestamp("2024-04-11"), "DFF"].iloc[0]
         - fred.loc[fred["date"] == pd.Timestamp("2024-01-12"), "DFF"].iloc[0]
     )
-    assert first["delta_dgs10_release_to_next_release"] == pytest.approx(expected_next)
+    expected_placebo = (
+        fred.loc[fred["date"] == pd.Timestamp("2024-01-12"), "DGS10"].iloc[0]
+        - fred.loc[fred["date"] == pd.Timestamp("2024-01-01"), "DGS10"].iloc[0]
+    ) * pricing_panels.RATE_PERCENT_TO_BPS
+    assert first["delta_dgs10_release_plus_63bd"] == pytest.approx(expected_63bd)
     assert first["delta_dgs10_release_plus_21bd"] == pytest.approx(expected_21bd)
-    assert first["delta_dff_release_to_next_release"] == pytest.approx(expected_dff)
+    assert first["delta_dff_release_plus_63bd"] == pytest.approx(expected_dff)
+    assert first["delta_dgs10_release_minus_21bd_to_minus_1bd"] == pytest.approx(expected_placebo)
     assert release_panel.loc[release_panel["quarter"] == "2024Q2", "debt_limit_dummy"].iloc[0] == 1
 
     last = release_panel.iloc[-1]
-    assert pd.isna(last["delta_dgs10_release_to_next_release"])
+    assert pd.isna(last["delta_dgs10_release_plus_63bd"])
     assert pd.notna(last["delta_dgs10_release_plus_21bd"])
+
+
+def test_build_pricing_release_flow_panel_collapses_same_day_rows_into_one_shock() -> None:
+    official_capture = pd.DataFrame(
+        {
+            "quarter": ["2024Q1", "2024Q2", "2024Q3"],
+            "qra_release_date": ["2024-02-15", "2024-02-15", "2024-05-15"],
+            "market_pricing_marker_minus_1d": ["2024-02-14", "2024-02-14", "2024-05-14"],
+            "total_financing_need_bn": [100.0, 200.0, 140.0],
+            "net_bill_issuance_bn": [20.0, 50.0, 28.0],
+            "notes": ["", "", ""],
+        }
+    )
+    fred = _monthly_fred_frame()
+
+    release_panel = pricing_panels.build_pricing_release_flow_panel(official_capture, fred)
+
+    assert len(release_panel) == 2
+    first = release_panel.iloc[0]
+    assert first["quarter"] == "2024Q1|2024Q2"
+    assert first["source_quarters"] == "2024Q1|2024Q2"
+    assert first["release_row_count"] == 2
+    assert first["market_pricing_marker_minus_1d"] == pd.Timestamp("2024-02-14")
+    assert first["bill_share"] == pytest.approx(70.0 / 300.0)
+    assert first["ati_baseline_bn"] == pytest.approx((20.0 - 18.0) + (50.0 - 36.0))
+    assert release_panel["market_pricing_marker_minus_1d"].is_unique

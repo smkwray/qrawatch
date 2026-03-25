@@ -18,6 +18,7 @@ from .research.pricing_models import (
     PRICING_TAU_SENSITIVITY_GRID_COLUMNS,
     SCENARIO_TRANSLATION_COLUMNS as PRICING_SCENARIO_TRANSLATION_COLUMNS,
 )
+from .research.pricing_panels import RELEASE_FLOW_PANEL_COLUMNS
 from .research.qra_classification import SUMMARY_HEADLINE_BUCKETS
 from .research.qra_elasticity import build_treatment_comparison_table
 
@@ -2285,30 +2286,7 @@ def build_pricing_scenario_translation_publish_table() -> pd.DataFrame:
 def build_pricing_release_flow_panel_publish_table() -> pd.DataFrame:
     return _read_processed_csv(
         PROCESSED_DIR / "pricing_release_flow_panel.csv",
-        columns=[
-            "release_id",
-            "quarter",
-            "qra_release_date",
-            "market_pricing_marker_minus_1d",
-            "release_to_next_release_end_date",
-            "release_plus_21bd_end_date",
-            "bill_share",
-            "ati_baseline_bn",
-            "ati_baseline_bn_posonly",
-            "debt_limit_dummy",
-            "target_tau",
-            "DGS10",
-            "THREEFYTP10",
-            "DGS30",
-            "delta_dgs10_release_to_next_release",
-            "delta_threefytp10_release_to_next_release",
-            "delta_dgs30_release_to_next_release",
-            "delta_dff_release_to_next_release",
-            "delta_dgs10_release_plus_21bd",
-            "delta_threefytp10_release_plus_21bd",
-            "delta_dgs30_release_plus_21bd",
-            "delta_dff_release_plus_21bd",
-        ],
+        columns=list(RELEASE_FLOW_PANEL_COLUMNS),
     )
 
 
@@ -2697,7 +2675,7 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "series_id": "pricing_release_flow_panel",
             "frequency": "release-event",
             "value_units": "release rows",
-            "sign_convention": "One row per official QRA release with release-level yield and policy-rate deltas.",
+            "sign_convention": "One row per unique market-pricing marker with fixed-horizon release deltas and pre-release placebo windows.",
             "source_quality": "derived_pricing_reduced_form",
             "series_role": "supporting",
             "public_role": "supporting",
@@ -2707,7 +2685,7 @@ def build_series_metadata_catalog() -> pd.DataFrame:
             "series_id": "pricing_release_flow_leave_one_out",
             "frequency": "artifact",
             "value_units": "diagnostic rows",
-            "sign_convention": "One row per omitted release and outcome for the release-level flow anchor.",
+            "sign_convention": "One row per omitted release and outcome for the +63 business-day release-level flow anchor.",
             "source_quality": "derived_pricing_reduced_form",
             "series_role": "supporting",
             "public_role": "supporting",

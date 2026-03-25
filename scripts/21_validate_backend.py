@@ -229,11 +229,15 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
     "pricing_release_flow_panel.csv": [
         "release_id",
         "quarter",
+        "source_quarters",
+        "release_row_count",
         "qra_release_date",
         "market_pricing_marker_minus_1d",
-        "delta_dgs10_release_to_next_release",
-        "delta_threefytp10_release_to_next_release",
-        "delta_dff_release_to_next_release",
+        "delta_dgs10_release_plus_63bd",
+        "delta_threefytp10_release_plus_63bd",
+        "delta_dff_release_plus_63bd",
+        "delta_dgs10_release_minus_21bd_to_minus_1bd",
+        "delta_threefytp10_release_minus_21bd_to_minus_1bd",
     ],
     "pricing_release_flow_leave_one_out.csv": [
         "spec_id",

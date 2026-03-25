@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from ati_shadow_policy.research import pricing_panels as pricing_panels
 from ati_shadow_policy.research import pricing_models as pricing_models
 
 
@@ -91,12 +92,14 @@ def _make_synthetic_panels() -> dict[str, pd.DataFrame]:
     release_debt_limit = (((releases >= "2013-04-01") & (releases <= "2013-10-01")) | ((releases >= "2023-01-01") & (releases <= "2023-07-01"))).astype(float)
     release_panel = pd.DataFrame(
         {
-            "release_id": [f"{date.year}Q{((date.month - 1) // 3) + 1}__{date.strftime('%Y-%m-%d')}" for date in releases],
+            "release_id": [f"{date.strftime('%Y-%m-%d')}__{date.year}Q{((date.month - 1) // 3) + 1}" for date in releases],
             "quarter": [f"{date.year}Q{((date.month - 1) // 3) + 1}" for date in releases],
+            "source_quarters": [f"{date.year}Q{((date.month - 1) // 3) + 1}" for date in releases],
+            "release_row_count": 1,
             "qra_release_date": releases,
             "market_pricing_marker_minus_1d": releases - pd.offsets.BDay(1),
-            "release_to_next_release_end_date": releases + pd.offsets.BDay(60),
-            "release_plus_21bd_end_date": releases + pd.offsets.BDay(21),
+            "total_financing_need_bn": 150.0 + 2.0 * rt,
+            "net_bill_issuance_bn": 30.0 + 0.8 * rt,
             "bill_share": 0.20 + 0.001 * np.sin(rt / 4.0),
             "ati_baseline_bn": release_ati,
             "ati_baseline_bn_posonly": np.maximum(release_ati, 0.0),
@@ -105,16 +108,49 @@ def _make_synthetic_panels() -> dict[str, pd.DataFrame]:
             "DGS10": 400.0 - 0.4 * release_ati,
             "THREEFYTP10": 100.0 - 0.2 * release_ati,
             "DGS30": 450.0 - 0.35 * release_ati,
-            "delta_dgs10_release_to_next_release": -0.09 * release_ati + 4.0 * release_dff + 0.4 * release_debt_limit,
-            "delta_threefytp10_release_to_next_release": -0.05 * release_ati + 2.0 * release_dff + 0.3 * release_debt_limit,
-            "delta_dgs30_release_to_next_release": -0.07 * release_ati + 3.5 * release_dff + 0.3 * release_debt_limit,
-            "delta_dff_release_to_next_release": release_dff,
-            "delta_dgs10_release_plus_21bd": -0.06 * release_ati + 3.0 * release_dff + 0.3 * release_debt_limit,
-            "delta_threefytp10_release_plus_21bd": -0.035 * release_ati + 1.5 * release_dff + 0.2 * release_debt_limit,
-            "delta_dgs30_release_plus_21bd": -0.055 * release_ati + 2.5 * release_dff + 0.2 * release_debt_limit,
-            "delta_dff_release_plus_21bd": release_dff * 0.8,
         }
     )
+    horizon_specs = {
+        1: (-0.015, -0.010, -0.012, 0.45),
+        5: (-0.025, -0.016, -0.020, 0.65),
+        10: (-0.035, -0.022, -0.028, 0.80),
+        21: (-0.050, -0.032, -0.040, 1.00),
+        42: (-0.070, -0.045, -0.055, 1.20),
+        63: (-0.095, -0.060, -0.075, 1.40),
+    }
+    for horizon_bd, (coef_dgs10, coef_tp, coef_dgs30, dff_scale) in horizon_specs.items():
+        window_label = pricing_panels.release_flow_window_label(horizon_bd)
+        release_panel[pricing_panels.release_flow_end_date_column(horizon_bd)] = releases + pd.offsets.BDay(horizon_bd)
+        release_panel[pricing_panels.release_flow_delta_column("DGS10", window_label)] = (
+            coef_dgs10 * release_ati + dff_scale * release_dff + 0.35 * release_debt_limit
+        )
+        release_panel[pricing_panels.release_flow_delta_column("THREEFYTP10", window_label)] = (
+            coef_tp * release_ati + 0.6 * dff_scale * release_dff + 0.25 * release_debt_limit
+        )
+        release_panel[pricing_panels.release_flow_delta_column("DGS30", window_label)] = (
+            coef_dgs30 * release_ati + 0.8 * dff_scale * release_dff + 0.30 * release_debt_limit
+        )
+        release_panel[pricing_panels.release_flow_control_column(window_label)] = release_dff * dff_scale
+
+    placebo_specs = {
+        (-21, -1): (0.004, 0.003, 0.0035, 0.5),
+        (-5, -1): (0.002, 0.0015, 0.0018, 0.3),
+    }
+    for (start_bd, end_bd), (coef_dgs10, coef_tp, coef_dgs30, dff_scale) in placebo_specs.items():
+        window_label = pricing_panels.release_flow_placebo_label(start_bd, end_bd)
+        release_panel[pricing_panels.release_flow_placebo_start_date_column(start_bd, end_bd)] = (
+            releases + pd.offsets.BDay(start_bd)
+        )
+        release_panel[pricing_panels.release_flow_delta_column("DGS10", window_label)] = (
+            coef_dgs10 * release_ati + dff_scale * release_dff + 0.10 * release_debt_limit
+        )
+        release_panel[pricing_panels.release_flow_delta_column("THREEFYTP10", window_label)] = (
+            coef_tp * release_ati + 0.5 * dff_scale * release_dff + 0.08 * release_debt_limit
+        )
+        release_panel[pricing_panels.release_flow_delta_column("DGS30", window_label)] = (
+            coef_dgs30 * release_ati + 0.6 * dff_scale * release_dff + 0.09 * release_debt_limit
+        )
+        release_panel[pricing_panels.release_flow_control_column(window_label)] = release_dff * dff_scale
 
     return {
         pricing_models.OFFICIAL_ATI_PRICE_PANEL: official,
@@ -142,33 +178,46 @@ def test_pricing_spec_registry_is_deterministic_and_covers_release_anchor_specs(
     required_columns = set(pricing_models.PRICING_SPEC_REGISTRY_COLUMNS)
     assert required_columns <= set(registry.columns)
     assert {
-        "release_flow_baseline_next_release",
-        "release_flow_baseline_21bd",
+        "release_flow_baseline_63bd",
+        "release_flow_horizon_1bd",
+        "release_flow_horizon_5bd",
+        "release_flow_horizon_10bd",
+        "release_flow_horizon_21bd",
+        "release_flow_horizon_42bd",
         "monthly_flow_baseline",
         "monthly_stock_baseline",
         "weekly_duration_baseline",
     } == set(registry["spec_id"])
     assert set(registry["anchor_role"]) == {"credibility_anchor", "headline_context", "supporting"}
-    assert "release_to_next_release" in set(registry["window_definition"])
-    assert registry.loc[registry["spec_id"] == "release_flow_baseline_next_release", "anchor_role"].eq("credibility_anchor").all()
+    assert "release_plus_63bd" in set(registry["window_definition"])
+    assert registry.loc[registry["spec_id"] == "release_flow_baseline_63bd", "anchor_role"].eq("credibility_anchor").all()
     assert registry.loc[registry["spec_id"] == "monthly_flow_baseline", "anchor_role"].eq("headline_context").all()
 
 
 def test_build_pricing_regression_summary_has_release_level_anchor_and_effective_shocks() -> None:
+    panels = _make_synthetic_panels()
     _, summary, _, _, _, _, _ = _load_regression_outputs()
 
     required_columns = set(pricing_models.PRICING_REGRESSION_SUMMARY_COLUMNS)
     assert required_columns <= set(summary.columns)
-    assert {"release_flow_baseline_next_release", "release_flow_baseline_21bd"}.issubset(set(summary["model_id"]))
+    assert {"release_flow_baseline_63bd", "release_flow_horizon_21bd"}.issubset(set(summary["model_id"]))
     assert summary["cov_type"].eq("HAC").all()
     assert summary["cov_maxlags"].eq(pricing_models.NEWEY_WEST_MAXLAGS).all()
     assert set(summary["dependent_variable"]) == {"THREEFYTP10", "DGS10"}
     assert summary["effective_shock_count"].gt(0).all()
-    anchor = summary.loc[(summary["model_id"] == "release_flow_baseline_next_release") & (summary["term"] == "ati_baseline_bn")]
+    anchor = summary.loc[(summary["model_id"] == "release_flow_baseline_63bd") & (summary["term"] == "ati_baseline_bn")]
     assert not anchor.empty
     assert anchor["anchor_role"].eq("credibility_anchor").all()
-    assert anchor["window_definition"].eq("release_to_next_release").all()
+    assert anchor["window_definition"].eq("release_plus_63bd").all()
     assert anchor["coef"].lt(0).all()
+    release_spec = next(spec for spec in pricing_models.BASELINE_SPECS if spec["spec_id"] == "release_flow_baseline_63bd")
+    prepared, _ = pricing_models._prepare_regression_panel(  # noqa: SLF001
+        panels[pricing_models.RELEASE_FLOW_PANEL],
+        release_spec,
+        "DGS10",
+    )
+    expected_shocks = prepared["market_pricing_marker_minus_1d"].nunique()
+    assert anchor["effective_shock_count"].eq(expected_shocks).all()
 
 
 def test_build_pricing_subsample_grid_covers_required_families_outcomes_and_release_windows() -> None:
@@ -183,7 +232,7 @@ def test_build_pricing_subsample_grid_covers_required_families_outcomes_and_rele
         "exclude_debt_limit",
     }
     assert {"THREEFYTP10", "DGS10", "DGS30"}.issubset(set(subsample["dependent_variable"]))
-    assert {"release_to_next_release", "release_plus_21bd", "carry_forward_monthly"}.issubset(set(subsample["window_definition"]))
+    assert {"release_plus_63bd", "release_plus_21bd", "carry_forward_monthly"}.issubset(set(subsample["window_definition"]))
 
 
 def test_build_pricing_regression_robustness_covers_required_families() -> None:
@@ -194,6 +243,7 @@ def test_build_pricing_regression_robustness_covers_required_families() -> None:
     assert set(robustness["variant_family"]) == {
         "supporting_outcome_dgs30",
         "flow_vs_stock_horse_race",
+        "release_flow_placebo",
         "standardized_predictors",
     }
     assert "const" not in set(robustness["term"])
@@ -235,6 +285,7 @@ def test_release_flow_leave_one_out_and_tau_grid_publish_expected_shapes() -> No
     release_count = leave_one_out["omitted_release_id"].nunique()
     assert len(leave_one_out) == release_count * len(pricing_models.HEADLINE_OUTCOMES)
     assert leave_one_out["coef"].lt(0).all()
+    assert leave_one_out["spec_id"].eq("release_flow_baseline_63bd").all()
 
     assert set(tau_grid.columns) == set(pricing_models.PRICING_TAU_SENSITIVITY_GRID_COLUMNS)
     assert set(tau_grid["tau"]) == {0.15, 0.18, 0.20}

@@ -190,3 +190,95 @@ def build_horizontal_bar_svg(
         + "".join(rows)
     )
     output_path.write_text(_svg_shell(width, height, body), encoding="utf-8")
+
+
+def build_horizon_profile_svg(
+    frame: pd.DataFrame,
+    *,
+    horizon_col: str,
+    value_col: str,
+    series_col: str,
+    title: str,
+    subtitle: str,
+    output_path: Path,
+) -> None:
+    data = frame[[horizon_col, value_col, series_col]].copy()
+    data[horizon_col] = pd.to_numeric(data[horizon_col], errors="coerce")
+    data[value_col] = _safe_float_series(data[value_col])
+    data[series_col] = data[series_col].astype(str)
+    data = data.dropna(subset=[horizon_col, value_col]).sort_values([series_col, horizon_col]).reset_index(drop=True)
+    if data.empty:
+        output_path.write_text(_svg_shell(960, 420, ""), encoding="utf-8")
+        return
+
+    width, height = 960, 420
+    margin_left, margin_right, margin_top, margin_bottom = 72, 28, 72, 56
+    plot_w = width - margin_left - margin_right
+    plot_h = height - margin_top - margin_bottom
+
+    unique_horizons = sorted(data[horizon_col].dropna().unique().tolist())
+    y_min = min(0.0, float(data[value_col].min()))
+    y_max = max(0.0, float(data[value_col].max()))
+    if y_min == y_max:
+        y_min -= 1.0
+        y_max += 1.0
+
+    def x_pos(horizon: float) -> float:
+        if len(unique_horizons) == 1:
+            return margin_left + plot_w / 2
+        return margin_left + (plot_w * unique_horizons.index(horizon) / (len(unique_horizons) - 1))
+
+    def y_pos(value: float) -> float:
+        return margin_top + plot_h - ((value - y_min) / (y_max - y_min) * plot_h)
+
+    y_ticks = []
+    for raw in range(5):
+        value = y_min + (y_max - y_min) * raw / 4
+        ypos = y_pos(value)
+        y_ticks.append(f'<line x1="{margin_left}" y1="{ypos:.2f}" x2="{width - margin_right}" y2="{ypos:.2f}" stroke="{SVG_GRID}" stroke-width="1"/>')
+        y_ticks.append(
+            f'<text x="{margin_left - 8}" y="{ypos + 4:.2f}" text-anchor="end" font-size="12" fill="{SVG_TEXT}">{value:.1f}</text>'
+        )
+
+    x_ticks = []
+    for horizon in unique_horizons:
+        xpos = x_pos(horizon)
+        x_ticks.append(f'<line x1="{xpos:.2f}" y1="{margin_top}" x2="{xpos:.2f}" y2="{margin_top + plot_h}" stroke="{SVG_GRID}" stroke-width="1"/>')
+        x_ticks.append(
+            f'<text x="{xpos:.2f}" y="{height - 18}" text-anchor="middle" font-size="12" fill="{SVG_TEXT}">{int(horizon)}</text>'
+        )
+
+    zero_y = y_pos(0.0)
+    series_paths = []
+    legend_parts = []
+    for idx, series_name in enumerate(sorted(data[series_col].unique().tolist())):
+        subset = data.loc[data[series_col] == series_name].sort_values(horizon_col)
+        color = SERIES_COLORS[idx % len(SERIES_COLORS)]
+        points = " ".join(
+            f"{x_pos(float(horizon)):.2f},{y_pos(float(value)):.2f}"
+            for horizon, value in zip(subset[horizon_col], subset[value_col], strict=False)
+        )
+        series_paths.append(f'<polyline fill="none" stroke="{color}" stroke-width="2.8" points="{points}"/>')
+        for horizon, value in zip(subset[horizon_col], subset[value_col], strict=False):
+            series_paths.append(
+                f'<circle cx="{x_pos(float(horizon)):.2f}" cy="{y_pos(float(value)):.2f}" r="3.5" fill="{color}"/>'
+            )
+        legend_x = margin_left + idx * 240
+        legend_parts.append(f'<rect x="{legend_x}" y="18" width="14" height="14" fill="{color}"/>')
+        legend_parts.append(
+            f'<text x="{legend_x + 22}" y="30" font-size="13" fill="{SVG_TEXT}">{escape(series_name)}</text>'
+        )
+
+    body = (
+        f'<text x="{margin_left}" y="48" font-size="24" font-weight="700" fill="{SVG_TEXT}">{escape(title)}</text>'
+        f'<text x="{margin_left}" y="66" font-size="13" fill="{SVG_TEXT}">{escape(subtitle)}</text>'
+        + "".join(legend_parts)
+        + f'<line x1="{margin_left}" y1="{margin_top + plot_h}" x2="{width - margin_right}" y2="{margin_top + plot_h}" stroke="{SVG_TEXT}" stroke-width="1.2"/>'
+        + f'<line x1="{margin_left}" y1="{margin_top}" x2="{margin_left}" y2="{margin_top + plot_h}" stroke="{SVG_TEXT}" stroke-width="1.2"/>'
+        + f'<line x1="{margin_left}" y1="{zero_y:.2f}" x2="{width - margin_right}" y2="{zero_y:.2f}" stroke="{SVG_TEXT}" stroke-width="1.2" stroke-dasharray="4 4"/>'
+        + "".join(y_ticks)
+        + "".join(x_ticks)
+        + "".join(series_paths)
+        + f'<text x="{width / 2:.2f}" y="{height - 2}" text-anchor="middle" font-size="12" fill="{SVG_TEXT}">Business days after release</text>'
+    )
+    output_path.write_text(_svg_shell(width, height, body), encoding="utf-8")

@@ -1,7 +1,7 @@
 source_family,raw_dir_exists,file_count,manifest_exists,downloads_exists
 fiscaldata,True,16,False,False
 fred,True,20,False,False
-qra,True,345,True,True
+qra,True,344,True,True
 investor_allotments,True,12,True,True
 primary_dealer,True,13,True,True
-sec_nmfp,True,98,True,True
+sec_nmfp,True,97,True,True

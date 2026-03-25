@@ -1160,7 +1160,7 @@
     var releaseAnchorRows = primaryRows.filter(function (row) { return row.anchor_role === 'credibility_anchor'; });
     var contextRows = primaryRows.filter(function (row) { return row.anchor_role !== 'credibility_anchor'; });
 
-    container.appendChild(el('h3', { class: 'section-subtitle', text: 'Release-Level Flow Anchor' }));
+    container.appendChild(el('h3', { class: 'section-subtitle', text: 'Release-Level Flow Profile' }));
     container.appendChild(buildTable([
       { key: 'model_id', label: 'Model', format: fmtSnake },
       { key: 'window_definition', label: 'Window', format: fmtSnake },
@@ -1172,7 +1172,7 @@
       { key: 'effective_shock_count', label: 'Shocks', numeric: true }
     ], releaseAnchorRows));
     container.appendChild(el('p', { class: 'card-meta',
-      text: 'The release-level flow rows are the current credibility anchor. Coefficients are reported in basis points per $100bn on the named input, with HAC / Newey-West standard errors.'
+      text: 'The +63bd row is the current release-level credibility anchor, but the repo still treats the full fixed-horizon profile as supporting/provisional rather than a settled elasticity. Coefficients are reported in basis points per $100bn with HAC / Newey-West standard errors.'
     }));
 
     if (contextRows.length) {
@@ -1262,7 +1262,12 @@
       {
         src: 'figures/pricing_headline_coefficients.svg',
         title: 'Release-Level and Context Coefficients',
-        note: 'The release-level flow anchor is shown first; monthly carry-forward and supporting windows stay in view as context.'
+        note: 'The +63bd release-level scalar appears alongside monthly carry-forward and other supporting context specs.'
+      },
+      {
+        src: 'figures/pricing_release_flow_horizon_profile.svg',
+        title: 'Release-Flow Horizon Profile',
+        note: 'The full fixed-horizon curve is the main audit surface; the sign still moves across natural endpoints, so the release-level result remains provisional.'
       },
       {
         src: 'figures/pricing_scenario_translation.svg',

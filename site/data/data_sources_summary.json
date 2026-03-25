@@ -18,7 +18,7 @@
     {
       "source_family": "qra",
       "raw_dir_exists": true,
-      "file_count": 345,
+      "file_count": 344,
       "manifest_exists": true,
       "downloads_exists": true
     },
@@ -39,7 +39,7 @@
     {
       "source_family": "sec_nmfp",
       "raw_dir_exists": true,
-      "file_count": 98,
+      "file_count": 97,
       "manifest_exists": true,
       "downloads_exists": true
     }

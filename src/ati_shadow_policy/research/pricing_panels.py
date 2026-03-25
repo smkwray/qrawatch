@@ -11,6 +11,8 @@ MSPD_MONEY_UNITS_TO_BILLION = 1_000.0
 RAW_DOLLARS_TO_BILLION = 1_000_000_000.0
 MILLIONS_TO_BILLION = 1_000.0
 RATE_PERCENT_TO_BPS = 100.0
+RELEASE_FLOW_HORIZONS_BD = (1, 5, 10, 21, 42, 63)
+RELEASE_FLOW_PLACEBO_WINDOWS_BD = ((-21, -1), (-5, -1))
 
 MSPD_REQUIRED_COLUMNS = (
     "record_date",
@@ -50,30 +52,66 @@ ATI_RELEASE_PANEL_COLUMNS = (
     "ati_baseline_bn_posonly",
     "cumulative_ati_baseline_bn",
 )
-RELEASE_FLOW_PANEL_COLUMNS = (
-    "release_id",
-    "quarter",
-    "qra_release_date",
-    "market_pricing_marker_minus_1d",
-    "release_to_next_release_end_date",
-    "release_plus_21bd_end_date",
-    "bill_share",
-    "ati_baseline_bn",
-    "ati_baseline_bn_posonly",
-    "debt_limit_dummy",
-    "target_tau",
-    "DGS10",
-    "THREEFYTP10",
-    "DGS30",
-    "delta_dgs10_release_to_next_release",
-    "delta_threefytp10_release_to_next_release",
-    "delta_dgs30_release_to_next_release",
-    "delta_dff_release_to_next_release",
-    "delta_dgs10_release_plus_21bd",
-    "delta_threefytp10_release_plus_21bd",
-    "delta_dgs30_release_plus_21bd",
-    "delta_dff_release_plus_21bd",
-)
+
+def release_flow_window_label(horizon_bd: int) -> str:
+    return f"release_plus_{int(horizon_bd)}bd"
+
+
+def release_flow_placebo_label(start_bd: int, end_bd: int) -> str:
+    return f"release_minus_{abs(int(start_bd))}bd_to_minus_{abs(int(end_bd))}bd"
+
+
+def release_flow_end_date_column(horizon_bd: int) -> str:
+    return f"{release_flow_window_label(horizon_bd)}_end_date"
+
+
+def release_flow_placebo_start_date_column(start_bd: int, end_bd: int) -> str:
+    return f"{release_flow_placebo_label(start_bd, end_bd)}_start_date"
+
+
+def release_flow_delta_column(series_name: str, window_label: str) -> str:
+    return f"delta_{series_name.lower()}_{window_label}"
+
+
+def release_flow_control_column(window_label: str) -> str:
+    return f"delta_dff_{window_label}"
+
+
+def _release_flow_panel_columns() -> tuple[str, ...]:
+    columns = [
+        "release_id",
+        "quarter",
+        "source_quarters",
+        "release_row_count",
+        "qra_release_date",
+        "market_pricing_marker_minus_1d",
+        "total_financing_need_bn",
+        "net_bill_issuance_bn",
+        "bill_share",
+        "ati_baseline_bn",
+        "ati_baseline_bn_posonly",
+        "debt_limit_dummy",
+        "target_tau",
+        "DGS10",
+        "THREEFYTP10",
+        "DGS30",
+    ]
+    for horizon_bd in RELEASE_FLOW_HORIZONS_BD:
+        window_label = release_flow_window_label(horizon_bd)
+        columns.append(release_flow_end_date_column(horizon_bd))
+        for series_name in ("DGS10", "THREEFYTP10", "DGS30"):
+            columns.append(release_flow_delta_column(series_name, window_label))
+        columns.append(release_flow_control_column(window_label))
+    for start_bd, end_bd in RELEASE_FLOW_PLACEBO_WINDOWS_BD:
+        window_label = release_flow_placebo_label(start_bd, end_bd)
+        columns.append(release_flow_placebo_start_date_column(start_bd, end_bd))
+        for series_name in ("DGS10", "THREEFYTP10", "DGS30"):
+            columns.append(release_flow_delta_column(series_name, window_label))
+        columns.append(release_flow_control_column(window_label))
+    return tuple(columns)
+
+
+RELEASE_FLOW_PANEL_COLUMNS = _release_flow_panel_columns()
 
 
 def _coerce_date_series(series: pd.Series) -> pd.Series:
@@ -284,6 +322,11 @@ def _first_available_on_or_after(
     if match.empty:
         return None
     return match.iloc[0]
+
+
+def _join_unique_strings(values: pd.Series) -> str:
+    cleaned = sorted({str(value).strip() for value in values if str(value).strip() and str(value).strip().lower() != "nan"})
+    return "|".join(cleaned)
 
 
 def _debt_limit_dummy_index(panel_dates: pd.Series, debt_limit_dates: pd.DataFrame | None) -> pd.Series:
@@ -604,21 +647,21 @@ def build_pricing_release_flow_panel(
     capture["market_pricing_marker_minus_1d"] = capture["market_pricing_marker_minus_1d"].fillna(
         capture["qra_release_date"] - BDay(1)
     )
-    if "release_id" not in capture.columns:
-        capture["release_id"] = (
-            capture["quarter"].astype(str).str.strip().fillna("")
-            + "__"
-            + capture["qra_release_date"].dt.strftime("%Y-%m-%d")
+    keep_columns = [
+        column
+        for column in (
+            "quarter",
+            "qra_release_date",
+            "market_pricing_marker_minus_1d",
+            "total_financing_need_bn",
+            "net_bill_issuance_bn",
         )
+        if column in capture.columns
+    ]
     release_panel = release_panel.merge(
-        capture[["quarter", "qra_release_date", "market_pricing_marker_minus_1d", "release_id"]],
+        capture[keep_columns],
         on=["quarter", "qra_release_date"],
         how="left",
-    )
-    release_panel["release_id"] = release_panel["release_id"].fillna(
-        release_panel["quarter"].astype(str).str.strip()
-        + "__"
-        + pd.to_datetime(release_panel["qra_release_date"], errors="coerce").dt.strftime("%Y-%m-%d")
     )
     release_panel["market_pricing_marker_minus_1d"] = _coerce_date_series(
         release_panel["market_pricing_marker_minus_1d"]
@@ -626,9 +669,34 @@ def build_pricing_release_flow_panel(
     release_panel["market_pricing_marker_minus_1d"] = release_panel["market_pricing_marker_minus_1d"].fillna(
         pd.to_datetime(release_panel["qra_release_date"], errors="coerce").dt.normalize() - BDay(1)
     )
-    release_panel["target_tau"] = TARGET_TAU
     release_panel["qra_release_date"] = _coerce_date_series(release_panel["qra_release_date"]).dt.normalize()
-    release_panel = release_panel.sort_values("qra_release_date").reset_index(drop=True)
+    release_panel["total_financing_need_bn"] = coerce_numeric(release_panel.get("total_financing_need_bn"))
+    release_panel["net_bill_issuance_bn"] = coerce_numeric(release_panel.get("net_bill_issuance_bn"))
+    release_panel["source_quarters"] = release_panel["quarter"].astype(str).str.strip()
+    release_panel["release_row_count"] = 1
+
+    grouped = (
+        release_panel.groupby(["qra_release_date", "market_pricing_marker_minus_1d"], as_index=False, dropna=False)
+        .agg(
+            quarter=("quarter", _join_unique_strings),
+            source_quarters=("source_quarters", _join_unique_strings),
+            release_row_count=("release_row_count", "sum"),
+            total_financing_need_bn=("total_financing_need_bn", "sum"),
+            net_bill_issuance_bn=("net_bill_issuance_bn", "sum"),
+            ati_baseline_bn=("ati_baseline_bn", "sum"),
+            ati_baseline_bn_posonly=("ati_baseline_bn_posonly", "sum"),
+        )
+    )
+    grouped["bill_share"] = grouped["net_bill_issuance_bn"] / grouped["total_financing_need_bn"]
+    grouped["target_tau"] = TARGET_TAU
+    grouped["release_id"] = grouped.apply(
+        lambda row: f"{pd.to_datetime(row['qra_release_date'], errors='coerce').strftime('%Y-%m-%d')}__{str(row['quarter']).replace('|', '+')}",
+        axis=1,
+    )
+    if grouped["market_pricing_marker_minus_1d"].duplicated().any():
+        duplicates = grouped.loc[grouped["market_pricing_marker_minus_1d"].duplicated(keep=False), "market_pricing_marker_minus_1d"]
+        raise ValueError(f"Release-flow panel requires unique market_pricing_marker_minus_1d values after aggregation; duplicates={duplicates.astype(str).tolist()}")
+    release_panel = grouped.sort_values(["qra_release_date", "market_pricing_marker_minus_1d"]).reset_index(drop=True)
 
     derived_debt_limit_dates = build_debt_limit_intervals(official_capture)
     if debt_limit_dates is None and not derived_debt_limit_dates.empty:
@@ -646,7 +714,6 @@ def build_pricing_release_flow_panel(
         return pd.DataFrame(columns=RELEASE_FLOW_PANEL_COLUMNS)
 
     rows: list[dict[str, object]] = []
-    release_panel["next_release_start_date"] = release_panel["market_pricing_marker_minus_1d"].shift(-1)
     for _, row in release_panel.iterrows():
         start_date = pd.to_datetime(row["market_pricing_marker_minus_1d"], errors="coerce")
         if pd.isna(start_date):
@@ -654,23 +721,18 @@ def build_pricing_release_flow_panel(
         start_obs = _first_available_on_or_after(daily_fred, start_date)
         if start_obs is None:
             continue
-
-        next_release_start = pd.to_datetime(row.get("next_release_start_date"), errors="coerce")
-        plus_21bd_target = pd.to_datetime(row["qra_release_date"], errors="coerce") + BDay(21)
-        next_release_obs = (
-            _first_available_on_or_after(daily_fred, next_release_start)
-            if not pd.isna(next_release_start)
-            else None
-        )
-        plus_21bd_obs = _first_available_on_or_after(daily_fred, plus_21bd_target)
+        if pd.to_datetime(start_obs["date"], errors="coerce") <= start_date - BDay(1):
+            raise ValueError("Release-flow start observation must align to the market-pricing marker or the next available business-day observation.")
 
         record: dict[str, object] = {
             "release_id": row["release_id"],
             "quarter": row["quarter"],
+            "source_quarters": row.get("source_quarters"),
+            "release_row_count": row.get("release_row_count"),
             "qra_release_date": row["qra_release_date"],
             "market_pricing_marker_minus_1d": start_obs["date"],
-            "release_to_next_release_end_date": next_release_obs["date"] if next_release_obs is not None else pd.NaT,
-            "release_plus_21bd_end_date": plus_21bd_obs["date"] if plus_21bd_obs is not None else pd.NaT,
+            "total_financing_need_bn": row.get("total_financing_need_bn"),
+            "net_bill_issuance_bn": row.get("net_bill_issuance_bn"),
             "bill_share": row.get("bill_share"),
             "ati_baseline_bn": row.get("ati_baseline_bn"),
             "ati_baseline_bn_posonly": row.get("ati_baseline_bn_posonly"),
@@ -680,26 +742,41 @@ def build_pricing_release_flow_panel(
             "THREEFYTP10": start_obs.get("THREEFYTP10"),
             "DGS30": start_obs.get("DGS30"),
         }
-        if next_release_obs is not None:
-            record["delta_dgs10_release_to_next_release"] = next_release_obs.get("DGS10") - start_obs.get("DGS10")
-            record["delta_threefytp10_release_to_next_release"] = next_release_obs.get("THREEFYTP10") - start_obs.get("THREEFYTP10")
-            record["delta_dgs30_release_to_next_release"] = next_release_obs.get("DGS30") - start_obs.get("DGS30")
-            record["delta_dff_release_to_next_release"] = next_release_obs.get("DFF") - start_obs.get("DFF")
-        else:
-            record["delta_dgs10_release_to_next_release"] = pd.NA
-            record["delta_threefytp10_release_to_next_release"] = pd.NA
-            record["delta_dgs30_release_to_next_release"] = pd.NA
-            record["delta_dff_release_to_next_release"] = pd.NA
-        if plus_21bd_obs is not None:
-            record["delta_dgs10_release_plus_21bd"] = plus_21bd_obs.get("DGS10") - start_obs.get("DGS10")
-            record["delta_threefytp10_release_plus_21bd"] = plus_21bd_obs.get("THREEFYTP10") - start_obs.get("THREEFYTP10")
-            record["delta_dgs30_release_plus_21bd"] = plus_21bd_obs.get("DGS30") - start_obs.get("DGS30")
-            record["delta_dff_release_plus_21bd"] = plus_21bd_obs.get("DFF") - start_obs.get("DFF")
-        else:
-            record["delta_dgs10_release_plus_21bd"] = pd.NA
-            record["delta_threefytp10_release_plus_21bd"] = pd.NA
-            record["delta_dgs30_release_plus_21bd"] = pd.NA
-            record["delta_dff_release_plus_21bd"] = pd.NA
+        for horizon_bd in RELEASE_FLOW_HORIZONS_BD:
+            window_label = release_flow_window_label(horizon_bd)
+            horizon_target = pd.to_datetime(row["qra_release_date"], errors="coerce") + BDay(horizon_bd)
+            horizon_obs = _first_available_on_or_after(daily_fred, horizon_target)
+            record[release_flow_end_date_column(horizon_bd)] = (
+                horizon_obs["date"] if horizon_obs is not None else pd.NaT
+            )
+            if horizon_obs is None:
+                for series_name in ("DGS10", "THREEFYTP10", "DGS30"):
+                    record[release_flow_delta_column(series_name, window_label)] = pd.NA
+                record[release_flow_control_column(window_label)] = pd.NA
+                continue
+            if pd.to_datetime(horizon_obs["date"], errors="coerce") <= pd.to_datetime(start_obs["date"], errors="coerce"):
+                raise ValueError(f"Release-flow horizon {window_label} produced a non-positive pricing window for release_id={row['release_id']}")
+            for series_name in ("DGS10", "THREEFYTP10", "DGS30"):
+                record[release_flow_delta_column(series_name, window_label)] = horizon_obs.get(series_name) - start_obs.get(series_name)
+            record[release_flow_control_column(window_label)] = horizon_obs.get("DFF") - start_obs.get("DFF")
+
+        for start_bd, end_bd in RELEASE_FLOW_PLACEBO_WINDOWS_BD:
+            window_label = release_flow_placebo_label(start_bd, end_bd)
+            placebo_start_target = pd.to_datetime(row["qra_release_date"], errors="coerce") + BDay(start_bd)
+            placebo_start_obs = _first_available_on_or_after(daily_fred, placebo_start_target)
+            record[release_flow_placebo_start_date_column(start_bd, end_bd)] = (
+                placebo_start_obs["date"] if placebo_start_obs is not None else pd.NaT
+            )
+            if placebo_start_obs is None:
+                for series_name in ("DGS10", "THREEFYTP10", "DGS30"):
+                    record[release_flow_delta_column(series_name, window_label)] = pd.NA
+                record[release_flow_control_column(window_label)] = pd.NA
+                continue
+            if pd.to_datetime(placebo_start_obs["date"], errors="coerce") >= pd.to_datetime(start_obs["date"], errors="coerce"):
+                raise ValueError(f"Release-flow placebo {window_label} produced a non-positive pricing window for release_id={row['release_id']}")
+            for series_name in ("DGS10", "THREEFYTP10", "DGS30"):
+                record[release_flow_delta_column(series_name, window_label)] = start_obs.get(series_name) - placebo_start_obs.get(series_name)
+            record[release_flow_control_column(window_label)] = start_obs.get("DFF") - placebo_start_obs.get("DFF")
         rows.append(record)
 
     if not rows:

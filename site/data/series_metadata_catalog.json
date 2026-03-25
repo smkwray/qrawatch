@@ -86,7 +86,7 @@
       "series_id": "pricing_release_flow_panel",
       "frequency": "release-event",
       "value_units": "release rows",
-      "sign_convention": "One row per official QRA release with release-level yield and policy-rate deltas.",
+      "sign_convention": "One row per unique market-pricing marker with fixed-horizon release deltas and pre-release placebo windows.",
       "source_quality": "derived_pricing_reduced_form",
       "series_role": "supporting",
       "public_role": "supporting"
@@ -96,7 +96,7 @@
       "series_id": "pricing_release_flow_leave_one_out",
       "frequency": "artifact",
       "value_units": "diagnostic rows",
-      "sign_convention": "One row per omitted release and outcome for the release-level flow anchor.",
+      "sign_convention": "One row per omitted release and outcome for the +63 business-day release-level flow anchor.",
       "source_quality": "derived_pricing_reduced_form",
       "series_role": "supporting",
       "public_role": "supporting"

@@ -5,6 +5,15 @@ from collections.abc import Mapping, Sequence
 import pandas as pd
 import statsmodels.api as sm
 
+from .pricing_panels import (
+    RELEASE_FLOW_HORIZONS_BD,
+    RELEASE_FLOW_PLACEBO_WINDOWS_BD,
+    release_flow_control_column,
+    release_flow_delta_column,
+    release_flow_placebo_label,
+    release_flow_window_label,
+)
+
 
 HEADLINE_OUTCOMES = ("THREEFYTP10", "DGS10")
 SUPPORTING_OUTCOMES = ("DGS30", "slope_10y_2y", "slope_30y_2y")
@@ -41,8 +50,6 @@ PREDICTOR_LABELS = {
     "buybacks_accepted": "Buybacks accepted (USD bn)",
     "delta_wdtgal": "Change in WDTGAL (USD bn)",
     "DFF": "Effective federal funds rate",
-    "delta_dff_release_to_next_release": "Change in DFF from release marker to next release",
-    "delta_dff_release_plus_21bd": "Change in DFF from release marker to +21 business days",
     "debt_limit_dummy": "Debt-limit period dummy",
 }
 
@@ -56,10 +63,22 @@ PREDICTOR_UNITS = {
     "buybacks_accepted": "USD bn",
     "delta_wdtgal": "USD bn",
     "DFF": "Percent",
-    "delta_dff_release_to_next_release": "Percent",
-    "delta_dff_release_plus_21bd": "Percent",
     "debt_limit_dummy": "Indicator",
 }
+
+for horizon_bd in RELEASE_FLOW_HORIZONS_BD:
+    window_label = release_flow_window_label(horizon_bd)
+    control_term = release_flow_control_column(window_label)
+    PREDICTOR_LABELS[control_term] = f"Change in DFF from release marker to +{horizon_bd} business days"
+    PREDICTOR_UNITS[control_term] = "Percent"
+
+for start_bd, end_bd in RELEASE_FLOW_PLACEBO_WINDOWS_BD:
+    window_label = release_flow_placebo_label(start_bd, end_bd)
+    control_term = release_flow_control_column(window_label)
+    PREDICTOR_LABELS[control_term] = (
+        f"Change in DFF over placebo window [{start_bd}, {end_bd}] business days relative to release"
+    )
+    PREDICTOR_UNITS[control_term] = "Percent"
 
 NEWEY_WEST_MAXLAGS = 4
 SCENARIO_SCALE_BN = 100.0
@@ -227,43 +246,43 @@ PRICING_TAU_SENSITIVITY_GRID_COLUMNS = (
     "notes",
 )
 
+def _release_flow_baseline_specs() -> tuple[dict[str, object], ...]:
+    specs: list[dict[str, object]] = []
+    primary_horizon = max(RELEASE_FLOW_HORIZONS_BD)
+    for horizon_bd in RELEASE_FLOW_HORIZONS_BD:
+        window_label = release_flow_window_label(horizon_bd)
+        specs.append(
+            {
+                "spec_id": (
+                    f"release_flow_baseline_{horizon_bd}bd"
+                    if horizon_bd == primary_horizon
+                    else f"release_flow_horizon_{horizon_bd}bd"
+                ),
+                "spec_family": "release_flow",
+                "headline_flag": True,
+                "anchor_role": "credibility_anchor" if horizon_bd == primary_horizon else "supporting",
+                "window_definition": window_label,
+                "panel_key": RELEASE_FLOW_PANEL,
+                "panel_frequency": "release-event",
+                "predictor_terms": ("ati_baseline_bn",),
+                "control_terms": (release_flow_control_column(window_label), "debt_limit_dummy"),
+                "dependent_by_outcome": {
+                    "THREEFYTP10": release_flow_delta_column("THREEFYTP10", window_label),
+                    "DGS10": release_flow_delta_column("DGS10", window_label),
+                    "DGS30": release_flow_delta_column("DGS30", window_label),
+                },
+                "sample_start": "2009-01-01",
+                "notes": (
+                    f"Unique-release fixed-horizon Maturity-Tilt Flow specification from the pre-release pricing marker "
+                    f"to +{horizon_bd} business days after the official release."
+                ),
+            }
+        )
+    return tuple(specs)
+
+
 BASELINE_SPECS = (
-    {
-        "spec_id": "release_flow_baseline_next_release",
-        "spec_family": "release_flow",
-        "headline_flag": True,
-        "anchor_role": "credibility_anchor",
-        "window_definition": "release_to_next_release",
-        "panel_key": RELEASE_FLOW_PANEL,
-        "panel_frequency": "release-event",
-        "predictor_terms": ("ati_baseline_bn",),
-        "control_terms": ("delta_dff_release_to_next_release", "debt_limit_dummy"),
-        "dependent_by_outcome": {
-            "THREEFYTP10": "delta_threefytp10_release_to_next_release",
-            "DGS10": "delta_dgs10_release_to_next_release",
-            "DGS30": "delta_dgs30_release_to_next_release",
-        },
-        "sample_start": "2009-01-01",
-        "notes": "Primary release-level Maturity-Tilt Flow specification from the market-pricing marker before each release to the next release marker.",
-    },
-    {
-        "spec_id": "release_flow_baseline_21bd",
-        "spec_family": "release_flow",
-        "headline_flag": True,
-        "anchor_role": "supporting",
-        "window_definition": "release_plus_21bd",
-        "panel_key": RELEASE_FLOW_PANEL,
-        "panel_frequency": "release-event",
-        "predictor_terms": ("ati_baseline_bn",),
-        "control_terms": ("delta_dff_release_plus_21bd", "debt_limit_dummy"),
-        "dependent_by_outcome": {
-            "THREEFYTP10": "delta_threefytp10_release_plus_21bd",
-            "DGS10": "delta_dgs10_release_plus_21bd",
-            "DGS30": "delta_dgs30_release_plus_21bd",
-        },
-        "sample_start": "2009-01-01",
-        "notes": "Supporting release-level Maturity-Tilt Flow specification from the market-pricing marker before each release to the first FRED observation on or after 21 business days.",
-    },
+    *_release_flow_baseline_specs(),
     {
         "spec_id": "monthly_flow_baseline",
         "spec_family": "monthly_flow",
@@ -304,6 +323,35 @@ BASELINE_SPECS = (
         "notes": "Weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls.",
     },
 )
+
+
+def _release_flow_placebo_specs() -> tuple[dict[str, object], ...]:
+    specs: list[dict[str, object]] = []
+    for start_bd, end_bd in RELEASE_FLOW_PLACEBO_WINDOWS_BD:
+        window_label = release_flow_placebo_label(start_bd, end_bd)
+        specs.append(
+            {
+                "variant_id": window_label,
+                "variant_family": "release_flow_placebo",
+                "spec_id": f"release_flow_placebo_{abs(start_bd)}bd_to_{abs(end_bd)}bd",
+                "spec_family": "release_flow_placebo",
+                "panel_key": RELEASE_FLOW_PANEL,
+                "panel_frequency": "release-event",
+                "window_definition": window_label,
+                "predictor_terms": ("ati_baseline_bn",),
+                "control_terms": (release_flow_control_column(window_label), "debt_limit_dummy"),
+                "dependent_by_outcome": {
+                    "THREEFYTP10": release_flow_delta_column("THREEFYTP10", window_label),
+                    "DGS10": release_flow_delta_column("DGS10", window_label),
+                    "DGS30": release_flow_delta_column("DGS30", window_label),
+                },
+                "sample_start": "2009-01-01",
+                "notes": (
+                    f"Pre-release placebo specification over window [{start_bd}, {end_bd}] business days relative to the official release."
+                ),
+            }
+        )
+    return tuple(specs)
 
 ROBUSTNESS_SPECS = (
     {
@@ -361,6 +409,7 @@ ROBUSTNESS_SPECS = (
         "standardize_predictors": True,
         "notes": "Weekly duration baseline with Public Duration Supply standardized to one standard deviation.",
     },
+    *_release_flow_placebo_specs(),
 )
 
 SUBSAMPLE_VARIANTS = (
@@ -445,7 +494,16 @@ def _build_sample_bounds(panel: pd.DataFrame) -> tuple[str | None, str | None]:
 
 def _effective_shock_count(panel: pd.DataFrame) -> int:
     if "release_id" in panel.columns:
-        return int(panel["release_id"].dropna().astype(str).nunique())
+        release_count = int(panel["release_id"].dropna().astype(str).nunique())
+        if "market_pricing_marker_minus_1d" in panel.columns:
+            marker_count = int(pd.to_datetime(panel["market_pricing_marker_minus_1d"], errors="coerce").dropna().nunique())
+            if marker_count != release_count:
+                raise ValueError(
+                    "Release-level pricing panels require effective_shock_count to equal unique "
+                    f"market-pricing markers. release_ids={release_count} markers={marker_count}"
+                )
+            return marker_count
+        return release_count
     date_col = _panel_date_column(panel)
     if date_col:
         return int(pd.to_datetime(panel[date_col], errors="coerce").dropna().nunique())
@@ -789,7 +847,7 @@ def build_pricing_subsample_grid(pricing_panels: Mapping[str, pd.DataFrame]) -> 
 
 def build_pricing_release_flow_leave_one_out(pricing_panels: Mapping[str, pd.DataFrame]) -> pd.DataFrame:
     panel = pricing_panels.get(RELEASE_FLOW_PANEL)
-    spec = _baseline_spec("release_flow_baseline_next_release")
+    spec = _baseline_spec(f"release_flow_baseline_{max(RELEASE_FLOW_HORIZONS_BD)}bd")
     if panel is None or panel.empty or "release_id" not in panel.columns:
         return pd.DataFrame(columns=PRICING_RELEASE_FLOW_LEAVE_ONE_OUT_COLUMNS)
 
@@ -827,7 +885,7 @@ def build_pricing_release_flow_leave_one_out(pricing_panels: Mapping[str, pd.Dat
                     "effective_shock_count": effective_shock_count,
                     "sample_start": sample_start,
                     "sample_end": sample_end,
-                    "notes": "Leave-one-release-out diagnostic for the release-to-next-release Maturity-Tilt Flow anchor.",
+                    "notes": f"Leave-one-release-out diagnostic for the +{max(RELEASE_FLOW_HORIZONS_BD)} business-day Maturity-Tilt Flow anchor.",
                 }
             )
     return pd.DataFrame(rows, columns=PRICING_RELEASE_FLOW_LEAVE_ONE_OUT_COLUMNS)
