@@ -2313,6 +2313,18 @@ def build_pricing_scenario_translation_publish_table() -> pd.DataFrame:
     )
 
 
+def build_pricing_overlay_panel_publish_table() -> pd.DataFrame:
+    path = PROCESSED_DIR / "official_ati_price_panel.csv"
+    if not path.exists():
+        return pd.DataFrame(columns=["date", "ati_baseline_bn", "stock_excess_bills_bn", "DGS10", "THREEFYTP10"])
+    df = pd.read_csv(path)
+    keep = ["date", "ati_baseline_bn", "stock_excess_bills_bn", "DGS10", "THREEFYTP10"]
+    keep = [c for c in keep if c in df.columns]
+    out = df[keep].copy()
+    out["date"] = pd.to_datetime(out["date"]).dt.strftime("%Y-%m-%d")
+    return out.dropna(subset=["date"]).sort_values("date").reset_index(drop=True)
+
+
 def build_pricing_release_flow_panel_publish_table() -> pd.DataFrame:
     return _read_processed_csv(
         PROCESSED_DIR / "pricing_release_flow_panel.csv",
@@ -3641,6 +3653,7 @@ def build_publish_artifacts() -> None:
         build_pricing_tau_sensitivity_grid_publish_table(),
     )
     publish_table("pricing_scenario_translation", "Pricing Scenario Translation", build_pricing_scenario_translation_publish_table())
+    publish_table("pricing_overlay_panel", "Pricing Overlay Panel", build_pricing_overlay_panel_publish_table())
     publish_table("data_sources_summary", "Data Sources Summary", build_data_sources_publish_table())
     publish_table("investor_allotments_summary", "Investor Allotments Summary", build_investor_allotments_summary_table())
     publish_table("primary_dealer_summary", "Primary Dealer Summary", build_primary_dealer_summary_table())

@@ -38,7 +38,7 @@
       "benchmark_verification_incomplete_count": 0,
       "reviewed_surprise_ready_count": 1,
       "tier_a_count": 1,
-      "benchmark_blockers": NaN
+      "benchmark_blockers": null
     },
     {
       "event_id": "qra_2023_02",
@@ -64,7 +64,7 @@
       "benchmark_verification_incomplete_count": 0,
       "reviewed_surprise_ready_count": 1,
       "tier_a_count": 1,
-      "benchmark_blockers": NaN
+      "benchmark_blockers": null
     },
     {
       "event_id": "qra_2023_08",
@@ -90,7 +90,7 @@
       "benchmark_verification_incomplete_count": 0,
       "reviewed_surprise_ready_count": 1,
       "tier_a_count": 1,
-      "benchmark_blockers": NaN
+      "benchmark_blockers": null
     },
     {
       "event_id": "qra_2024_01",
@@ -116,7 +116,7 @@
       "benchmark_verification_incomplete_count": 0,
       "reviewed_surprise_ready_count": 1,
       "tier_a_count": 0,
-      "benchmark_blockers": NaN
+      "benchmark_blockers": null
     },
     {
       "event_id": "qra_2024_07",
@@ -142,7 +142,7 @@
       "benchmark_verification_incomplete_count": 0,
       "reviewed_surprise_ready_count": 1,
       "tier_a_count": 1,
-      "benchmark_blockers": NaN
+      "benchmark_blockers": null
     },
     {
       "event_id": "qra_2025_02",
@@ -168,7 +168,7 @@
       "benchmark_verification_incomplete_count": 0,
       "reviewed_surprise_ready_count": 1,
       "tier_a_count": 1,
-      "benchmark_blockers": NaN
+      "benchmark_blockers": null
     },
     {
       "event_id": "qra_2025_07",

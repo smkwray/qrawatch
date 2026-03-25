@@ -1,6 +1,4584 @@
 {
-  "title": "Monthly Pricing Overlay Panel",
+  "title": "Pricing Overlay Panel",
   "rows": [
+    {
+      "date": "1954-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1954-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1954-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1954-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1954-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1954-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1955-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1956-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1957-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1958-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1959-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1960-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1961-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": null,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 409.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 400.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 386.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 386.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 390.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 400.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 404.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 396.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 394.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 392.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 392.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1962-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 385.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 387.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 394.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 395.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 395.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 396.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 400.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 400.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 401.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 407.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 415.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 408.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1963-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 413.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 415.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 418.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 423.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 422.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 419.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 415.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 419.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 421.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 418.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 416.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 420.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1964-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 421.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 419.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 422.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 420.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 421.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 423.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 420.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 422.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 426.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 434.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 441.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 448.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1965-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 465.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 469.00000000000006,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 501.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 471.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 479.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 480.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 497.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 505.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 536.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 501.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 497.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 512.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1966-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 463.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 451.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 472.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 450.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 478.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 480.99999999999994,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 522.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 516.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 527.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 531.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 564.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 574.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1967-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 570.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 554.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 556.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 576.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 574.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 586.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 564.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 539.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 542.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 549.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 561.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 578.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1968-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 616.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 619.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 626.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 630.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 620.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 656.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 673.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 666.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 683.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 751.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 694.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 729.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1969-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 788.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 775.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 690.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 708.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 782.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 795.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 768.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 738.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 749.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 729.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 733.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 649.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1970-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 650.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 609.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 614.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 553.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 608.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 638.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 670.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 685.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 628.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 600.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 587.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 593.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1971-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 589.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 609.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 604.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 612.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 614.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 605.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 615.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 612.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 642.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 654.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 641.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 628.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1972-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 641.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 654.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 664.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 673.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 670.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 693.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 694.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 743.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 725.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 690.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 671.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 669.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1973-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 690.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 700.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 701.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 741.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 766.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 752.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 764.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 789.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 811.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 794.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 779.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 764.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1974-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 740.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 753.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 746.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 801.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 831.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 803.9999999999999,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 796.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 819.9999999999999,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 822.0000000000001,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 848.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 791.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 814.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1975-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 776.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 780.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 777.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 766.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 767.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 796.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 786.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 786.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 766.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 755.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 742.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 701.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1976-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 681.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 740.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 745.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 742.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 745.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 738.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 720.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 742.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 728.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 741.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 762.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 755.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1977-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 778.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 794.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 803.9999999999999,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 815.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 824.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 842.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 861.9999999999999,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 856.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 839.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 856.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 896.0000000000001,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 886.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1978-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 915.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 894.9999999999999,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 917.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 911.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 935.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 906.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 881.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 901.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 924.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 944.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1072.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1038.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1979-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1033.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1113.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1272.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1264.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1076.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1025.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1009.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1076.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1155.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1186.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1246.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1272.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1980-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1243.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1268.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1343.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1313.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1411.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1350.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1386.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1467.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1541.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1584.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1463.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1313.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1981-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1398.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1414.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1403.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1418.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1387.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1371.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1444.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1368.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1281.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1173.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1071.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1079.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1982-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1036.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1080.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1027.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1062.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1027.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1081.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1096.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1176.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1198.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1144.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1174.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1163.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1983-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1182.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1167.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1204.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1253.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1282.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1391.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1384.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1291.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1279.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1247.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1179.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1158.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1984-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1155.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1117.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1191.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1165.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1141.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1028.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1025.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1057.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1028.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1031.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 1001.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 959.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1985-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 900.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 908.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 813.0000000000001,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 739.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 738.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 805.0000000000001,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 735.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 734.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 695.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 745.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 734.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 715.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1986-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 723.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 718.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 719.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 751.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 821.0000000000001,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 849.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 838.0000000000001,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 866.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 900.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 963.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 888.0000000000001,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 899.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1987-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 883.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 826.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 816.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 857.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 886.9999999999999,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 920.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 882.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 912.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 925.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 886.9999999999999,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 865.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 906.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1988-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 914.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 901.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 932.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 930.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 902.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 860.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 810.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 782.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 826.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 831.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 792.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 784.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1989-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 793.0,
+      "THREEFYTP10": null
+    },
+    {
+      "date": "1990-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 843.0,
+      "THREEFYTP10": 203.12
+    },
+    {
+      "date": "1990-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 851.0,
+      "THREEFYTP10": 207.01
+    },
+    {
+      "date": "1990-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 865.0,
+      "THREEFYTP10": 210.89
+    },
+    {
+      "date": "1990-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 904.0,
+      "THREEFYTP10": 231.62
+    },
+    {
+      "date": "1990-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 860.0,
+      "THREEFYTP10": 212.4
+    },
+    {
+      "date": "1990-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 843.0,
+      "THREEFYTP10": 204.52
+    },
+    {
+      "date": "1990-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 836.0,
+      "THREEFYTP10": 202.85
+    },
+    {
+      "date": "1990-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 886.0,
+      "THREEFYTP10": 230.62
+    },
+    {
+      "date": "1990-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 882.0,
+      "THREEFYTP10": 234.64
+    },
+    {
+      "date": "1990-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 865.0,
+      "THREEFYTP10": 224.52999999999997
+    },
+    {
+      "date": "1990-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 826.0,
+      "THREEFYTP10": 207.69000000000003
+    },
+    {
+      "date": "1990-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 808.0,
+      "THREEFYTP10": 213.49999999999997
+    },
+    {
+      "date": "1991-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 802.9999999999999,
+      "THREEFYTP10": 214.99
+    },
+    {
+      "date": "1991-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 802.0,
+      "THREEFYTP10": 219.36
+    },
+    {
+      "date": "1991-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 805.0000000000001,
+      "THREEFYTP10": 229.3
+    },
+    {
+      "date": "1991-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 802.0,
+      "THREEFYTP10": 231.4
+    },
+    {
+      "date": "1991-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 806.0,
+      "THREEFYTP10": 235.36
+    },
+    {
+      "date": "1991-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 824.0,
+      "THREEFYTP10": 245.51
+    },
+    {
+      "date": "1991-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 819.9999999999999,
+      "THREEFYTP10": 238.28
+    },
+    {
+      "date": "1991-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 782.0,
+      "THREEFYTP10": 226.91
+    },
+    {
+      "date": "1991-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 747.0,
+      "THREEFYTP10": 212.87
+    },
+    {
+      "date": "1991-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 747.0,
+      "THREEFYTP10": 216.92
+    },
+    {
+      "date": "1991-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 738.0,
+      "THREEFYTP10": 223.85
+    },
+    {
+      "date": "1991-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 671.0,
+      "THREEFYTP10": 204.33
+    },
+    {
+      "date": "1992-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 731.0,
+      "THREEFYTP10": 232.94000000000003
+    },
+    {
+      "date": "1992-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 727.0,
+      "THREEFYTP10": 233.43
+    },
+    {
+      "date": "1992-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 754.0,
+      "THREEFYTP10": 241.82
+    },
+    {
+      "date": "1992-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 761.0,
+      "THREEFYTP10": 251.27
+    },
+    {
+      "date": "1992-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 733.0,
+      "THREEFYTP10": 237.26
+    },
+    {
+      "date": "1992-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 714.0,
+      "THREEFYTP10": 229.68
+    },
+    {
+      "date": "1992-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 672.0,
+      "THREEFYTP10": 214.99
+    },
+    {
+      "date": "1992-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 662.0,
+      "THREEFYTP10": 212.54
+    },
+    {
+      "date": "1992-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 637.0,
+      "THREEFYTP10": 208.65
+    },
+    {
+      "date": "1992-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 680.0,
+      "THREEFYTP10": 223.6
+    },
+    {
+      "date": "1992-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 695.0,
+      "THREEFYTP10": 228.3
+    },
+    {
+      "date": "1992-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 670.0,
+      "THREEFYTP10": 217.93
+    },
+    {
+      "date": "1993-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 639.0,
+      "THREEFYTP10": 204.71
+    },
+    {
+      "date": "1993-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 603.0,
+      "THREEFYTP10": 183.98
+    },
+    {
+      "date": "1993-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 603.0,
+      "THREEFYTP10": 186.88
+    },
+    {
+      "date": "1993-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 605.0,
+      "THREEFYTP10": 181.44
+    },
+    {
+      "date": "1993-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 616.0,
+      "THREEFYTP10": 181.89
+    },
+    {
+      "date": "1993-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 580.0,
+      "THREEFYTP10": 162.32
+    },
+    {
+      "date": "1993-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 583.0,
+      "THREEFYTP10": 163.69
+    },
+    {
+      "date": "1993-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 545.0,
+      "THREEFYTP10": 145.54
+    },
+    {
+      "date": "1993-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 540.0,
+      "THREEFYTP10": 144.20999999999998
+    },
+    {
+      "date": "1993-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 543.0,
+      "THREEFYTP10": 144.14
+    },
+    {
+      "date": "1993-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 583.0,
+      "THREEFYTP10": 161.09
+    },
+    {
+      "date": "1993-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 583.0,
+      "THREEFYTP10": 163.07
+    },
+    {
+      "date": "1994-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 570.0,
+      "THREEFYTP10": 155.35000000000002
+    },
+    {
+      "date": "1994-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 615.0,
+      "THREEFYTP10": 177.61
+    },
+    {
+      "date": "1994-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 677.0,
+      "THREEFYTP10": 206.18
+    },
+    {
+      "date": "1994-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 706.0,
+      "THREEFYTP10": 210.36
+    },
+    {
+      "date": "1994-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 717.0,
+      "THREEFYTP10": 208.84999999999997
+    },
+    {
+      "date": "1994-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 734.0,
+      "THREEFYTP10": 219.65
+    },
+    {
+      "date": "1994-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 712.0,
+      "THREEFYTP10": 205.23
+    },
+    {
+      "date": "1994-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 719.0,
+      "THREEFYTP10": 202.2
+    },
+    {
+      "date": "1994-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 762.0,
+      "THREEFYTP10": 222.11
+    },
+    {
+      "date": "1994-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 781.0,
+      "THREEFYTP10": 224.13
+    },
+    {
+      "date": "1994-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 791.0,
+      "THREEFYTP10": 220.04
+    },
+    {
+      "date": "1994-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 784.0,
+      "THREEFYTP10": 212.67
+    },
+    {
+      "date": "1995-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 760.0,
+      "THREEFYTP10": 198.62
+    },
+    {
+      "date": "1995-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 722.0,
+      "THREEFYTP10": 181.19
+    },
+    {
+      "date": "1995-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 720.0,
+      "THREEFYTP10": 181.16
+    },
+    {
+      "date": "1995-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 707.0,
+      "THREEFYTP10": 171.33
+    },
+    {
+      "date": "1995-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 630.0,
+      "THREEFYTP10": 133.36
+    },
+    {
+      "date": "1995-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 621.0,
+      "THREEFYTP10": 133.57000000000002
+    },
+    {
+      "date": "1995-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 645.0,
+      "THREEFYTP10": 146.82
+    },
+    {
+      "date": "1995-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 628.0,
+      "THREEFYTP10": 141.0
+    },
+    {
+      "date": "1995-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 617.0,
+      "THREEFYTP10": 136.42000000000002
+    },
+    {
+      "date": "1995-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 603.0,
+      "THREEFYTP10": 124.75
+    },
+    {
+      "date": "1995-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 576.0,
+      "THREEFYTP10": 113.12
+    },
+    {
+      "date": "1995-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 558.0,
+      "THREEFYTP10": 111.0
+    },
+    {
+      "date": "1996-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 560.0,
+      "THREEFYTP10": 110.84
+    },
+    {
+      "date": "1996-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 613.0,
+      "THREEFYTP10": 139.83
+    },
+    {
+      "date": "1996-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 634.0,
+      "THREEFYTP10": 152.95000000000002
+    },
+    {
+      "date": "1996-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 666.0,
+      "THREEFYTP10": 166.33
+    },
+    {
+      "date": "1996-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 685.0,
+      "THREEFYTP10": 174.56
+    },
+    {
+      "date": "1996-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 673.0,
+      "THREEFYTP10": 168.12
+    },
+    {
+      "date": "1996-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 680.0,
+      "THREEFYTP10": 168.36
+    },
+    {
+      "date": "1996-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 696.0,
+      "THREEFYTP10": 177.25
+    },
+    {
+      "date": "1996-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 672.0,
+      "THREEFYTP10": 169.23
+    },
+    {
+      "date": "1996-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 637.0,
+      "THREEFYTP10": 148.89
+    },
+    {
+      "date": "1996-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 606.0,
+      "THREEFYTP10": 133.14999999999998
+    },
+    {
+      "date": "1996-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 643.0,
+      "THREEFYTP10": 149.33
+    },
+    {
+      "date": "1997-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 653.0,
+      "THREEFYTP10": 157.19
+    },
+    {
+      "date": "1997-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 656.0,
+      "THREEFYTP10": 159.54
+    },
+    {
+      "date": "1997-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 692.0,
+      "THREEFYTP10": 174.96
+    },
+    {
+      "date": "1997-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 672.0,
+      "THREEFYTP10": 166.86
+    },
+    {
+      "date": "1997-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 667.0,
+      "THREEFYTP10": 167.79
+    },
+    {
+      "date": "1997-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 651.0,
+      "THREEFYTP10": 159.18
+    },
+    {
+      "date": "1997-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 602.0,
+      "THREEFYTP10": 131.14
+    },
+    {
+      "date": "1997-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 634.0,
+      "THREEFYTP10": 148.78
+    },
+    {
+      "date": "1997-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 612.0,
+      "THREEFYTP10": 141.2
+    },
+    {
+      "date": "1997-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 584.0,
+      "THREEFYTP10": 124.6
+    },
+    {
+      "date": "1997-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 586.0,
+      "THREEFYTP10": 121.79
+    },
+    {
+      "date": "1997-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 575.0,
+      "THREEFYTP10": 113.25
+    },
+    {
+      "date": "1998-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 553.0,
+      "THREEFYTP10": 106.36
+    },
+    {
+      "date": "1998-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 562.0,
+      "THREEFYTP10": 111.71
+    },
+    {
+      "date": "1998-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 567.0,
+      "THREEFYTP10": 116.32
+    },
+    {
+      "date": "1998-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 568.0,
+      "THREEFYTP10": 120.27
+    },
+    {
+      "date": "1998-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 556.0,
+      "THREEFYTP10": 112.35
+    },
+    {
+      "date": "1998-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 544.0,
+      "THREEFYTP10": 106.57
+    },
+    {
+      "date": "1998-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 550.0,
+      "THREEFYTP10": 108.68
+    },
+    {
+      "date": "1998-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 505.0,
+      "THREEFYTP10": 87.72999999999999
+    },
+    {
+      "date": "1998-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 444.00000000000006,
+      "THREEFYTP10": 67.61
+    },
+    {
+      "date": "1998-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 463.99999999999994,
+      "THREEFYTP10": 78.28
+    },
+    {
+      "date": "1998-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 474.0,
+      "THREEFYTP10": 82.03
+    },
+    {
+      "date": "1998-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 465.00000000000006,
+      "THREEFYTP10": 83.37
+    },
+    {
+      "date": "1999-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 466.0,
+      "THREEFYTP10": 83.3
+    },
+    {
+      "date": "1999-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 529.0,
+      "THREEFYTP10": 113.95
+    },
+    {
+      "date": "1999-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 525.0,
+      "THREEFYTP10": 116.84
+    },
+    {
+      "date": "1999-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 536.0,
+      "THREEFYTP10": 115.42
+    },
+    {
+      "date": "1999-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 564.0,
+      "THREEFYTP10": 132.86
+    },
+    {
+      "date": "1999-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 581.0,
+      "THREEFYTP10": 138.09
+    },
+    {
+      "date": "1999-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 592.0,
+      "THREEFYTP10": 146.29000000000002
+    },
+    {
+      "date": "1999-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 598.0,
+      "THREEFYTP10": 144.70000000000002
+    },
+    {
+      "date": "1999-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 590.0,
+      "THREEFYTP10": 145.45999999999998
+    },
+    {
+      "date": "1999-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 602.0,
+      "THREEFYTP10": 146.13
+    },
+    {
+      "date": "1999-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 618.0,
+      "THREEFYTP10": 145.22
+    },
+    {
+      "date": "1999-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 645.0,
+      "THREEFYTP10": 157.63
+    },
+    {
+      "date": "2000-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 668.0,
+      "THREEFYTP10": 158.88
+    },
+    {
+      "date": "2000-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 642.0,
+      "THREEFYTP10": 148.12
+    },
+    {
+      "date": "2000-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 603.0,
+      "THREEFYTP10": 127.59
+    },
+    {
+      "date": "2000-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 623.0,
+      "THREEFYTP10": 137.83
+    },
+    {
+      "date": "2000-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 629.0,
+      "THREEFYTP10": 139.32999999999998
+    },
+    {
+      "date": "2000-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 603.0,
+      "THREEFYTP10": 123.79
+    },
+    {
+      "date": "2000-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 604.0,
+      "THREEFYTP10": 115.01999999999998
+    },
+    {
+      "date": "2000-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 573.0,
+      "THREEFYTP10": 102.74
+    },
+    {
+      "date": "2000-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 580.0,
+      "THREEFYTP10": 104.38
+    },
+    {
+      "date": "2000-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 577.0,
+      "THREEFYTP10": 96.1
+    },
+    {
+      "date": "2000-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 548.0,
+      "THREEFYTP10": 83.55
+    },
+    {
+      "date": "2000-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": null,
+      "DGS10": 512.0,
+      "THREEFYTP10": 75.75
+    },
+    {
+      "date": "2001-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 120.22948145999992,
+      "DGS10": 519.0,
+      "THREEFYTP10": 93.86
+    },
+    {
+      "date": "2001-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 142.59219274000012,
+      "DGS10": 492.0,
+      "THREEFYTP10": 89.32
+    },
+    {
+      "date": "2001-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 168.81571193999994,
+      "DGS10": 493.0,
+      "THREEFYTP10": 100.54
+    },
+    {
+      "date": "2001-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 101.09469216,
+      "DGS10": 535.0,
+      "THREEFYTP10": 127.19
+    },
+    {
+      "date": "2001-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 104.52228349999992,
+      "DGS10": 543.0,
+      "THREEFYTP10": 138.7
+    },
+    {
+      "date": "2001-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 106.04828692000002,
+      "DGS10": 542.0,
+      "THREEFYTP10": 137.42000000000002
+    },
+    {
+      "date": "2001-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 139.56200852,
+      "DGS10": 507.0,
+      "THREEFYTP10": 119.31
+    },
+    {
+      "date": "2001-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 205.42874346000008,
+      "DGS10": 484.99999999999994,
+      "THREEFYTP10": 114.32
+    },
+    {
+      "date": "2001-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 207.35748595999985,
+      "DGS10": 459.99999999999994,
+      "THREEFYTP10": 122.08
+    },
+    {
+      "date": "2001-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 210.42552611599993,
+      "DGS10": 430.0,
+      "THREEFYTP10": 113.13
+    },
+    {
+      "date": "2001-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 274.94738702,
+      "DGS10": 478.0,
+      "THREEFYTP10": 146.92000000000002
+    },
+    {
+      "date": "2001-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 274.30625788,
+      "DGS10": 507.0,
+      "THREEFYTP10": 166.05
+    },
+    {
+      "date": "2002-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 258.45344700000004,
+      "DGS10": 507.0,
+      "THREEFYTP10": 160.86
+    },
+    {
+      "date": "2002-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 287.1925084400002,
+      "DGS10": 488.0,
+      "THREEFYTP10": 152.89999999999998
+    },
+    {
+      "date": "2002-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 288.1044107000001,
+      "DGS10": 542.0,
+      "THREEFYTP10": 179.72
+    },
+    {
+      "date": "2002-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 254.80829034,
+      "DGS10": 511.00000000000006,
+      "THREEFYTP10": 163.23000000000002
+    },
+    {
+      "date": "2002-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 268.0053482979999,
+      "DGS10": 508.0,
+      "THREEFYTP10": 157.36
+    },
+    {
+      "date": "2002-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 273.06005232000007,
+      "DGS10": 486.00000000000006,
+      "THREEFYTP10": 147.12
+    },
+    {
+      "date": "2002-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 305.01667518000005,
+      "DGS10": 451.0,
+      "THREEFYTP10": 125.41
+    },
+    {
+      "date": "2002-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 324.51956720000004,
+      "DGS10": 413.99999999999994,
+      "THREEFYTP10": 105.62
+    },
+    {
+      "date": "2002-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 303.63998775999994,
+      "DGS10": 363.0,
+      "THREEFYTP10": 79.29
+    },
+    {
+      "date": "2002-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 315.10778573999994,
+      "DGS10": 393.0,
+      "THREEFYTP10": 95.38
+    },
+    {
+      "date": "2002-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 324.41945463999997,
+      "DGS10": 422.0,
+      "THREEFYTP10": 119.39
+    },
+    {
+      "date": "2002-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 311.8177262800001,
+      "DGS10": 383.0,
+      "THREEFYTP10": 94.18
+    },
+    {
+      "date": "2003-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 293.85036172,
+      "DGS10": 400.0,
+      "THREEFYTP10": 105.06
+    },
+    {
+      "date": "2003-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 329.52679198000004,
+      "DGS10": 371.0,
+      "THREEFYTP10": 87.48
+    },
+    {
+      "date": "2003-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 355.29566202000024,
+      "DGS10": 383.0,
+      "THREEFYTP10": 96.28
+    },
+    {
+      "date": "2003-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 332.9566948200001,
+      "DGS10": 389.0,
+      "THREEFYTP10": 96.81
+    },
+    {
+      "date": "2003-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 307.079286584,
+      "DGS10": 337.0,
+      "THREEFYTP10": 65.07
+    },
+    {
+      "date": "2003-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 319.55211598000017,
+      "DGS10": 354.0,
+      "THREEFYTP10": 78.36
+    },
+    {
+      "date": "2003-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 322.68801920000016,
+      "DGS10": 449.0,
+      "THREEFYTP10": 130.73999999999998
+    },
+    {
+      "date": "2003-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 339.91745798000005,
+      "DGS10": 445.0,
+      "THREEFYTP10": 133.1
+    },
+    {
+      "date": "2003-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 295.2978533490002,
+      "DGS10": 396.0,
+      "THREEFYTP10": 103.19
+    },
+    {
+      "date": "2003-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 310.44886129999986,
+      "DGS10": 433.0,
+      "THREEFYTP10": 123.03
+    },
+    {
+      "date": "2003-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 313.4206767599999,
+      "DGS10": 434.0,
+      "THREEFYTP10": 124.04
+    },
+    {
+      "date": "2003-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 285.26602562,
+      "DGS10": 426.99999999999994,
+      "THREEFYTP10": 119.62
+    },
+    {
+      "date": "2004-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 263.14930114054187,
+      "DGS10": 416.0,
+      "THREEFYTP10": 115.53
+    },
+    {
+      "date": "2004-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 298.87776932,
+      "DGS10": 399.0,
+      "THREEFYTP10": 105.19
+    },
+    {
+      "date": "2004-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 315.15195978,
+      "DGS10": 386.0,
+      "THREEFYTP10": 95.77
+    },
+    {
+      "date": "2004-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 267.888330663557,
+      "DGS10": 453.0,
+      "THREEFYTP10": 136.34
+    },
+    {
+      "date": "2004-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 284.0553679866738,
+      "DGS10": 466.0,
+      "THREEFYTP10": 140.72
+    },
+    {
+      "date": "2004-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 270.79785974759176,
+      "DGS10": 462.0,
+      "THREEFYTP10": 132.51999999999998
+    },
+    {
+      "date": "2004-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 277.0189721701354,
+      "DGS10": 450.0,
+      "THREEFYTP10": 124.36
+    },
+    {
+      "date": "2004-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 285.43603314093036,
+      "DGS10": 413.0,
+      "THREEFYTP10": 100.64
+    },
+    {
+      "date": "2004-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 269.18143641219314,
+      "DGS10": 413.99999999999994,
+      "THREEFYTP10": 94.59
+    },
+    {
+      "date": "2004-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 279.45676320000007,
+      "DGS10": 405.0,
+      "THREEFYTP10": 87.47
+    },
+    {
+      "date": "2004-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 317.3101660199999,
+      "DGS10": 436.00000000000006,
+      "THREEFYTP10": 97.18
+    },
+    {
+      "date": "2004-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 290.41153698,
+      "DGS10": 424.0,
+      "THREEFYTP10": 90.07
+    },
+    {
+      "date": "2005-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 271.34492703999996,
+      "DGS10": 413.99999999999994,
+      "THREEFYTP10": 81.81
+    },
+    {
+      "date": "2005-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 301.08223896000015,
+      "DGS10": 436.00000000000006,
+      "THREEFYTP10": 88.0
+    },
+    {
+      "date": "2005-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 320.4102894359998,
+      "DGS10": 450.0,
+      "THREEFYTP10": 96.07
+    },
+    {
+      "date": "2005-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 258.59275854,
+      "DGS10": 421.0,
+      "THREEFYTP10": 76.71
+    },
+    {
+      "date": "2005-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 232.26706968,
+      "DGS10": 400.0,
+      "THREEFYTP10": 66.27
+    },
+    {
+      "date": "2005-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 197.8058961452531,
+      "DGS10": 394.0,
+      "THREEFYTP10": 58.709999999999994
+    },
+    {
+      "date": "2005-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 208.22037876,
+      "DGS10": 428.0,
+      "THREEFYTP10": 70.44
+    },
+    {
+      "date": "2005-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 214.09056947999997,
+      "DGS10": 401.99999999999994,
+      "THREEFYTP10": 56.31
+    },
+    {
+      "date": "2005-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 178.98616436000003,
+      "DGS10": 434.0,
+      "THREEFYTP10": 71.17999999999999
+    },
+    {
+      "date": "2005-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 192.96272041400013,
+      "DGS10": 457.0,
+      "THREEFYTP10": 76.87
+    },
+    {
+      "date": "2005-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 233.58669195199997,
+      "DGS10": 449.0,
+      "THREEFYTP10": 72.45
+    },
+    {
+      "date": "2005-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 210.75418150000007,
+      "DGS10": 438.99999999999994,
+      "THREEFYTP10": 64.42
+    },
+    {
+      "date": "2006-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 201.1801264168502,
+      "DGS10": 453.0,
+      "THREEFYTP10": 65.14999999999999
+    },
+    {
+      "date": "2006-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 229.59846853458993,
+      "DGS10": 455.0,
+      "THREEFYTP10": 65.67
+    },
+    {
+      "date": "2006-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 260.7780532757843,
+      "DGS10": 486.00000000000006,
+      "THREEFYTP10": 78.91
+    },
+    {
+      "date": "2006-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 194.13030375027785,
+      "DGS10": 507.0,
+      "THREEFYTP10": 85.08
+    },
+    {
+      "date": "2006-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 185.977278508991,
+      "DGS10": 512.0,
+      "THREEFYTP10": 86.81
+    },
+    {
+      "date": "2006-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 150.9833758836919,
+      "DGS10": 515.0,
+      "THREEFYTP10": 85.08
+    },
+    {
+      "date": "2006-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 162.2199080926001,
+      "DGS10": 499.0,
+      "THREEFYTP10": 74.53999999999999
+    },
+    {
+      "date": "2006-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 180.27198272059516,
+      "DGS10": 474.0,
+      "THREEFYTP10": 63.24999999999999
+    },
+    {
+      "date": "2006-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 136.98357117097305,
+      "DGS10": 463.99999999999994,
+      "THREEFYTP10": 59.75
+    },
+    {
+      "date": "2006-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 148.6820605069017,
+      "DGS10": 461.00000000000006,
+      "THREEFYTP10": 55.96
+    },
+    {
+      "date": "2006-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 200.4542209845463,
+      "DGS10": 446.0,
+      "THREEFYTP10": 48.61
+    },
+    {
+      "date": "2006-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 162.67101664879837,
+      "DGS10": 471.0,
+      "THREEFYTP10": 61.77
+    },
+    {
+      "date": "2007-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 149.53582756769944,
+      "DGS10": 483.0,
+      "THREEFYTP10": 67.44
+    },
+    {
+      "date": "2007-02-28",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 188.54775114512717,
+      "DGS10": 455.99999999999994,
+      "THREEFYTP10": 51.49
+    },
+    {
+      "date": "2007-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 228.7144129194249,
+      "DGS10": 465.00000000000006,
+      "THREEFYTP10": 57.68
+    },
+    {
+      "date": "2007-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 149.8574944575713,
+      "DGS10": 463.0,
+      "THREEFYTP10": 58.47
+    },
+    {
+      "date": "2007-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 130.98981128950658,
+      "DGS10": 490.00000000000006,
+      "THREEFYTP10": 75.63
+    },
+    {
+      "date": "2007-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 88.0133817594356,
+      "DGS10": 503.0,
+      "THREEFYTP10": 84.35000000000001
+    },
+    {
+      "date": "2007-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 99.45245005904272,
+      "DGS10": 478.0,
+      "THREEFYTP10": 67.47
+    },
+    {
+      "date": "2007-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 204.75093376382716,
+      "DGS10": 454.0,
+      "THREEFYTP10": 71.31
+    },
+    {
+      "date": "2007-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 157.41715630848043,
+      "DGS10": 459.0,
+      "THREEFYTP10": 77.3
+    },
+    {
+      "date": "2007-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 134.42124612774646,
+      "DGS10": 448.00000000000006,
+      "THREEFYTP10": 68.47
+    },
+    {
+      "date": "2007-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 217.2625726271488,
+      "DGS10": 397.0,
+      "THREEFYTP10": 59.11
+    },
+    {
+      "date": "2007-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 187.28931793885417,
+      "DGS10": 404.0,
+      "THREEFYTP10": 59.809999999999995
+    },
+    {
+      "date": "2008-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 168.46808508529406,
+      "DGS10": 367.0,
+      "THREEFYTP10": 62.25000000000001
+    },
+    {
+      "date": "2008-02-29",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 286.34307463270034,
+      "DGS10": 353.0,
+      "THREEFYTP10": 61.809999999999995
+    },
+    {
+      "date": "2008-03-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 306.5630585993414,
+      "DGS10": 345.0,
+      "THREEFYTP10": 65.14999999999999
+    },
+    {
+      "date": "2008-04-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 190.0551084810104,
+      "DGS10": 377.0,
+      "THREEFYTP10": 85.45
+    },
+    {
+      "date": "2008-05-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 275.9123926316849,
+      "DGS10": 405.99999999999994,
+      "THREEFYTP10": 95.59
+    },
+    {
+      "date": "2008-06-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 215.10019477880573,
+      "DGS10": 399.0,
+      "THREEFYTP10": 89.03999999999999
+    },
+    {
+      "date": "2008-07-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 267.8037533289336,
+      "DGS10": 399.0,
+      "THREEFYTP10": 91.09
+    },
+    {
+      "date": "2008-08-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 344.8521505226551,
+      "DGS10": 383.0,
+      "THREEFYTP10": 78.75
+    },
+    {
+      "date": "2008-09-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 547.3325335954536,
+      "DGS10": 385.0,
+      "THREEFYTP10": 92.42
+    },
+    {
+      "date": "2008-10-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 878.4507854162302,
+      "DGS10": 401.0,
+      "THREEFYTP10": 121.85
+    },
+    {
+      "date": "2008-11-30",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 955.626175546444,
+      "DGS10": 293.0,
+      "THREEFYTP10": 74.75
+    },
+    {
+      "date": "2008-12-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 823.0904174201015,
+      "DGS10": 225.0,
+      "THREEFYTP10": 39.3
+    },
     {
       "date": "2009-01-31",
       "ati_baseline_bn": null,
@@ -48,7 +4626,7 @@
       "ati_baseline_bn": -19.92,
       "stock_excess_bills_bn": 799.5833004262207,
       "DGS10": 352.0,
-      "THREEFYTP10": 104.89999999999999
+      "THREEFYTP10": 104.9
     },
     {
       "date": "2009-08-31",
@@ -88,16 +4666,16 @@
     {
       "date": "2010-01-31",
       "ati_baseline_bn": -261.747,
-      "stock_excess_bills_bn": 388.67348747712276,
+      "stock_excess_bills_bn": 388.6734874771227,
       "DGS10": 363.0,
-      "THREEFYTP10": 100.64999999999999
+      "THREEFYTP10": 100.65
     },
     {
       "date": "2010-02-28",
       "ati_baseline_bn": -20.617000000000004,
       "stock_excess_bills_bn": 403.3067445917185,
       "DGS10": 361.0,
-      "THREEFYTP10": 98.72999999999999
+      "THREEFYTP10": 98.73
     },
     {
       "date": "2010-03-31",
@@ -132,7 +4710,7 @@
       "ati_baseline_bn": -100.209,
       "stock_excess_bills_bn": 318.3098771953383,
       "DGS10": 294.0,
-      "THREEFYTP10": 55.910000000000004
+      "THREEFYTP10": 55.91
     },
     {
       "date": "2010-08-31",
@@ -151,7 +4729,7 @@
     {
       "date": "2010-10-31",
       "ati_baseline_bn": -57.094,
-      "stock_excess_bills_bn": 230.77081079622954,
+      "stock_excess_bills_bn": 230.7708107962295,
       "DGS10": 263.0,
       "THREEFYTP10": 34.36
     },
@@ -216,7 +4794,7 @@
       "ati_baseline_bn": -152.625,
       "stock_excess_bills_bn": -195.47668176970348,
       "DGS10": 282.0,
-      "THREEFYTP10": 45.800000000000004
+      "THREEFYTP10": 45.8
     },
     {
       "date": "2011-08-31",
@@ -263,7 +4841,7 @@
     {
       "date": "2012-02-29",
       "ati_baseline_bn": 54.01299999999999,
-      "stock_excess_bills_bn": -229.59740534089798,
+      "stock_excess_bills_bn": -229.597405340898,
       "DGS10": 198.0,
       "THREEFYTP10": -0.64
     },
@@ -272,7 +4850,7 @@
       "ati_baseline_bn": 54.01299999999999,
       "stock_excess_bills_bn": -186.45604892282583,
       "DGS10": 223.0,
-      "THREEFYTP10": 13.370000000000001
+      "THREEFYTP10": 13.37
     },
     {
       "date": "2012-04-30",
@@ -321,7 +4899,7 @@
       "ati_baseline_bn": 31.15800000000001,
       "stock_excess_bills_bn": -337.73960956262994,
       "DGS10": 172.0,
-      "THREEFYTP10": -13.569999999999999
+      "THREEFYTP10": -13.57
     },
     {
       "date": "2012-11-30",
@@ -381,28 +4959,28 @@
     },
     {
       "date": "2013-07-31",
-      "ati_baseline_bn": -12.591999999999999,
+      "ati_baseline_bn": -12.592,
       "stock_excess_bills_bn": -511.0705519919801,
       "DGS10": 260.0,
       "THREEFYTP10": 36.7
     },
     {
       "date": "2013-08-31",
-      "ati_baseline_bn": -12.591999999999999,
+      "ati_baseline_bn": -12.592,
       "stock_excess_bills_bn": -447.54809059592424,
       "DGS10": 278.0,
       "THREEFYTP10": 49.2
     },
     {
       "date": "2013-09-30",
-      "ati_baseline_bn": -12.591999999999999,
+      "ati_baseline_bn": -12.592,
       "stock_excess_bills_bn": -557.3361408158659,
       "DGS10": 264.0,
       "THREEFYTP10": 39.35
     },
     {
       "date": "2013-10-31",
-      "ati_baseline_bn": -12.591999999999999,
+      "ati_baseline_bn": -12.592,
       "stock_excess_bills_bn": -560.1379470757499,
       "DGS10": 257.0,
       "THREEFYTP10": 33.339999999999996
@@ -430,14 +5008,14 @@
     },
     {
       "date": "2014-02-28",
-      "ati_baseline_bn": -106.10499999999999,
+      "ati_baseline_bn": -106.105,
       "stock_excess_bills_bn": -548.0875302633535,
       "DGS10": 266.0,
       "THREEFYTP10": 42.27
     },
     {
       "date": "2014-03-31",
-      "ati_baseline_bn": -106.10499999999999,
+      "ati_baseline_bn": -106.105,
       "stock_excess_bills_bn": -532.4200688701135,
       "DGS10": 273.0,
       "THREEFYTP10": 49.91
@@ -517,14 +5095,14 @@
       "ati_baseline_bn": -7.879999999999999,
       "stock_excess_bills_bn": -789.7707149396202,
       "DGS10": 200.0,
-      "THREEFYTP10": 19.939999999999998
+      "THREEFYTP10": 19.94
     },
     {
       "date": "2015-03-31",
       "ati_baseline_bn": -7.879999999999999,
       "stock_excess_bills_bn": -797.9855976202978,
       "DGS10": 194.0,
-      "THREEFYTP10": 13.200000000000001
+      "THREEFYTP10": 13.2
     },
     {
       "date": "2015-04-30",
@@ -535,21 +5113,21 @@
     },
     {
       "date": "2015-05-31",
-      "ati_baseline_bn": -93.52600000000001,
+      "ati_baseline_bn": -93.526,
       "stock_excess_bills_bn": -836.884989083718,
       "DGS10": 212.0,
       "THREEFYTP10": 23.82
     },
     {
       "date": "2015-06-30",
-      "ati_baseline_bn": -93.52600000000001,
+      "ati_baseline_bn": -93.526,
       "stock_excess_bills_bn": -893.0054051564181,
       "DGS10": 235.0,
       "THREEFYTP10": 34.68
     },
     {
       "date": "2015-07-31",
-      "ati_baseline_bn": -93.52600000000001,
+      "ati_baseline_bn": -93.526,
       "stock_excess_bills_bn": -866.4289768226236,
       "DGS10": 220.00000000000003,
       "THREEFYTP10": 26.05
@@ -573,7 +5151,7 @@
       "ati_baseline_bn": -48.875,
       "stock_excess_bills_bn": -1031.5453986790917,
       "DGS10": 216.0,
-      "THREEFYTP10": 22.400000000000002
+      "THREEFYTP10": 22.4
     },
     {
       "date": "2015-11-30",
@@ -627,7 +5205,7 @@
     {
       "date": "2016-06-30",
       "ati_baseline_bn": -137.876,
-      "stock_excess_bills_bn": -909.5962173837015,
+      "stock_excess_bills_bn": -909.5962173837016,
       "DGS10": 149.0,
       "THREEFYTP10": -18.22
     },
@@ -640,24 +5218,24 @@
     },
     {
       "date": "2016-08-31",
-      "ati_baseline_bn": 102.87799999999999,
+      "ati_baseline_bn": 102.878,
       "stock_excess_bills_bn": -814.8840070783519,
       "DGS10": 158.0,
-      "THREEFYTP10": -12.709999999999999
+      "THREEFYTP10": -12.71
     },
     {
       "date": "2016-09-30",
-      "ati_baseline_bn": 102.87799999999999,
+      "ati_baseline_bn": 102.878,
       "stock_excess_bills_bn": -811.9446707652178,
       "DGS10": 160.0,
-      "THREEFYTP10": -12.479999999999999
+      "THREEFYTP10": -12.48
     },
     {
       "date": "2016-10-31",
-      "ati_baseline_bn": 102.87799999999999,
+      "ati_baseline_bn": 102.878,
       "stock_excess_bills_bn": -725.6611137436621,
       "DGS10": 184.0,
-      "THREEFYTP10": -0.9900000000000001
+      "THREEFYTP10": -0.99
     },
     {
       "date": "2016-11-30",
@@ -699,7 +5277,7 @@
       "ati_baseline_bn": -34.056,
       "stock_excess_bills_bn": -769.0714550217479,
       "DGS10": 229.0,
-      "THREEFYTP10": 15.040000000000001
+      "THREEFYTP10": 15.04
     },
     {
       "date": "2017-05-31",
@@ -720,7 +5298,7 @@
       "ati_baseline_bn": -43.688,
       "stock_excess_bills_bn": -772.8747721431515,
       "DGS10": 229.99999999999997,
-      "THREEFYTP10": 9.700000000000001
+      "THREEFYTP10": 9.7
     },
     {
       "date": "2017-08-31",
@@ -741,7 +5319,7 @@
       "ati_baseline_bn": 51.407,
       "stock_excess_bills_bn": -713.3332797179341,
       "DGS10": 238.0,
-      "THREEFYTP10": 13.469999999999999
+      "THREEFYTP10": 13.47
     },
     {
       "date": "2017-11-30",
@@ -774,7 +5352,7 @@
     {
       "date": "2018-03-31",
       "ati_baseline_bn": 243.678,
-      "stock_excess_bills_bn": -401.08346280161595,
+      "stock_excess_bills_bn": -401.0834628016159,
       "DGS10": 274.0,
       "THREEFYTP10": 23.5
     },
@@ -797,7 +5375,7 @@
       "ati_baseline_bn": -144.456,
       "stock_excess_bills_bn": -538.8522554160319,
       "DGS10": 285.0,
-      "THREEFYTP10": 26.029999999999998
+      "THREEFYTP10": 26.03
     },
     {
       "date": "2018-07-31",
@@ -871,14 +5449,14 @@
     },
     {
       "date": "2019-05-31",
-      "ati_baseline_bn": -234.33700000000002,
+      "ati_baseline_bn": -234.337,
       "stock_excess_bills_bn": -515.4789678330715,
       "DGS10": 214.0,
       "THREEFYTP10": -22.98
     },
     {
       "date": "2019-06-30",
-      "ati_baseline_bn": -234.33700000000002,
+      "ati_baseline_bn": -234.337,
       "stock_excess_bills_bn": -616.6280367280201,
       "DGS10": 200.0,
       "THREEFYTP10": -26.8
@@ -914,7 +5492,7 @@
     {
       "date": "2019-11-30",
       "ati_baseline_bn": -23.375,
-      "stock_excess_bills_bn": -477.86607016944987,
+      "stock_excess_bills_bn": -477.8660701694498,
       "DGS10": 178.0,
       "THREEFYTP10": -25.69
     },
@@ -923,7 +5501,7 @@
       "ati_baseline_bn": -23.375,
       "stock_excess_bills_bn": -585.92028340654,
       "DGS10": 192.0,
-      "THREEFYTP10": -18.759999999999998
+      "THREEFYTP10": -18.76
     },
     {
       "date": "2020-01-31",
@@ -936,8 +5514,8 @@
       "date": "2020-02-29",
       "ati_baseline_bn": 174.554,
       "stock_excess_bills_bn": -480.75144316151386,
-      "DGS10": 112.99999999999999,
-      "THREEFYTP10": -55.730000000000004
+      "DGS10": 113.0,
+      "THREEFYTP10": -55.73
     },
     {
       "date": "2020-03-31",
@@ -951,25 +5529,25 @@
       "ati_baseline_bn": 174.554,
       "stock_excess_bills_bn": 665.3644786618141,
       "DGS10": 64.0,
-      "THREEFYTP10": -56.910000000000004
+      "THREEFYTP10": -56.91
     },
     {
       "date": "2020-05-31",
-      "ati_baseline_bn": 1845.3100000000002,
+      "ati_baseline_bn": 1845.31,
       "stock_excess_bills_bn": 1168.151541891494,
       "DGS10": 65.0,
       "THREEFYTP10": -59.040000000000006
     },
     {
       "date": "2020-06-30",
-      "ati_baseline_bn": 1845.3100000000002,
+      "ati_baseline_bn": 1845.31,
       "stock_excess_bills_bn": 1496.5523811422872,
       "DGS10": 66.0,
-      "THREEFYTP10": -60.550000000000004
+      "THREEFYTP10": -60.55
     },
     {
       "date": "2020-07-31",
-      "ati_baseline_bn": 1845.3100000000002,
+      "ati_baseline_bn": 1845.31,
       "stock_excess_bills_bn": 1477.525407643506,
       "DGS10": 55.00000000000001,
       "THREEFYTP10": -64.71000000000001
@@ -993,14 +5571,14 @@
       "ati_baseline_bn": -221.159,
       "stock_excess_bills_bn": 1305.7386747326404,
       "DGS10": 88.0,
-      "THREEFYTP10": -50.449999999999996
+      "THREEFYTP10": -50.45
     },
     {
       "date": "2020-11-30",
       "ati_baseline_bn": -497.98799999999994,
       "stock_excess_bills_bn": 1219.0297654137044,
       "DGS10": 84.0,
-      "THREEFYTP10": -50.839999999999996
+      "THREEFYTP10": -50.84
     },
     {
       "date": "2020-12-31",
@@ -1013,8 +5591,8 @@
       "date": "2021-01-31",
       "ati_baseline_bn": -497.98799999999994,
       "stock_excess_bills_bn": 1166.1363729797213,
-      "DGS10": 111.00000000000001,
-      "THREEFYTP10": -40.410000000000004
+      "DGS10": 111.0,
+      "THREEFYTP10": -40.41
     },
     {
       "date": "2021-02-28",
@@ -1042,7 +5620,7 @@
       "ati_baseline_bn": -708.845,
       "stock_excess_bills_bn": 521.2388091331518,
       "DGS10": 158.0,
-      "THREEFYTP10": -11.559999999999999
+      "THREEFYTP10": -11.56
     },
     {
       "date": "2021-06-30",
@@ -1060,21 +5638,21 @@
     },
     {
       "date": "2021-08-31",
-      "ati_baseline_bn": -15.591999999999999,
-      "stock_excess_bills_bn": 90.31894734398405,
+      "ati_baseline_bn": -15.592,
+      "stock_excess_bills_bn": 90.31894734398404,
       "DGS10": 130.0,
       "THREEFYTP10": -23.39
     },
     {
       "date": "2021-09-30",
-      "ati_baseline_bn": -15.591999999999999,
+      "ati_baseline_bn": -15.592,
       "stock_excess_bills_bn": -224.04782991590787,
       "DGS10": 152.0,
       "THREEFYTP10": -10.31
     },
     {
       "date": "2021-10-31",
-      "ati_baseline_bn": -15.591999999999999,
+      "ati_baseline_bn": -15.592,
       "stock_excess_bills_bn": -131.6688309871296,
       "DGS10": 155.0,
       "THREEFYTP10": -4.41
@@ -1210,14 +5788,14 @@
       "ati_baseline_bn": 692.96,
       "stock_excess_bills_bn": -385.6514298434199,
       "DGS10": 364.0,
-      "THREEFYTP10": -1.8599999999999999
+      "THREEFYTP10": -1.86
     },
     {
       "date": "2023-06-30",
       "ati_baseline_bn": 692.96,
       "stock_excess_bills_bn": -12.899209385560994,
       "DGS10": 381.0,
-      "THREEFYTP10": 10.190000000000001
+      "THREEFYTP10": 10.19
     },
     {
       "date": "2023-07-31",
@@ -1257,7 +5835,7 @@
     {
       "date": "2023-12-31",
       "ati_baseline_bn": 262.237,
-      "stock_excess_bills_bn": 928.8736600533207,
+      "stock_excess_bills_bn": 928.8736600533208,
       "DGS10": 388.0,
       "THREEFYTP10": 9.17
     },
@@ -1292,7 +5870,7 @@
     {
       "date": "2024-05-31",
       "ati_baseline_bn": 86.922,
-      "stock_excess_bills_bn": 999.1904625199165,
+      "stock_excess_bills_bn": 999.1904625199164,
       "DGS10": 451.0,
       "THREEFYTP10": 44.18
     },
@@ -1306,7 +5884,7 @@
     {
       "date": "2024-07-31",
       "ati_baseline_bn": 80.80399999999999,
-      "stock_excess_bills_bn": 990.5543065431203,
+      "stock_excess_bills_bn": 990.5543065431204,
       "DGS10": 409.0,
       "THREEFYTP10": 21.97
     },
@@ -1315,39 +5893,39 @@
       "ati_baseline_bn": 80.80399999999999,
       "stock_excess_bills_bn": 1154.5478474284207,
       "DGS10": 391.0,
-      "THREEFYTP10": 14.799999999999999
+      "THREEFYTP10": 14.8
     },
     {
       "date": "2024-09-30",
       "ati_baseline_bn": 80.80399999999999,
-      "stock_excess_bills_bn": 1013.6599348349483,
+      "stock_excess_bills_bn": 1013.6599348349484,
       "DGS10": 381.0,
       "THREEFYTP10": 19.45
     },
     {
       "date": "2024-10-31",
-      "ati_baseline_bn": -178.73499999999999,
+      "ati_baseline_bn": -178.735,
       "stock_excess_bills_bn": 1148.4390112535723,
       "DGS10": 428.0,
       "THREEFYTP10": 48.9
     },
     {
       "date": "2024-11-30",
-      "ati_baseline_bn": -178.73499999999999,
+      "ati_baseline_bn": -178.735,
       "stock_excess_bills_bn": 1309.6124911639126,
       "DGS10": 418.0,
       "THREEFYTP10": 44.89
     },
     {
       "date": "2024-12-31",
-      "ati_baseline_bn": -178.73499999999999,
-      "stock_excess_bills_bn": 1096.3617123365723,
+      "ati_baseline_bn": -178.735,
+      "stock_excess_bills_bn": 1096.3617123365725,
       "DGS10": 458.0,
       "THREEFYTP10": 68.72
     },
     {
       "date": "2025-01-31",
-      "ati_baseline_bn": -178.73499999999999,
+      "ati_baseline_bn": -178.735,
       "stock_excess_bills_bn": 1246.5314073746222,
       "DGS10": 458.0,
       "THREEFYTP10": 68.36
@@ -1362,7 +5940,7 @@
     {
       "date": "2025-03-31",
       "ati_baseline_bn": -393.793,
-      "stock_excess_bills_bn": 1010.2813546966007,
+      "stock_excess_bills_bn": 1010.2813546966008,
       "DGS10": 423.00000000000006,
       "THREEFYTP10": 49.88
     },
@@ -1397,7 +5975,7 @@
     {
       "date": "2025-08-31",
       "ati_baseline_bn": 44.278000000000006,
-      "stock_excess_bills_bn": 1075.7745297526267,
+      "stock_excess_bills_bn": 1075.774529752627,
       "DGS10": 423.00000000000006,
       "THREEFYTP10": 47.27
     },
@@ -1425,7 +6003,7 @@
     {
       "date": "2025-12-31",
       "ati_baseline_bn": 44.278000000000006,
-      "stock_excess_bills_bn": 1098.4183605764943,
+      "stock_excess_bills_bn": 1098.4183605764945,
       "DGS10": 418.0,
       "THREEFYTP10": 57.099999999999994
     },
@@ -1434,7 +6012,7 @@
       "ati_baseline_bn": 44.278000000000006,
       "stock_excess_bills_bn": 1133.4652894225458,
       "DGS10": 426.0,
-      "THREEFYTP10": 61.480000000000004
+      "THREEFYTP10": 61.48
     },
     {
       "date": "2026-02-28",

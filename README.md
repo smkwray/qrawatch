@@ -12,7 +12,7 @@ The project stays neutral about motive. It treats the underlying proposition as 
 
 The project maintains an explicit hierarchy between what the current evidence can and cannot support:
 
-**What the evidence supports:** Official maturity-composition measurement across the current public history window; headline plumbing and duration supply regressions at headline readiness; a narrow post-2022Q3 financing-estimates pilot with reviewed benchmark evidence and Tier A components.
+**What the evidence supports:** Official maturity-composition measurement across the current public history window. Exact official quarter coverage currently spans 2009Q1 through 2025Q4. Headline plumbing and duration supply regressions at headline readiness. A narrow current-sample financing pilot with 14 current-sample financing components, 6 verified pre-release external benchmarks, 5 Tier A components, 8 source-family-exhausted blocked rows, and 0 open benchmark candidates.
 
 **What the evidence does not establish:** A settled or full-sample causal estimate of Treasury issuance effects on long rates. The pricing layer remains supporting/provisional reduced-form evidence. Scenario translations are illustrative only.
 

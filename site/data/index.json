@@ -1,9 +1,8 @@
 {
   "title": "qrawatch site data artifacts",
-  "generated_at_utc": "2026-03-25T14:10:35.371835+00:00",
-  "artifact_count": 98,
+  "generated_at_utc": "2026-03-25T17:46:10.367846+00:00",
+  "artifact_count": 99,
   "artifacts": [
-    "pricing_overlay_panel.json",
     "ati_quarter_table.csv",
     "ati_quarter_table.json",
     "ati_seed_forecast_table.csv",
@@ -46,6 +45,8 @@
     "plumbing_regression_summary.json",
     "plumbing_robustness.csv",
     "plumbing_robustness.json",
+    "pricing_overlay_panel.csv",
+    "pricing_overlay_panel.json",
     "pricing_regression_robustness.csv",
     "pricing_regression_robustness.json",
     "pricing_regression_summary.csv",

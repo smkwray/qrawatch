@@ -167,21 +167,6 @@
       "sign_convention": "Higher values imply more duration supply to the public."
     },
     {
-      "date": "2026-04-01",
-      "value": 107554000000.0,
-      "construction_id": "headline_nonbill_net_exact_qt_minus_buybacks",
-      "construction_family": "headline",
-      "treasury_proxy_label": "Exact combined non-bill net issuance",
-      "includes_frn": true,
-      "includes_tips": true,
-      "includes_qt_proxy": true,
-      "subtracts_buybacks": true,
-      "source_quality": "hybrid_exact_nonbill_net_plus_qt_proxy",
-      "frequency": "weekly (W-WED)",
-      "value_units": "USD notional (weekly sum)",
-      "sign_convention": "Higher values imply more duration supply to the public."
-    },
-    {
       "date": "2026-01-14",
       "value": 0.0,
       "construction_id": "treasury_only_nominal_plus_tips",
@@ -334,21 +319,6 @@
     {
       "date": "2026-03-25",
       "value": 0.0,
-      "construction_id": "treasury_only_nominal_plus_tips",
-      "construction_family": "treasury_only",
-      "treasury_proxy_label": "Nominal coupons + TIPS",
-      "includes_frn": false,
-      "includes_tips": true,
-      "includes_qt_proxy": false,
-      "subtracts_buybacks": false,
-      "source_quality": "fallback_gross_coupon_proxy",
-      "frequency": "weekly (W-WED)",
-      "value_units": "USD notional (weekly sum)",
-      "sign_convention": "Higher values imply more duration supply to the public."
-    },
-    {
-      "date": "2026-04-01",
-      "value": 215000000000.0,
       "construction_id": "treasury_only_nominal_plus_tips",
       "construction_family": "treasury_only",
       "treasury_proxy_label": "Nominal coupons + TIPS",
@@ -527,21 +497,6 @@
       "sign_convention": "Higher values imply more duration supply to the public."
     },
     {
-      "date": "2026-04-01",
-      "value": 215000000000.0,
-      "construction_id": "combined_nominal_plus_tips_qt_minus_buybacks",
-      "construction_family": "combined_duration",
-      "treasury_proxy_label": "Nominal coupons + TIPS",
-      "includes_frn": false,
-      "includes_tips": true,
-      "includes_qt_proxy": true,
-      "subtracts_buybacks": true,
-      "source_quality": "fallback_gross_coupon_proxy_plus_qt_proxy",
-      "frequency": "weekly (W-WED)",
-      "value_units": "USD notional (weekly sum)",
-      "sign_convention": "Higher values imply more duration supply to the public."
-    },
-    {
       "date": "2026-01-14",
       "value": -4000000000.0,
       "construction_id": "combined_nominal_plus_tips_plus_frn_qt_minus_buybacks",
@@ -707,21 +662,6 @@
       "sign_convention": "Higher values imply more duration supply to the public."
     },
     {
-      "date": "2026-04-01",
-      "value": 243000000000.0,
-      "construction_id": "combined_nominal_plus_tips_plus_frn_qt_minus_buybacks",
-      "construction_family": "combined_duration",
-      "treasury_proxy_label": "Nominal coupons + TIPS + FRNs",
-      "includes_frn": true,
-      "includes_tips": true,
-      "includes_qt_proxy": true,
-      "subtracts_buybacks": true,
-      "source_quality": "fallback_gross_coupon_proxy_plus_qt_proxy",
-      "frequency": "weekly (W-WED)",
-      "value_units": "USD notional (weekly sum)",
-      "sign_convention": "Higher values imply more duration supply to the public."
-    },
-    {
       "date": "2026-01-14",
       "value": -4000000000.0,
       "construction_id": "combined_nominal_only_qt_minus_buybacks",
@@ -874,21 +814,6 @@
     {
       "date": "2026-03-25",
       "value": -205000000.0,
-      "construction_id": "combined_nominal_only_qt_minus_buybacks",
-      "construction_family": "combined_duration",
-      "treasury_proxy_label": "Nominal coupons only (TIPS excluded)",
-      "includes_frn": false,
-      "includes_tips": false,
-      "includes_qt_proxy": true,
-      "subtracts_buybacks": true,
-      "source_quality": "fallback_gross_coupon_proxy_plus_qt_proxy",
-      "frequency": "weekly (W-WED)",
-      "value_units": "USD notional (weekly sum)",
-      "sign_convention": "Higher values imply more duration supply to the public."
-    },
-    {
-      "date": "2026-04-01",
-      "value": 196000000000.0,
       "construction_id": "combined_nominal_only_qt_minus_buybacks",
       "construction_family": "combined_duration",
       "treasury_proxy_label": "Nominal coupons only (TIPS excluded)",

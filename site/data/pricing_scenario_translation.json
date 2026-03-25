@@ -38,7 +38,7 @@
       "implied_bp_change": -44.05425599407576,
       "nobs": 1197,
       "effective_shock_count": 1197,
-      "p_value": 4.9183312078624395e-08,
+      "p_value": 4.918331207862477e-08,
       "notes": "Weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
     },
     {
