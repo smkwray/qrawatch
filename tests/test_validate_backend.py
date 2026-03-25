@@ -165,6 +165,67 @@ def _build_publish_artifacts(
                     },
                 ]
             )
+        elif csv_name == "pricing_spec_registry.csv":
+            frame = pd.DataFrame(
+                [
+                    {
+                        "spec_id": "release_flow_baseline_63bd",
+                        "spec_family": "release_flow",
+                        "pipeline_anchor_role": "credibility_anchor",
+                        "public_claim_role": "supporting_anchor",
+                        "public_readiness": "supporting_provisional",
+                        "window_definition": "release_plus_63bd",
+                        "sample_start": "2009-01-31",
+                        "sample_end": "2026-03-31",
+                        "outcome": "DGS10",
+                        "predictor_set": "ati_baseline_bn",
+                        "control_set": "delta_dff_release_plus_63bd|debt_limit_dummy",
+                        "frequency": "release-event",
+                        "notes": "Primary release-level flow spec.",
+                    }
+                ]
+            )
+        elif csv_name == "pricing_regression_summary.csv":
+            frame = pd.DataFrame(
+                [
+                    {
+                        "model_id": "release_flow_baseline_63bd",
+                        "model_family": "release_flow",
+                        "pipeline_model_mode": "baseline_summary",
+                        "panel_key": "pricing_release_flow_panel",
+                        "window_definition": "release_plus_63bd",
+                        "pipeline_anchor_role": "credibility_anchor",
+                        "public_claim_role": "supporting_anchor",
+                        "public_readiness": "supporting_provisional",
+                        "dependent_variable": "DGS10",
+                        "outcome_role": "headline",
+                        "term": "ati_baseline_bn",
+                        "coef": -0.05,
+                        "std_err": 0.02,
+                        "p_value": 0.03,
+                        "nobs": 68,
+                        "effective_shock_count": 68,
+                    }
+                ]
+            )
+        elif csv_name == "pricing_regression_robustness.csv":
+            frame = pd.DataFrame(
+                [
+                    {
+                        "dependent_variable": "DGS10",
+                        "model_id": "monthly_stock_baseline_standardized",
+                        "model_family": "monthly_stock",
+                        "variant_id": "standardized_predictors",
+                        "variant_family": "standardized_predictors",
+                        "pipeline_model_mode": "robustness",
+                        "public_claim_role": "supporting",
+                        "public_readiness": "supporting_provisional",
+                        "term": "stock_excess_bills_bn",
+                        "coef": 0.01,
+                        "p_value": 0.30,
+                    }
+                ]
+            )
         elif csv_name == "extension_status.csv":
             frame = pd.DataFrame(
                 [
@@ -398,6 +459,35 @@ def _add_publish_artifact(
             index_payload["artifacts"].append(item)
     index_payload["artifact_count"] = len(index_payload["artifacts"])
     (publish_path / "index.json").write_text(json.dumps(index_payload), encoding="utf-8")
+
+
+def _build_site_bundle(
+    site_path: Path,
+    *,
+    manifest_artifacts: list[str] | None = None,
+    include_sync_temp: bool = False,
+) -> None:
+    site_path.mkdir(parents=True, exist_ok=True)
+    (site_path / "ati_quarter_table.csv").write_text("quarter\n2026Q1\n", encoding="utf-8")
+    (site_path / "ati_quarter_table.json").write_text(
+        json.dumps({"title": "ati_quarter_table", "rows": []}),
+        encoding="utf-8",
+    )
+    if include_sync_temp:
+        (site_path / ".syncthing.ati_quarter_table.csv.tmp").write_text("tmp", encoding="utf-8")
+    artifacts = ["ati_quarter_table.csv", "ati_quarter_table.json", "index.json"]
+    if manifest_artifacts is not None:
+        artifacts = manifest_artifacts
+    (site_path / "index.json").write_text(
+        json.dumps(
+            {
+                "title": "qrawatch site data artifacts",
+                "artifact_count": len(artifacts),
+                "artifacts": artifacts,
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 def _build_valid_official_capture_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
@@ -1968,6 +2058,74 @@ def test_validate_publish_artifacts_flags_headline_claim_scope_on_supporting_non
     )
 
     assert "qra_publish_invalid_claim_scope:event_usability_table.csv" in errors
+
+
+def test_validate_site_bundle_flags_absent_markdown_listed_in_manifest(tmp_path: Path) -> None:
+    site_path = tmp_path / "site" / "data"
+    _build_site_bundle(
+        site_path,
+        manifest_artifacts=[
+            "ati_quarter_table.csv",
+            "ati_quarter_table.json",
+            "ati_quarter_table.md",
+            "index.json",
+        ],
+    )
+
+    errors, warnings, summary = validate_backend_script.validate_site_bundle(site_path)
+
+    assert warnings == []
+    assert "site_bundle_index_lists_markdown:ati_quarter_table.md" in errors
+    assert "site_bundle_index_missing_realized_artifacts:ati_quarter_table.md" in errors
+    assert summary["actual_artifacts"] == 3
+
+
+def test_validate_site_bundle_ignores_sync_temp_artifacts(tmp_path: Path) -> None:
+    site_path = tmp_path / "site" / "data"
+    _build_site_bundle(site_path, include_sync_temp=True)
+
+    errors, warnings, summary = validate_backend_script.validate_site_bundle(site_path)
+
+    assert errors == []
+    assert warnings == []
+    assert summary["actual_artifacts"] == 3
+    assert summary["indexed_artifacts"] == 3
+
+
+def test_validate_site_bundle_accepts_filtered_manifest_with_matching_count(tmp_path: Path) -> None:
+    site_path = tmp_path / "site" / "data"
+    _build_site_bundle(site_path)
+
+    errors, warnings, summary = validate_backend_script.validate_site_bundle(site_path)
+
+    assert errors == []
+    assert warnings == []
+    assert summary == {"actual_artifacts": 3, "indexed_artifacts": 3}
+
+
+def test_validate_publish_artifacts_flags_missing_pricing_public_fields(tmp_path: Path) -> None:
+    publish_path = tmp_path / "publish"
+    _build_publish_artifacts(path=publish_path)
+    readme_path = tmp_path / "README.md"
+    readme_path.write_text(
+        "# test\nExact official quarter coverage currently spans `2026Q1` through `2026Q1`.\n",
+        encoding="utf-8",
+    )
+
+    frame = pd.read_csv(publish_path / "pricing_regression_summary.csv")
+    frame["public_claim_role"] = ""
+    frame.to_csv(publish_path / "pricing_regression_summary.csv", index=False)
+
+    errors, warnings, _summary = validate_backend_script.validate_publish_artifacts(
+        publish_path,
+        readme_path=readme_path,
+    )
+
+    assert "readme_official_coverage_mismatch:statement=2026Q1:readiness=" in warnings
+    assert (
+        "pricing_contract_missing_values:pricing_regression_summary.csv:public_claim_role:release_flow_baseline_63bd"
+        in errors
+    )
 
 
 def test_validate_neutral_maturity_tilt_language_flags_standalone_ati_label(tmp_path: Path) -> None:

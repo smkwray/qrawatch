@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -37,6 +38,29 @@ def test_build_data_sources_publish_table_reports_existing_files(tmp_path, monke
     assert bool(qra_row["manifest_exists"])
     assert bool(qra_row["downloads_exists"])
     assert qra_row["file_count"] == 3
+
+
+def test_write_site_bundle_manifest_filters_to_realized_csv_json(tmp_path, monkeypatch) -> None:
+    site_dir = tmp_path / "site" / "data"
+    site_dir.mkdir(parents=True)
+    (site_dir / "ati_quarter_table.csv").write_text("quarter\n2026Q1\n", encoding="utf-8")
+    (site_dir / "ati_quarter_table.json").write_text('{"rows":[]}', encoding="utf-8")
+    (site_dir / "ati_quarter_table.md").write_text("# should stay out\n", encoding="utf-8")
+    (site_dir / ".syncthing.ati_quarter_table.csv.tmp").write_text("tmp", encoding="utf-8")
+    (site_dir / "index.json").write_text('{"stale":true}', encoding="utf-8")
+
+    monkeypatch.setattr(publish, "SITE_DATA_DIR", site_dir)
+
+    manifest_path = publish.write_site_bundle_manifest()
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest_path == site_dir / "index.json"
+    assert payload["artifacts"] == [
+        "ati_quarter_table.csv",
+        "ati_quarter_table.json",
+        "index.json",
+    ]
+    assert payload["artifact_count"] == 3
 
 
 def test_build_duration_publish_table_returns_latest_window(tmp_path, monkeypatch):
@@ -2083,6 +2107,16 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
     assert list(release_flow_panel["release_id"]) == ["2024-01-15__2024Q1"]
     assert list(leave_one_out["omitted_release_id"]) == ["2024-01-15__2024Q1"]
     assert list(tau_grid["tau"]) == [0.18]
+    assert set(spec_registry["pipeline_anchor_role"]) == {"credibility_anchor"}
+    assert set(spec_registry["public_claim_role"]) == {"supporting_anchor"}
+    assert set(spec_registry["public_readiness"]) == {"supporting_provisional"}
+    assert set(summary["pipeline_model_mode"]) == {"baseline_summary"}
+    assert set(summary["pipeline_anchor_role"]) == {"credibility_anchor"}
+    assert set(summary["public_claim_role"]) == {"supporting_anchor"}
+    assert set(summary["public_readiness"]) == {"supporting_provisional"}
+    assert set(robustness["pipeline_model_mode"]) == {"robustness"}
+    assert set(robustness["public_claim_role"]) == {"supporting"}
+    assert set(robustness["public_readiness"]) == {"supporting_provisional"}
 
     dataset_status = publish.build_dataset_status_table()
     pricing_row = dataset_status.loc[dataset_status["dataset"] == "pricing"].iloc[0]

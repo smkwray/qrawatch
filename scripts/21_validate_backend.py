@@ -40,6 +40,12 @@ OFFICIAL_ROLE_PREFIXES = (
     "refunding_statement",
     "auction_reconstruction",
 )
+SITE_BUNDLE_ALLOWED_SUFFIXES = {".csv", ".json"}
+SYNC_TEMP_PREFIXES = (".syncthing",)
+PRICING_PIPELINE_ANCHOR_ROLES = {"credibility_anchor", "context", "supporting"}
+PRICING_PUBLIC_CLAIM_ROLES = {"supporting_anchor", "supporting_context", "supporting"}
+PRICING_PUBLIC_READINESS_VALUES = {"supporting_provisional"}
+PRICING_PIPELINE_MODEL_MODES = {"baseline_summary", "supporting_outcome", "robustness"}
 
 QUARTER_PATTERN = re.compile(r"^\d{4}Q[1-4]$")
 UNANCHORED_QUARTER_PATTERN = r"\d{4}Q[1-4]"
@@ -1217,6 +1223,212 @@ def _quarter_coverage(frame: pd.DataFrame) -> dict[str, int | float]:
     }
 
 
+def _is_sync_temp_artifact_name(name: str) -> bool:
+    return any(name.startswith(prefix) for prefix in SYNC_TEMP_PREFIXES)
+
+
+def _site_bundle_actual_artifacts(site_dir: Path) -> tuple[list[str], list[str]]:
+    actual: list[str] = []
+    unexpected: list[str] = []
+    if not site_dir.exists():
+        return actual, unexpected
+    for path in sorted(site_dir.iterdir()):
+        if not path.is_file():
+            continue
+        if _is_sync_temp_artifact_name(path.name):
+            continue
+        if path.name == "index.json":
+            actual.append(path.name)
+            continue
+        if path.suffix not in SITE_BUNDLE_ALLOWED_SUFFIXES:
+            unexpected.append(path.name)
+            continue
+        actual.append(path.name)
+    return actual, unexpected
+
+
+def _nonempty_string_mask(series: pd.Series) -> pd.Series:
+    text = series.astype("string").fillna("").str.strip()
+    return text.isin({"", "<NA>", "nan", "None"})
+
+
+def _validate_pricing_public_contracts(
+    pricing_frames: dict[str, pd.DataFrame],
+    *,
+    errors: list[str],
+) -> None:
+    spec_registry = pricing_frames.get("pricing_spec_registry.csv", pd.DataFrame()).copy()
+    summary = pricing_frames.get("pricing_regression_summary.csv", pd.DataFrame()).copy()
+    robustness = pricing_frames.get("pricing_regression_robustness.csv", pd.DataFrame()).copy()
+
+    if not spec_registry.empty:
+        for column, allowed in (
+            ("pipeline_anchor_role", PRICING_PIPELINE_ANCHOR_ROLES),
+            ("public_claim_role", PRICING_PUBLIC_CLAIM_ROLES),
+            ("public_readiness", PRICING_PUBLIC_READINESS_VALUES),
+        ):
+            if column not in spec_registry.columns:
+                continue
+            missing = spec_registry.loc[_nonempty_string_mask(spec_registry[column]), "spec_id"].astype(str).tolist()
+            if missing:
+                errors.append(f"pricing_contract_missing_values:pricing_spec_registry.csv:{column}:{','.join(sorted(set(missing)))}")
+                continue
+            invalid = sorted(
+                {
+                    str(value).strip()
+                    for value in spec_registry[column].astype(str)
+                    if str(value).strip() not in allowed
+                }
+            )
+            if invalid:
+                errors.append(f"pricing_contract_invalid_values:pricing_spec_registry.csv:{column}:{','.join(invalid)}")
+
+    if not summary.empty:
+        for column, allowed in (
+            ("pipeline_model_mode", PRICING_PIPELINE_MODEL_MODES),
+            ("pipeline_anchor_role", PRICING_PIPELINE_ANCHOR_ROLES),
+            ("public_claim_role", PRICING_PUBLIC_CLAIM_ROLES),
+            ("public_readiness", PRICING_PUBLIC_READINESS_VALUES),
+        ):
+            if column not in summary.columns:
+                continue
+            missing = summary.loc[_nonempty_string_mask(summary[column]), "model_id"].astype(str).tolist()
+            if missing:
+                errors.append(f"pricing_contract_missing_values:pricing_regression_summary.csv:{column}:{','.join(sorted(set(missing)))}")
+                continue
+            invalid = sorted(
+                {
+                    str(value).strip()
+                    for value in summary[column].astype(str)
+                    if str(value).strip() not in allowed
+                }
+            )
+            if invalid:
+                errors.append(f"pricing_contract_invalid_values:pricing_regression_summary.csv:{column}:{','.join(invalid)}")
+
+    if not robustness.empty:
+        for column, allowed in (
+            ("pipeline_model_mode", PRICING_PIPELINE_MODEL_MODES),
+            ("public_claim_role", PRICING_PUBLIC_CLAIM_ROLES),
+            ("public_readiness", PRICING_PUBLIC_READINESS_VALUES),
+        ):
+            if column not in robustness.columns:
+                continue
+            missing = robustness.loc[_nonempty_string_mask(robustness[column]), "model_id"].astype(str).tolist()
+            if missing:
+                errors.append(f"pricing_contract_missing_values:pricing_regression_robustness.csv:{column}:{','.join(sorted(set(missing)))}")
+                continue
+            invalid = sorted(
+                {
+                    str(value).strip()
+                    for value in robustness[column].astype(str)
+                    if str(value).strip() not in allowed
+                }
+            )
+            if invalid:
+                errors.append(f"pricing_contract_invalid_values:pricing_regression_robustness.csv:{column}:{','.join(invalid)}")
+
+    if spec_registry.empty:
+        return
+
+    expected_roles = (
+        spec_registry[["spec_id", "pipeline_anchor_role", "public_claim_role", "public_readiness"]]
+        .drop_duplicates(subset=["spec_id"])
+        .rename(columns={"spec_id": "model_id"})
+    )
+
+    if not summary.empty:
+        merged = summary.merge(expected_roles, on="model_id", how="left", suffixes=("", "_expected"))
+        missing_specs = sorted(
+            {
+                str(value)
+                for value in merged.loc[merged["public_claim_role_expected"].isna(), "model_id"].astype(str)
+            }
+        )
+        if missing_specs:
+            errors.append(
+                "pricing_contract_missing_spec_registry_rows:pricing_regression_summary.csv:"
+                + ",".join(missing_specs)
+            )
+        for column in ("pipeline_anchor_role", "public_claim_role", "public_readiness"):
+            expected_column = f"{column}_expected"
+            mismatched = merged.loc[
+                merged[expected_column].notna()
+                & (merged[column].astype(str).str.strip() != merged[expected_column].astype(str).str.strip()),
+                "model_id",
+            ].astype(str).tolist()
+            if mismatched:
+                errors.append(
+                    f"pricing_contract_spec_registry_mismatch:pricing_regression_summary.csv:{column}:{','.join(sorted(set(mismatched)))}"
+                )
+
+    if not robustness.empty:
+        merged = robustness.merge(
+            expected_roles[["model_id", "public_claim_role", "public_readiness"]],
+            on="model_id",
+            how="left",
+            suffixes=("", "_expected"),
+        )
+        for column in ("public_claim_role", "public_readiness"):
+            expected_column = f"{column}_expected"
+            mismatched = merged.loc[
+                merged[expected_column].notna()
+                & (merged[column].astype(str).str.strip() != merged[expected_column].astype(str).str.strip()),
+                "model_id",
+            ].astype(str).tolist()
+            if mismatched:
+                errors.append(
+                    f"pricing_contract_spec_registry_mismatch:pricing_regression_robustness.csv:{column}:{','.join(sorted(set(mismatched)))}"
+                )
+
+
+def validate_site_bundle(site_dir: Path) -> tuple[list[str], list[str], dict[str, int]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    if not site_dir.exists():
+        errors.append(f"site_bundle_dir_missing:{site_dir}")
+        return errors, warnings, {"actual_artifacts": 0, "indexed_artifacts": 0}
+
+    actual, unexpected = _site_bundle_actual_artifacts(site_dir)
+    if unexpected:
+        errors.append(f"site_bundle_unexpected_files:{','.join(unexpected)}")
+
+    index_path = site_dir / "index.json"
+    if not index_path.exists():
+        errors.append("site_bundle_index_missing:index.json")
+        return errors, warnings, {"actual_artifacts": len(actual), "indexed_artifacts": 0}
+
+    try:
+        payload = json.loads(index_path.read_text(encoding="utf-8"))
+        artifacts = [str(item) for item in payload.get("artifacts", [])]
+        artifact_count = int(payload.get("artifact_count", 0))
+    except Exception as exc:
+        errors.append(f"site_bundle_index_read_error:{exc}")
+        return errors, warnings, {"actual_artifacts": len(actual), "indexed_artifacts": 0}
+
+    if artifact_count != len(artifacts):
+        errors.append(f"site_bundle_index_count_mismatch:{artifact_count}:{len(artifacts)}")
+
+    invalid_suffixes = sorted({name for name in artifacts if name.endswith(".md")})
+    if invalid_suffixes:
+        errors.append(f"site_bundle_index_lists_markdown:{','.join(invalid_suffixes)}")
+
+    invalid_temp = sorted({name for name in artifacts if _is_sync_temp_artifact_name(name)})
+    if invalid_temp:
+        errors.append(f"site_bundle_index_lists_sync_temps:{','.join(invalid_temp)}")
+
+    missing = sorted(set(artifacts) - set(actual))
+    if missing:
+        errors.append(f"site_bundle_index_missing_realized_artifacts:{','.join(missing)}")
+
+    omitted = sorted(set(actual) - set(artifacts))
+    if omitted:
+        errors.append(f"site_bundle_index_omits_realized_artifacts:{','.join(omitted)}")
+
+    return errors, warnings, {"actual_artifacts": len(actual), "indexed_artifacts": len(artifacts)}
+
+
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate backend readiness before publish.")
     parser.add_argument(
@@ -1238,6 +1450,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--publish-dir",
         default=str(DEFAULT_PUBLISH_DIR),
         help="Path to output/publish directory.",
+    )
+    parser.add_argument(
+        "--site-dir",
+        default="",
+        help="Optional path to site/data directory for site-bundle validation.",
     )
     parser.add_argument(
         "--json",
@@ -2410,6 +2627,7 @@ def validate_publish_artifacts(
     readiness_frame: pd.DataFrame | None = None
     completion_frame: pd.DataFrame | None = None
     qra_frames: dict[str, pd.DataFrame] = {}
+    pricing_frames: dict[str, pd.DataFrame] = {}
 
     if not publish_dir.exists():
         errors.append(f"publish_dir_missing:{publish_dir}")
@@ -2444,6 +2662,8 @@ def validate_publish_artifacts(
             _validate_overlap_excluded_for_file(csv_name, csv_frame, errors=errors, warnings=warnings)
         if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv", "event_design_status.csv", "causal_claims_status.csv"}:
             qra_frames[csv_name] = csv_frame.copy()
+        if csv_name.startswith("pricing_"):
+            pricing_frames[csv_name] = csv_frame.copy()
         if csv_name == "official_capture_readiness.csv":
             readiness_frame = csv_frame
         if csv_name == "official_capture_completion.csv":
@@ -2480,6 +2700,8 @@ def validate_publish_artifacts(
             _validate_overlap_excluded_for_file(csv_name, csv_frame, errors=errors, warnings=warnings)
         if csv_name.startswith("qra_") or csv_name in {"event_usability_table.csv", "event_design_status.csv", "causal_claims_status.csv"}:
             qra_frames[csv_name] = csv_frame.copy()
+        if csv_name.startswith("pricing_"):
+            pricing_frames[csv_name] = csv_frame.copy()
         if csv_name == "official_capture_readiness.csv":
             readiness_frame = csv_frame
         if csv_name == "official_capture_completion.csv":
@@ -2645,6 +2867,7 @@ def validate_publish_artifacts(
 
     readiness_exact, completion_exact = _validate_exact_coverages(readiness_frame, completion_frame)
     errors.extend(_validate_qra_publish_consistency(qra_frames))
+    _validate_pricing_public_contracts(pricing_frames, errors=errors)
     _validate_readme_exact_coverage_consistency(
         readme_path=readme_path,
         readiness_exact=readiness_exact,
@@ -2832,6 +3055,7 @@ def validate_backend(
     official_ati_path: Path,
     manual_capture_path: Path,
     publish_dir: Path,
+    site_dir: Path | None = None,
     readme_path: Path | None = None,
 ) -> BackendValidationResult:
     errors: list[str] = []
@@ -2891,6 +3115,11 @@ def validate_backend(
     )
     errors.extend(contract_errors)
     warnings.extend(contract_warnings)
+    if site_dir is not None:
+        site_errors, site_warnings, site_summary = validate_site_bundle(site_dir)
+        errors.extend(site_errors)
+        warnings.extend(site_warnings)
+        summaries["site_bundle"] = site_summary
 
     return BackendValidationResult(errors=errors, warnings=warnings, summaries=summaries)
 
@@ -2912,11 +3141,13 @@ def _to_text(payload: BackendValidationResult) -> str:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
+    site_dir = Path(args.site_dir) if args.site_dir else None
     result = validate_backend(
         official_capture_path=Path(args.official_capture),
         official_ati_path=Path(args.official_ati),
         manual_capture_path=Path(args.manual_template),
         publish_dir=Path(args.publish_dir),
+        site_dir=site_dir,
     )
 
     if args.json:

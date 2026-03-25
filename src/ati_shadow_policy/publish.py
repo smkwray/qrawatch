@@ -8,7 +8,7 @@ from typing import Iterable
 import pandas as pd
 
 from .io_utils import ensure_dir, write_df, write_json
-from .paths import OUTPUT_DIR, PROCESSED_DIR, RAW_DIR, TABLES_DIR
+from .paths import OUTPUT_DIR, PROCESSED_DIR, PROJECT_ROOT, RAW_DIR, TABLES_DIR
 from .research.pricing_models import (
     PRICING_REGRESSION_ROBUSTNESS_COLUMNS,
     PRICING_REGRESSION_SUMMARY_COLUMNS,
@@ -27,6 +27,8 @@ def get_publish_dir() -> Path:
 
 
 PUBLISH_DIR = get_publish_dir()
+SITE_DATA_DIR = PROJECT_ROOT / "site" / "data"
+SYNC_TEMP_PREFIXES = (".syncthing",)
 OFFICIAL_CAPTURE_REQUIRED_FIELDS = [
     "quarter",
     "qra_release_date",
@@ -131,6 +133,29 @@ def publish_table(name: str, title: str, df: pd.DataFrame) -> None:
     write_df(df, base.with_suffix(".csv"))
     _write_records_json(df.to_dict(orient="records"), base.with_suffix(".json"), title)
     _write_markdown_table(title, df, base.with_suffix(".md"))
+
+
+def _is_sync_temp_artifact_name(name: str) -> bool:
+    return any(name.startswith(prefix) for prefix in SYNC_TEMP_PREFIXES)
+
+
+def _artifact_names(
+    directory: Path,
+    *,
+    allowed_suffixes: set[str] | None = None,
+) -> list[str]:
+    if not directory.exists():
+        return []
+    names: list[str] = []
+    for path in sorted(directory.iterdir()):
+        if not path.is_file():
+            continue
+        if path.name == "index.json" or _is_sync_temp_artifact_name(path.name):
+            continue
+        if allowed_suffixes is not None and path.suffix not in allowed_suffixes:
+            continue
+        names.append(path.name)
+    return names
 
 
 def _read_processed_csv(path: Path, columns: list[str] | None = None) -> pd.DataFrame:
@@ -3514,15 +3539,34 @@ def build_dataset_status_table() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def build_index_metadata() -> dict:
-    publish_dir = get_publish_dir()
-    files = sorted(p.name for p in publish_dir.glob("*") if p.is_file())
+def build_index_metadata(
+    directory: Path | None = None,
+    *,
+    title: str = "qrawatch publish artifacts",
+    allowed_suffixes: set[str] | None = None,
+) -> dict:
+    target_dir = get_publish_dir() if directory is None else directory
+    files = _artifact_names(target_dir, allowed_suffixes=allowed_suffixes)
+    artifacts = [*files, "index.json"]
     return {
-        "title": "qrawatch publish artifacts",
+        "title": title,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "artifact_count": len(files),
-        "artifacts": files,
+        "artifact_count": len(artifacts),
+        "artifacts": artifacts,
     }
+
+
+def write_site_bundle_manifest(site_dir: Path | None = None) -> Path:
+    target_dir = SITE_DATA_DIR if site_dir is None else site_dir
+    ensure_dir(target_dir)
+    manifest_path = target_dir / "index.json"
+    payload = build_index_metadata(
+        target_dir,
+        title="qrawatch site data artifacts",
+        allowed_suffixes={".csv", ".json"},
+    )
+    write_json(payload, manifest_path)
+    return manifest_path
 
 
 def build_publish_artifacts() -> None:

@@ -110,6 +110,8 @@ site: guard-env publish
 	@mkdir -p site/data
 	@find site/data -maxdepth 1 -type f \( -name '*.json' -o -name '*.csv' \) -delete
 	@rsync -a --delete --include='*.json' --include='*.csv' --exclude='*' output/publish/ site/data/
+	$(RUN) scripts/32_build_site_bundle_manifest.py
+	$(RUN) scripts/21_validate_backend.py --site-dir site/data
 	@if [[ -d output/figures ]]; then \
 		mkdir -p site/figures; \
 		rsync -a --delete output/figures/ site/figures/ 2>/dev/null || true; \
