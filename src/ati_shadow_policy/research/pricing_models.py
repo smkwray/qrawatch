@@ -41,10 +41,10 @@ OUTCOME_LABELS = {
 }
 
 PREDICTOR_LABELS = {
-    "ati_baseline_bn": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
-    "stock_excess_bills_bn": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
-    "stock_excess_bills_share": "Excess Bills Share Gap (internal `stock_excess_bills_share`)",
-    "cumulative_ati_baseline_bn": "Cumulative Maturity-Tilt Flow (internal `cumulative_ati_baseline_bn`, USD bn)",
+    "ati_baseline_bn": "Maturity-Tilt Flow (USD bn)",
+    "stock_excess_bills_bn": "Excess Bills Stock (USD bn)",
+    "stock_excess_bills_share": "Excess Bills Share Gap",
+    "cumulative_ati_baseline_bn": "Cumulative Maturity-Tilt Flow (USD bn)",
     "headline_public_duration_supply": "Public Duration Supply (USD bn)",
     "qt_proxy": "QT proxy (USD bn)",
     "buybacks_accepted": "Buybacks accepted (USD bn)",
@@ -85,6 +85,9 @@ SCENARIO_SCALE_BN = 100.0
 SCALED_100BN_TERMS = {"ati_baseline_bn", "stock_excess_bills_bn", "headline_public_duration_supply"}
 TAU_GRID = (0.15, 0.18, 0.20)
 DATE_CANDIDATES = ("date", "qra_release_date", "market_pricing_marker_minus_1d")
+MONTHLY_CARRY_FORWARD_NOTE_SUFFIX = (
+    " Panels are labeled at month-end, so the current month may be partial before month close."
+)
 
 PRICING_SPEC_REGISTRY_COLUMNS = (
     "spec_id",
@@ -492,6 +495,13 @@ def _build_sample_bounds(panel: pd.DataFrame) -> tuple[str | None, str | None]:
     return dates.min().strftime("%Y-%m-%d"), dates.max().strftime("%Y-%m-%d")
 
 
+def _public_notes(spec: Mapping[str, object]) -> str:
+    notes = str(spec.get("notes", "") or "")
+    if spec.get("window_definition") == "carry_forward_monthly" and MONTHLY_CARRY_FORWARD_NOTE_SUFFIX not in notes:
+        return notes + MONTHLY_CARRY_FORWARD_NOTE_SUFFIX
+    return notes
+
+
 def _effective_shock_count(panel: pd.DataFrame) -> int:
     if "release_id" in panel.columns:
         release_count = int(panel["release_id"].dropna().astype(str).nunique())
@@ -709,7 +719,7 @@ def _run_spec_rows(
         reg["sample_start"] = sample_start
         reg["sample_end"] = sample_end
         reg["effective_shock_count"] = effective_shock_count
-        reg["notes"] = spec["notes"]
+        reg["notes"] = _public_notes(spec)
         rows.append(reg[list(PRICING_REGRESSION_SUMMARY_COLUMNS)])
 
     if not rows:
@@ -749,7 +759,7 @@ def build_pricing_spec_registry(pricing_panels: Mapping[str, pd.DataFrame]) -> p
                     "predictor_set": "|".join(spec["predictor_terms"]),
                     "control_set": "|".join(spec["control_terms"]),
                     "frequency": spec["panel_frequency"],
-                    "notes": spec["notes"],
+                    "notes": _public_notes(spec),
                 }
             )
     return pd.DataFrame(rows, columns=PRICING_SPEC_REGISTRY_COLUMNS)
@@ -940,7 +950,10 @@ def build_pricing_tau_sensitivity_grid(pricing_panels: Mapping[str, pd.DataFrame
                     "rsquared": float(row["rsquared"]),
                     "sample_start": sample_start,
                     "sample_end": sample_end,
-                    "notes": f"Monthly stock-only pricing sensitivity using target tau={tau:.2f}.",
+                    "notes": (
+                        f"Monthly stock-only pricing sensitivity using target tau={tau:.2f}."
+                        f"{MONTHLY_CARRY_FORWARD_NOTE_SUFFIX}"
+                    ),
                 }
             )
     return pd.DataFrame(rows, columns=PRICING_TAU_SENSITIVITY_GRID_COLUMNS)

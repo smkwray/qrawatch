@@ -32,10 +32,12 @@ Headline estimand:
   - controls: `DFF`, `debt_limit_dummy`
   - sample: `2009-02-28` through `2026-03-31`
   - effective shocks shown in the current table equal monthly rows, so this spec remains context rather than the main credibility anchor
+  - note: monthly carry-forward tables are labeled at month-end, so the current month may be partial before month close
 - `monthly_stock_baseline`
   - outcomes: `THREEFYTP10`, `DGS10`
   - controls: `DFF`, `debt_limit_dummy`
   - sample: `2009-01-31` through `2026-03-31`
+  - note: month-end sample labels follow the carry-forward panel convention and can include a partial current month
 - `weekly_duration_baseline`
   - outcomes: `THREEFYTP10`, `DGS10`
   - controls: `qt_proxy`, `buybacks_accepted`, `delta_wdtgal`, `DFF`

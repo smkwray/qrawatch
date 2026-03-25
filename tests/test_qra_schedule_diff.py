@@ -22,6 +22,12 @@ def test_build_qra_schedule_table_normalizes_nominal_and_frn_rows() -> None:
                     "Sep-23: 2Y=51, 3Y=41, 5Y=46, 7Y=31, 10Y=21, 20Y=11, 30Y=16."
                 ),
                 "guidance_frns": "Monthly FRN schedule: Aug-23: 2Y FRN=18; Sep-23: 2Y FRN=19.",
+            },
+            {
+                "quarter": "2020Q3",
+                "qra_release_date": "2020-08-05",
+                "guidance_nominal_coupons": "Monthly nominal schedule: Jul-20: 2Y=40, 3Y=35, 5Y=38, 7Y=24, 10Y=20, 20Y=12, 30Y=14.",
+                "guidance_frns": "Monthly FRN schedule: Jul-20: 2Y FRN=16.",
             }
         ]
     )
@@ -40,6 +46,7 @@ def test_build_qra_schedule_table_normalizes_nominal_and_frn_rows() -> None:
     assert set(table["issue_type"]) == {"nominal_coupon", "frn"}
     assert set(table["tenor"]) >= {"2Y", "10Y", "2Y_FRN"}
     assert len(table) == 16
+    assert table["event_id"].eq("qra_2023_05").all()
     assert table.loc[table["tenor"] == "2Y_FRN", "announced_size_bn"].tolist() == [18.0, 19.0]
 
 

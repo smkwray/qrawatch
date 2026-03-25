@@ -149,7 +149,7 @@ def build_qra_schedule_table(
         event_id = row.get("event_id")
         quarter = row.get("quarter")
         qra_release_date = row.get("qra_release_date")
-        if pd.isna(qra_release_date) or not str(event_id or "").strip():
+        if pd.isna(qra_release_date) or pd.isna(event_id) or not str(event_id).strip():
             continue
 
         nominal_rows = _extract_nominal_schedule_rows(row.get("guidance_nominal_coupons"))

@@ -181,7 +181,7 @@
       "predictor_set": "ati_baseline_bn",
       "control_set": "DFF|debt_limit_dummy",
       "frequency": "monthly",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "spec_id": "monthly_flow_baseline",
@@ -195,7 +195,7 @@
       "predictor_set": "ati_baseline_bn",
       "control_set": "DFF|debt_limit_dummy",
       "frequency": "monthly",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "spec_id": "monthly_stock_baseline",
@@ -209,7 +209,7 @@
       "predictor_set": "stock_excess_bills_bn",
       "control_set": "DFF|debt_limit_dummy",
       "frequency": "monthly",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "spec_id": "monthly_stock_baseline",
@@ -223,7 +223,7 @@
       "predictor_set": "stock_excess_bills_bn",
       "control_set": "DFF|debt_limit_dummy",
       "frequency": "monthly",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "spec_id": "weekly_duration_baseline",

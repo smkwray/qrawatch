@@ -19,7 +19,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0855536862037403,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -48,7 +48,7 @@
       "effective_shock_count": 58,
       "rsquared": 0.0563683302235029,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -77,7 +77,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0018483849204572,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -106,7 +106,7 @@
       "effective_shock_count": 58,
       "rsquared": 0.021251943869215,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -135,7 +135,7 @@
       "effective_shock_count": 54,
       "rsquared": 0.0922370523487863,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -164,7 +164,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0424219438160582,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -193,7 +193,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.3611784585289486,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -202,7 +202,7 @@
       "model_mode": "supporting_outcome",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS30",
@@ -222,7 +222,7 @@
       "effective_shock_count": 207,
       "rsquared": 0.3619257218960032,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -231,7 +231,7 @@
       "model_mode": "supporting_outcome",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS30",
@@ -280,7 +280,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.13392160852987,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -289,7 +289,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together."
+      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "THREEFYTP10",
@@ -309,7 +309,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.13392160852987,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -318,7 +318,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together."
+      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS10",
@@ -338,7 +338,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.5874849115464985,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -347,7 +347,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together."
+      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS10",
@@ -367,7 +367,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.5874849115464985,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -376,7 +376,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together."
+      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS30",
@@ -396,7 +396,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.3907033064189059,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -405,7 +405,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together."
+      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS30",
@@ -425,7 +425,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.3907033064189059,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -434,7 +434,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together."
+      "notes": "Monthly horse-race specification with Maturity-Tilt Flow and Excess Bills Stock together. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "THREEFYTP10",
@@ -454,7 +454,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.1163120284839358,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn) (1 SD)",
+      "term_label": "Maturity-Tilt Flow (USD bn) (1 SD)",
       "term_units": "standard deviations",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -463,7 +463,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly flow baseline with the primary predictor standardized to one standard deviation."
+      "notes": "Monthly flow baseline with the primary predictor standardized to one standard deviation. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS10",
@@ -483,7 +483,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.5793542933122507,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn) (1 SD)",
+      "term_label": "Maturity-Tilt Flow (USD bn) (1 SD)",
       "term_units": "standard deviations",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -492,7 +492,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly flow baseline with the primary predictor standardized to one standard deviation."
+      "notes": "Monthly flow baseline with the primary predictor standardized to one standard deviation. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS30",
@@ -512,7 +512,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.3611784585289488,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn) (1 SD)",
+      "term_label": "Maturity-Tilt Flow (USD bn) (1 SD)",
       "term_units": "standard deviations",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -521,7 +521,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly flow baseline with the primary predictor standardized to one standard deviation."
+      "notes": "Monthly flow baseline with the primary predictor standardized to one standard deviation. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "THREEFYTP10",
@@ -541,7 +541,7 @@
       "effective_shock_count": 207,
       "rsquared": 0.0865941283541469,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn) (1 SD)",
+      "term_label": "Excess Bills Stock (USD bn) (1 SD)",
       "term_units": "standard deviations",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -550,7 +550,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock baseline with the primary predictor standardized to one standard deviation."
+      "notes": "Monthly stock baseline with the primary predictor standardized to one standard deviation. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS10",
@@ -570,7 +570,7 @@
       "effective_shock_count": 207,
       "rsquared": 0.5631269904779896,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn) (1 SD)",
+      "term_label": "Excess Bills Stock (USD bn) (1 SD)",
       "term_units": "standard deviations",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -579,7 +579,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock baseline with the primary predictor standardized to one standard deviation."
+      "notes": "Monthly stock baseline with the primary predictor standardized to one standard deviation. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "DGS30",
@@ -599,7 +599,7 @@
       "effective_shock_count": 207,
       "rsquared": 0.3619257218960032,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn) (1 SD)",
+      "term_label": "Excess Bills Stock (USD bn) (1 SD)",
       "term_units": "standard deviations",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -608,7 +608,7 @@
       "model_mode": "robustness",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock baseline with the primary predictor standardized to one standard deviation."
+      "notes": "Monthly stock baseline with the primary predictor standardized to one standard deviation. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "dependent_variable": "THREEFYTP10",
@@ -715,7 +715,7 @@
       "effective_shock_count": 57,
       "rsquared": 0.0876417875061987,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -744,7 +744,7 @@
       "effective_shock_count": 57,
       "rsquared": 0.0182088061176766,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -773,7 +773,7 @@
       "effective_shock_count": 57,
       "rsquared": 0.0141349407924176,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -802,7 +802,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0039457111166709,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -831,7 +831,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0075688341540012,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -860,7 +860,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0118730536184759,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",

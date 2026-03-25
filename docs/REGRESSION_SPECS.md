@@ -44,9 +44,10 @@ DeltaReserves_t = a + b1 * Bills_t + b2 * Coupons_t + b3 * DeltaTGA_t + b4 * QT_
 ```
 
 Baseline implementation notes:
-- `Bills_t` = provisional gross bill auction flow
-- `Coupons_t` = provisional gross coupon auction flow
+- `Bills_t` = exact official net bill issuance in the headline plumbing variant
+- `Coupons_t` = exact official combined non-bill net issuance in the headline plumbing variant
 - `QT_t = -Delta TREAST_t`
+- labeled fallback variants may still use gross auction-flow constructions for comparison, continuity, or diagnostics
 
 Expected sign pattern in the note's logic:
 - `b1` more negative than `b2` in ON RRP equation
@@ -60,10 +61,13 @@ These regressions are mechanism tests, not proofs of causal identification on th
 PublicDurationSupply_t = Coupons_t + QT_t - Buybacks_t
 ```
 
-First pass:
-- `Coupons_t` = gross nominal coupon + TIPS auction flow
+Headline construction:
+- `Coupons_t` = exact combined non-bill net issuance reaching the public
 - `Buybacks_t` = accepted amount in buyback operations
-- `QT_t` = Fed Treasury holdings decline
+- `QT_t` = Fed Treasury holdings decline, used as a proxy contribution in the current public release
+
+Fallback comparison:
+- provisional comparison variants still publish gross coupon-flow constructions with labeled fallback status
 
 ## E. Flow vs stock horse race
 

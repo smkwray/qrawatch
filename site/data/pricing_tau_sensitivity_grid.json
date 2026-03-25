@@ -8,7 +8,7 @@
       "dependent_variable": "THREEFYTP10",
       "dependent_label": "10-year term premium proxy (THREEFYTP10)",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 0.4071054916875204,
       "std_err": 1.063620480890354,
       "t_stat": 0.3827544683482716,
@@ -18,7 +18,7 @@
       "rsquared": 0.0706549396128729,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.15."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.15. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "tau": 0.15,
@@ -27,7 +27,7 @@
       "dependent_variable": "DGS10",
       "dependent_label": "10-year Treasury constant maturity yield",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 0.6951555719799262,
       "std_err": 1.943453348797451,
       "t_stat": 0.357690897190852,
@@ -37,7 +37,7 @@
       "rsquared": 0.555757088254485,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.15."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.15. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "tau": 0.15,
@@ -46,7 +46,7 @@
       "dependent_variable": "DGS30",
       "dependent_label": "30-year Treasury constant maturity yield",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 1.421513396718456,
       "std_err": 2.1877414578330887,
       "t_stat": 0.6497629743353837,
@@ -56,7 +56,7 @@
       "rsquared": 0.3412651330732259,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.15."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.15. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "tau": 0.18,
@@ -65,7 +65,7 @@
       "dependent_variable": "THREEFYTP10",
       "dependent_label": "10-year term premium proxy (THREEFYTP10)",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 0.8348280777935673,
       "std_err": 1.1626265016818067,
       "t_stat": 0.7180535422046032,
@@ -75,7 +75,7 @@
       "rsquared": 0.0865941283541469,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.18."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.18. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "tau": 0.18,
@@ -84,7 +84,7 @@
       "dependent_variable": "DGS10",
       "dependent_label": "10-year Treasury constant maturity yield",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 1.4954001805619592,
       "std_err": 2.111025101267703,
       "t_stat": 0.7083763142673901,
@@ -94,7 +94,7 @@
       "rsquared": 0.5631269904779896,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.18."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.18. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "tau": 0.18,
@@ -103,7 +103,7 @@
       "dependent_variable": "DGS30",
       "dependent_label": "30-year Treasury constant maturity yield",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 2.512626370423771,
       "std_err": 2.352061056330294,
       "t_stat": 1.0682657933820785,
@@ -113,7 +113,7 @@
       "rsquared": 0.3619257218960033,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.18."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.18. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "tau": 0.2,
@@ -122,7 +122,7 @@
       "dependent_variable": "THREEFYTP10",
       "dependent_label": "10-year term premium proxy (THREEFYTP10)",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 1.14349474422298,
       "std_err": 1.1769290468589784,
       "t_stat": 0.9715919131019592,
@@ -132,7 +132,7 @@
       "rsquared": 0.1035550982325834,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.20."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.20. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "tau": 0.2,
@@ -141,7 +141,7 @@
       "dependent_variable": "DGS10",
       "dependent_label": "10-year Treasury constant maturity yield",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 2.0756163083358707,
       "std_err": 2.1268995796616617,
       "t_stat": 0.9758882498185698,
@@ -151,7 +151,7 @@
       "rsquared": 0.5711784324079765,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.20."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.20. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "tau": 0.2,
@@ -160,7 +160,7 @@
       "dependent_variable": "DGS30",
       "dependent_label": "30-year Treasury constant maturity yield",
       "term": "stock_excess_bills_bn",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "coef": 3.2843774896214963,
       "std_err": 2.3401639153995837,
       "t_stat": 1.403481810828917,
@@ -170,7 +170,7 @@
       "rsquared": 0.3819939328350111,
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock-only pricing sensitivity using target tau=0.20."
+      "notes": "Monthly stock-only pricing sensitivity using target tau=0.20. Panels are labeled at month-end, so the current month may be partial before month close."
     }
   ]
 }

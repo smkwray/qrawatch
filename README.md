@@ -124,9 +124,11 @@ make site
 
 ## Repository map
 
-- `PROJECT_BRIEF.md` — project question, scope, hypotheses, and contribution
-- `RESEARCH_DESIGN.md` — equations, identification, outcomes, and robustness
+- `README.md` — project question, current status, claim boundary, and reproducibility workflow
 - `DATA_SOURCES.md` — source registry and why each dataset matters
+- `docs/REGRESSION_SPECS.md` — compact equations and baseline regression layouts
+- `docs/QRA_CAPTURE_PROTOCOL.md` — official quarter-capture workflow and provenance rules
+- `docs/DATA_DICTIONARY.md` — field-level definitions for publish artifacts and source tables
 - `docs/STATUS_GLOSSARY.md` — readiness/source-quality labels and public terminology
 - `docs/PRICING_METHODS.md` — pricing estimands, panel design, and reduced-form interpretation boundaries
 - `docs/PRICING_RESULTS_MEMO.md` — current pricing coefficients, robustness, and claim boundary
@@ -153,6 +155,6 @@ make site
 ## What comes next
 
 - keep the QRA causal lane bounded and documented as a narrow audited pilot rather than reopening broad benchmark hunts
-- pressure-test the `+63bd` release-level profile with leave-one-release-out diagnostics and pre-release placebo windows
-- decide whether the fixed-horizon release-level profile can earn stronger status or whether monthly flow should remain the strongest published reduced-form result
-- only after that, choose between richer release controls, a stronger event bridge, or a broader design pivot
+- decide whether one more bounded backend design round is justified or whether the current pricing claim boundary should stand as the stopping point for this public release
+- if no remaining backend task is likely to move that claim boundary, shift effort to frontend and public communication rather than reopening open-ended robustness work
+- only if a bounded backend round is justified, choose between richer release controls, a stronger event bridge, or a broader design pivot

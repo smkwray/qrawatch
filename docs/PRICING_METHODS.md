@@ -33,6 +33,8 @@ That is implemented with one primary design and supporting context designs:
 - Excess Bills Stock context: bp change in month-end rates per `$100bn` change in `stock_excess_bills_bn`
 - Public Duration Supply context: bp change in weekly rates per `$100bn` change in `headline_public_duration_supply`
 
+For the monthly carry-forward specifications, the panel is labeled at month-end. That means the current month can be partial before month close; month-end sample labels should be read as panel labels, not as proof that the month is complete.
+
 ## Locked baseline specifications
 
 `release_flow_baseline_63bd`
@@ -61,6 +63,7 @@ That is implemented with one primary design and supporting context designs:
 - sample start: `2009Q1`
 - role: `headline_context`
 - interpretation: carry-forward monthly context spec; useful for scale and persistence, but not the main effective-shock design
+- note: `headline_context` is an internal pipeline role for a published context spec, not a public headline-claim label
 
 `monthly_stock_baseline`
 
@@ -107,6 +110,8 @@ Artifacts:
 - `pricing_release_flow_leave_one_out`
 - `pricing_tau_sensitivity_grid`
 - `pricing_scenario_translation`
+
+Some published artifact fields retain internal pipeline IDs such as `anchor_role = headline_context` or `model_mode = headline_baseline`. Those fields identify regression families inside the backend workflow. Public claim status should be read from `dataset_status`, the pricing memo, and the surrounding documentation rather than inferred from those schema names alone.
 
 ## Figure pack
 

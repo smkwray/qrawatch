@@ -51,7 +51,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0325023067890252,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -171,7 +171,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0691233446220204,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -291,7 +291,7 @@
       "effective_shock_count": 58,
       "rsquared": 0.0350710769422211,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -411,7 +411,7 @@
       "effective_shock_count": 58,
       "rsquared": 0.0441323369933116,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -531,7 +531,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0407574430714616,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -651,7 +651,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0138173121134954,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -771,7 +771,7 @@
       "effective_shock_count": 58,
       "rsquared": 0.0079988247298123,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -891,7 +891,7 @@
       "effective_shock_count": 58,
       "rsquared": 0.0187635986955548,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1011,7 +1011,7 @@
       "effective_shock_count": 54,
       "rsquared": 0.0092552167361192,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1131,7 +1131,7 @@
       "effective_shock_count": 54,
       "rsquared": 0.0915971273412632,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1251,7 +1251,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0484393362421922,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1371,7 +1371,7 @@
       "effective_shock_count": 60,
       "rsquared": 0.0344352645582012,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1469,7 +1469,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_flow_baseline",
@@ -1491,7 +1491,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.1163120284839357,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1499,7 +1499,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_flow_baseline",
@@ -1529,7 +1529,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_flow_baseline",
@@ -1559,7 +1559,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_flow_baseline",
@@ -1589,7 +1589,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_flow_baseline",
@@ -1611,7 +1611,7 @@
       "effective_shock_count": 206,
       "rsquared": 0.5793542933122507,
       "term_role": "primary_predictor",
-      "term_label": "Maturity-Tilt Flow (internal `ati_baseline_bn`, USD bn)",
+      "term_label": "Maturity-Tilt Flow (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1619,7 +1619,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_flow_baseline",
@@ -1649,7 +1649,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_flow_baseline",
@@ -1679,7 +1679,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-02-28",
       "sample_end": "2026-03-31",
-      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor."
+      "notes": "Monthly carry-forward Maturity-Tilt Flow specification retained as side-by-side headline context, not the main credibility anchor. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_stock_baseline",
@@ -1709,7 +1709,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_stock_baseline",
@@ -1731,7 +1731,7 @@
       "effective_shock_count": 207,
       "rsquared": 0.0865941283541469,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1739,7 +1739,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_stock_baseline",
@@ -1769,7 +1769,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_stock_baseline",
@@ -1799,7 +1799,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_stock_baseline",
@@ -1829,7 +1829,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_stock_baseline",
@@ -1851,7 +1851,7 @@
       "effective_shock_count": 207,
       "rsquared": 0.5631269904779896,
       "term_role": "primary_predictor",
-      "term_label": "Excess Bills Stock (internal `stock_excess_bills_bn`, USD bn)",
+      "term_label": "Excess Bills Stock (USD bn)",
       "term_units": "USD 100bn",
       "outcome_units": "basis points",
       "cov_type": "HAC",
@@ -1859,7 +1859,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_stock_baseline",
@@ -1889,7 +1889,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "monthly_stock_baseline",
@@ -1919,7 +1919,7 @@
       "term_mode": "baseline",
       "sample_start": "2009-01-31",
       "sample_end": "2026-03-31",
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls."
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
     },
     {
       "model_id": "weekly_duration_baseline",

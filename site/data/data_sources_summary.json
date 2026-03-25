@@ -18,14 +18,14 @@
     {
       "source_family": "qra",
       "raw_dir_exists": true,
-      "file_count": 344,
+      "file_count": 528,
       "manifest_exists": true,
       "downloads_exists": true
     },
     {
       "source_family": "investor_allotments",
       "raw_dir_exists": true,
-      "file_count": 12,
+      "file_count": 13,
       "manifest_exists": true,
       "downloads_exists": true
     },
