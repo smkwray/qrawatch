@@ -1406,13 +1406,12 @@
       fetchJSON('series_metadata_catalog.json'),
       fetchJSON('data_sources_summary.json'),
       fetchJSON('causal_claims_status.json'),
-      fetchJSON('qra_causal_claims_status.json'),
       fetchJSON('qra_benchmark_evidence_registry.json'),
       fetchJSON('official_capture_readiness.json'),
       fetchJSON('official_capture_completion.json'),
       fetchJSON('official_capture_backfill_queue.json')
     ]);
-    var dsStatus = results[0], extStatus = results[1], catalog = results[2], sources = results[3], causalClaims = results[4] || results[5], benchmarkEvidence = results[6], captureReadiness = results[7], captureCompletion = results[8], captureBackfillQueue = results[9];
+    var dsStatus = results[0], extStatus = results[1], catalog = results[2], sources = results[3], causalClaims = results[4], benchmarkEvidence = results[5], captureReadiness = results[6], captureCompletion = results[7], captureBackfillQueue = results[8];
 
     if (dsStatus) {
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Dataset Readiness' }));
