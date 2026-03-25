@@ -261,6 +261,18 @@ def _build_ati_release_panel(official_capture: pd.DataFrame) -> pd.DataFrame:
     return with_ati.reindex(columns=ATI_RELEASE_PANEL_COLUMNS)
 
 
+def _last_completed_month_end(dates: pd.Series) -> pd.Timestamp | None:
+    cleaned = _coerce_date_series(dates).dropna().sort_values()
+    if cleaned.empty:
+        return None
+    latest = cleaned.iloc[-1].normalize()
+    current_month_end = latest + pd.offsets.MonthEnd(0)
+    if latest == current_month_end:
+        return current_month_end
+    prior_month_end = latest + pd.offsets.MonthEnd(-1)
+    return prior_month_end if prior_month_end >= cleaned.iloc[0].normalize() else None
+
+
 def _prepare_monthly_fred_panel(fred: pd.DataFrame, outcome_cols: tuple[str, ...]) -> pd.DataFrame:
     _require_columns(fred, ("date",), "FRED core panel")
     panel = fred.copy()
@@ -272,6 +284,10 @@ def _prepare_monthly_fred_panel(fred: pd.DataFrame, outcome_cols: tuple[str, ...
         panel[col] = coerce_numeric(panel[col])
 
     monthly = panel.set_index("date").resample("ME").last().reset_index()
+    last_completed_month_end = _last_completed_month_end(panel["date"])
+    if last_completed_month_end is None:
+        return pd.DataFrame(columns=["date", *outcome_cols, "slope_10y_2y", "slope_30y_2y"])
+    monthly = monthly.loc[monthly["date"] <= last_completed_month_end].copy()
     keep = [c for c in outcome_cols if c in monthly.columns]
     monthly = monthly[["date", *keep]].copy()
     rate_columns = [column for column in ("THREEFYTP10", "DGS2", "DGS10", "DGS30") if column in monthly.columns]

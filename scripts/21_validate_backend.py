@@ -165,8 +165,12 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
     "pricing_regression_summary.csv": [
         "model_id",
         "model_family",
+        "pipeline_model_mode",
         "panel_key",
         "window_definition",
+        "pipeline_anchor_role",
+        "public_claim_role",
+        "public_readiness",
         "dependent_variable",
         "outcome_role",
         "term",
@@ -179,8 +183,9 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
     "pricing_spec_registry.csv": [
         "spec_id",
         "spec_family",
-        "headline_flag",
-        "anchor_role",
+        "pipeline_anchor_role",
+        "public_claim_role",
+        "public_readiness",
         "window_definition",
         "sample_start",
         "sample_end",
@@ -210,6 +215,9 @@ REQUIRED_PUBLISH_SCHEMAS: dict[str, list[str]] = {
         "model_family",
         "variant_id",
         "variant_family",
+        "pipeline_model_mode",
+        "public_claim_role",
+        "public_readiness",
         "term",
         "coef",
         "p_value",
@@ -2603,6 +2611,8 @@ def validate_publish_artifacts(
                 "pricing_tau_sensitivity_grid",
             },
             "pricing_spec_registry": {"pricing_spec_registry"},
+            "pricing_regression_summary": {"pricing_regression_summary"},
+            "pricing_regression_robustness": {"pricing_regression_robustness"},
             "pricing_subsample_grid": {"pricing_subsample_grid"},
         }.items():
             match = series_catalog.loc[series_catalog.get("dataset", pd.Series(dtype=str)) == dataset_name]
@@ -2617,6 +2627,8 @@ def validate_publish_artifacts(
         for dataset_name in (
             "pricing",
             "pricing_spec_registry",
+            "pricing_regression_summary",
+            "pricing_regression_robustness",
             "pricing_subsample_grid",
             "pricing_scenario_translation",
             "pricing_release_flow_panel",

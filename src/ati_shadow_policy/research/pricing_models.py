@@ -86,14 +86,33 @@ SCALED_100BN_TERMS = {"ati_baseline_bn", "stock_excess_bills_bn", "headline_publ
 TAU_GRID = (0.15, 0.18, 0.20)
 DATE_CANDIDATES = ("date", "qra_release_date", "market_pricing_marker_minus_1d")
 MONTHLY_CARRY_FORWARD_NOTE_SUFFIX = (
-    " Panels are labeled at month-end, so the current month may be partial before month close."
+    " Panels are labeled at month-end and published only through the last completed month."
 )
+PRICING_PUBLIC_READINESS = "supporting_provisional"
+
+PIPELINE_ANCHOR_ROLE_MAP = {
+    "credibility_anchor": "credibility_anchor",
+    "headline_context": "context",
+    "supporting": "supporting",
+}
+PUBLIC_CLAIM_ROLE_MAP = {
+    "credibility_anchor": "supporting_anchor",
+    "headline_context": "supporting_context",
+    "supporting": "supporting",
+}
+PIPELINE_MODEL_MODE_MAP = {
+    "headline_baseline": "baseline_summary",
+    "supporting_outcome": "supporting_outcome",
+    "robustness": "robustness",
+    "subsample": "subsample",
+}
 
 PRICING_SPEC_REGISTRY_COLUMNS = (
     "spec_id",
     "spec_family",
-    "headline_flag",
-    "anchor_role",
+    "pipeline_anchor_role",
+    "public_claim_role",
+    "public_readiness",
     "window_definition",
     "sample_start",
     "sample_end",
@@ -107,11 +126,13 @@ PRICING_SPEC_REGISTRY_COLUMNS = (
 PRICING_REGRESSION_SUMMARY_COLUMNS = (
     "model_id",
     "model_family",
-    "model_mode",
+    "pipeline_model_mode",
     "panel_key",
     "panel_frequency",
     "window_definition",
-    "anchor_role",
+    "pipeline_anchor_role",
+    "public_claim_role",
+    "public_readiness",
     "dependent_variable",
     "dependent_label",
     "outcome_role",
@@ -159,7 +180,9 @@ PRICING_REGRESSION_ROBUSTNESS_COLUMNS = (
     "cov_type",
     "cov_maxlags",
     "term_mode",
-    "model_mode",
+    "pipeline_model_mode",
+    "public_claim_role",
+    "public_readiness",
     "sample_start",
     "sample_end",
     "notes",
@@ -262,7 +285,6 @@ def _release_flow_baseline_specs() -> tuple[dict[str, object], ...]:
                     else f"release_flow_horizon_{horizon_bd}bd"
                 ),
                 "spec_family": "release_flow",
-                "headline_flag": True,
                 "anchor_role": "credibility_anchor" if horizon_bd == primary_horizon else "supporting",
                 "window_definition": window_label,
                 "panel_key": RELEASE_FLOW_PANEL,
@@ -289,7 +311,6 @@ BASELINE_SPECS = (
     {
         "spec_id": "monthly_flow_baseline",
         "spec_family": "monthly_flow",
-        "headline_flag": True,
         "anchor_role": "headline_context",
         "window_definition": "carry_forward_monthly",
         "panel_key": OFFICIAL_ATI_PRICE_PANEL,
@@ -302,7 +323,6 @@ BASELINE_SPECS = (
     {
         "spec_id": "monthly_stock_baseline",
         "spec_family": "monthly_stock",
-        "headline_flag": True,
         "anchor_role": "supporting",
         "window_definition": "carry_forward_monthly",
         "panel_key": OFFICIAL_ATI_PRICE_PANEL,
@@ -315,7 +335,6 @@ BASELINE_SPECS = (
     {
         "spec_id": "weekly_duration_baseline",
         "spec_family": "weekly_duration",
-        "headline_flag": True,
         "anchor_role": "supporting",
         "window_definition": "weekly_duration_window",
         "panel_key": WEEKLY_SUPPLY_PANEL,
@@ -500,6 +519,20 @@ def _public_notes(spec: Mapping[str, object]) -> str:
     if spec.get("window_definition") == "carry_forward_monthly" and MONTHLY_CARRY_FORWARD_NOTE_SUFFIX not in notes:
         return notes + MONTHLY_CARRY_FORWARD_NOTE_SUFFIX
     return notes
+
+
+def _pipeline_anchor_role(spec: Mapping[str, object]) -> str:
+    raw = str(spec.get("anchor_role", "supporting") or "supporting")
+    return PIPELINE_ANCHOR_ROLE_MAP.get(raw, raw)
+
+
+def _public_claim_role(spec: Mapping[str, object]) -> str:
+    raw = str(spec.get("anchor_role", "supporting") or "supporting")
+    return PUBLIC_CLAIM_ROLE_MAP.get(raw, "supporting")
+
+
+def _pipeline_model_mode(model_mode: str) -> str:
+    return PIPELINE_MODEL_MODE_MAP.get(model_mode, model_mode)
 
 
 def _effective_shock_count(panel: pd.DataFrame) -> int:
@@ -699,11 +732,13 @@ def _run_spec_rows(
         reg = reg.copy()
         reg["model_id"] = spec["spec_id"]
         reg["model_family"] = spec["spec_family"]
-        reg["model_mode"] = model_mode
+        reg["pipeline_model_mode"] = _pipeline_model_mode(model_mode)
         reg["panel_key"] = spec["panel_key"]
         reg["panel_frequency"] = spec["panel_frequency"]
         reg["window_definition"] = spec["window_definition"]
-        reg["anchor_role"] = spec.get("anchor_role", "supporting")
+        reg["pipeline_anchor_role"] = _pipeline_anchor_role(spec)
+        reg["public_claim_role"] = _public_claim_role(spec)
+        reg["public_readiness"] = PRICING_PUBLIC_READINESS
         reg["dependent_variable"] = outcome
         reg["dependent_label"] = OUTCOME_LABELS.get(outcome, outcome)
         reg["outcome_role"] = "headline" if outcome in HEADLINE_OUTCOMES else "supporting"
@@ -750,8 +785,9 @@ def build_pricing_spec_registry(pricing_panels: Mapping[str, pd.DataFrame]) -> p
                 {
                     "spec_id": spec["spec_id"],
                     "spec_family": spec["spec_family"],
-                    "headline_flag": bool(spec["headline_flag"]),
-                    "anchor_role": spec["anchor_role"],
+                    "pipeline_anchor_role": _pipeline_anchor_role(spec),
+                    "public_claim_role": _public_claim_role(spec),
+                    "public_readiness": PRICING_PUBLIC_READINESS,
                     "window_definition": spec["window_definition"],
                     "sample_start": sample_start,
                     "sample_end": sample_end,

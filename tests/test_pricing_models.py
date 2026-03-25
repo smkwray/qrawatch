@@ -188,10 +188,14 @@ def test_pricing_spec_registry_is_deterministic_and_covers_release_anchor_specs(
         "monthly_stock_baseline",
         "weekly_duration_baseline",
     } == set(registry["spec_id"])
-    assert set(registry["anchor_role"]) == {"credibility_anchor", "headline_context", "supporting"}
+    assert set(registry["pipeline_anchor_role"]) == {"credibility_anchor", "context", "supporting"}
+    assert set(registry["public_claim_role"]) == {"supporting_anchor", "supporting_context", "supporting"}
+    assert registry["public_readiness"].eq(pricing_models.PRICING_PUBLIC_READINESS).all()
     assert "release_plus_63bd" in set(registry["window_definition"])
-    assert registry.loc[registry["spec_id"] == "release_flow_baseline_63bd", "anchor_role"].eq("credibility_anchor").all()
-    assert registry.loc[registry["spec_id"] == "monthly_flow_baseline", "anchor_role"].eq("headline_context").all()
+    assert registry.loc[registry["spec_id"] == "release_flow_baseline_63bd", "pipeline_anchor_role"].eq("credibility_anchor").all()
+    assert registry.loc[registry["spec_id"] == "release_flow_baseline_63bd", "public_claim_role"].eq("supporting_anchor").all()
+    assert registry.loc[registry["spec_id"] == "monthly_flow_baseline", "pipeline_anchor_role"].eq("context").all()
+    assert registry.loc[registry["spec_id"] == "monthly_flow_baseline", "public_claim_role"].eq("supporting_context").all()
 
 
 def test_build_pricing_regression_summary_has_release_level_anchor_and_effective_shocks() -> None:
@@ -205,9 +209,12 @@ def test_build_pricing_regression_summary_has_release_level_anchor_and_effective
     assert summary["cov_maxlags"].eq(pricing_models.NEWEY_WEST_MAXLAGS).all()
     assert set(summary["dependent_variable"]) == {"THREEFYTP10", "DGS10"}
     assert summary["effective_shock_count"].gt(0).all()
+    assert summary["public_readiness"].eq(pricing_models.PRICING_PUBLIC_READINESS).all()
     anchor = summary.loc[(summary["model_id"] == "release_flow_baseline_63bd") & (summary["term"] == "ati_baseline_bn")]
     assert not anchor.empty
-    assert anchor["anchor_role"].eq("credibility_anchor").all()
+    assert anchor["pipeline_anchor_role"].eq("credibility_anchor").all()
+    assert anchor["public_claim_role"].eq("supporting_anchor").all()
+    assert anchor["pipeline_model_mode"].eq("baseline_summary").all()
     assert anchor["window_definition"].eq("release_plus_63bd").all()
     assert anchor["coef"].lt(0).all()
     release_spec = next(spec for spec in pricing_models.BASELINE_SPECS if spec["spec_id"] == "release_flow_baseline_63bd")
@@ -246,6 +253,7 @@ def test_build_pricing_regression_robustness_covers_required_families() -> None:
         "release_flow_placebo",
         "standardized_predictors",
     }
+    assert robustness["public_readiness"].eq(pricing_models.PRICING_PUBLIC_READINESS).all()
     assert "const" not in set(robustness["term"])
     assert "DFF" not in set(robustness["term"])
 
@@ -353,7 +361,7 @@ def test_pricing_regression_script_writes_expected_artifacts(tmp_path) -> None:
     leave_one_out_df = pd.read_csv(leave_one_out)
     tau_df = pd.read_csv(tau_grid)
 
-    assert "anchor_role" in spec_df.columns
+    assert {"pipeline_anchor_role", "public_claim_role", "public_readiness"}.issubset(set(spec_df.columns))
     assert {"window_definition", "effective_shock_count"}.issubset(set(summary_df.columns))
     assert "scenario_role" in pd.read_csv(scenario).columns
     assert not leave_one_out_df.empty

@@ -14,11 +14,11 @@
       "outcome_role": "headline",
       "term": "headline_public_duration_supply",
       "term_label": "Public Duration Supply (USD bn)",
-      "coef_bp_per_100bn": -26.08411102259444,
-      "implied_bp_change": -26.08411102259444,
-      "nobs": 1196,
-      "effective_shock_count": 1196,
-      "p_value": 3.3298406239677704e-09,
+      "coef_bp_per_100bn": -26.080875357385892,
+      "implied_bp_change": -26.080875357385892,
+      "nobs": 1197,
+      "effective_shock_count": 1197,
+      "p_value": 3.355563123000163e-09,
       "notes": "Weekly reduced-form specification using Public Duration Supply with QT, buybacks, TGA, and policy-rate controls."
     },
     {
@@ -54,12 +54,12 @@
       "outcome_role": "headline",
       "term": "stock_excess_bills_bn",
       "term_label": "Excess Bills Stock (USD bn)",
-      "coef_bp_per_100bn": 0.8348280777935694,
-      "implied_bp_change": 4.174140388967847,
-      "nobs": 207,
-      "effective_shock_count": 207,
-      "p_value": 0.472724273940835,
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
+      "coef_bp_per_100bn": 0.8134726468881064,
+      "implied_bp_change": 4.067363234440532,
+      "nobs": 206,
+      "effective_shock_count": 206,
+      "p_value": 0.4881320034589304,
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end and published only through the last completed month."
     },
     {
       "scenario_id": "plus_500bn_term_out",
@@ -74,12 +74,12 @@
       "outcome_role": "headline",
       "term": "stock_excess_bills_bn",
       "term_label": "Excess Bills Stock (USD bn)",
-      "coef_bp_per_100bn": 1.495400180561965,
-      "implied_bp_change": 7.477000902809825,
-      "nobs": 207,
-      "effective_shock_count": 207,
-      "p_value": 0.4787115972563814,
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
+      "coef_bp_per_100bn": 1.4557157617242786,
+      "implied_bp_change": 7.278578808621393,
+      "nobs": 206,
+      "effective_shock_count": 206,
+      "p_value": 0.4943131691972628,
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end and published only through the last completed month."
     },
     {
       "scenario_id": "plus_1000bn_term_out",
@@ -94,12 +94,12 @@
       "outcome_role": "headline",
       "term": "stock_excess_bills_bn",
       "term_label": "Excess Bills Stock (USD bn)",
-      "coef_bp_per_100bn": 0.8348280777935694,
-      "implied_bp_change": 8.348280777935694,
-      "nobs": 207,
-      "effective_shock_count": 207,
-      "p_value": 0.472724273940835,
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
+      "coef_bp_per_100bn": 0.8134726468881064,
+      "implied_bp_change": 8.134726468881064,
+      "nobs": 206,
+      "effective_shock_count": 206,
+      "p_value": 0.4881320034589304,
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end and published only through the last completed month."
     },
     {
       "scenario_id": "plus_1000bn_term_out",
@@ -114,12 +114,12 @@
       "outcome_role": "headline",
       "term": "stock_excess_bills_bn",
       "term_label": "Excess Bills Stock (USD bn)",
-      "coef_bp_per_100bn": 1.495400180561965,
-      "implied_bp_change": 14.95400180561965,
-      "nobs": 207,
-      "effective_shock_count": 207,
-      "p_value": 0.4787115972563814,
-      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end, so the current month may be partial before month close."
+      "coef_bp_per_100bn": 1.4557157617242786,
+      "implied_bp_change": 14.557157617242789,
+      "nobs": 206,
+      "effective_shock_count": 206,
+      "p_value": 0.4943131691972628,
+      "notes": "Monthly stock specification using Excess Bills Stock after policy-rate and debt-limit controls. Panels are labeled at month-end and published only through the last completed month."
     }
   ]
 }

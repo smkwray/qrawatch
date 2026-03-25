@@ -33,7 +33,7 @@ That is implemented with one primary design and supporting context designs:
 - Excess Bills Stock context: bp change in month-end rates per `$100bn` change in `stock_excess_bills_bn`
 - Public Duration Supply context: bp change in weekly rates per `$100bn` change in `headline_public_duration_supply`
 
-For the monthly carry-forward specifications, the panel is labeled at month-end. That means the current month can be partial before month close; month-end sample labels should be read as panel labels, not as proof that the month is complete.
+For the monthly carry-forward specifications, the panel is labeled at month-end and published only through the last completed month. Month-end sample labels are therefore completed-month labels rather than partial-current-month placeholders.
 
 ## Locked baseline specifications
 
@@ -42,7 +42,7 @@ For the monthly carry-forward specifications, the panel is labeled at month-end.
 `delta_Y_release_plus_63bd = a + b1 * ati_baseline_bn_release + b2 * delta_dff_release_plus_63bd + b3 * debt_limit_dummy_release + e`
 
 - outcomes: `DGS10`, `THREEFYTP10`
-- sample start: `2009Q1`
+- sample start: first observed release marker `2010-02-03`
 - role: `credibility_anchor`
 - interpretation: one-row-per-unique market-pricing marker pricing test using cumulative changes from the pre-release market marker to `+63` business days after release
 
@@ -51,7 +51,7 @@ For the monthly carry-forward specifications, the panel is labeled at month-end.
 `delta_Y_release_plus_hbd = a + b1 * ati_baseline_bn_release + b2 * delta_dff_release_plus_hbd + b3 * debt_limit_dummy_release + e`
 
 - outcomes: `DGS10`, `THREEFYTP10`
-- sample start: `2009Q1`
+- sample start: first observed release marker `2010-02-03`
 - role: `supporting`
 - interpretation: supporting horizon-profile checkpoints at `h ∈ {1, 5, 10, 21, 42}` business days
 
@@ -61,9 +61,9 @@ For the monthly carry-forward specifications, the panel is labeled at month-end.
 
 - outcomes: `DGS10`, `THREEFYTP10`
 - sample start: `2009Q1`
-- role: `headline_context`
+- role: published supporting context
 - interpretation: carry-forward monthly context spec; useful for scale and persistence, but not the main effective-shock design
-- note: `headline_context` is an internal pipeline role for a published context spec, not a public headline-claim label
+- note: this published context spec now carries `public_claim_role = supporting_context`; backend bookkeeping remains available through `pipeline_*` fields
 
 `monthly_stock_baseline`
 
@@ -111,7 +111,11 @@ Artifacts:
 - `pricing_tau_sensitivity_grid`
 - `pricing_scenario_translation`
 
-Some published artifact fields retain internal pipeline IDs such as `anchor_role = headline_context` or `model_mode = headline_baseline`. Those fields identify regression families inside the backend workflow. Public claim status should be read from `dataset_status`, the pricing memo, and the surrounding documentation rather than inferred from those schema names alone.
+Published pricing artifacts now separate public claim fields from backend bookkeeping:
+
+- `public_claim_role` is the frontend/public field for rows such as `supporting_anchor`, `supporting_context`, or `supporting`
+- `public_readiness` carries the public readiness tier for the pricing pack, currently `supporting_provisional`
+- `pipeline_anchor_role` and `pipeline_model_mode` are backend workflow fields and should not be read as public readiness labels
 
 ## Figure pack
 

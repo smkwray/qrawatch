@@ -37,12 +37,12 @@ def test_build_official_ati_price_panel_carries_forward_from_each_release_date()
     jan = panel.loc[panel["date"] == pd.Timestamp("2024-01-31"), "ati_baseline_bn"].iloc[0]
     mar = panel.loc[panel["date"] == pd.Timestamp("2024-03-31"), "ati_baseline_bn"].iloc[0]
     may = panel.loc[panel["date"] == pd.Timestamp("2024-05-31"), "ati_baseline_bn"].iloc[0]
-    sep = panel.loc[panel["date"] == pd.Timestamp("2024-09-30"), "ati_baseline_bn"].iloc[0]
+    aug = panel.loc[panel["date"] == pd.Timestamp("2024-08-31"), "ati_baseline_bn"].iloc[0]
 
     assert jan == 2.0
     assert mar == 2.0
     assert may == -6.0
-    assert sep == -14.0
+    assert aug == -14.0
     assert (
         panel.loc[panel["date"] == pd.Timestamp("2024-01-31"), "qra_release_date"].iloc[0]
         == pd.Timestamp("2024-01-15")
@@ -51,6 +51,22 @@ def test_build_official_ati_price_panel_carries_forward_from_each_release_date()
         panel.loc[panel["date"] == pd.Timestamp("2024-05-31"), "qra_release_date"].iloc[0]
         == pd.Timestamp("2024-04-12")
     )
+
+
+def test_build_official_ati_price_panel_excludes_partial_current_month() -> None:
+    official_capture = pd.DataFrame(
+        {
+            "qra_release_date": ["2024-01-15", "2024-04-12"],
+            "total_financing_need_bn": [100.0, 200.0],
+            "net_bill_issuance_bn": [20.0, 30.0],
+            "quarter": ["2024Q1", "2024Q2"],
+        }
+    )
+
+    panel = pricing_panels.build_official_ati_price_panel(official_capture, _monthly_fred_frame())
+
+    assert panel["date"].max() == pd.Timestamp("2024-08-31")
+    assert pd.Timestamp("2024-09-30") not in set(panel["date"])
 
 
 def test_build_mspd_stock_excess_bills_panel_builds_bill_share_prioritized_by_data_family() -> None:

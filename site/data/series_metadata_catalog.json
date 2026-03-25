@@ -152,6 +152,26 @@
       "public_role": "supporting"
     },
     {
+      "dataset": "pricing_regression_summary",
+      "series_id": "pricing_regression_summary",
+      "frequency": "artifact",
+      "value_units": "regression rows",
+      "sign_convention": "Regression rows report one coefficient estimate per model, outcome, and term in the locked headline summary pack.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
+      "dataset": "pricing_regression_robustness",
+      "series_id": "pricing_regression_robustness",
+      "frequency": "artifact",
+      "value_units": "regression rows",
+      "sign_convention": "Regression rows report primary-predictor checks from the published pricing robustness families.",
+      "source_quality": "derived_pricing_reduced_form",
+      "series_role": "supporting",
+      "public_role": "supporting"
+    },
+    {
       "dataset": "pricing_subsample_grid",
       "series_id": "pricing_subsample_grid",
       "frequency": "artifact",

@@ -20,7 +20,7 @@
       "can_claim": "A narrow post-2022Q3 financing-estimates pilot with 14 reviewed current-sample financing components, 6 benchmark-ready rows, and 5 Tier A components.",
       "cannot_claim": "A settled or full-sample causal estimate of Treasury issuance effects on long rates; 8 financing rows remain post-release-invalid, 8 are source-family-exhausted, 0 remain open benchmark candidates, and the long-rate translation layer is still supporting/provisional.",
       "boundary_reason": "14 current-sample financing rows; 6 benchmark-ready; 5 Tier A; 1 context-only; 8 post-release-invalid; 8 source-family-exhausted; 0 open candidates.",
-      "last_regenerated_utc": "2026-03-25T11:37:03.263080+00:00"
+      "last_regenerated_utc": "2026-03-25T12:31:32.018049+00:00"
     }
   ]
 }

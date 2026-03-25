@@ -3,7 +3,7 @@ SHELL := /bin/zsh
 EXPECTED_VENV := $(HOME)/venvs/qrawatch
 RUN = source .env && "$(MAKE)" --no-print-directory guard-env >/dev/null && "$(PYTHON)" -B
 
-.PHONY: guard-env bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity causal-review identification identification-refresh absorption test download-core qra investor primary sec event plumbing duration publish qra-quality backend-validate regenerate pricing-figures site
+.PHONY: guard-env bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity causal-review identification identification-refresh absorption test download-core qra investor primary sec event plumbing duration pricing-panels pricing-regressions publish qra-quality backend-validate regenerate pricing-figures site
 
 guard-env:
 	@source .env && \
@@ -85,6 +85,12 @@ plumbing: guard-env
 duration: guard-env
 	$(RUN) scripts/12_build_public_duration_supply.py
 
+pricing-panels: guard-env
+	$(RUN) scripts/29_build_pricing_panels.py
+
+pricing-regressions: guard-env
+	$(RUN) scripts/30_run_pricing_regressions.py
+
 publish: guard-env
 	$(RUN) scripts/15_build_publish_artifacts.py
 
@@ -97,7 +103,7 @@ qra-quality: guard-env
 backend-validate: guard-env
 	$(RUN) scripts/21_validate_backend.py
 
-regenerate: download-core qra qra-enrich official-capture official-ati investor primary sec seed event shock-template elasticity identification causal-review identification-refresh absorption plumbing duration publish qra-quality backend-validate
+regenerate: download-core qra qra-enrich official-capture official-ati investor primary sec seed event shock-template elasticity identification causal-review identification-refresh absorption plumbing duration pricing-panels pricing-regressions pricing-figures publish qra-quality backend-validate
 
 site: guard-env publish
 	@echo "Copying publish artifacts to site/data/..."

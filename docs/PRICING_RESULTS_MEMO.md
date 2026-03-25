@@ -1,6 +1,6 @@
 # Pricing Results Memo
 
-Date: March 24, 2026
+Date: March 25, 2026
 
 ## Objective
 
@@ -30,14 +30,14 @@ Headline estimand:
 - `monthly_flow_baseline`
   - outcomes: `THREEFYTP10`, `DGS10`
   - controls: `DFF`, `debt_limit_dummy`
-  - sample: `2009-02-28` through `2026-03-31`
+  - sample: `2009-02-28` through `2026-02-28`
   - effective shocks shown in the current table equal monthly rows, so this spec remains context rather than the main credibility anchor
-  - note: monthly carry-forward tables are labeled at month-end, so the current month may be partial before month close
+  - note: monthly carry-forward tables are labeled at month-end and now publish only through the last completed month
 - `monthly_stock_baseline`
   - outcomes: `THREEFYTP10`, `DGS10`
   - controls: `DFF`, `debt_limit_dummy`
-  - sample: `2009-01-31` through `2026-03-31`
-  - note: month-end sample labels follow the carry-forward panel convention and can include a partial current month
+  - sample: `2009-01-31` through `2026-02-28`
+  - note: month-end sample labels follow the carry-forward panel convention but are locked to completed months only
 - `weekly_duration_baseline`
   - outcomes: `THREEFYTP10`, `DGS10`
   - controls: `qt_proxy`, `buybacks_accepted`, `delta_wdtgal`, `DFF`
@@ -69,13 +69,13 @@ Current baseline coefficients in bp per `$100bn`:
     - `THREEFYTP10`: `-0.309` bp, `p = 0.585`
     - `DGS10`: `-0.749` bp, `p = 0.485`
 - `monthly_flow_baseline`
-  - `THREEFYTP10`: `-2.813` bp, `p = 0.023`
-  - `DGS10`: `-5.215` bp, `p = 0.027`
+  - `THREEFYTP10`: `-2.805` bp, `p = 0.024`
+  - `DGS10`: `-5.201` bp, `p = 0.028`
 - `monthly_stock_baseline`
-  - `THREEFYTP10`: `0.835` bp, `p = 0.473`
-  - `DGS10`: `1.495` bp, `p = 0.479`
+  - `THREEFYTP10`: `0.813` bp, `p = 0.488`
+  - `DGS10`: `1.456` bp, `p = 0.494`
 - `weekly_duration_baseline`
-  - `THREEFYTP10`: `-26.084` bp, `p = 3.33e-09`
+  - `THREEFYTP10`: `-26.081` bp, `p = 3.36e-09`
   - `DGS10`: `-44.054` bp, `p = 4.92e-08`
 
 ## What survives robustness
@@ -113,41 +113,41 @@ The pre-release placebo checks are mixed rather than cleanly zero:
 The strongest current reduced-form result is still the **monthly Maturity-Tilt Flow** relationship:
 
 - `post_2014`
-  - `THREEFYTP10`: `-2.110` bp, `p = 0.037`
-  - `DGS10`: `-3.892` bp, `p = 0.031`
+  - `THREEFYTP10`: `-2.101` bp, `p = 0.038`
+  - `DGS10`: `-3.875` bp, `p = 0.032`
 - `post_2020`
-  - `THREEFYTP10`: `-2.040` bp, `p = 0.001`
-  - `DGS10`: `-3.757` bp, `p = 0.001`
+  - `THREEFYTP10`: `-2.025` bp, `p = 0.001`
+  - `DGS10`: `-3.728` bp, `p = 0.001`
 - `exclude_debt_limit`
-  - `THREEFYTP10`: `-3.716` bp, `p = 0.005`
-  - `DGS10`: `-7.041` bp, `p = 0.004`
+  - `THREEFYTP10`: `-3.719` bp, `p = 0.005`
+  - `DGS10`: `-7.047` bp, `p = 0.004`
 - supporting `DGS30` checks
-  - baseline: `-5.387` bp, `p = 0.042`
-  - `post_2014`: `-3.806` bp, `p = 0.026`
-  - `post_2020`: `-3.486` bp, `p = 0.001`
+  - baseline: `-5.367` bp, `p = 0.044`
+  - `post_2014`: `-3.782` bp, `p = 0.027`
+  - `post_2020`: `-3.449` bp, `p = 0.001`
 
 The **weekly Public Duration Supply** result is still numerically large but regime-sensitive:
 
 - full sample baseline remains strongly negative
 - `post_2014` remains strongly negative
-  - `THREEFYTP10`: `-9.912` bp, `p = 0.00017`
+  - `THREEFYTP10`: `-9.919` bp, `p = 0.00017`
   - `DGS10`: `-16.822` bp, `p = 0.00037`
 - `exclude_debt_limit` remains strongly negative
-  - `THREEFYTP10`: `-22.794` bp, `p = 0.00030`
+  - `THREEFYTP10`: `-22.813` bp, `p = 0.00030`
   - `DGS10`: `-35.891` bp, `p = 0.00192`
 - but `post_2009` is weak and `post_2020` is effectively absent
 
 The **Excess Bills Stock** result is still weak:
 
-- baseline `THREEFYTP10`: `0.835` bp, `p = 0.473`
-- baseline `DGS10`: `1.495` bp, `p = 0.479`
+- baseline `THREEFYTP10`: `0.813` bp, `p = 0.488`
+- baseline `DGS10`: `1.456` bp, `p = 0.494`
 - tau sensitivity does not fix it
   - `tau = 0.15`
-    - `THREEFYTP10`: `0.407` bp, `p = 0.702`
-    - `DGS10`: `0.695` bp, `p = 0.721`
+    - `THREEFYTP10`: `0.380` bp, `p = 0.724`
+    - `DGS10`: `0.644` bp, `p = 0.743`
   - `tau = 0.20`
-    - `THREEFYTP10`: `1.143` bp, `p = 0.331`
-    - `DGS10`: `2.076` bp, `p = 0.329`
+    - `THREEFYTP10`: `1.126` bp, `p = 0.342`
+    - `DGS10`: `2.043` bp, `p = 0.340`
 
 ## Leave-one-release-out
 
@@ -167,19 +167,19 @@ So the fixed-horizon release-level flow design is cleaner than the prior variabl
 Flow-vs-stock horse race:
 
 - `Maturity-Tilt Flow` stays negative in both headline outcomes
-  - `THREEFYTP10`: `-2.761` bp, `p = 0.074`
-  - `DGS10`: `-5.121` bp, `p = 0.081`
+  - `THREEFYTP10`: `-2.757` bp, `p = 0.073`
+  - `DGS10`: `-5.113` bp, `p = 0.080`
 - `Excess Bills Stock` stays weak
-  - `THREEFYTP10`: `0.750` bp, `p = 0.486`
-  - `DGS10`: `1.372` bp, `p = 0.482`
+  - `THREEFYTP10`: `0.729` bp, `p = 0.502`
+  - `DGS10`: `1.333` bp, `p = 0.499`
 
 Standardized primary-predictor checks:
 
 - standardized `monthly_flow_baseline`
-  - `THREEFYTP10`: `-8.644` bp per `1 SD`, `p = 0.023`
-  - `DGS10`: `-16.025` bp per `1 SD`, `p = 0.027`
+  - `THREEFYTP10`: `-8.641` bp per `1 SD`, `p = 0.024`
+  - `DGS10`: `-16.020` bp per `1 SD`, `p = 0.028`
 - standardized `weekly_duration_baseline`
-  - `THREEFYTP10`: `-6.575` bp per `1 SD`, `p = 3.33e-09`
+  - `THREEFYTP10`: `-6.574` bp per `1 SD`, `p = 3.36e-09`
   - `DGS10`: `-11.105` bp per `1 SD`, `p = 4.92e-08`
 - standardized `monthly_stock_baseline`
   - still weak and statistically unpersuasive
@@ -187,16 +187,16 @@ Standardized primary-predictor checks:
 Published scenario arithmetic:
 
 - `plus_100bn_duration_supply`
-  - `THREEFYTP10`: `-26.084` bp
+  - `THREEFYTP10`: `-26.081` bp
   - `DGS10`: `-44.054` bp
   - role: `supporting`
 - `plus_500bn_term_out`
-  - `THREEFYTP10`: `4.174` bp
-  - `DGS10`: `7.477` bp
+  - `THREEFYTP10`: `4.067` bp
+  - `DGS10`: `7.279` bp
   - role: `illustrative_only`
 - `plus_1000bn_term_out`
-  - `THREEFYTP10`: `8.348` bp
-  - `DGS10`: `14.954` bp
+  - `THREEFYTP10`: `8.135` bp
+  - `DGS10`: `14.557` bp
   - role: `illustrative_only`
 
 ## Current claim boundary
@@ -204,6 +204,7 @@ Published scenario arithmetic:
 The strongest current reduced-form claim is:
 
 - the repo now has a cleaner unique-release fixed-horizon pricing panel, with same-day duplicate release rows collapsed into one pricing shock and a published horizon profile around the `+63bd` scalar
+- the monthly carry-forward pricing surface is now locked to completed months only; the strongest monthly flow signal survives that lock with nearly unchanged coefficients
 - the strongest current negative Maturity-Tilt signal still remains the **monthly carry-forward Maturity-Tilt Flow** relationship rather than the release-level anchor
 - the `+63bd` release-flow coefficient is directionally plausible, but still too small and imprecise to anchor the project by itself
 

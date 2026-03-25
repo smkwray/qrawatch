@@ -116,6 +116,11 @@
     supporting_provisional: 'Supporting Provisional',
     provisional_supporting: 'Provisional Supporting',
     not_started: 'Not started',
+    supporting_anchor: 'Supporting Anchor',
+    supporting_context: 'Supporting Context',
+    credibility_anchor: 'Credibility Anchor',
+    context: 'Context',
+    baseline_summary: 'Baseline Summary',
     manual_official_capture: 'Official capture',
     official_matched: 'Matched',
     date_proxy: 'Date Proxy',
@@ -1139,7 +1144,8 @@
       container.appendChild(el('h3', { class: 'section-subtitle', text: 'Locked Baseline Specs' }));
       container.appendChild(buildTable([
         { key: 'spec_id', label: 'Spec', format: fmtSnake },
-        { key: 'anchor_role', label: 'Role', format: fmtSnake },
+        { key: 'public_claim_role', label: 'Role', format: fmtLabel },
+        { key: 'public_readiness', label: 'Status', format: fmtLabel },
         { key: 'window_definition', label: 'Window', format: fmtSnake },
         { key: 'outcome', label: 'Outcome', format: fmtSnake },
         { key: 'predictor_set', label: 'Predictor', format: fmtSnake },
@@ -1157,8 +1163,12 @@
         return String(a.model_id).localeCompare(String(b.model_id)) || String(a.dependent_variable).localeCompare(String(b.dependent_variable));
       });
 
-    var releaseAnchorRows = primaryRows.filter(function (row) { return row.anchor_role === 'credibility_anchor'; });
-    var contextRows = primaryRows.filter(function (row) { return row.anchor_role !== 'credibility_anchor'; });
+    var releaseAnchorRows = primaryRows.filter(function (row) {
+      return row.public_claim_role === 'supporting_anchor' || row.pipeline_anchor_role === 'credibility_anchor';
+    });
+    var contextRows = primaryRows.filter(function (row) {
+      return !(row.public_claim_role === 'supporting_anchor' || row.pipeline_anchor_role === 'credibility_anchor');
+    });
 
     container.appendChild(el('h3', { class: 'section-subtitle', text: 'Release-Level Flow Profile' }));
     container.appendChild(buildTable([

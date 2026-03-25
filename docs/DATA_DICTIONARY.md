@@ -260,3 +260,61 @@ These are governance labels, not statistical results. Use `eligibility_blockers`
 
 - site-facing metadata catalog for headline and fallback series
 - records frequency, units, sign conventions, source-quality labels, and series role
+
+### `output/publish/pricing_spec_registry.csv`
+
+- one row per locked pricing specification and headline outcome
+- `pipeline_anchor_role` — backend workflow role such as `credibility_anchor`, `context`, or `supporting`
+- `public_claim_role` — public-facing claim role such as `supporting_anchor`, `supporting_context`, or `supporting`
+- `public_readiness` — public readiness tier for the pricing pack, currently `supporting_provisional`
+- `window_definition` — fixed-horizon release window, monthly carry-forward window, or weekly duration window
+- `sample_start` / `sample_end` — realized regression-sample bounds after required merges, missing-value filtering, and completed-month locking where applicable
+- `predictor_set` / `control_set` — canonical pipe-delimited regressor lists used for the locked spec
+
+### `output/publish/pricing_regression_summary.csv`
+
+- headline summary pack for the locked pricing specifications
+- includes one row per estimated term in each published baseline regression
+- `pipeline_model_mode` — backend workflow bucket for the row, currently `baseline_summary`
+- `pipeline_anchor_role` — backend workflow role inherited from the underlying spec
+- `public_claim_role` — public-facing claim role for the underlying spec
+- `public_readiness` — public readiness tier for the pricing family, currently `supporting_provisional`
+- `effective_shock_count` — unique release markers or time rows used by the fitted regression after sample filtering
+- `term_mode` — whether the row belongs to the baseline term pack, standardized-predictor pack, supporting outcome pack, or another robustness family
+
+### `output/publish/pricing_regression_robustness.csv`
+
+- primary-predictor rows for the published pricing robustness families
+- `variant_id` / `variant_family` — named robustness design such as `post_2014`, `release_flow_placebo`, or `standardized_predictors`
+- `pipeline_model_mode` — backend workflow bucket for the robustness row
+- `public_claim_role` — public-facing claim role inherited from the underlying pricing family
+- `public_readiness` — public readiness tier for the pricing family, currently `supporting_provisional`
+- `sample_start` / `sample_end` — realized bounds for the fitted robustness regression
+
+### `output/publish/pricing_subsample_grid.csv`
+
+- primary-predictor rows for locked pricing specs under named sample restrictions
+- `variant_id` / `variant_family` — named sample restriction such as `post_2014`, `post_2020`, or `exclude_debt_limit`
+- `effective_shock_count` — unique rows or release markers retained after the named sample restriction
+
+### `output/publish/pricing_release_flow_panel.csv`
+
+- one row per unique market-pricing marker in the fixed-horizon release-flow design
+- carries realized release dates, merged quarter labels, fixed-horizon end dates, cumulative rate changes, placebo-window deltas, and the release-level debt-limit control
+
+### `output/publish/pricing_release_flow_leave_one_out.csv`
+
+- leave-one-release-out diagnostic for the primary `+63bd` release-flow anchor
+- one row per omitted release and headline outcome
+
+### `output/publish/pricing_tau_sensitivity_grid.csv`
+
+- stock-only pricing coefficients under alternate target bill-share anchors
+- `tau` — target bill-share anchor used to reconstruct the Excess Bills Stock predictor
+
+### `output/publish/pricing_scenario_translation.csv`
+
+- scenario arithmetic derived from fitted pricing coefficients
+- `scenario_role` — public interpretation boundary such as `supporting` or `illustrative_only`
+- `coef_bp_per_100bn` — fitted coefficient used for the scenario translation
+- `implied_bp_change` — scenario-implied basis-point change under the named shock size

@@ -32,6 +32,7 @@ The repo now has a reproducible backend product and public site, with headline f
 - the plumbing baseline uses exact net bill and non-bill series, with fallbacks labeled separately
 - the duration headline is a hybrid exact-plus-proxy construction with explicit fallback comparisons
 - the pricing layer now publishes a locked `pricing_spec_registry`, a `pricing_subsample_grid`, scenario translations, and five paper-style figures
+- the monthly carry-forward pricing lane is now published only through the last completed month rather than a future-stamped partial current month
 - `claim_scope` separates descriptive-only rows, causal-pilot-only rows, and headline rows so the public boundary is machine-readable
 - the publish layer under `output/publish/` is the frontend-facing API
 - investor allotments, primary dealer, and SEC N-MFP remain summary-ready supporting extensions
@@ -51,6 +52,8 @@ The pricing layer now centers on a unique-release fixed-horizon flow profile:
 - `monthly_stock_baseline` and `weekly_duration_baseline` remain supporting reduced-form context rather than the main release-level credibility object
 
 Headline quantity coefficients are published in **basis points per `$100bn`** on the named input.
+
+Pricing publish artifacts now expose explicit public claim fields such as `public_claim_role` and `public_readiness`, while backend workflow labels are kept under `pipeline_*` columns.
 
 The pricing credibility pack now includes:
 
@@ -155,6 +158,6 @@ make site
 ## What comes next
 
 - keep the QRA causal lane bounded and documented as a narrow audited pilot rather than reopening broad benchmark hunts
-- decide whether one more bounded backend design round is justified or whether the current pricing claim boundary should stand as the stopping point for this public release
+- freeze the pricing claim boundary after the completed-month monthly lock unless a clearly bounded backend task can still move it materially
 - if no remaining backend task is likely to move that claim boundary, shift effort to frontend and public communication rather than reopening open-ended robustness work
-- only if a bounded backend round is justified, choose between richer release controls, a stronger event bridge, or a broader design pivot
+- do not reopen broad release-level spec searches or benchmark hunts unless a new source universe or identification surface appears

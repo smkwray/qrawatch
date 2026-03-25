@@ -1844,8 +1844,9 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
             {
                 "spec_id": "release_flow_baseline_63bd",
                 "spec_family": "release_flow",
-                "headline_flag": True,
-                "anchor_role": "credibility_anchor",
+                "pipeline_anchor_role": "credibility_anchor",
+                "public_claim_role": "supporting_anchor",
+                "public_readiness": "supporting_provisional",
                 "window_definition": "release_plus_63bd",
                 "sample_start": "2009-01-31",
                 "sample_end": "2026-03-31",
@@ -1862,11 +1863,13 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
             {
                 "model_id": "release_flow_baseline_63bd",
                 "model_family": "release_flow",
-                "model_mode": "headline_baseline",
+                "pipeline_model_mode": "baseline_summary",
                 "panel_key": "pricing_release_flow_panel",
                 "panel_frequency": "release-event",
                 "window_definition": "release_plus_63bd",
-                "anchor_role": "credibility_anchor",
+                "pipeline_anchor_role": "credibility_anchor",
+                "public_claim_role": "supporting_anchor",
+                "public_readiness": "supporting_provisional",
                 "dependent_variable": "DGS10",
                 "dependent_label": "10-year Treasury constant maturity yield",
                 "outcome_role": "headline",
@@ -1946,7 +1949,9 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
                 "cov_type": "HAC",
                 "cov_maxlags": 4,
                 "term_mode": "standardized_predictors",
-                "model_mode": "robustness",
+                "pipeline_model_mode": "robustness",
+                "public_claim_role": "supporting",
+                "public_readiness": "supporting_provisional",
                 "sample_start": "2009-01-31",
                 "sample_end": "2026-03-31",
                 "notes": "Monthly stock baseline standardized.",
@@ -2085,6 +2090,8 @@ def test_build_pricing_publish_tables_and_dataset_status(tmp_path, monkeypatch) 
     assert pricing_row["public_role"] == "supporting"
     assert bool(pricing_row["fallback_only"])
     assert "pricing_spec_registry" in set(dataset_status["dataset"])
+    assert "pricing_regression_summary" in set(dataset_status["dataset"])
+    assert "pricing_regression_robustness" in set(dataset_status["dataset"])
     assert "pricing_subsample_grid" in set(dataset_status["dataset"])
     assert "pricing_release_flow_panel" in set(dataset_status["dataset"])
     assert "pricing_tau_sensitivity_grid" in set(dataset_status["dataset"])
@@ -2094,7 +2101,16 @@ def test_series_metadata_catalog_includes_pricing_series() -> None:
     catalog = publish.build_series_metadata_catalog()
 
     pricing_rows = catalog.loc[
-        catalog["dataset"].isin(["pricing", "pricing_scenario_translation", "pricing_spec_registry", "pricing_subsample_grid"])
+        catalog["dataset"].isin(
+            [
+                "pricing",
+                "pricing_scenario_translation",
+                "pricing_spec_registry",
+                "pricing_regression_summary",
+                "pricing_regression_robustness",
+                "pricing_subsample_grid",
+            ]
+        )
     ].copy()
 
     assert not pricing_rows.empty
@@ -2103,6 +2119,8 @@ def test_series_metadata_catalog_includes_pricing_series() -> None:
     )
     assert {
         "pricing_spec_registry",
+        "pricing_regression_summary",
+        "pricing_regression_robustness",
         "pricing_subsample_grid",
         "pricing_release_flow_panel",
         "pricing_release_flow_leave_one_out",
