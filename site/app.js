@@ -11,15 +11,11 @@
       if (!resp.ok) return null;
       var text = await resp.text();
       if (/\bNaN\b|\bInfinity\b/.test(text)) {
-        console.error('Artifact ' + filename + ' contains NaN or Infinity — backend should emit valid JSON. Attempting parse with repair.');
-        text = text
-          .replace(/\bNaN\b/g, 'null')
-          .replace(/\b-Infinity\b/g, 'null')
-          .replace(/\bInfinity\b/g, 'null');
+        throw new Error('Artifact ' + filename + ' contains NaN or Infinity — backend must emit valid JSON. Fix the pipeline; do not ship malformed artifacts.');
       }
       return JSON.parse(text);
     } catch (e) {
-      console.error('Failed to parse ' + filename + ':', e);
+      console.error('Failed to load ' + filename + ':', e);
       return null;
     }
   }
