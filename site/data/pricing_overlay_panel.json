@@ -1,0 +1,1447 @@
+{
+  "title": "Monthly Pricing Overlay Panel",
+  "rows": [
+    {
+      "date": "2009-01-31",
+      "ati_baseline_bn": null,
+      "stock_excess_bills_bn": 763.5778423389924,
+      "DGS10": 287.0,
+      "THREEFYTP10": 71.89999999999999
+    },
+    {
+      "date": "2009-02-28",
+      "ati_baseline_bn": 43.12600000000002,
+      "stock_excess_bills_bn": 903.3365523691472,
+      "DGS10": 302.0,
+      "THREEFYTP10": 76.36
+    },
+    {
+      "date": "2009-03-31",
+      "ati_baseline_bn": 43.12600000000002,
+      "stock_excess_bills_bn": 905.663771446376,
+      "DGS10": 271.0,
+      "THREEFYTP10": 52.83
+    },
+    {
+      "date": "2009-04-30",
+      "ati_baseline_bn": -19.92,
+      "stock_excess_bills_bn": 849.1229453158782,
+      "DGS10": 316.0,
+      "THREEFYTP10": 78.0
+    },
+    {
+      "date": "2009-05-31",
+      "ati_baseline_bn": -19.92,
+      "stock_excess_bills_bn": 903.6328063050722,
+      "DGS10": 347.0,
+      "THREEFYTP10": 99.89
+    },
+    {
+      "date": "2009-06-30",
+      "ati_baseline_bn": -19.92,
+      "stock_excess_bills_bn": 816.2830667742263,
+      "DGS10": 353.0,
+      "THREEFYTP10": 103.22
+    },
+    {
+      "date": "2009-07-31",
+      "ati_baseline_bn": -19.92,
+      "stock_excess_bills_bn": 799.5833004262207,
+      "DGS10": 352.0,
+      "THREEFYTP10": 104.89999999999999
+    },
+    {
+      "date": "2009-08-31",
+      "ati_baseline_bn": -133.07999999999998,
+      "stock_excess_bills_bn": 819.4314199461459,
+      "DGS10": 340.0,
+      "THREEFYTP10": 96.88
+    },
+    {
+      "date": "2009-09-30",
+      "ati_baseline_bn": -133.07999999999998,
+      "stock_excess_bills_bn": 730.7558961155876,
+      "DGS10": 331.0,
+      "THREEFYTP10": 90.12
+    },
+    {
+      "date": "2009-10-31",
+      "ati_baseline_bn": -133.07999999999998,
+      "stock_excess_bills_bn": 607.9328107438566,
+      "DGS10": 341.0,
+      "THREEFYTP10": 95.19
+    },
+    {
+      "date": "2009-11-30",
+      "ati_baseline_bn": -261.747,
+      "stock_excess_bills_bn": 559.076336211004,
+      "DGS10": 321.0,
+      "THREEFYTP10": 79.64
+    },
+    {
+      "date": "2009-12-31",
+      "ati_baseline_bn": -261.747,
+      "stock_excess_bills_bn": 484.43122126778434,
+      "DGS10": 385.0,
+      "THREEFYTP10": 113.47
+    },
+    {
+      "date": "2010-01-31",
+      "ati_baseline_bn": -261.747,
+      "stock_excess_bills_bn": 388.67348747712276,
+      "DGS10": 363.0,
+      "THREEFYTP10": 100.64999999999999
+    },
+    {
+      "date": "2010-02-28",
+      "ati_baseline_bn": -20.617000000000004,
+      "stock_excess_bills_bn": 403.3067445917185,
+      "DGS10": 361.0,
+      "THREEFYTP10": 98.72999999999999
+    },
+    {
+      "date": "2010-03-31",
+      "ati_baseline_bn": -20.617000000000004,
+      "stock_excess_bills_bn": 447.2107534386206,
+      "DGS10": 384.0,
+      "THREEFYTP10": 109.08
+    },
+    {
+      "date": "2010-04-30",
+      "ati_baseline_bn": -20.617000000000004,
+      "stock_excess_bills_bn": 425.2998245346232,
+      "DGS10": 369.0,
+      "THREEFYTP10": 100.51
+    },
+    {
+      "date": "2010-05-31",
+      "ati_baseline_bn": -100.209,
+      "stock_excess_bills_bn": 423.0076953888227,
+      "DGS10": 331.0,
+      "THREEFYTP10": 80.7
+    },
+    {
+      "date": "2010-06-30",
+      "ati_baseline_bn": -100.209,
+      "stock_excess_bills_bn": 324.0920820307175,
+      "DGS10": 297.0,
+      "THREEFYTP10": 61.69
+    },
+    {
+      "date": "2010-07-31",
+      "ati_baseline_bn": -100.209,
+      "stock_excess_bills_bn": 318.3098771953383,
+      "DGS10": 294.0,
+      "THREEFYTP10": 55.910000000000004
+    },
+    {
+      "date": "2010-08-31",
+      "ati_baseline_bn": -57.094,
+      "stock_excess_bills_bn": 312.71477487172996,
+      "DGS10": 247.00000000000003,
+      "THREEFYTP10": 32.300000000000004
+    },
+    {
+      "date": "2010-09-30",
+      "ati_baseline_bn": -57.094,
+      "stock_excess_bills_bn": 258.7544162748694,
+      "DGS10": 252.99999999999997,
+      "THREEFYTP10": 31.290000000000003
+    },
+    {
+      "date": "2010-10-31",
+      "ati_baseline_bn": -57.094,
+      "stock_excess_bills_bn": 230.77081079622954,
+      "DGS10": 263.0,
+      "THREEFYTP10": 34.36
+    },
+    {
+      "date": "2010-11-30",
+      "ati_baseline_bn": -81.205,
+      "stock_excess_bills_bn": 200.76449698993997,
+      "DGS10": 281.0,
+      "THREEFYTP10": 45.43
+    },
+    {
+      "date": "2010-12-31",
+      "ati_baseline_bn": -81.205,
+      "stock_excess_bills_bn": 177.14097372812148,
+      "DGS10": 330.0,
+      "THREEFYTP10": 77.01
+    },
+    {
+      "date": "2011-01-31",
+      "ati_baseline_bn": -81.205,
+      "stock_excess_bills_bn": 146.89725787418595,
+      "DGS10": 342.0,
+      "THREEFYTP10": 77.29
+    },
+    {
+      "date": "2011-02-28",
+      "ati_baseline_bn": -141.735,
+      "stock_excess_bills_bn": 109.83650819747557,
+      "DGS10": 342.0,
+      "THREEFYTP10": 82.88
+    },
+    {
+      "date": "2011-03-31",
+      "ati_baseline_bn": -141.735,
+      "stock_excess_bills_bn": 54.607625425734454,
+      "DGS10": 347.0,
+      "THREEFYTP10": 87.35000000000001
+    },
+    {
+      "date": "2011-04-30",
+      "ati_baseline_bn": -141.735,
+      "stock_excess_bills_bn": -6.090069589491116,
+      "DGS10": 332.0,
+      "THREEFYTP10": 77.99000000000001
+    },
+    {
+      "date": "2011-05-31",
+      "ati_baseline_bn": -152.625,
+      "stock_excess_bills_bn": -88.69671050296853,
+      "DGS10": 305.0,
+      "THREEFYTP10": 60.62
+    },
+    {
+      "date": "2011-06-30",
+      "ati_baseline_bn": -152.625,
+      "stock_excess_bills_bn": -148.74183310131926,
+      "DGS10": 318.0,
+      "THREEFYTP10": 65.36999999999999
+    },
+    {
+      "date": "2011-07-31",
+      "ati_baseline_bn": -152.625,
+      "stock_excess_bills_bn": -195.47668176970348,
+      "DGS10": 282.0,
+      "THREEFYTP10": 45.800000000000004
+    },
+    {
+      "date": "2011-08-31",
+      "ati_baseline_bn": -116.634,
+      "stock_excess_bills_bn": -220.414990365739,
+      "DGS10": 223.0,
+      "THREEFYTP10": 14.09
+    },
+    {
+      "date": "2011-09-30",
+      "ati_baseline_bn": -116.634,
+      "stock_excess_bills_bn": -254.91295555374393,
+      "DGS10": 192.0,
+      "THREEFYTP10": 4.3
+    },
+    {
+      "date": "2011-10-31",
+      "ati_baseline_bn": -116.634,
+      "stock_excess_bills_bn": -271.8729505064424,
+      "DGS10": 217.0,
+      "THREEFYTP10": 16.03
+    },
+    {
+      "date": "2011-11-30",
+      "ati_baseline_bn": -11.96,
+      "stock_excess_bills_bn": -265.6189812578602,
+      "DGS10": 208.0,
+      "THREEFYTP10": 6.93
+    },
+    {
+      "date": "2011-12-31",
+      "ati_baseline_bn": -11.96,
+      "stock_excess_bills_bn": -268.1215480310389,
+      "DGS10": 189.0,
+      "THREEFYTP10": -0.4
+    },
+    {
+      "date": "2012-01-31",
+      "ati_baseline_bn": -11.96,
+      "stock_excess_bills_bn": -286.95802891471794,
+      "DGS10": 183.0,
+      "THREEFYTP10": -6.61
+    },
+    {
+      "date": "2012-02-29",
+      "ati_baseline_bn": 54.01299999999999,
+      "stock_excess_bills_bn": -229.59740534089798,
+      "DGS10": 198.0,
+      "THREEFYTP10": -0.64
+    },
+    {
+      "date": "2012-03-31",
+      "ati_baseline_bn": 54.01299999999999,
+      "stock_excess_bills_bn": -186.45604892282583,
+      "DGS10": 223.0,
+      "THREEFYTP10": 13.370000000000001
+    },
+    {
+      "date": "2012-04-30",
+      "ati_baseline_bn": 54.01299999999999,
+      "stock_excess_bills_bn": -258.5882044862862,
+      "DGS10": 195.0,
+      "THREEFYTP10": -2.04
+    },
+    {
+      "date": "2012-05-31",
+      "ati_baseline_bn": -110.774,
+      "stock_excess_bills_bn": -282.09002176076393,
+      "DGS10": 159.0,
+      "THREEFYTP10": -17.9
+    },
+    {
+      "date": "2012-06-30",
+      "ati_baseline_bn": -110.774,
+      "stock_excess_bills_bn": -297.5553242974343,
+      "DGS10": 167.0,
+      "THREEFYTP10": -16.21
+    },
+    {
+      "date": "2012-07-31",
+      "ati_baseline_bn": -110.774,
+      "stock_excess_bills_bn": -328.33019782725205,
+      "DGS10": 151.0,
+      "THREEFYTP10": -23.71
+    },
+    {
+      "date": "2012-08-31",
+      "ati_baseline_bn": 33.324000000000005,
+      "stock_excess_bills_bn": -273.25901055043795,
+      "DGS10": 157.0,
+      "THREEFYTP10": -20.29
+    },
+    {
+      "date": "2012-09-30",
+      "ati_baseline_bn": 33.324000000000005,
+      "stock_excess_bills_bn": -318.94756001848606,
+      "DGS10": 165.0,
+      "THREEFYTP10": -18.91
+    },
+    {
+      "date": "2012-10-31",
+      "ati_baseline_bn": 31.15800000000001,
+      "stock_excess_bills_bn": -337.73960956262994,
+      "DGS10": 172.0,
+      "THREEFYTP10": -13.569999999999999
+    },
+    {
+      "date": "2012-11-30",
+      "ati_baseline_bn": 31.15800000000001,
+      "stock_excess_bills_bn": -290.9118454440782,
+      "DGS10": 162.0,
+      "THREEFYTP10": -19.71
+    },
+    {
+      "date": "2012-12-31",
+      "ati_baseline_bn": 31.15800000000001,
+      "stock_excess_bills_bn": -360.6058459477981,
+      "DGS10": 178.0,
+      "THREEFYTP10": -11.74
+    },
+    {
+      "date": "2013-01-31",
+      "ati_baseline_bn": 31.15800000000001,
+      "stock_excess_bills_bn": -392.8098209936298,
+      "DGS10": 202.0,
+      "THREEFYTP10": 0.66
+    },
+    {
+      "date": "2013-02-28",
+      "ati_baseline_bn": -2.559999999999995,
+      "stock_excess_bills_bn": -293.55350623821835,
+      "DGS10": 189.0,
+      "THREEFYTP10": -6.460000000000001
+    },
+    {
+      "date": "2013-03-31",
+      "ati_baseline_bn": -2.559999999999995,
+      "stock_excess_bills_bn": -260.6886795644958,
+      "DGS10": 187.0,
+      "THREEFYTP10": -6.93
+    },
+    {
+      "date": "2013-04-30",
+      "ati_baseline_bn": -2.559999999999995,
+      "stock_excess_bills_bn": -360.06760299866215,
+      "DGS10": 170.0,
+      "THREEFYTP10": -15.079999999999998
+    },
+    {
+      "date": "2013-05-31",
+      "ati_baseline_bn": -209.519,
+      "stock_excess_bills_bn": -444.5761333446196,
+      "DGS10": 216.0,
+      "THREEFYTP10": 10.4
+    },
+    {
+      "date": "2013-06-30",
+      "ati_baseline_bn": -209.519,
+      "stock_excess_bills_bn": -481.15081241568595,
+      "DGS10": 252.0,
+      "THREEFYTP10": 32.72
+    },
+    {
+      "date": "2013-07-31",
+      "ati_baseline_bn": -12.591999999999999,
+      "stock_excess_bills_bn": -511.0705519919801,
+      "DGS10": 260.0,
+      "THREEFYTP10": 36.7
+    },
+    {
+      "date": "2013-08-31",
+      "ati_baseline_bn": -12.591999999999999,
+      "stock_excess_bills_bn": -447.54809059592424,
+      "DGS10": 278.0,
+      "THREEFYTP10": 49.2
+    },
+    {
+      "date": "2013-09-30",
+      "ati_baseline_bn": -12.591999999999999,
+      "stock_excess_bills_bn": -557.3361408158659,
+      "DGS10": 264.0,
+      "THREEFYTP10": 39.35
+    },
+    {
+      "date": "2013-10-31",
+      "ati_baseline_bn": -12.591999999999999,
+      "stock_excess_bills_bn": -560.1379470757499,
+      "DGS10": 257.0,
+      "THREEFYTP10": 33.339999999999996
+    },
+    {
+      "date": "2013-11-30",
+      "ati_baseline_bn": 54.71000000000001,
+      "stock_excess_bills_bn": -501.539040475852,
+      "DGS10": 275.0,
+      "THREEFYTP10": 41.56
+    },
+    {
+      "date": "2013-12-31",
+      "ati_baseline_bn": 54.71000000000001,
+      "stock_excess_bills_bn": -544.5465224886797,
+      "DGS10": 304.0,
+      "THREEFYTP10": 59.919999999999995
+    },
+    {
+      "date": "2014-01-31",
+      "ati_baseline_bn": 54.71000000000001,
+      "stock_excess_bills_bn": -642.5812319734741,
+      "DGS10": 267.0,
+      "THREEFYTP10": 44.04
+    },
+    {
+      "date": "2014-02-28",
+      "ati_baseline_bn": -106.10499999999999,
+      "stock_excess_bills_bn": -548.0875302633535,
+      "DGS10": 266.0,
+      "THREEFYTP10": 42.27
+    },
+    {
+      "date": "2014-03-31",
+      "ati_baseline_bn": -106.10499999999999,
+      "stock_excess_bills_bn": -532.4200688701135,
+      "DGS10": 273.0,
+      "THREEFYTP10": 49.91
+    },
+    {
+      "date": "2014-04-30",
+      "ati_baseline_bn": -294.403,
+      "stock_excess_bills_bn": -703.9997095916935,
+      "DGS10": 267.0,
+      "THREEFYTP10": 48.010000000000005
+    },
+    {
+      "date": "2014-05-31",
+      "ati_baseline_bn": -294.403,
+      "stock_excess_bills_bn": -719.7308194131618,
+      "DGS10": 248.0,
+      "THREEFYTP10": 36.1
+    },
+    {
+      "date": "2014-06-30",
+      "ati_baseline_bn": -294.403,
+      "stock_excess_bills_bn": -787.1725342992283,
+      "DGS10": 252.99999999999997,
+      "THREEFYTP10": 40.43
+    },
+    {
+      "date": "2014-07-31",
+      "ati_baseline_bn": -294.403,
+      "stock_excess_bills_bn": -779.3303032352857,
+      "DGS10": 258.0,
+      "THREEFYTP10": 44.76
+    },
+    {
+      "date": "2014-08-31",
+      "ati_baseline_bn": 3.433,
+      "stock_excess_bills_bn": -752.1511988935558,
+      "DGS10": 235.0,
+      "THREEFYTP10": 34.73
+    },
+    {
+      "date": "2014-09-30",
+      "ati_baseline_bn": 3.433,
+      "stock_excess_bills_bn": -801.9782572862621,
+      "DGS10": 252.0,
+      "THREEFYTP10": 44.76
+    },
+    {
+      "date": "2014-10-31",
+      "ati_baseline_bn": 3.433,
+      "stock_excess_bills_bn": -811.3181874966799,
+      "DGS10": 235.0,
+      "THREEFYTP10": 34.699999999999996
+    },
+    {
+      "date": "2014-11-30",
+      "ati_baseline_bn": 5.234999999999999,
+      "stock_excess_bills_bn": -795.9301299802759,
+      "DGS10": 218.00000000000003,
+      "THREEFYTP10": 27.1
+    },
+    {
+      "date": "2014-12-31",
+      "ati_baseline_bn": 5.234999999999999,
+      "stock_excess_bills_bn": -795.425854164452,
+      "DGS10": 217.0,
+      "THREEFYTP10": 28.08
+    },
+    {
+      "date": "2015-01-31",
+      "ati_baseline_bn": 5.234999999999999,
+      "stock_excess_bills_bn": -834.106498356728,
+      "DGS10": 168.0,
+      "THREEFYTP10": 2.76
+    },
+    {
+      "date": "2015-02-28",
+      "ati_baseline_bn": -7.879999999999999,
+      "stock_excess_bills_bn": -789.7707149396202,
+      "DGS10": 200.0,
+      "THREEFYTP10": 19.939999999999998
+    },
+    {
+      "date": "2015-03-31",
+      "ati_baseline_bn": -7.879999999999999,
+      "stock_excess_bills_bn": -797.9855976202978,
+      "DGS10": 194.0,
+      "THREEFYTP10": 13.200000000000001
+    },
+    {
+      "date": "2015-04-30",
+      "ati_baseline_bn": -7.879999999999999,
+      "stock_excess_bills_bn": -843.2561851300179,
+      "DGS10": 204.99999999999997,
+      "THREEFYTP10": 18.57
+    },
+    {
+      "date": "2015-05-31",
+      "ati_baseline_bn": -93.52600000000001,
+      "stock_excess_bills_bn": -836.884989083718,
+      "DGS10": 212.0,
+      "THREEFYTP10": 23.82
+    },
+    {
+      "date": "2015-06-30",
+      "ati_baseline_bn": -93.52600000000001,
+      "stock_excess_bills_bn": -893.0054051564181,
+      "DGS10": 235.0,
+      "THREEFYTP10": 34.68
+    },
+    {
+      "date": "2015-07-31",
+      "ati_baseline_bn": -93.52600000000001,
+      "stock_excess_bills_bn": -866.4289768226236,
+      "DGS10": 220.00000000000003,
+      "THREEFYTP10": 26.05
+    },
+    {
+      "date": "2015-08-31",
+      "ati_baseline_bn": -48.875,
+      "stock_excess_bills_bn": -888.403705360282,
+      "DGS10": 221.0,
+      "THREEFYTP10": 24.84
+    },
+    {
+      "date": "2015-09-30",
+      "ati_baseline_bn": -48.875,
+      "stock_excess_bills_bn": -955.6781410565638,
+      "DGS10": 206.0,
+      "THREEFYTP10": 17.62
+    },
+    {
+      "date": "2015-10-31",
+      "ati_baseline_bn": -48.875,
+      "stock_excess_bills_bn": -1031.5453986790917,
+      "DGS10": 216.0,
+      "THREEFYTP10": 22.400000000000002
+    },
+    {
+      "date": "2015-11-30",
+      "ati_baseline_bn": 29.058,
+      "stock_excess_bills_bn": -856.1008926785737,
+      "DGS10": 221.0,
+      "THREEFYTP10": 24.41
+    },
+    {
+      "date": "2015-12-31",
+      "ati_baseline_bn": 29.058,
+      "stock_excess_bills_bn": -863.2227498598302,
+      "DGS10": 227.0,
+      "THREEFYTP10": 27.76
+    },
+    {
+      "date": "2016-01-31",
+      "ati_baseline_bn": 29.058,
+      "stock_excess_bills_bn": -896.0789277253882,
+      "DGS10": 194.0,
+      "THREEFYTP10": 5.28
+    },
+    {
+      "date": "2016-02-29",
+      "ati_baseline_bn": 59.028000000000006,
+      "stock_excess_bills_bn": -844.3444302264741,
+      "DGS10": 174.0,
+      "THREEFYTP10": -4.65
+    },
+    {
+      "date": "2016-03-31",
+      "ati_baseline_bn": 59.028000000000006,
+      "stock_excess_bills_bn": -802.3456752336238,
+      "DGS10": 178.0,
+      "THREEFYTP10": -1.81
+    },
+    {
+      "date": "2016-04-30",
+      "ati_baseline_bn": 59.028000000000006,
+      "stock_excess_bills_bn": -876.9748405014659,
+      "DGS10": 183.0,
+      "THREEFYTP10": 0.66
+    },
+    {
+      "date": "2016-05-31",
+      "ati_baseline_bn": -137.876,
+      "stock_excess_bills_bn": -886.8789080834263,
+      "DGS10": 184.0,
+      "THREEFYTP10": 1.0
+    },
+    {
+      "date": "2016-06-30",
+      "ati_baseline_bn": -137.876,
+      "stock_excess_bills_bn": -909.5962173837015,
+      "DGS10": 149.0,
+      "THREEFYTP10": -18.22
+    },
+    {
+      "date": "2016-07-31",
+      "ati_baseline_bn": -137.876,
+      "stock_excess_bills_bn": -879.027744340984,
+      "DGS10": 146.0,
+      "THREEFYTP10": -18.57
+    },
+    {
+      "date": "2016-08-31",
+      "ati_baseline_bn": 102.87799999999999,
+      "stock_excess_bills_bn": -814.8840070783519,
+      "DGS10": 158.0,
+      "THREEFYTP10": -12.709999999999999
+    },
+    {
+      "date": "2016-09-30",
+      "ati_baseline_bn": 102.87799999999999,
+      "stock_excess_bills_bn": -811.9446707652178,
+      "DGS10": 160.0,
+      "THREEFYTP10": -12.479999999999999
+    },
+    {
+      "date": "2016-10-31",
+      "ati_baseline_bn": 102.87799999999999,
+      "stock_excess_bills_bn": -725.6611137436621,
+      "DGS10": 184.0,
+      "THREEFYTP10": -0.9900000000000001
+    },
+    {
+      "date": "2016-11-30",
+      "ati_baseline_bn": 137.204,
+      "stock_excess_bills_bn": -632.9100609169939,
+      "DGS10": 237.0,
+      "THREEFYTP10": 27.250000000000004
+    },
+    {
+      "date": "2016-12-31",
+      "ati_baseline_bn": 137.204,
+      "stock_excess_bills_bn": -687.8644204491541,
+      "DGS10": 245.00000000000003,
+      "THREEFYTP10": 33.22
+    },
+    {
+      "date": "2017-01-31",
+      "ati_baseline_bn": 137.204,
+      "stock_excess_bills_bn": -733.4981249095416,
+      "DGS10": 245.00000000000003,
+      "THREEFYTP10": 31.7
+    },
+    {
+      "date": "2017-02-28",
+      "ati_baseline_bn": -34.056,
+      "stock_excess_bills_bn": -748.8438594426021,
+      "DGS10": 236.0,
+      "THREEFYTP10": 26.97
+    },
+    {
+      "date": "2017-03-31",
+      "ati_baseline_bn": -34.056,
+      "stock_excess_bills_bn": -757.0401411355015,
+      "DGS10": 240.0,
+      "THREEFYTP10": 23.25
+    },
+    {
+      "date": "2017-04-30",
+      "ati_baseline_bn": -34.056,
+      "stock_excess_bills_bn": -769.0714550217479,
+      "DGS10": 229.0,
+      "THREEFYTP10": 15.040000000000001
+    },
+    {
+      "date": "2017-05-31",
+      "ati_baseline_bn": -43.688,
+      "stock_excess_bills_bn": -768.9189879274941,
+      "DGS10": 221.0,
+      "THREEFYTP10": 8.03
+    },
+    {
+      "date": "2017-06-30",
+      "ati_baseline_bn": -43.688,
+      "stock_excess_bills_bn": -803.7369850567981,
+      "DGS10": 231.0,
+      "THREEFYTP10": 10.51
+    },
+    {
+      "date": "2017-07-31",
+      "ati_baseline_bn": -43.688,
+      "stock_excess_bills_bn": -772.8747721431515,
+      "DGS10": 229.99999999999997,
+      "THREEFYTP10": 9.700000000000001
+    },
+    {
+      "date": "2017-08-31",
+      "ati_baseline_bn": 51.407,
+      "stock_excess_bills_bn": -788.9189609848258,
+      "DGS10": 212.0,
+      "THREEFYTP10": 1.87
+    },
+    {
+      "date": "2017-09-30",
+      "ati_baseline_bn": 51.407,
+      "stock_excess_bills_bn": -754.0262525509875,
+      "DGS10": 233.0,
+      "THREEFYTP10": 11.17
+    },
+    {
+      "date": "2017-10-31",
+      "ati_baseline_bn": 51.407,
+      "stock_excess_bills_bn": -713.3332797179341,
+      "DGS10": 238.0,
+      "THREEFYTP10": 13.469999999999999
+    },
+    {
+      "date": "2017-11-30",
+      "ati_baseline_bn": 95.559,
+      "stock_excess_bills_bn": -627.8474781470497,
+      "DGS10": 242.0,
+      "THREEFYTP10": 12.9
+    },
+    {
+      "date": "2017-12-31",
+      "ati_baseline_bn": 95.559,
+      "stock_excess_bills_bn": -650.5102102549578,
+      "DGS10": 240.0,
+      "THREEFYTP10": 12.33
+    },
+    {
+      "date": "2018-01-31",
+      "ati_baseline_bn": 243.678,
+      "stock_excess_bills_bn": -645.6787356765757,
+      "DGS10": 272.0,
+      "THREEFYTP10": 27.42
+    },
+    {
+      "date": "2018-02-28",
+      "ati_baseline_bn": 243.678,
+      "stock_excess_bills_bn": -564.0632250928659,
+      "DGS10": 287.0,
+      "THREEFYTP10": 32.1
+    },
+    {
+      "date": "2018-03-31",
+      "ati_baseline_bn": 243.678,
+      "stock_excess_bills_bn": -401.08346280161595,
+      "DGS10": 274.0,
+      "THREEFYTP10": 23.5
+    },
+    {
+      "date": "2018-04-30",
+      "ati_baseline_bn": 243.678,
+      "stock_excess_bills_bn": -503.99377272185586,
+      "DGS10": 295.0,
+      "THREEFYTP10": 32.93
+    },
+    {
+      "date": "2018-05-31",
+      "ati_baseline_bn": -144.456,
+      "stock_excess_bills_bn": -505.1088899237501,
+      "DGS10": 283.0,
+      "THREEFYTP10": 24.81
+    },
+    {
+      "date": "2018-06-30",
+      "ati_baseline_bn": -144.456,
+      "stock_excess_bills_bn": -538.8522554160319,
+      "DGS10": 285.0,
+      "THREEFYTP10": 26.029999999999998
+    },
+    {
+      "date": "2018-07-31",
+      "ati_baseline_bn": -144.456,
+      "stock_excess_bills_bn": -509.4583704987737,
+      "DGS10": 296.0,
+      "THREEFYTP10": 29.79
+    },
+    {
+      "date": "2018-08-31",
+      "ati_baseline_bn": 22.826000000000008,
+      "stock_excess_bills_bn": -413.40769117189944,
+      "DGS10": 286.0,
+      "THREEFYTP10": 22.06
+    },
+    {
+      "date": "2018-09-30",
+      "ati_baseline_bn": 22.826000000000008,
+      "stock_excess_bills_bn": -510.1118553374978,
+      "DGS10": 305.0,
+      "THREEFYTP10": 30.959999999999997
+    },
+    {
+      "date": "2018-10-31",
+      "ati_baseline_bn": 23.516999999999996,
+      "stock_excess_bills_bn": -506.4199005732279,
+      "DGS10": 315.0,
+      "THREEFYTP10": 31.6
+    },
+    {
+      "date": "2018-11-30",
+      "ati_baseline_bn": 23.516999999999996,
+      "stock_excess_bills_bn": -411.7195428403942,
+      "DGS10": 301.0,
+      "THREEFYTP10": 23.799999999999997
+    },
+    {
+      "date": "2018-12-31",
+      "ati_baseline_bn": 23.516999999999996,
+      "stock_excess_bills_bn": -471.30265973129593,
+      "DGS10": 269.0,
+      "THREEFYTP10": 4.97
+    },
+    {
+      "date": "2019-01-31",
+      "ati_baseline_bn": 51.328,
+      "stock_excess_bills_bn": -512.5076230076319,
+      "DGS10": 263.0,
+      "THREEFYTP10": 1.82
+    },
+    {
+      "date": "2019-02-28",
+      "ati_baseline_bn": 51.328,
+      "stock_excess_bills_bn": -442.49986382332986,
+      "DGS10": 273.0,
+      "THREEFYTP10": 5.2
+    },
+    {
+      "date": "2019-03-31",
+      "ati_baseline_bn": 51.328,
+      "stock_excess_bills_bn": -388.966493601088,
+      "DGS10": 241.0,
+      "THREEFYTP10": -10.5
+    },
+    {
+      "date": "2019-04-30",
+      "ati_baseline_bn": 51.328,
+      "stock_excess_bills_bn": -474.5709626570755,
+      "DGS10": 250.99999999999997,
+      "THREEFYTP10": -5.46
+    },
+    {
+      "date": "2019-05-31",
+      "ati_baseline_bn": -234.33700000000002,
+      "stock_excess_bills_bn": -515.4789678330715,
+      "DGS10": 214.0,
+      "THREEFYTP10": -22.98
+    },
+    {
+      "date": "2019-06-30",
+      "ati_baseline_bn": -234.33700000000002,
+      "stock_excess_bills_bn": -616.6280367280201,
+      "DGS10": 200.0,
+      "THREEFYTP10": -26.8
+    },
+    {
+      "date": "2019-07-31",
+      "ati_baseline_bn": 48.20700000000001,
+      "stock_excess_bills_bn": -668.3684256147816,
+      "DGS10": 202.0,
+      "THREEFYTP10": -23.98
+    },
+    {
+      "date": "2019-08-31",
+      "ati_baseline_bn": 48.20700000000001,
+      "stock_excess_bills_bn": -574.4201140125493,
+      "DGS10": 150.0,
+      "THREEFYTP10": -48.38
+    },
+    {
+      "date": "2019-09-30",
+      "ati_baseline_bn": 48.20700000000001,
+      "stock_excess_bills_bn": -565.5633281830778,
+      "DGS10": 168.0,
+      "THREEFYTP10": -36.77
+    },
+    {
+      "date": "2019-10-31",
+      "ati_baseline_bn": -23.375,
+      "stock_excess_bills_bn": -516.4668897569418,
+      "DGS10": 169.0,
+      "THREEFYTP10": -29.73
+    },
+    {
+      "date": "2019-11-30",
+      "ati_baseline_bn": -23.375,
+      "stock_excess_bills_bn": -477.86607016944987,
+      "DGS10": 178.0,
+      "THREEFYTP10": -25.69
+    },
+    {
+      "date": "2019-12-31",
+      "ati_baseline_bn": -23.375,
+      "stock_excess_bills_bn": -585.92028340654,
+      "DGS10": 192.0,
+      "THREEFYTP10": -18.759999999999998
+    },
+    {
+      "date": "2020-01-31",
+      "ati_baseline_bn": -23.375,
+      "stock_excess_bills_bn": -605.3096113874876,
+      "DGS10": 151.0,
+      "THREEFYTP10": -39.98
+    },
+    {
+      "date": "2020-02-29",
+      "ati_baseline_bn": 174.554,
+      "stock_excess_bills_bn": -480.75144316151386,
+      "DGS10": 112.99999999999999,
+      "THREEFYTP10": -55.730000000000004
+    },
+    {
+      "date": "2020-03-31",
+      "ati_baseline_bn": 174.554,
+      "stock_excess_bills_bn": -431.8658667852983,
+      "DGS10": 70.0,
+      "THREEFYTP10": -52.03
+    },
+    {
+      "date": "2020-04-30",
+      "ati_baseline_bn": 174.554,
+      "stock_excess_bills_bn": 665.3644786618141,
+      "DGS10": 64.0,
+      "THREEFYTP10": -56.910000000000004
+    },
+    {
+      "date": "2020-05-31",
+      "ati_baseline_bn": 1845.3100000000002,
+      "stock_excess_bills_bn": 1168.151541891494,
+      "DGS10": 65.0,
+      "THREEFYTP10": -59.040000000000006
+    },
+    {
+      "date": "2020-06-30",
+      "ati_baseline_bn": 1845.3100000000002,
+      "stock_excess_bills_bn": 1496.5523811422872,
+      "DGS10": 66.0,
+      "THREEFYTP10": -60.550000000000004
+    },
+    {
+      "date": "2020-07-31",
+      "ati_baseline_bn": 1845.3100000000002,
+      "stock_excess_bills_bn": 1477.525407643506,
+      "DGS10": 55.00000000000001,
+      "THREEFYTP10": -64.71000000000001
+    },
+    {
+      "date": "2020-08-31",
+      "ati_baseline_bn": -221.159,
+      "stock_excess_bills_bn": 1442.38709666419,
+      "DGS10": 72.0,
+      "THREEFYTP10": -57.809999999999995
+    },
+    {
+      "date": "2020-09-30",
+      "ati_baseline_bn": -221.159,
+      "stock_excess_bills_bn": 1361.4183704087422,
+      "DGS10": 69.0,
+      "THREEFYTP10": -59.78
+    },
+    {
+      "date": "2020-10-31",
+      "ati_baseline_bn": -221.159,
+      "stock_excess_bills_bn": 1305.7386747326404,
+      "DGS10": 88.0,
+      "THREEFYTP10": -50.449999999999996
+    },
+    {
+      "date": "2020-11-30",
+      "ati_baseline_bn": -497.98799999999994,
+      "stock_excess_bills_bn": 1219.0297654137044,
+      "DGS10": 84.0,
+      "THREEFYTP10": -50.839999999999996
+    },
+    {
+      "date": "2020-12-31",
+      "ati_baseline_bn": -497.98799999999994,
+      "stock_excess_bills_bn": 1187.6694240647205,
+      "DGS10": 93.0,
+      "THREEFYTP10": -48.49
+    },
+    {
+      "date": "2021-01-31",
+      "ati_baseline_bn": -497.98799999999994,
+      "stock_excess_bills_bn": 1166.1363729797213,
+      "DGS10": 111.00000000000001,
+      "THREEFYTP10": -40.410000000000004
+    },
+    {
+      "date": "2021-02-28",
+      "ati_baseline_bn": -411.11,
+      "stock_excess_bills_bn": 1050.4992726648682,
+      "DGS10": 144.0,
+      "THREEFYTP10": -18.07
+    },
+    {
+      "date": "2021-03-31",
+      "ati_baseline_bn": -411.11,
+      "stock_excess_bills_bn": 819.1805190190379,
+      "DGS10": 174.0,
+      "THREEFYTP10": -3.74
+    },
+    {
+      "date": "2021-04-30",
+      "ati_baseline_bn": -411.11,
+      "stock_excess_bills_bn": 677.8167008050852,
+      "DGS10": 165.0,
+      "THREEFYTP10": -8.260000000000002
+    },
+    {
+      "date": "2021-05-31",
+      "ati_baseline_bn": -708.845,
+      "stock_excess_bills_bn": 521.2388091331518,
+      "DGS10": 158.0,
+      "THREEFYTP10": -11.559999999999999
+    },
+    {
+      "date": "2021-06-30",
+      "ati_baseline_bn": -708.845,
+      "stock_excess_bills_bn": 362.0674338595224,
+      "DGS10": 145.0,
+      "THREEFYTP10": -14.66
+    },
+    {
+      "date": "2021-07-31",
+      "ati_baseline_bn": -708.845,
+      "stock_excess_bills_bn": 236.38915485228813,
+      "DGS10": 124.0,
+      "THREEFYTP10": -26.8
+    },
+    {
+      "date": "2021-08-31",
+      "ati_baseline_bn": -15.591999999999999,
+      "stock_excess_bills_bn": 90.31894734398405,
+      "DGS10": 130.0,
+      "THREEFYTP10": -23.39
+    },
+    {
+      "date": "2021-09-30",
+      "ati_baseline_bn": -15.591999999999999,
+      "stock_excess_bills_bn": -224.04782991590787,
+      "DGS10": 152.0,
+      "THREEFYTP10": -10.31
+    },
+    {
+      "date": "2021-10-31",
+      "ati_baseline_bn": -15.591999999999999,
+      "stock_excess_bills_bn": -131.6688309871296,
+      "DGS10": 155.0,
+      "THREEFYTP10": -4.41
+    },
+    {
+      "date": "2021-11-30",
+      "ati_baseline_bn": 73.324,
+      "stock_excess_bills_bn": -237.19292590457573,
+      "DGS10": 143.0,
+      "THREEFYTP10": -8.219999999999999
+    },
+    {
+      "date": "2021-12-31",
+      "ati_baseline_bn": 73.324,
+      "stock_excess_bills_bn": -296.1509129726466,
+      "DGS10": 152.0,
+      "THREEFYTP10": -5.88
+    },
+    {
+      "date": "2022-01-31",
+      "ati_baseline_bn": 73.324,
+      "stock_excess_bills_bn": -164.35032219221128,
+      "DGS10": 179.0,
+      "THREEFYTP10": 7.21
+    },
+    {
+      "date": "2022-02-28",
+      "ati_baseline_bn": -416.838,
+      "stock_excess_bills_bn": -120.27150442894931,
+      "DGS10": 183.0,
+      "THREEFYTP10": 7.68
+    },
+    {
+      "date": "2022-03-31",
+      "ati_baseline_bn": -416.838,
+      "stock_excess_bills_bn": -262.53930515909616,
+      "DGS10": 231.99999999999997,
+      "THREEFYTP10": 32.0
+    },
+    {
+      "date": "2022-04-30",
+      "ati_baseline_bn": -416.838,
+      "stock_excess_bills_bn": -357.90341126455775,
+      "DGS10": 289.0,
+      "THREEFYTP10": 53.400000000000006
+    },
+    {
+      "date": "2022-05-31",
+      "ati_baseline_bn": 104.328,
+      "stock_excess_bills_bn": -522.3646399334315,
+      "DGS10": 285.0,
+      "THREEFYTP10": 44.17
+    },
+    {
+      "date": "2022-06-30",
+      "ati_baseline_bn": 104.328,
+      "stock_excess_bills_bn": -672.1594614128154,
+      "DGS10": 298.0,
+      "THREEFYTP10": 38.9
+    },
+    {
+      "date": "2022-07-31",
+      "ati_baseline_bn": 104.328,
+      "stock_excess_bills_bn": -688.9182680443341,
+      "DGS10": 267.0,
+      "THREEFYTP10": 5.4399999999999995
+    },
+    {
+      "date": "2022-08-31",
+      "ati_baseline_bn": 1.149000000000001,
+      "stock_excess_bills_bn": -536.5131271160938,
+      "DGS10": 315.0,
+      "THREEFYTP10": 24.19
+    },
+    {
+      "date": "2022-09-30",
+      "ati_baseline_bn": 1.149000000000001,
+      "stock_excess_bills_bn": -620.3221091581097,
+      "DGS10": 383.0,
+      "THREEFYTP10": 51.690000000000005
+    },
+    {
+      "date": "2022-10-31",
+      "ati_baseline_bn": 1.149000000000001,
+      "stock_excess_bills_bn": -607.8489392400197,
+      "DGS10": 409.99999999999994,
+      "THREEFYTP10": 50.55
+    },
+    {
+      "date": "2022-11-30",
+      "ati_baseline_bn": 231.158,
+      "stock_excess_bills_bn": -499.7249032725883,
+      "DGS10": 368.0,
+      "THREEFYTP10": 19.96
+    },
+    {
+      "date": "2022-12-31",
+      "ati_baseline_bn": 231.158,
+      "stock_excess_bills_bn": -611.6878225895899,
+      "DGS10": 388.0,
+      "THREEFYTP10": 28.01
+    },
+    {
+      "date": "2023-01-31",
+      "ati_baseline_bn": 231.158,
+      "stock_excess_bills_bn": -404.0962264074317,
+      "DGS10": 352.0,
+      "THREEFYTP10": 2.55
+    },
+    {
+      "date": "2023-02-28",
+      "ati_baseline_bn": 310.267,
+      "stock_excess_bills_bn": -313.0830582259179,
+      "DGS10": 392.0,
+      "THREEFYTP10": 25.8
+    },
+    {
+      "date": "2023-03-31",
+      "ati_baseline_bn": 310.267,
+      "stock_excess_bills_bn": -319.97059714956583,
+      "DGS10": 348.0,
+      "THREEFYTP10": 3.05
+    },
+    {
+      "date": "2023-04-30",
+      "ati_baseline_bn": 310.267,
+      "stock_excess_bills_bn": -428.79781974284975,
+      "DGS10": 344.0,
+      "THREEFYTP10": -6.35
+    },
+    {
+      "date": "2023-05-31",
+      "ati_baseline_bn": 692.96,
+      "stock_excess_bills_bn": -385.6514298434199,
+      "DGS10": 364.0,
+      "THREEFYTP10": -1.8599999999999999
+    },
+    {
+      "date": "2023-06-30",
+      "ati_baseline_bn": 692.96,
+      "stock_excess_bills_bn": -12.899209385560994,
+      "DGS10": 381.0,
+      "THREEFYTP10": 10.190000000000001
+    },
+    {
+      "date": "2023-07-31",
+      "ati_baseline_bn": 692.96,
+      "stock_excess_bills_bn": 245.67534495745272,
+      "DGS10": 397.0,
+      "THREEFYTP10": 14.62
+    },
+    {
+      "date": "2023-08-31",
+      "ati_baseline_bn": 284.063,
+      "stock_excess_bills_bn": 487.9610681629666,
+      "DGS10": 409.0,
+      "THREEFYTP10": 20.64
+    },
+    {
+      "date": "2023-09-30",
+      "ati_baseline_bn": 284.063,
+      "stock_excess_bills_bn": 624.7440472594208,
+      "DGS10": 459.0,
+      "THREEFYTP10": 47.0
+    },
+    {
+      "date": "2023-10-31",
+      "ati_baseline_bn": 284.063,
+      "stock_excess_bills_bn": 776.3743649173254,
+      "DGS10": 488.0,
+      "THREEFYTP10": 62.31
+    },
+    {
+      "date": "2023-11-30",
+      "ati_baseline_bn": 262.237,
+      "stock_excess_bills_bn": 942.2025455326605,
+      "DGS10": 437.0,
+      "THREEFYTP10": 34.489999999999995
+    },
+    {
+      "date": "2023-12-31",
+      "ati_baseline_bn": 262.237,
+      "stock_excess_bills_bn": 928.8736600533207,
+      "DGS10": 388.0,
+      "THREEFYTP10": 9.17
+    },
+    {
+      "date": "2024-01-31",
+      "ati_baseline_bn": -332.88300000000004,
+      "stock_excess_bills_bn": 1008.3830296009006,
+      "DGS10": 399.0,
+      "THREEFYTP10": 17.09
+    },
+    {
+      "date": "2024-02-29",
+      "ati_baseline_bn": -332.88300000000004,
+      "stock_excess_bills_bn": 1183.8433618629867,
+      "DGS10": 425.0,
+      "THREEFYTP10": 30.95
+    },
+    {
+      "date": "2024-03-31",
+      "ati_baseline_bn": -332.88300000000004,
+      "stock_excess_bills_bn": 1211.593914217158,
+      "DGS10": 420.0,
+      "THREEFYTP10": 27.32
+    },
+    {
+      "date": "2024-04-30",
+      "ati_baseline_bn": -332.88300000000004,
+      "stock_excess_bills_bn": 1021.4568262523644,
+      "DGS10": 469.00000000000006,
+      "THREEFYTP10": 52.51
+    },
+    {
+      "date": "2024-05-31",
+      "ati_baseline_bn": 86.922,
+      "stock_excess_bills_bn": 999.1904625199165,
+      "DGS10": 451.0,
+      "THREEFYTP10": 44.18
+    },
+    {
+      "date": "2024-06-30",
+      "ati_baseline_bn": 86.922,
+      "stock_excess_bills_bn": 896.8311326158794,
+      "DGS10": 436.00000000000006,
+      "THREEFYTP10": 33.12
+    },
+    {
+      "date": "2024-07-31",
+      "ati_baseline_bn": 80.80399999999999,
+      "stock_excess_bills_bn": 990.5543065431203,
+      "DGS10": 409.0,
+      "THREEFYTP10": 21.97
+    },
+    {
+      "date": "2024-08-31",
+      "ati_baseline_bn": 80.80399999999999,
+      "stock_excess_bills_bn": 1154.5478474284207,
+      "DGS10": 391.0,
+      "THREEFYTP10": 14.799999999999999
+    },
+    {
+      "date": "2024-09-30",
+      "ati_baseline_bn": 80.80399999999999,
+      "stock_excess_bills_bn": 1013.6599348349483,
+      "DGS10": 381.0,
+      "THREEFYTP10": 19.45
+    },
+    {
+      "date": "2024-10-31",
+      "ati_baseline_bn": -178.73499999999999,
+      "stock_excess_bills_bn": 1148.4390112535723,
+      "DGS10": 428.0,
+      "THREEFYTP10": 48.9
+    },
+    {
+      "date": "2024-11-30",
+      "ati_baseline_bn": -178.73499999999999,
+      "stock_excess_bills_bn": 1309.6124911639126,
+      "DGS10": 418.0,
+      "THREEFYTP10": 44.89
+    },
+    {
+      "date": "2024-12-31",
+      "ati_baseline_bn": -178.73499999999999,
+      "stock_excess_bills_bn": 1096.3617123365723,
+      "DGS10": 458.0,
+      "THREEFYTP10": 68.72
+    },
+    {
+      "date": "2025-01-31",
+      "ati_baseline_bn": -178.73499999999999,
+      "stock_excess_bills_bn": 1246.5314073746222,
+      "DGS10": 458.0,
+      "THREEFYTP10": 68.36
+    },
+    {
+      "date": "2025-02-28",
+      "ati_baseline_bn": -393.793,
+      "stock_excess_bills_bn": 1214.8125028462111,
+      "DGS10": 424.0,
+      "THREEFYTP10": 50.629999999999995
+    },
+    {
+      "date": "2025-03-31",
+      "ati_baseline_bn": -393.793,
+      "stock_excess_bills_bn": 1010.2813546966007,
+      "DGS10": 423.00000000000006,
+      "THREEFYTP10": 49.88
+    },
+    {
+      "date": "2025-04-30",
+      "ati_baseline_bn": 513.663,
+      "stock_excess_bills_bn": 916.382195622002,
+      "DGS10": 417.0,
+      "THREEFYTP10": 43.5
+    },
+    {
+      "date": "2025-05-31",
+      "ati_baseline_bn": 513.663,
+      "stock_excess_bills_bn": 857.099408744117,
+      "DGS10": 441.0,
+      "THREEFYTP10": 55.15
+    },
+    {
+      "date": "2025-06-30",
+      "ati_baseline_bn": 513.663,
+      "stock_excess_bills_bn": 625.7492152580332,
+      "DGS10": 424.0,
+      "THREEFYTP10": 46.03
+    },
+    {
+      "date": "2025-07-31",
+      "ati_baseline_bn": 44.278000000000006,
+      "stock_excess_bills_bn": 781.3166619901607,
+      "DGS10": 437.0,
+      "THREEFYTP10": 52.62
+    },
+    {
+      "date": "2025-08-31",
+      "ati_baseline_bn": 44.278000000000006,
+      "stock_excess_bills_bn": 1075.7745297526267,
+      "DGS10": 423.00000000000006,
+      "THREEFYTP10": 47.27
+    },
+    {
+      "date": "2025-09-30",
+      "ati_baseline_bn": 44.278000000000006,
+      "stock_excess_bills_bn": 1048.3966527617924,
+      "DGS10": 416.0,
+      "THREEFYTP10": 50.31
+    },
+    {
+      "date": "2025-10-31",
+      "ati_baseline_bn": 44.278000000000006,
+      "stock_excess_bills_bn": 1193.4526905092894,
+      "DGS10": 411.00000000000006,
+      "THREEFYTP10": 49.75
+    },
+    {
+      "date": "2025-11-30",
+      "ati_baseline_bn": 44.278000000000006,
+      "stock_excess_bills_bn": 1287.6554574392408,
+      "DGS10": 401.99999999999994,
+      "THREEFYTP10": 45.07
+    },
+    {
+      "date": "2025-12-31",
+      "ati_baseline_bn": 44.278000000000006,
+      "stock_excess_bills_bn": 1098.4183605764943,
+      "DGS10": 418.0,
+      "THREEFYTP10": 57.099999999999994
+    },
+    {
+      "date": "2026-01-31",
+      "ati_baseline_bn": 44.278000000000006,
+      "stock_excess_bills_bn": 1133.4652894225458,
+      "DGS10": 426.0,
+      "THREEFYTP10": 61.480000000000004
+    },
+    {
+      "date": "2026-02-28",
+      "ati_baseline_bn": 44.278000000000006,
+      "stock_excess_bills_bn": 1297.150319053387,
+      "DGS10": 397.0,
+      "THREEFYTP10": 46.27
+    }
+  ]
+}

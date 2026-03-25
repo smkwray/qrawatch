@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QRA Watch &mdash; In-Progress Treasury Maturity Composition Research</title>
-  <meta name="description" content="In-progress public research project tracking Treasury maturity composition, QRA announcements, duration supply, and market plumbing using public data.">
+  <title>QRA Watch &mdash; Treasury Maturity Composition Research</title>
+  <meta name="description" content="Public research project measuring Treasury maturity composition, duration supply, market plumbing, and reduced-form pricing using official data. All outputs are artifact-driven from published backend tables.">
   <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,163 +14,160 @@
 </head>
 <body>
 
-<header>
-  <div class="container header-bar">
-    <div>
-      <h1>QRA Watch</h1>
-      <p class="subtitle">In-progress public research on Treasury maturity composition, QRA announcements, and duration supply</p>
+<!-- ── Hero ── -->
+<header id="hero">
+  <div class="container">
+    <div class="hero-top">
+      <div class="hero-text">
+        <h1>QRA Watch</h1>
+        <p class="hero-subtitle">Treasury Maturity Composition Research</p>
+        <p class="hero-desc">
+          An open, artifact-driven research project measuring whether Treasury's bill-versus-coupon
+          mix operates like a shadow form of balance-sheet policy&mdash;changing public duration supply,
+          term premia, and market plumbing. All data is sourced from public APIs and official filings.
+        </p>
+      </div>
+      <button id="themeToggle" class="theme-toggle" onclick="qraToggleTheme()" aria-label="Toggle theme">&#9790;</button>
     </div>
-    <button id="themeToggle" class="theme-toggle" onclick="qraToggleTheme()" aria-label="Toggle theme">&#9790;</button>
+    <div class="hero-strip" id="hero-strip">
+      <span class="hero-chip" id="hero-chip-coverage">Loading&hellip;</span>
+      <span class="hero-chip" id="hero-chip-artifacts">Loading&hellip;</span>
+      <span class="hero-chip" id="hero-chip-updated">Loading&hellip;</span>
+    </div>
+    <div class="hero-ctas">
+      <a href="#composition" class="hero-cta hero-cta-primary">View main charts</a>
+      <a href="#evidence" class="hero-cta">Read claim boundary</a>
+      <a href="#provenance" class="hero-cta">Methods &amp; provenance</a>
+    </div>
   </div>
 </header>
 
-  <nav id="main-nav">
+<!-- ── Sticky Nav ── -->
+<nav id="main-nav">
   <div class="container">
-    <a href="#overview" class="active">Overview</a>
-    <a href="#capture">Treasury Maturity Composition</a>
-    <a href="#events">Events</a>
-    <a href="#methods">Methods</a>
-    <a href="#plumbing">Plumbing</a>
-    <a href="#duration">Duration</a>
+    <a href="#evidence" class="active">Evidence</a>
+    <a href="#findings">Findings</a>
+    <a href="#composition">Composition</a>
+    <a href="#mechanism">Mechanism</a>
     <a href="#pricing">Pricing</a>
-    <a href="#extensions">Extensions</a>
+    <a href="#causal">Causal Lane</a>
     <a href="#provenance">Provenance</a>
+    <a href="#extensions">Extensions</a>
   </div>
 </nav>
 
 <main>
 
-  <section id="overview">
+  <!-- ── Evidence Boundary ── -->
+  <section id="evidence">
     <div class="container">
-      <h2 class="section-title">Project Overview</h2>
+      <h2 class="section-title">Evidence Hierarchy &amp; Claim Boundary</h2>
       <p class="section-desc">
-        This project measures Treasury maturity composition using public data. It tracks coupon shortfall
-        relative to a bill-share baseline, studies announcement effects around Quarterly Refunding
-        Announcements, traces transmission through the bills / reserves / ON&nbsp;RRP channel, and nests
-        Treasury issuance inside a broader public-duration-supply framework. All data is sourced from public APIs and filings:
-        FiscalData, FRED, Treasury QRA documents, and SEC EDGAR.
+        This project maintains an explicit boundary between what the current evidence can and cannot support.
+        The sections below separate headline measurement, reduced-form pricing, and bounded causal evidence.
       </p>
-      <p class="section-desc" id="overview-coverage">Loading exact official quarter coverage&hellip;</p>
-      <h3 class="section-subtitle">Dataset Readiness</h3>
-      <div id="overview-content">
-        <p class="loading">Loading status&hellip;</p>
+      <div id="evidence-content">
+        <p class="loading">Loading claim boundary&hellip;</p>
       </div>
     </div>
   </section>
 
-  <section id="capture">
+  <!-- ── Key Findings ── -->
+  <section id="findings">
+    <div class="container">
+      <h2 class="section-title">Current State</h2>
+      <p class="section-desc">
+        High-level status of each research lane, sourced from backend artifact metadata.
+      </p>
+      <div id="findings-content">
+        <p class="loading">Loading findings&hellip;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Treasury Maturity Composition ── -->
+  <section id="composition">
     <div class="container">
       <h2 class="section-title">Treasury Maturity Composition</h2>
       <p class="section-desc">
-        The headline table is official-first and shows the exact official quarter panel.
-        Seed and forecast rows are kept separate as non-headline context. Official quarterly refunding
-        data is reconstructed from Treasury auction settlements and QRA documents. Three robustness
-        baselines (15%, 18%, 20% bill share) are computed for each quarter.
+        The headline measurement object. Official quarterly financing data is reconstructed from
+        Treasury auction settlements and QRA documents. The Maturity-Tilt Flow measures coupon
+        shortfall relative to an 18% bill-share baseline&mdash;positive values mean more bill-heavy financing.
       </p>
-      <div id="capture-content">
-        <p class="loading">Loading data&hellip;</p>
+      <div id="composition-content">
+        <p class="loading">Loading composition data&hellip;</p>
       </div>
     </div>
   </section>
 
-  <section id="events">
+  <!-- ── Mechanism: Plumbing + Duration ── -->
+  <section id="mechanism">
     <div class="container">
-      <h2 class="section-title">QRA Event Study</h2>
+      <h2 class="section-title">Transmission Mechanism</h2>
       <p class="section-desc">
-        Market reactions around Quarterly Refunding Announcements, classified by expected policy direction.
-        Easing events (coupon restraint) should lower yields and term premia;
-        tightening events (more duration supply) should raise them. The current event sample is still
-        small, so these results should be read as suggestive rather than definitive.
+        Two headline channels through which maturity composition may affect markets:
+        the bills/reserves/ON&nbsp;RRP substitution channel (plumbing) and the broader
+        public duration supply framework.
       </p>
-      <div id="events-content">
-        <p class="loading">Loading data&hellip;</p>
+      <div id="mechanism-content">
+        <p class="loading">Loading mechanism data&hellip;</p>
       </div>
     </div>
   </section>
 
-  <section id="methods">
-    <div class="container">
-      <h2 class="section-title">Methods &amp; Identification</h2>
-      <p class="section-desc">
-        Data-driven ledgers for the current QRA treatment contract, the shock crosswalk, the event usability grid,
-        and the absorption bridge. These surfaces are generated from published tables and remain explicit about what
-        is reviewed, provisional, or still missing.
-      </p>
-      <div id="methods-content">
-        <p class="loading">Loading data&hellip;</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="plumbing">
-    <div class="container">
-      <h2 class="section-title">Plumbing: Bills, Reserves &amp; ON&nbsp;RRP</h2>
-      <p class="section-desc">
-        Weekly regressions testing whether bill-heavy financing is associated with larger declines in
-        ON&nbsp;RRP and smaller declines in reserve balances, consistent with a substitution channel
-        where bills absorb money-market liquidity that would otherwise sit in the Fed&rsquo;s facilities.
-      </p>
-      <div id="plumbing-content">
-        <p class="loading">Loading data&hellip;</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="duration">
-    <div class="container">
-      <h2 class="section-title">Public Duration Supply</h2>
-      <p class="section-desc">
-        A joint measure of Treasury non-bill issuance, Fed QT, and buybacks.
-        Higher values indicate more duration supply to the public.
-        The headline measure uses exact net issuance; the provisional construction uses gross
-        coupon flows as a fallback.
-      </p>
-      <div id="duration-content">
-        <p class="loading">Loading data&hellip;</p>
-      </div>
-    </div>
-  </section>
-
+  <!-- ── Pricing ── -->
   <section id="pricing">
     <div class="container">
       <h2 class="section-title">Pricing: Rates &amp; Term Premium</h2>
       <p class="section-desc">
-        Reduced-form pricing regressions linking release-level Maturity-Tilt Flow,
-        monthly carry-forward context specs, Excess Bills Stock, and Public Duration Supply
-        to the 10-year yield and 10-year term premium proxy. These outputs remain
-        supporting/provisional in interpretation. The unique-release fixed-horizon flow
-        design is the repo&rsquo;s main release-level credibility test, but the monthly flow
-        result still remains the strongest reduced-form signal in the current outputs.
+        Reduced-form pricing regressions linking maturity composition to long rates and term premia.
+        This layer is published as supporting/provisional evidence&mdash;not a settled structural claim.
       </p>
       <div id="pricing-content">
-        <p class="loading">Loading data&hellip;</p>
+        <p class="loading">Loading pricing data&hellip;</p>
       </div>
     </div>
   </section>
 
-  <section id="extensions">
+  <!-- ── Bounded QRA Causal Lane ── -->
+  <section id="causal">
     <div class="container">
-      <h2 class="section-title">Extensions</h2>
+      <h2 class="section-title">Bounded QRA Causal Lane</h2>
       <p class="section-desc">
-        Supplementary datasets that provide supporting context on investor composition,
-        dealer positioning, and money market fund holdings. These modules are visible as
-        supporting status/context surfaces, not as headline empirical conclusions.
+        A narrower, bounded supporting lane. The event-causal surface is currently a small
+        post-2022Q3 financing pilot&mdash;not a settled full-sample design. This section is
+        separate from the broader pricing results and should be read as supporting rather than headline evidence.
       </p>
-      <div id="extensions-content">
-        <p class="loading">Loading data&hellip;</p>
+      <div id="causal-content">
+        <p class="loading">Loading causal data&hellip;</p>
       </div>
     </div>
   </section>
 
+  <!-- ── Provenance & Methods ── -->
   <section id="provenance">
     <div class="container">
-      <h2 class="section-title">Provenance &amp; Data Status</h2>
+      <h2 class="section-title">Methods, Provenance &amp; Data Status</h2>
       <p class="section-desc">
-        Complete status of every dataset, extension module, series definition, and data source
-        used in this project. All outputs are regenerated from source via <code>make regenerate</code>.
+        This site reads only from published backend artifacts. No raw or interim data is
+        accessed by the frontend. All outputs are regenerated from source via <code>make regenerate</code>.
       </p>
       <div id="provenance-content">
-        <p class="loading">Loading data&hellip;</p>
+        <p class="loading">Loading provenance data&hellip;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Extensions ── -->
+  <section id="extensions">
+    <div class="container">
+      <h2 class="section-title">Supporting Extensions</h2>
+      <p class="section-desc">
+        Supplementary datasets providing context on investor composition, dealer positioning,
+        and money market fund holdings. These are supporting status surfaces, not headline empirical conclusions.
+      </p>
+      <div id="extensions-content">
+        <p class="loading">Loading extensions&hellip;</p>
       </div>
     </div>
   </section>
@@ -188,7 +185,7 @@
           The project does not claim activist intent. It measures observable issuance composition
           and related market outcomes using public data.
         </p>
-        <p style="margin-top: 8px;">
+        <p class="footer-sources">
           Public data sources:
           <a href="https://fiscaldata.treasury.gov" target="_blank" rel="noopener">FiscalData</a>,
           <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a>,
@@ -197,10 +194,10 @@
         </p>
       </div>
       <div>
-        <h3>Regeneration</h3>
+        <h3>Architecture</h3>
         <p>Backend pipeline: <code>make regenerate</code></p>
-        <p>Frontend build: <code>make site</code></p>
-        <p style="margin-top: 8px;">
+        <p>Site bundle: <code>make site</code></p>
+        <p class="footer-sources">
           This site reads only from <code>output/publish/</code> artifacts.
           No raw or interim data is accessed by the frontend.
         </p>

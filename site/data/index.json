@@ -1,8 +1,9 @@
 {
   "title": "qrawatch site data artifacts",
   "generated_at_utc": "2026-03-25T14:10:35.371835+00:00",
-  "artifact_count": 97,
+  "artifact_count": 98,
   "artifacts": [
+    "pricing_overlay_panel.json",
     "ati_quarter_table.csv",
     "ati_quarter_table.json",
     "ati_seed_forecast_table.csv",
