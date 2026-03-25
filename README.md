@@ -21,19 +21,21 @@ The project maintains an explicit hierarchy between what the current evidence ca
 | Lane | Description | Status |
 |------|-------------|--------|
 | **Headline measurement & mechanism** | Official maturity composition, plumbing regressions, public duration supply | Headline ready |
-| **Strongest reduced-form signal** | Monthly carry-forward Maturity-Tilt Flow specification | Supporting/provisional |
-| **Release-level credibility lane** | Unique-release fixed-horizon +63bd flow design | Supporting/provisional |
+| **Reduced-form context** | Monthly carry-forward Maturity-Tilt Flow specification | Supporting/provisional |
+| **Reduced-form credibility anchor** | Unique-release fixed-horizon +63bd flow design | Supporting/provisional |
 | **Bounded causal pilot** | Post-2022Q3 financing-estimates event design | Supporting, bounded |
 | **Supporting extensions** | Investor allotments, primary dealer, SEC N-MFP | Summary ready |
 
-The monthly flow spec remains the strongest current reduced-form signal. The release-level +63bd design is the cleaner credibility lane. The causal pilot is narrower and supporting — not the main pricing coefficient source in this round.
+The release-level +63bd design is the credibility anchor for the pricing layer. The monthly flow spec provides supporting context with a longer sample but weaker identification. The causal pilot is narrower and supporting — not the main pricing coefficient source in this round.
 
 ## Key terminology
 
 - **Maturity Tilt** — the quarter-level bill-versus-coupon composition object from official Treasury financing arithmetic
-- **Maturity-Tilt Flow** — the signed quarterly flow object (internal field: `ati_baseline_bn`)
-- **Excess Bills Stock** — the stock object (internal field: `stock_excess_bills_bn`)
+- **Maturity-Tilt Flow** — the signed quarterly flow object measuring coupon shortfall relative to baseline
+- **Excess Bills Stock** — the cumulative stock object derived from the flow series
 - **Public Duration Supply** — the weekly duration-supply construction used in the duration and pricing layers
+
+See `docs/DATA_DICTIONARY.md` for internal field-level definitions.
 
 ## Site architecture
 
@@ -84,7 +86,7 @@ make site
 
 ## Sign conventions
 
-- Positive `ati_baseline_bn` = more bill-heavy maturity tilt relative to the 18% baseline
+- Positive Maturity-Tilt Flow = more bill-heavy financing relative to the 18% baseline
 - Positive Public Duration Supply = more duration pushed into private hands
 - Positive QT contribution = Fed Treasury holdings falling
 - Buybacks enter the duration construction with opposite sign (they remove duration from public hands)

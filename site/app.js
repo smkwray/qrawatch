@@ -929,11 +929,11 @@
       updatedChip.textContent = 'Updated: ' + relTime(latest);
     }
 
-    // Add headline status chips
+    // Add headline status chips (use public_role, not pipeline readiness flag)
     if (dsStatus && dsStatus.rows) {
       var strip = $('#hero-strip');
-      var headlineCount = dsStatus.rows.filter(function (r) { return r.headline_ready; }).length;
-      strip.appendChild(el('span', { class: 'hero-chip', text: headlineCount + ' headline-ready datasets' }));
+      var headlineCount = dsStatus.rows.filter(function (r) { return r.public_role === 'headline'; }).length;
+      strip.appendChild(el('span', { class: 'hero-chip', text: headlineCount + ' headline datasets' }));
     }
   }
 
@@ -957,8 +957,8 @@
     lane1.appendChild(el('h4', { text: 'Measurement & Mechanism' }));
     var lane1Desc = 'Official maturity composition, plumbing regressions, and public duration supply. ';
     if (dsStatus && dsStatus.rows) {
-      var headlineDatasets = dsStatus.rows.filter(function (r) { return r.headline_ready; });
-      lane1Desc += headlineDatasets.length + ' datasets at headline readiness.';
+      var headlineDatasets = dsStatus.rows.filter(function (r) { return r.public_role === 'headline'; });
+      lane1Desc += headlineDatasets.length + ' datasets at headline public role.';
     }
     lane1.appendChild(el('p', { text: lane1Desc }));
     ladder.appendChild(lane1);
@@ -967,7 +967,7 @@
     var lane2 = el('div', { class: 'evidence-lane evidence-lane-supporting' });
     lane2.appendChild(el('div', { class: 'evidence-lane-label', text: 'Supporting' }));
     lane2.appendChild(el('h4', { text: 'Reduced-Form Pricing' }));
-    lane2.appendChild(el('p', { text: 'Monthly carry-forward flow spec is the strongest current reduced-form signal. Release-level +63bd design is the cleaner credibility lane. Both remain supporting/provisional.' }));
+    lane2.appendChild(el('p', { text: 'Release-level +63bd design is the credibility anchor. Monthly carry-forward flow spec provides supporting context. Both remain supporting/provisional.' }));
     ladder.appendChild(lane2);
 
     // Lane 3: Bounded Causal Pilot
@@ -1389,11 +1389,14 @@
     container.appendChild(el('p', { class: 'section-desc', text: 'A joint measure of Treasury non-bill issuance, Fed QT, and buybacks. Higher values indicate more duration supply to the public. The headline measure uses exact net issuance; the provisional construction uses gross coupon flows as a fallback.' }));
 
     if (durSummary && durSummary.rows && durSummary.rows.length) {
-      // Sort by date, take recent
-      var sorted = durSummary.rows.slice().sort(function (a, b) {
-        return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
-      });
-      var recent = sorted.slice(0, 52).reverse();
+      // Filter out future-dated rows, sort by date descending, take recent
+      var todayStr = new Date().toISOString().slice(0, 10);
+      var sorted = durSummary.rows
+        .filter(function (r) { return r.date <= todayStr; })
+        .sort(function (a, b) {
+          return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+        });
+      var recent = sorted.reverse();
 
       // Line chart with headline/provisional toggle
       var durSeries = {
@@ -1413,8 +1416,12 @@
       // Header with toggle
       var durHeader = el('div', { class: 'chart-header' });
       var durHeaderText = el('div', { class: 'chart-header-text' });
-      durHeaderText.appendChild(el('div', { class: 'chart-title', text: 'Public Duration Supply (Recent 52 Weeks)' }));
-      var durCaptionEl = el('div', { class: 'chart-caption', text: 'Weekly USD. Higher = more duration supply to private hands. Headline = exact non-bill net + QT proxy - buybacks.' });
+      var durWeekCount = recent.length;
+      durHeaderText.appendChild(el('div', { class: 'chart-title', text: 'Public Duration Supply (Recent ' + durWeekCount + ' Weeks)' }));
+      var qtMissing = recent.some(function (r) { return r.qt_proxy == null || (typeof r.qt_proxy === 'number' && isNaN(r.qt_proxy)); });
+      var durCaptionText = 'Weekly USD. Higher = more duration supply to private hands. Headline = exact non-bill net + QT proxy \u2212 buybacks.';
+      if (qtMissing) durCaptionText += ' Note: QT proxy is unavailable for some weeks and zero-filled in the headline construction.';
+      var durCaptionEl = el('div', { class: 'chart-caption', text: durCaptionText });
       durHeaderText.appendChild(durCaptionEl);
       durHeader.appendChild(durHeaderText);
       var durControls = el('div', { class: 'chart-controls' });
@@ -1443,7 +1450,7 @@
 
       // Initial SVG
       var initDurChart = buildLineChart(makeDurData('headline'), {
-        ariaLabel: 'Line chart of headline public duration supply over recent 52 weeks'
+        ariaLabel: 'Line chart of headline public duration supply'
       });
       var initSvg = initDurChart.querySelector('svg');
       if (initSvg) durChartWrap.appendChild(initSvg);
@@ -1513,10 +1520,15 @@
     var h = padT + items.length * rowH + 20;
     var chartW = w - padL - padR;
 
-    // Compute range from coef +/- 1.96*SE
+    // Compute range from coef +/- 1.96*SE (or just coef if no SE)
+    var hideWhiskers = opts.hideWhiskers || false;
     var allVals = [];
     items.forEach(function (it) {
-      allVals.push(it.coef - 1.96 * it.se, it.coef + 1.96 * it.se);
+      if (it.se > 0) {
+        allVals.push(it.coef - 1.96 * it.se, it.coef + 1.96 * it.se);
+      } else {
+        allVals.push(it.coef);
+      }
     });
     var minV = Math.min.apply(null, allVals.concat([0]));
     var maxV = Math.max.apply(null, allVals.concat([0]));
@@ -1565,11 +1577,12 @@
       var band = svgEl('rect', { x: '0', y: String(cy - rowH / 2), width: String(w), height: String(rowH), fill: 'transparent' });
       svg.appendChild(band);
 
-      // Whisker line
-      svg.appendChild(svgEl('line', { x1: xPos(lo).toFixed(1), y1: String(cy), x2: xPos(hi).toFixed(1), y2: String(cy), stroke: 'var(--color-accent)', 'stroke-width': '2', opacity: '0.5' }));
-      // Caps
-      svg.appendChild(svgEl('line', { x1: xPos(lo).toFixed(1), y1: String(cy - 5), x2: xPos(lo).toFixed(1), y2: String(cy + 5), stroke: 'var(--color-accent)', 'stroke-width': '1.5', opacity: '0.5' }));
-      svg.appendChild(svgEl('line', { x1: xPos(hi).toFixed(1), y1: String(cy - 5), x2: xPos(hi).toFixed(1), y2: String(cy + 5), stroke: 'var(--color-accent)', 'stroke-width': '1.5', opacity: '0.5' }));
+      // Whisker line + caps (only when SE is published)
+      if (!hideWhiskers && it.se > 0) {
+        svg.appendChild(svgEl('line', { x1: xPos(lo).toFixed(1), y1: String(cy), x2: xPos(hi).toFixed(1), y2: String(cy), stroke: 'var(--color-accent)', 'stroke-width': '2', opacity: '0.5' }));
+        svg.appendChild(svgEl('line', { x1: xPos(lo).toFixed(1), y1: String(cy - 5), x2: xPos(lo).toFixed(1), y2: String(cy + 5), stroke: 'var(--color-accent)', 'stroke-width': '1.5', opacity: '0.5' }));
+        svg.appendChild(svgEl('line', { x1: xPos(hi).toFixed(1), y1: String(cy - 5), x2: xPos(hi).toFixed(1), y2: String(cy + 5), stroke: 'var(--color-accent)', 'stroke-width': '1.5', opacity: '0.5' }));
+      }
 
       // Dot
       var dotColor = it.pval < 0.05 ? 'var(--color-accent)' : 'var(--color-text-muted)';
@@ -1605,7 +1618,10 @@
 
       // Interaction
       band.addEventListener('mousemove', function (e) {
-        showTooltip(e, it.label, fmtNum(it.coef, 3) + ' bp/$100bn  (SE ' + fmtNum(it.se, 3) + ', p=' + fmtPval(it.pval) + ')');
+        var detail = fmtNum(it.coef, 3) + ' bp/$100bn';
+        if (it.se > 0) detail += '  (SE ' + fmtNum(it.se, 3) + ', p=' + fmtPval(it.pval) + ')';
+        else detail += '  (p=' + fmtPval(it.pval) + ')';
+        showTooltip(e, it.label, detail);
         dot.setAttribute('r', '7');
       });
       band.addEventListener('mouseleave', function () {
@@ -1777,8 +1793,27 @@
 
     container.appendChild(el('div', { class: 'interpretation-note' }, [
       el('strong', { text: 'Interpretation boundary: ' }),
-      document.createTextNode('Supporting/provisional reduced-form evidence. The monthly flow spec is the strongest signal; the release-level +63bd design is the cleaner credibility lane. Neither is a settled causal claim.')
+      document.createTextNode('Supporting/provisional reduced-form evidence. The release-level +63bd design is the credibility anchor; the monthly flow spec provides additional context. Neither is a settled causal claim.')
     ]));
+
+    // ── Build role map from spec registry ──
+    var registryRoleMap = {};
+    if (specRegistry && specRegistry.rows) {
+      specRegistry.rows.forEach(function (sr) {
+        if (!registryRoleMap[sr.spec_id]) {
+          registryRoleMap[sr.spec_id] = sr.public_claim_role || sr.pipeline_anchor_role || 'supporting';
+        }
+      });
+    }
+
+    // Map artifact roles to display labels
+    var claimRoleDisplayLabels = {
+      supporting_anchor: 'anchor',
+      credibility_anchor: 'anchor',
+      supporting_context: 'context',
+      context: 'context',
+      supporting: 'supporting'
+    };
 
     // ── Extract primary predictor rows ──
     var primaryRows = summary.rows
@@ -1793,12 +1828,11 @@
       monthly_stock_baseline: 'Monthly Stock',
       weekly_duration_baseline: 'Weekly Duration'
     };
-    var roleLabels = {
-      monthly_flow_baseline: 'strongest',
-      release_flow_baseline_63bd: 'credibility',
-      monthly_stock_baseline: 'supporting',
-      weekly_duration_baseline: 'supporting'
-    };
+    var roleLabels = {};
+    modelDisplayOrder.forEach(function (mid) {
+      var artRole = registryRoleMap[mid] || 'supporting';
+      roleLabels[mid] = claimRoleDisplayLabels[artRole] || 'supporting';
+    });
 
     var coefItems = [];
     modelDisplayOrder.forEach(function (mid) {
@@ -1817,7 +1851,7 @@
     if (coefItems.length) {
       container.appendChild(buildDotWhiskerChart(coefItems, {
         title: 'Coefficient Comparison',
-        caption: 'Coefficients in bp per $100bn with 95% CI. Filled dots = significant at p<0.05. Monthly Flow is the strongest signal; Release +63bd is the credibility anchor.',
+        caption: 'Coefficients in bp per $100bn with 95% CI. Filled dots = significant at p<0.05. Roles from spec registry: Release +63bd is the credibility anchor; Monthly Flow provides supporting context.',
         ariaLabel: 'Dot-whisker chart comparing pricing coefficients across specifications'
       }));
     }
@@ -1855,16 +1889,18 @@
     var resultCards = el('div', { class: 'card-grid card-grid-3' });
     monthlyFlowRows.forEach(function (mr) {
       var outcomeShort = mr.dependent_variable === 'THREEFYTP10' ? 'Term Premium' : '10Y Yield';
+      var mfRole = claimRoleDisplayLabels[registryRoleMap['monthly_flow_baseline']] || 'context';
       resultCards.appendChild(el('div', { class: 'card' }, [
-        el('div', { class: 'card-title' }, [pricingLabel('strongest', 'Strongest Signal'), document.createTextNode(' ' + outcomeShort)]),
+        el('div', { class: 'card-title' }, [pricingLabel(mfRole, fmtLabel(registryRoleMap['monthly_flow_baseline'] || 'context')), document.createTextNode(' ' + outcomeShort)]),
         el('div', { class: 'card-value', text: fmtNum(mr.coef, 3) + ' bp' }),
         el('div', { class: 'card-meta', text: 'Monthly flow | p=' + fmtPval(mr.p_value) + ' ' + stars(mr.p_value) + ' | N=' + mr.nobs })
       ]));
     });
     releaseAnchorRows.forEach(function (ar) {
       var outcomeShort = ar.dependent_variable === 'THREEFYTP10' ? 'Term Premium' : '10Y Yield';
+      var raRole = claimRoleDisplayLabels[registryRoleMap['release_flow_baseline_63bd']] || 'anchor';
       resultCards.appendChild(el('div', { class: 'card' }, [
-        el('div', { class: 'card-title' }, [pricingLabel('credibility', 'Credibility'), document.createTextNode(' ' + outcomeShort)]),
+        el('div', { class: 'card-title' }, [pricingLabel(raRole, fmtLabel(registryRoleMap['release_flow_baseline_63bd'] || 'supporting_anchor')), document.createTextNode(' ' + outcomeShort)]),
         el('div', { class: 'card-value', text: fmtNum(ar.coef, 3) + ' bp' }),
         el('div', { class: 'card-meta', text: 'Release +63bd | p=' + fmtPval(ar.p_value) + ' ' + stars(ar.p_value) + ' | N=' + ar.effective_shock_count })
       ]));
@@ -1878,23 +1914,24 @@
         pricingLabel('illustrative', 'Illustrative')
       ]));
 
-      // Build interactive horizontal bar chart from scenario data
+      // Build interactive horizontal chart from scenario data (point estimates only — no published SE)
       var scenItems = scenarios.rows.map(function (r) {
         var outShort = r.dependent_variable === 'THREEFYTP10' ? 'TP' : '10Y';
         var scenShort = (r.scenario_label || '').replace(/^Plus /, '+').replace(/ translation via .*/, '');
         return {
           label: scenShort + ' \u2192 ' + outShort,
           coef: r.implied_bp_change,
-          se: Math.abs(r.implied_bp_change) * 0.3, // approximate CI for visual
+          se: 0,
           pval: r.p_value,
           roleClass: r.scenario_role === 'illustrative_only' ? 'illustrative' : 'supporting'
         };
       });
       container.appendChild(buildDotWhiskerChart(scenItems, {
         title: 'Scenario Translations',
-        caption: 'Implied basis-point changes from illustrative what-if exercises. Large p-values on stock-based scenarios indicate high uncertainty. Not headline estimates.',
+        caption: 'Implied basis-point changes from illustrative what-if exercises. Point estimates only — no published uncertainty. Large p-values on stock-based scenarios indicate high source-model uncertainty. Not headline estimates.',
         ariaLabel: 'Interactive scenario translation chart',
-        padLeft: 300
+        padLeft: 300,
+        hideWhiskers: true
       }));
     }
 
@@ -2177,12 +2214,12 @@
         el('div', { class: 'card-meta', text: 'Generated: ' + fmtTimestamp(index.generated_at_utc) })
       ]));
       if (dsStatus) {
-        var headlineCount = dsStatus.rows.filter(function (r) { return r.headline_ready; }).length;
+        var headlineCount = dsStatus.rows.filter(function (r) { return r.public_role === 'headline'; }).length;
         var totalCount = dsStatus.rows.length;
         snapGrid.appendChild(el('div', { class: 'card' }, [
           el('div', { class: 'card-title', text: 'Dataset Readiness' }),
           el('div', { class: 'card-value', text: headlineCount + ' / ' + totalCount }),
-          el('div', { class: 'card-meta', text: 'Headline-ready / total tracked' })
+          el('div', { class: 'card-meta', text: 'Headline public role / total tracked' })
         ]));
       }
       container.appendChild(snapGrid);

@@ -1016,14 +1016,14 @@ footer .footer-sources { margin-top: 8px; }
   vertical-align: middle;
 }
 
-.pricing-label-strongest {
-  background: var(--color-headline-bg);
-  color: var(--color-headline);
-}
-
-.pricing-label-credibility {
+.pricing-label-anchor {
   background: var(--color-accent-subtle);
   color: var(--color-accent);
+}
+
+.pricing-label-context {
+  background: var(--color-headline-bg);
+  color: var(--color-headline);
 }
 
 .pricing-label-illustrative {

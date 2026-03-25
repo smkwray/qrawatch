@@ -15,9 +15,23 @@ def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
+def _sanitize_for_json(obj: object) -> object:
+    """Replace NaN/Infinity with None so json.dumps emits valid JSON."""
+    import math
+
+    if isinstance(obj, float) and (math.isnan(obj) or math.isinf(obj)):
+        return None
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    return obj
+
+
 def write_json(obj: dict, path: Path) -> None:
     ensure_dir(path.parent)
-    path.write_text(json.dumps(obj, indent=2, default=str) + "\n", encoding="utf-8")
+    clean = _sanitize_for_json(obj)
+    path.write_text(json.dumps(clean, indent=2, default=str) + "\n", encoding="utf-8")
 
 
 def write_text(text: str, path: Path) -> None:

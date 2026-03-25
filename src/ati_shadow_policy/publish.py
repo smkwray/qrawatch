@@ -2252,8 +2252,10 @@ def build_duration_publish_table() -> pd.DataFrame:
         if col not in df.columns:
             df[col] = pd.NA
     df["date"] = pd.to_datetime(df["date"])
+    today = pd.Timestamp.now().normalize()
     latest = (
-        df.sort_values("date")
+        df[df["date"] <= today]
+        .sort_values("date")
         .tail(12)[keep]
         .copy()
     )
@@ -2269,7 +2271,10 @@ def build_duration_comparison_publish_table() -> pd.DataFrame:
         )
     df = pd.read_csv(path)
     if "date" in df.columns:
-        df["date"] = pd.to_datetime(df["date"]).dt.strftime("%Y-%m-%d")
+        df["date"] = pd.to_datetime(df["date"])
+        today = pd.Timestamp.now().normalize()
+        df = df[df["date"] <= today].copy()
+        df["date"] = df["date"].dt.strftime("%Y-%m-%d")
     return df
 
 
