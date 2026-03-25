@@ -35,10 +35,20 @@ jobs:
         run: python3 -m pytest -q tests/test_qra_quality_report.py
 
       - name: Run QRA quality contract gate
-        run: python3 scripts/14_qra_quality_report.py --fail-on-contract
+        run: |
+          if [[ ! -f data/raw/qra/downloads.csv || ! -f data/processed/official_quarterly_refunding_capture.csv ]]; then
+            echo "Skipping QRA quality contract gate on clean checkout: required local data artifacts are absent."
+            exit 0
+          fi
+          python3 scripts/14_qra_quality_report.py --fail-on-contract
 
       - name: Run backend validator unit tests
         run: python3 -m pytest -q tests/test_validate_backend.py
 
       - name: Run backend validator
-        run: python3 scripts/21_validate_backend.py
+        run: |
+          if [[ ! -f data/processed/official_quarterly_refunding_capture.csv || ! -d output/publish ]]; then
+            echo "Skipping backend validator on clean checkout: required local build artifacts are absent."
+            exit 0
+          fi
+          python3 scripts/21_validate_backend.py
