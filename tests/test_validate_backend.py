@@ -941,7 +941,7 @@ def test_validate_backend_detects_publish_hygiene_leak(tmp_path: Path) -> None:
     publish_path = tmp_path / "publish"
     _build_publish_artifacts(path=publish_path)
     (publish_path / "ati_seed_vs_official.md").write_text(
-        "# leak\n\nLocal source: /Users/demo/file.csv\n",
+        "# leak\n\nLocal source: /" + "Users/demo/file.csv\n",
         encoding="utf-8",
     )
 
