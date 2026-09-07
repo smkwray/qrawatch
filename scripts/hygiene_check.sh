@@ -37,14 +37,14 @@ fi
 
 # Tracked-eligible source roots. Override via HYGIENE_SCAN_ROOTS env var
 # if your project uses a different layout.
-SCAN_ROOTS=(${HYGIENE_SCAN_ROOTS:-src scripts config configs tests})
-TOP_LEVEL_FILES=(README.md CITATION.cff pyproject.toml setup.py setup.cfg)
+SCAN_ROOTS=(${HYGIENE_SCAN_ROOTS:-src scripts config configs tests docs .github})
+TOP_LEVEL_FILES=(README.md CITATION.cff pyproject.toml setup.py setup.cfg Makefile)
 
 # Sibling project roots to also scan for cache leaks (space-separated).
 SIBLING_PROJECTS=(${HYGIENE_SIBLING_PROJECTS:-})
 
 # Scan glob extensions
-SCAN_GLOBS=("*.py" "*.md" "*.yml" "*.yaml" "*.toml" "*.sh" "*.ps1" "*.cfg" "*.ini")
+SCAN_GLOBS=("*.py" "*.md" "*.yml" "*.yaml" "*.toml" "*.sh" "*.ps1" "*.cfg" "*.ini" "Makefile")
 
 violations=0
 warnings=0
@@ -62,7 +62,7 @@ gather_files() {
       | while read -r f; do
           [[ -z "$f" ]] && continue
           case "$f" in
-            do/*|docs/*|var/*|data/*|outputs/*|dist/*|.git/*) continue ;;
+            do/*|var/*|data/*|outputs/*|dist/*|.git/*) continue ;;
           esac
           is_self_referential "$f" && continue
           for pat in "${SCAN_GLOBS[@]}"; do

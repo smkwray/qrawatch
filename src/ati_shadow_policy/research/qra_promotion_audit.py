@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -33,18 +34,38 @@ class AuditInputs:
         return frame
 
 
-def _metric_value(frame: pd.DataFrame, scope: str, metric: str) -> int | None:
-    if frame.empty or not {"scope", "metric", "value"}.issubset(frame.columns):
-        return None
+def _count_value(values: pd.Series, label: str) -> int:
+    if len(values) != 1:
+        raise ValueError(f"Expected one nonnegative integer count for {label}")
+    value = pd.to_numeric(values, errors="coerce").iloc[0]
+    if pd.isna(value) or not math.isfinite(value) or value < 0 or value % 1:
+        raise ValueError(f"Expected one nonnegative integer count for {label}")
+    return int(value)
+
+
+def _metric_value(frame: pd.DataFrame, scope: str, metric: str) -> int:
     match = frame[(frame["scope"] == scope) & (frame["metric"] == metric)]
-    if match.empty:
-        return None
-    value = pd.to_numeric(match["value"], errors="coerce").dropna()
-    if value.empty:
-        return None
-    if len(value) != 1 or value.iloc[0] < 0 or value.iloc[0] % 1:
-        raise ValueError(f"Expected one nonnegative integer count for {scope}/{metric}")
-    return int(value.iloc[0])
+    return _count_value(match["value"], f"{scope}/{metric}")
+
+
+def _validate_pricing(rows: pd.DataFrame) -> None:
+    if rows.empty:
+        return
+    expected = {
+        "public_readiness": {"supporting_provisional"},
+        "public_claim_role": {"supporting", "supporting_anchor", "supporting_context"},
+        "term_units": {"USD 100bn"},
+        "outcome_units": {"basis points"},
+    }
+    for column, allowed in expected.items():
+        if not rows[column].isin(allowed).all():
+            raise ValueError(f"Pricing evidence has contradictory {column}")
+    for column in ["coef", "p_value"]:
+        values = pd.to_numeric(rows[column], errors="coerce")
+        if not values.map(lambda value: pd.notna(value) and math.isfinite(value)).all():
+            raise ValueError(f"Pricing evidence has invalid {column}")
+        if column == "p_value" and not values.between(0, 1).all():
+            raise ValueError("Pricing evidence has invalid p_value")
 
 
 def _primary_predictor(frame: pd.DataFrame, model_id: str) -> pd.DataFrame:
@@ -84,17 +105,17 @@ def build_qra_promotion_audit(publish_dir: Path = OUTPUT_DIR / "publish") -> pd.
     schemas = [
         (capture, {"is_headline_ready"}),
         (benchmarks, {"scope", "metric", "value"}),
-        (causal, {"source_family_exhausted_count"}),
-        (usability, {"event_date_type", "usable_for_headline"}),
-        (pricing, {"model_id", "term_role", "coef", "p_value"}),
-        (robustness, {"variant_family", "coef", "p_value"}),
+        (causal, {"claim_id", "claim_scope", "headline_ready", "source_family_exhausted_count"}),
+        (usability, {"event_date_type", "usable_for_headline", "claim_scope"}),
+        (pricing, {"model_id", "term_role", "coef", "p_value", "public_readiness", "public_claim_role", "term_units", "outcome_units"}),
+        (robustness, {"variant_family", "coef", "p_value", "public_readiness", "public_claim_role", "term_units", "outcome_units"}),
         (diagnostic, {"usable_for_headline_reason"}),
     ]
     for frame, required in schemas:
         if not required.issubset(frame.columns):
             raise ValueError(f"Audit evidence missing columns: {sorted(required - set(frame.columns))}")
     for frame, column in [(capture, "is_headline_ready"), (usability, "usable_for_headline")]:
-        if not frame[column].dropna().isin([True, False]).all():
+        if not frame[column].isin([True, False]).all():
             raise ValueError(f"Audit evidence {column} must contain booleans")
 
     capture_rows = len(capture)
@@ -103,17 +124,17 @@ def build_qra_promotion_audit(publish_dir: Path = OUTPUT_DIR / "publish") -> pd.
     causal_eligible = _metric_value(benchmarks, financing_scope, "causal_eligible_count")
     benchmark_ready = _metric_value(benchmarks, financing_scope, "external_benchmark_ready_count")
     post_release_invalid = _metric_value(benchmarks, financing_scope, "post_release_invalid_count")
-    if any(value is None for value in [causal_eligible, benchmark_ready, post_release_invalid]):
-        raise ValueError("Required financing benchmark counts are missing")
-    source_exhausted = None
-    if not causal.empty and "source_family_exhausted_count" in causal.columns:
-        value = pd.to_numeric(causal["source_family_exhausted_count"], errors="coerce").dropna()
-        source_exhausted = int(value.iloc[0]) if not value.empty else None
+    pilot = causal[causal["claim_id"] == "current_sample_financing_pilot"]
+    source_exhausted = _count_value(
+        pilot["source_family_exhausted_count"], "current_sample_financing_pilot/source_family_exhausted_count"
+    )
+    if not pilot["claim_scope"].eq("causal_pilot_only").all() or not pilot["headline_ready"].eq(False).all():
+        raise ValueError("Financing evidence has contradictory claim scope or headline readiness")
 
-    official_usable = 0
-    if not usability.empty and {"event_date_type", "usable_for_headline"}.issubset(usability.columns):
-        official = usability[usability["event_date_type"] == "official_release_date"]
-        official_usable = int(official["usable_for_headline"].fillna(False).astype(bool).sum())
+    official = usability[usability["event_date_type"] == "official_release_date"]
+    if not official["claim_scope"].eq("descriptive_only").all():
+        raise ValueError("Official-event evidence has contradictory claim_scope")
+    official_usable = int(official["usable_for_headline"].sum())
 
     diagnostic_non_official = 0
     if "usable_for_headline_reason" in diagnostic.columns:
@@ -128,6 +149,9 @@ def build_qra_promotion_audit(publish_dir: Path = OUTPUT_DIR / "publish") -> pd.
     placebos = robustness[
         robustness.get("variant_family", pd.Series(dtype=str)).astype(str) == "release_flow_placebo"
     ].copy() if not robustness.empty else pd.DataFrame()
+
+    for selected in [release_anchor, monthly_flow, monthly_stock, weekly_duration, placebos]:
+        _validate_pricing(selected)
 
     rows = [
         {
@@ -175,28 +199,28 @@ def build_qra_promotion_audit(publish_dir: Path = OUTPUT_DIR / "publish") -> pd.
         {
             "lane": "release_flow_pricing_anchor",
             "paper_role": "supporting_pricing_context",
-            "status": "weak_imprecise",
+            "status": "supporting_provisional",
             "evidence": _coef_phrase(release_anchor),
             "primary_artifacts": "output/publish/pricing_regression_summary.csv;output/publish/pricing_release_flow_leave_one_out.csv",
-            "allowed_claim": "The +63bd release-flow design is cleaner than monthly timing but remains imprecise.",
+            "allowed_claim": "The +63bd release-flow coefficients provide provisional release-window pricing context.",
             "forbidden_upgrade": "Do not use the release-flow coefficient as the headline elasticity.",
         },
         {
             "lane": "monthly_maturity_tilt_flow",
             "paper_role": "supporting_pricing_context",
-            "status": "strongest_reduced_form_signal",
+            "status": "supporting_provisional",
             "evidence": _coef_phrase(monthly_flow),
             "primary_artifacts": "output/publish/pricing_regression_summary.csv;output/publish/pricing_regression_robustness.csv",
-            "allowed_claim": "Monthly Maturity-Tilt Flow is the strongest reduced-form pricing relationship.",
+            "allowed_claim": "Monthly Maturity-Tilt Flow provides provisional reduced-form pricing context.",
             "forbidden_upgrade": "Do not present it as clean announcement-time identification.",
         },
         {
             "lane": "weekly_public_duration_supply",
             "paper_role": "mechanism_context",
-            "status": "strong_but_regime_sensitive",
+            "status": "supporting_provisional",
             "evidence": _coef_phrase(weekly_duration),
             "primary_artifacts": "output/publish/pricing_regression_summary.csv;docs/PRICING_RESULTS_MEMO.md",
-            "allowed_claim": "Public duration supply is a mechanism-context series with large reduced-form associations.",
+            "allowed_claim": "Public duration supply provides provisional mechanism context.",
             "forbidden_upgrade": "Do not treat the weekly coefficient as stable across regimes or structural.",
         },
         {
@@ -211,7 +235,7 @@ def build_qra_promotion_audit(publish_dir: Path = OUTPUT_DIR / "publish") -> pd.
         {
             "lane": "pre_release_placebo",
             "paper_role": "boundary_check",
-            "status": "mixed_but_not_dominant",
+            "status": "boundary_check",
             "evidence": _coef_phrase(placebos),
             "primary_artifacts": "output/publish/pricing_regression_robustness.csv",
             "allowed_claim": "Pre-release placebo checks are part of the boundary discipline.",
@@ -220,6 +244,9 @@ def build_qra_promotion_audit(publish_dir: Path = OUTPUT_DIR / "publish") -> pd.
     ]
     availability = {
         "official_qra_measurement": capture_ready > 0,
+        "current_sample_financing_pilot": benchmark_ready > 0 and causal_eligible > 0,
+        "official_release_event_windows": official_usable > 0,
+        "monday_wednesday_subevents": diagnostic_non_official > 0,
         "release_flow_pricing_anchor": not release_anchor.empty,
         "monthly_maturity_tilt_flow": not monthly_flow.empty,
         "weekly_public_duration_supply": not weekly_duration.empty,
@@ -227,7 +254,7 @@ def build_qra_promotion_audit(publish_dir: Path = OUTPUT_DIR / "publish") -> pd.
         "pre_release_placebo": not placebos.empty,
     }
     for row in rows:
-        if availability.get(row["lane"], True) is False or row["evidence"] == "missing":
+        if not availability.get(row["lane"], False) or row["evidence"] == "missing":
             row["status"] = "evidence_unavailable"
             row["allowed_claim"] = "No empirical claim: required lane evidence is unavailable."
     return pd.DataFrame(rows, columns=AUDIT_COLUMNS)
@@ -247,8 +274,8 @@ def write_qra_promotion_audit(
         "",
         (
             "This audit is descriptive evidence governance, not causal identification. "
-            "It summarizes QRA measurement and pricing artifacts. Fixed qualitative "
-            "assessments require review against these inputs; they are not statistical gates."
+            "It summarizes QRA measurement and pricing artifacts. Pricing labels describe "
+            "provisional research roles, not empirical strength or statistical gates."
         ),
         "",
         "## Decision",
