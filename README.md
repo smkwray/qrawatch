@@ -10,9 +10,9 @@ The project stays neutral about motive. It treats the underlying proposition as 
 
 ## Claim boundary
 
-The project maintains an explicit hierarchy between what the current evidence can and cannot support:
+The evidence below describes the retained March 2026 snapshot. It does not establish fresh upstream evidence or new empirical results.
 
-**What the evidence supports:** Official maturity-composition measurement across the current public history window. Exact official quarter coverage currently spans 2009Q1 through 2025Q4. Headline plumbing and duration supply regressions at headline readiness. A narrow current-sample financing pilot with 14 current-sample financing components, 6 verified pre-release external benchmarks, 5 Tier A components, 8 source-family-exhausted blocked rows, and 0 open benchmark candidates.
+**What the evidence supports:** Official maturity-composition measurement, with exact official quarter coverage from 2009Q1 through 2025Q4 in the retained snapshot. Plumbing and duration-supply regressions provide supporting/provisional context. The snapshot also contains a narrow financing pilot with 14 financing components, 6 verified pre-release external benchmarks, 5 Tier A components, 8 source-family-exhausted blocked rows, and 0 open benchmark candidates.
 
 **What the evidence does not establish:** A settled or full-sample causal estimate of Treasury issuance effects on long rates. The pricing layer remains supporting/provisional reduced-form evidence. Scenario translations are illustrative only.
 
@@ -20,13 +20,14 @@ The project maintains an explicit hierarchy between what the current evidence ca
 
 | Lane | Description | Status |
 |------|-------------|--------|
-| **Headline measurement & mechanism** | Official maturity composition, plumbing regressions, public duration supply | Headline ready |
+| **Official measurement** | Official maturity composition in the retained snapshot | Measurement only |
+| **Mechanism context** | Plumbing regressions and public duration supply in the retained snapshot | Supporting/provisional |
 | **Reduced-form context** | Monthly carry-forward Maturity-Tilt Flow specification | Supporting/provisional |
 | **Reduced-form credibility anchor** | Unique-release fixed-horizon +63bd flow design | Supporting/provisional |
 | **Bounded causal pilot** | Post-2022Q3 financing-estimates event design | Supporting, bounded |
 | **Supporting extensions** | Investor allotments, primary dealer, SEC N-MFP | Summary ready |
 
-The release-level +63bd design is the credibility anchor for the pricing layer. The monthly flow spec provides supporting context with a longer sample but weaker identification. The causal pilot is narrower and supporting — not the main pricing coefficient source in this round.
+The release-level +63bd design is the credibility anchor for the pricing layer. The monthly flow spec provides supporting context with a longer sample but weaker identification. The causal pilot is narrower and supporting — not the main pricing coefficient source in the retained snapshot.
 
 ## Key terminology
 
@@ -75,7 +76,7 @@ make site
 - `README.md` — project overview, claim boundary, and evidence hierarchy
 - `DATA_SOURCES.md` — source registry
 - `docs/PRICING_METHODS.md` — pricing estimands, panel design, interpretation boundaries
-- `docs/PRICING_RESULTS_MEMO.md` — current coefficients and claim boundary
+- `docs/PRICING_RESULTS_MEMO.md` — March 2026 coefficients and claim boundary
 - `docs/BENCHMARK_SEARCH_CLOSURE.md` — bounded benchmark-search closure memo
 - `docs/STATUS_GLOSSARY.md` — readiness/source-quality labels
 - `docs/DATA_DICTIONARY.md` — field-level definitions
