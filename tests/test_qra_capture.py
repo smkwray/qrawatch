@@ -901,3 +901,23 @@ def test_build_capture_completion_status_distinguishes_tiers() -> None:
     assert status.loc["2024Q1", "is_headline_ready"]
     assert status.loc["2024Q2", "completion_tier"] == "semi_automated_guidance_only"
     assert status.loc["2024Q3", "completion_tier"] == "seed_assisted"
+
+
+def test_borrowing_estimate_is_found_with_or_without_spaces_around_the_dash():
+    # Treasury's releases switched from "October – December 2025" to "January–March 2026"
+    # in November 2025; the financing need for the next quarter must be read from both,
+    # and the current-quarter estimate in the same release must not be picked instead.
+    unspaced = (
+        "During the October–December 2025 quarter, Treasury expects to borrow $569 billion in "
+        "privately-held net marketable debt. During the January–March 2026 quarter, Treasury "
+        "expects to borrow $578 billion in privately-held net marketable debt."
+    )
+    spaced = (
+        "During the July – September 2025 quarter, Treasury expects to borrow $1.007 trillion. "
+        "During the October – December 2025 quarter, Treasury expects to borrow $590 billion."
+    )
+
+    assert qra_capture_mod._extract_borrowing_amount_for_quarter(unspaced, "2026Q1") == 578.0
+    assert qra_capture_mod._extract_borrowing_amount_for_quarter(unspaced, "2025Q4") == 569.0
+    assert qra_capture_mod._extract_borrowing_amount_for_quarter(spaced, "2025Q4") == 590.0
+    assert qra_capture_mod._extract_borrowing_amount_for_quarter(spaced, "2025Q3") == pytest.approx(1007.0)

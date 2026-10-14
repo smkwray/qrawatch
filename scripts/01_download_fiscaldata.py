@@ -20,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset", action="append", help="Dataset key from configs/fiscaldata_datasets.json")
     parser.add_argument("--all", action="store_true", help="Download all manifest datasets")
     parser.add_argument("--max-pages", type=int, default=None, help="Optional page limit for debugging")
+    parser.add_argument("--out-dir", default=None, help="Output directory (default: data/raw/fiscaldata)")
     return parser.parse_args()
 
 
@@ -35,7 +36,7 @@ def main() -> None:
     else:
         raise SystemExit("Pass --all or at least one --dataset")
 
-    out_dir = RAW_DIR / "fiscaldata"
+    out_dir = Path(args.out_dir) if args.out_dir else RAW_DIR / "fiscaldata"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     for key in keys:

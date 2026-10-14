@@ -1325,6 +1325,8 @@ def _normalize_period_text(value: str) -> str:
     normalized = normalized.replace("–", "-").replace("—", "-").replace("‑", "-")
     normalized = normalized.replace("\xa0", " ")
     normalized = re.sub(r"[^a-z0-9-]+", " ", normalized)
+    # Releases from November 2025 print "January–March 2026" without spaces.
+    normalized = re.sub(r"\s*-\s*", " - ", normalized)
     normalized = re.sub(r"\s+", " ", normalized)
     return normalized.strip()
 

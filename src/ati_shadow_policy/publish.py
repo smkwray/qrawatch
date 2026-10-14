@@ -466,8 +466,8 @@ def _provenance_summary(row: pd.Series) -> str:
     return "; ".join(parts)
 
 
-def build_ati_publish_table() -> pd.DataFrame:
-    return _official_ati_headline_table()
+def build_ati_publish_table(path: Path | None = None) -> pd.DataFrame:
+    return _official_ati_headline_table(path)
 
 
 def build_ati_seed_forecast_table() -> pd.DataFrame:
@@ -646,7 +646,7 @@ def _official_capture_with_status_columns() -> pd.DataFrame:
     return _add_official_capture_status_columns(df)
 
 
-def _official_ati_headline_table() -> pd.DataFrame:
+def _official_ati_headline_table(path: Path | None = None) -> pd.DataFrame:
     columns = [
         "quarter",
         "financing_need_bn",
@@ -657,7 +657,7 @@ def _official_ati_headline_table() -> pd.DataFrame:
         "missing_coupons_20_bn",
         "ati_baseline_bn",
     ]
-    path = PROCESSED_DIR / "ati_index_official_capture.csv"
+    path = path or PROCESSED_DIR / "ati_index_official_capture.csv"
     if not path.exists():
         return pd.DataFrame(columns=columns + ["source_quality", "public_role"])
     official = pd.read_csv(path)
@@ -2614,8 +2614,8 @@ def build_sec_nmfp_summary_table() -> pd.DataFrame:
     )
 
 
-def build_official_capture_completion_publish_table() -> pd.DataFrame:
-    path = PROCESSED_DIR / "official_capture_completion_status.csv"
+def build_official_capture_completion_publish_table(path: Path | None = None) -> pd.DataFrame:
+    path = path or PROCESSED_DIR / "official_capture_completion_status.csv"
     return _read_processed_csv(
         path,
         columns=[

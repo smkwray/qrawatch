@@ -57,7 +57,8 @@ def test_build_ati_input_from_official_capture_requires_statement_provenance():
     assert ati_input.empty
 
 
-def test_manual_capture_template_extends_official_frontier_through_2025q4():
+def test_manual_capture_template_extends_official_frontier_through_2026q2():
+    # The 2026-10-14 refresh is bounded at 2026Q2; later quarters need their own capture.
     capture = pd.read_csv(
         MANUAL_DIR / "official_quarterly_refunding_capture_template.csv",
         dtype=str,
@@ -66,5 +67,5 @@ def test_manual_capture_template_extends_official_frontier_through_2025q4():
     ati_input = build_ati_input_from_official_capture(capture)
     quarters = set(ati_input["quarter"].tolist())
 
-    assert {"2024Q4", "2025Q1", "2025Q2", "2025Q3", "2025Q4"}.issubset(quarters)
-    assert "2026Q1" not in quarters
+    assert {"2025Q3", "2025Q4", "2026Q1", "2026Q2"}.issubset(quarters)
+    assert "2026Q3" not in quarters
