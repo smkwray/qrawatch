@@ -681,32 +681,156 @@ def test_build_quarter_net_issuance_from_auctions_reconstructs_2023q4_bill_net()
     assert float(bill_row["net_issuance_bn"]) == pytest.approx(437.45, abs=0.05)
 
 
-def test_build_quarter_net_issuance_treats_cmb_only_missing_maturity_as_complete() -> None:
-    auctions = pd.DataFrame(
+def _bill(
+    issue: str,
+    maturity: str,
+    offering_bn: float,
+    *,
+    estimate_bn: float | None = None,
+    cmb: bool = False,
+    announced: str | None = None,
+    soma_bn: float = 0.0,
+    soma_holdings_bn: float = 0.0,
+) -> dict[str, object]:
+    """One bill auction row in FiscalData units (dollars); SOMA add-ons sit outside the offering."""
+    return {
+        "issue_date": issue,
+        "maturity_date": maturity,
+        "announcemt_date": announced or str((pd.Timestamp(issue) - pd.Timedelta(days=5)).date()),
+        "security_type": "Bill",
+        "cash_management_bill_cmb": "Yes" if cmb else "No",
+        "offering_amt": offering_bn * 1e9,
+        "total_accepted": (offering_bn + soma_bn) * 1e9,
+        "soma_accepted": soma_bn * 1e9,
+        "soma_holdings": soma_holdings_bn * 1e9,
+        "est_pub_held_mat_by_type_amt": None if estimate_bn is None else estimate_bn * 1e9,
+    }
+
+
+def _bill_net(rows: list[dict[str, object]], quarters: list[str]) -> pd.Series:
+    recon = build_quarter_net_issuance_from_auctions(pd.DataFrame(rows), quarters=quarters)
+    bills = recon.loc[recon["bucket"] == "bill_like"].set_index("quarter")
+    assert bills["reconstruction_status"].eq("complete").all()
+    return bills["net_issuance_bn"]
+
+
+def test_cmb_issued_on_a_day_with_no_other_bill_still_counts() -> None:
+    # Treasury raises the CMB's cash from private investors in the quarter it settles. That day
+    # has no published maturity estimate because no regular bill settles; dropping the offering
+    # understated net bills by up to $455 billion (2020Q2).
+    rows = [
+        _bill("2023-01-05", "2023-04-06", 100, estimate_bn=90),
+        _bill("2023-02-14", "2023-04-20", 50, cmb=True),
+    ]
+    net = _bill_net(rows, ["2023Q1"])
+
+    assert net["2023Q1"] == pytest.approx((100 - 90) + 50)
+
+
+def test_bill_maturing_on_a_day_with_no_bill_issue_is_netted_in_its_settlement_quarter() -> None:
+    # A CMB that matures when no bill is issued is still repaid to private holders. It must be
+    # netted on its maturity date, in that date's quarter, even when it was issued in another.
+    rows = [
+        _bill("2023-01-10", "2023-02-21", 40, cmb=True),
+        _bill("2023-03-20", "2023-04-18", 30, cmb=True),
+    ]
+    net = _bill_net(rows, ["2023Q1", "2023Q2"])
+
+    assert net["2023Q1"] == pytest.approx(40 - 40 + 30)
+    assert net["2023Q2"] == pytest.approx(-30)
+
+
+def test_every_bill_maturing_on_an_estimate_day_is_netted_once() -> None:
+    # The published estimate of bills maturing on a day reflects bills outstanding when it was
+    # announced. A later announcement for the same issue day supersedes an earlier one (June:
+    # 151 includes the 5-day CMB, 136 does not), and a bill announced after the latest estimate
+    # is added to it (December: the 5-day CMB announced after the 245 estimate).
+    june = [
+        _bill("2023-06-01", "2023-08-31", 35, estimate_bn=35, announced="2023-05-30"),
+        _bill("2023-06-01", "2023-06-06", 15, cmb=True, announced="2023-05-31"),
+        _bill("2023-06-06", "2023-07-05", 35, estimate_bn=136, announced="2023-05-30"),
+        _bill("2023-06-06", "2023-07-20", 50, estimate_bn=151, cmb=True, announced="2023-06-02"),
+    ]
+    december = [
+        _bill("2024-12-05", "2025-03-06", 81, estimate_bn=226, announced="2024-11-28"),
+        _bill("2024-12-05", "2024-12-10", 25, cmb=True, announced="2024-12-04"),
+        _bill("2024-12-10", "2025-01-07", 85, estimate_bn=245, announced="2024-12-03"),
+    ]
+    net = _bill_net(june + december, ["2023Q2", "2024Q4"])
+
+    assert net["2023Q2"] == pytest.approx((35 + 15 - 35) + (35 + 50 - 151))
+    assert net["2024Q4"] == pytest.approx((81 + 25 - 226) + (85 - 245 - 25))
+
+
+def test_soma_add_ons_stay_outside_private_net_bills() -> None:
+    # Privately held borrowing excludes SOMA rollovers. A $10 billion SOMA add-on is accepted on
+    # top of the $100 billion offering and is not issuance to the public; when the bill matures
+    # in the next quarter on a day without an estimate, only the $100 billion held privately is
+    # netted. Counting the add-on would raise 2023Q1 and lower 2023Q2 by $10 billion.
+    rows = [
+        _bill("2023-01-05", "2023-04-13", 100, estimate_bn=95, soma_bn=10, soma_holdings_bn=12),
+    ]
+    net = _bill_net(rows, ["2023Q1", "2023Q2"])
+
+    assert net["2023Q1"] == pytest.approx(100 - 95)
+    assert net["2023Q2"] == pytest.approx(-100)
+
+
+def _reconciliation_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
+    # 2023Q1: a regular bill with a $10bn SOMA add-on settles against a $95bn publicly held
+    # estimate while SOMA holds $12bn of the maturing bill, a CMB settles alone, and the regular
+    # bill matures on a day with no issue. 2023Q2: one issue, and the CMB matures alone.
+    rows = [
+        _bill("2022-12-01", "2023-01-05", 95, soma_bn=12),
+        _bill("2023-01-05", "2023-03-02", 100, estimate_bn=95, soma_bn=10, soma_holdings_bn=12),
+        _bill("2023-02-14", "2023-04-20", 50, cmb=True),
+        _bill("2023-04-06", "2023-07-06", 60, estimate_bn=0),
+    ]
+    stocks = {"2022-12-31": 1_000_000, "2023-01-31": 1_010_000, "2023-03-31": 943_000, "2023-06-30": 953_000}
+    mspd = pd.DataFrame(
         [
-            {
-                "issue_date": "2023-03-01",
-                "security_type": "Bill",
-                "cash_management_bill_cmb": "No",
-                "offering_amt": 100_000_000_000,
-                "est_pub_held_mat_by_type_amt": 90_000_000_000,
-            },
-            {
-                "issue_date": "2023-03-31",
-                "security_type": "Bill",
-                "cash_management_bill_cmb": "Yes",
-                "offering_amt": 50_000_000_000,
-                "est_pub_held_mat_by_type_amt": pd.NA,
-            },
+            {"record_date": date, "security_type_desc": "Marketable", "security_class_desc": cls, "total_mil_amt": amount}
+            for date, stock in stocks.items()
+            for cls, amount in (("Bills", stock), ("Notes", 5 * stock))
         ]
     )
+    return pd.DataFrame(rows), mspd
 
-    reconstruction = build_quarter_net_issuance_from_auctions(auctions, quarters=["2023Q1"])
-    bill_row = reconstruction.loc[reconstruction["bucket"] == "bill_like"].iloc[0]
 
-    assert bill_row["issue_dates_missing_maturing_estimate"] == 1
-    assert bill_row["issue_dates_cmb_only_missing_maturity"] == 1
-    assert bill_row["reconstruction_status"] == "complete"
+def test_mspd_reconciliation_reports_every_quarter_and_closes_the_identity() -> None:
+    # Marketable bills outstanding fall by every maturity, SOMA-held included, and rise by every
+    # award, SOMA add-ons included. Adding back SOMA redemptions must recover private net bills.
+    auctions, mspd = _reconciliation_inputs()
+    net = _bill_net(auctions.to_dict("records"), ["2023Q1", "2023Q2"])
+    recon = qra_capture_mod.reconcile_net_bills_with_mspd(net, qra_capture_mod.bill_settlement_flows(auctions), mspd)
+    recon = recon.set_index("quarter")
+
+    assert recon.index.tolist() == ["2023Q1", "2023Q2"]
+    assert net.tolist() == pytest.approx([(100 + 50) - (95 + 100), 60 - 50])
+    assert recon["mspd_bills_change_bn"].tolist() == pytest.approx([(110 + 50) - (107 + 110), 10])
+    assert recon.loc["2023Q1", "soma_bill_redemptions_bn"] == pytest.approx((12 + 10) - 10)
+    assert recon["residual_bn"].tolist() == pytest.approx([0.0, 0.0], abs=1e-9)
+
+
+def test_mspd_reconciliation_refuses_a_quarter_without_a_quarter_end_stock() -> None:
+    # A missing MSPD month-end would leave a quarter unreconciled; the build must say which.
+    auctions, mspd = _reconciliation_inputs()
+    mspd = mspd[mspd["record_date"] != "2023-06-30"]
+    net = _bill_net(auctions.to_dict("records"), ["2023Q1", "2023Q2"])
+
+    with pytest.raises(ValueError, match="2023Q2"):
+        qra_capture_mod.reconcile_net_bills_with_mspd(net, qra_capture_mod.bill_settlement_flows(auctions), mspd)
+
+
+def test_bill_quarter_is_partial_when_a_maturing_auction_lacks_its_award() -> None:
+    # Without the accepted amount a maturity on a day without an estimate has no size; the
+    # quarter must be marked partial with no net figure rather than netted at zero.
+    rows = [_bill("2023-01-10", "2023-02-21", 40, cmb=True)]
+    rows[0]["total_accepted"] = None
+    recon = build_quarter_net_issuance_from_auctions(pd.DataFrame(rows), quarters=["2023Q1"])
+    bill = recon.loc[recon["bucket"] == "bill_like"].iloc[0]
+
+    assert bill["reconstruction_status"] == "partial" and pd.isna(bill["net_issuance_bn"])
 
 
 def test_enrich_capture_with_auction_reconstruction_promotes_rows() -> None:

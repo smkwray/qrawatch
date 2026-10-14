@@ -5,10 +5,11 @@ from the quarter before --first through the quarter after --last into OUT/source
 the URL, retrieval time and SHA-256 of each file. Existing files are never replaced.
 
 build: read each quarter's realized borrowing sentence from the release published in the
-following quarter, label the financing value the template held (own-quarter estimate,
-prior-release estimate or following-quarter estimate) from the same releases, write the
-realized capture to --realized (tracked) and run script 34 on a template whose financing
-fields are the realized values. Writes OUT/publish/financing_convention_audit.csv and adds a
+following quarter (releases listed in --release-log, by default OUT/sources/release_downloads.csv),
+label the financing value the template held (own-quarter estimate, prior-release estimate or
+following-quarter estimate) from the same releases, write the realized capture to --realized
+(tracked) and run script 34, with its MSPD reconciliation, on a template whose financing fields
+are the realized values. Writes OUT/publish/financing_convention_audit.csv and adds a
 realized_financing block to OUT/receipt.json.
 """
 
@@ -34,7 +35,6 @@ import pandas as pd
 from ati_shadow_policy.io_utils import download_binary_with_metadata, write_df
 from ati_shadow_policy.paths import MANUAL_DIR
 from ati_shadow_policy.qra_capture import (
-    _classify_auction_bucket,
     _extract_html_text,
     _parse_html_document,
     _strip_financing_release_note_fragments,
@@ -276,34 +276,15 @@ def realized_template(template: pd.DataFrame, realized: pd.DataFrame) -> pd.Data
     return out
 
 
-def bill_coverage_gaps(auctions: pd.DataFrame) -> pd.DataFrame:
-    """Bill flows the auction reconstruction of net_bills leaves out, by quarter (diagnostic only).
-
-    net_bills nets each issue date's offering against the publicly held bills maturing that
-    day. Offerings on issue dates with no maturity estimate (CMB-only dates) drop out of the
-    sum, and bills maturing on a day with no bill issue are never netted.
-    """
-    bills = auctions.copy()
-    bills["bucket"] = bills.apply(_classify_auction_bucket, axis=1)
-    bills = bills[bills["bucket"].eq("bill_like")].copy()
-    for column in ("issue_date", "maturity_date"):
-        bills[column] = pd.to_datetime(bills[column], errors="coerce")
-    for column in ("offering_amt", "est_pub_held_mat_by_type_amt"):
-        bills[column] = pd.to_numeric(bills[column], errors="coerce")
-    by_date = bills.groupby("issue_date").agg(offering=("offering_amt", "sum"), maturing=("est_pub_held_mat_by_type_amt", "min"))
-    dropped = by_date.loc[by_date["maturing"].isna(), "offering"]
-    unnetted = bills.loc[~bills["maturity_date"].isin(by_date.index)]
-    out = pd.DataFrame(
-        {
-            "cmb_only_issue_offering_bn": dropped.groupby(dropped.index.to_period("Q").astype(str)).sum() / 1e9,
-            "unnetted_bill_maturities_bn": unnetted.groupby(unnetted["maturity_date"].dt.to_period("Q").astype(str))["offering_amt"].sum() / 1e9,
-        }
-    ).fillna(0.0)
-    out.index.name = "quarter"
-    return out.reset_index()
-
-
-def build(out_dir: Path, template_path: Path, auctions: Path, realized_path: Path, argv: list[str]) -> int:
+def build(
+    out_dir: Path,
+    template_path: Path,
+    auctions: Path,
+    mspd: Path,
+    log_path: Path,
+    realized_path: Path,
+    argv: list[str],
+) -> int:
     template = pd.read_csv(template_path, dtype=str, keep_default_na=False)
     quarters = template["quarter"].tolist()
     if quarters != quarter_range(quarters[0], quarters[-1]):
@@ -314,7 +295,6 @@ def build(out_dir: Path, template_path: Path, auctions: Path, realized_path: Pat
         if path.exists():
             raise SystemExit(f"Refusing to replace existing outputs: {path}")
 
-    log_path = out_dir / "sources" / "release_downloads.csv"
     releases = read_releases(pd.read_csv(log_path, dtype=str))
     realized = realized_rows(releases, quarters)
     write_df(realized, realized_path)
@@ -324,7 +304,7 @@ def build(out_dir: Path, template_path: Path, auctions: Path, realized_path: Pat
         return 1
 
     write_df(realized_template(template, realized), inputs)
-    script_34_args = ["--template", str(inputs), "--auctions", str(auctions), "--out-dir", str(out_dir)]
+    script_34_args = ["--template", str(inputs), "--auctions", str(auctions), "--mspd", str(mspd), "--out-dir", str(out_dir)]
     status = refresh.main(script_34_args)
     if status:
         return status
@@ -337,10 +317,6 @@ def build(out_dir: Path, template_path: Path, auctions: Path, realized_path: Pat
     )
     audit["old_ati_baseline_bn"] = audit["net_bills_bn"] - 0.18 * audit["old_financing_bn"]
     audit["financing_change_bn"] = audit["realized_financing_bn"] - audit["old_financing_bn"]
-    audit = audit.merge(bill_coverage_gaps(pd.read_csv(auctions, low_memory=False)), on="quarter", how="left")
-    gap_columns = ["cmb_only_issue_offering_bn", "unnetted_bill_maturities_bn"]
-    audit[gap_columns] = audit[gap_columns].fillna(0.0)
-    audit["net_bills_full_coverage_bn"] = audit["net_bills_bn"] + audit[gap_columns[0]] - audit[gap_columns[1]]
     write_df(audit, audit_path)
 
     receipt_path = out_dir / "receipt.json"
@@ -380,6 +356,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     bld.add_argument("--out-dir", required=True)
     bld.add_argument("--template", default=str(MANUAL_DIR / "official_quarterly_refunding_capture_template.csv"))
     bld.add_argument("--auctions", required=True)
+    bld.add_argument("--mspd", required=True, help="FiscalData mspd_table_1 CSV extract for the net-bill reconciliation.")
+    bld.add_argument("--release-log", default=None, help="Release download log (default: OUT/sources/release_downloads.csv).")
     bld.add_argument("--realized", default=str(DEFAULT_REALIZED), help="Realized capture CSV to write (default: %(default)s).")
     return parser.parse_args(argv)
 
@@ -389,7 +367,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "capture":
         return capture(Path(args.out_dir), args.first, args.last)
     argv_record = [refresh._rel(Path(__file__)), *(argv if argv is not None else sys.argv[1:])]
-    return build(Path(args.out_dir), Path(args.template), Path(args.auctions), Path(args.realized), argv_record)
+    out_dir = Path(args.out_dir)
+    log_path = Path(args.release_log) if args.release_log else out_dir / "sources" / "release_downloads.csv"
+    return build(out_dir, Path(args.template), Path(args.auctions), Path(args.mspd), log_path, Path(args.realized), argv_record)
 
 
 if __name__ == "__main__":

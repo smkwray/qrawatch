@@ -141,6 +141,18 @@ AUCTION_REQUIRED_COLUMNS: tuple[str, ...] = (
     "offering_amt",
     "est_pub_held_mat_by_type_amt",
 )
+BILL_FLOW_COLUMNS: tuple[str, ...] = (
+    "issue_date",
+    "maturity_date",
+    "announcemt_date",
+    "security_type",
+    "cash_management_bill_cmb",
+    "offering_amt",
+    "total_accepted",
+    "soma_accepted",
+    "soma_holdings",
+    "est_pub_held_mat_by_type_amt",
+)
 
 
 @dataclass(frozen=True)
@@ -575,97 +587,261 @@ def build_refunding_statement_source_map(statement_downloads_df: pd.DataFrame) -
     )
 
 
+def _group_sum_strict(frame: pd.DataFrame, key: str, columns: list[str]) -> pd.DataFrame:
+    """Sum by key; a group with any missing value sums to NaN, not to the values it has."""
+    sums = frame.groupby(key)[columns].sum()
+    return sums.mask(frame[columns].isna().groupby(frame[key]).any())
+
+
+def bill_settlement_flows(auctions_df: pd.DataFrame) -> pd.DataFrame:
+    """Privately held bill flows by settlement date, cash management bills included.
+
+    Every bill offering enters on its issue date at its offering amount, which excludes SOMA
+    add-ons. Every bill maturity enters on its maturity date at its publicly held amount, which
+    excludes SOMA holdings. SOMA rollovers therefore never enter, and SOMA redemptions are
+    financed by private offerings, as in Treasury's privately held net marketable borrowing.
+
+    The publicly held amount maturing on a date is Treasury's published estimate
+    (``est_pub_held_mat_by_type_amt``) from the latest-announced bill auction issuing that day,
+    plus any bill maturing that day that was announced after that estimate. On a date with no
+    published estimate (no bill issue, or only cash management bills issued) it is the auction
+    record of the bills maturing that day: accepted less SOMA add-ons. An amount is NaN when an
+    auction it depends on lacks a needed value.
+
+    SOMA-held maturities, SOMA add-ons, awards above the offering amount and the gap between the
+    auction record and the published estimate are carried for the MSPD reconciliation.
+    """
+    missing = sorted(set(BILL_FLOW_COLUMNS) - set(auctions_df.columns))
+    if missing:
+        raise ValueError("Bill settlement flows are missing required auction columns: " + ", ".join(missing))
+    bills = auctions_df.loc[auctions_df.apply(_classify_auction_bucket, axis=1).eq("bill_like")].copy()
+    for column in ("issue_date", "maturity_date", "announcemt_date"):
+        bills[column] = pd.to_datetime(bills[column], errors="coerce")
+    undated = bills[["issue_date", "maturity_date", "announcemt_date"]].isna().any(axis=1)
+    if undated.any():
+        raise ValueError(f"{int(undated.sum())} bill auctions lack an issue, maturity or announcement date")
+    for column in ("offering_amt", "total_accepted", "soma_accepted", "soma_holdings", "est_pub_held_mat_by_type_amt"):
+        bills[column] = coerce_numeric(bills[column])
+    bills["private_accepted_amt"] = bills["total_accepted"] - bills["soma_accepted"]
+    bills["award_above_offering_amt"] = bills["private_accepted_amt"] - bills["offering_amt"]
+
+    issues = _group_sum_strict(bills, "issue_date", ["offering_amt", "soma_accepted", "award_above_offering_amt"])
+    issues = issues.rename(columns={"soma_accepted": "soma_addon_amt"})
+    issues["cmb_only_issue"] = bills.groupby("issue_date")["cash_management_bill_cmb"].agg(
+        lambda series: bool(series.fillna("").eq("Yes").all())
+    )
+
+    published = (
+        bills.dropna(subset=["est_pub_held_mat_by_type_amt"])
+        .sort_values(["issue_date", "announcemt_date", "est_pub_held_mat_by_type_amt"], kind="stable")
+        .drop_duplicates("issue_date", keep="last")
+        .set_index("issue_date")[["est_pub_held_mat_by_type_amt", "announcemt_date", "soma_holdings"]]
+        .rename(
+            columns={
+                "est_pub_held_mat_by_type_amt": "published_estimate_amt",
+                "announcemt_date": "estimate_announced",
+                "soma_holdings": "estimate_soma_holdings_amt",
+            }
+        )
+    )
+    maturing = bills.join(published["estimate_announced"], on="maturity_date")
+    unpublished = maturing["estimate_announced"].isna() | (maturing["announcemt_date"] > maturing["estimate_announced"])
+    record = _group_sum_strict(maturing.loc[unpublished], "maturity_date", ["private_accepted_amt", "soma_accepted"])
+    record = record.rename(columns={"private_accepted_amt": "record_maturing_amt", "soma_accepted": "record_soma_maturing_amt"})
+    record_total = _group_sum_strict(maturing, "maturity_date", ["total_accepted"])
+
+    dates = issues.index.union(record_total.index).union(published.index)
+    flows = pd.DataFrame(index=dates).join(issues).join(published).join(record).join(record_total)
+    in_issues, in_published, in_record = dates.isin(issues.index), dates.isin(published.index), dates.isin(record.index)
+
+    def part(column: str, present) -> pd.Series:
+        return flows[column].where(present, 0.0)
+
+    flows["publicly_held_maturing_amt"] = part("published_estimate_amt", in_published) + part("record_maturing_amt", in_record)
+    flows["soma_held_maturing_amt"] = part("estimate_soma_holdings_amt", in_published) + part("record_soma_maturing_amt", in_record)
+    flows["maturing_estimate_gap_amt"] = (
+        part("total_accepted", dates.isin(record_total.index)) - flows["publicly_held_maturing_amt"] - flows["soma_held_maturing_amt"]
+    )
+    for column in ("offering_amt", "soma_addon_amt", "award_above_offering_amt"):
+        flows[column] = part(column, in_issues)
+    flows["record_maturing_amt"] = part("record_maturing_amt", in_record)
+    flows["bill_issue"] = in_issues
+    flows["published_estimate"] = in_published
+    flows["cmb_only_issue"] = flows["cmb_only_issue"].fillna(False).astype(bool)
+    flows.index.name = "date"
+    return flows[
+        [
+            "offering_amt",
+            "publicly_held_maturing_amt",
+            "record_maturing_amt",
+            "bill_issue",
+            "published_estimate",
+            "cmb_only_issue",
+            "soma_addon_amt",
+            "soma_held_maturing_amt",
+            "award_above_offering_amt",
+            "maturing_estimate_gap_amt",
+        ]
+    ].reset_index()
+
+
+def _quarter_bill_reconstruction(flows: pd.DataFrame, wanted: set[str] | None) -> pd.DataFrame:
+    flows = flows.assign(quarter=pd.to_datetime(flows["date"]).dt.to_period("Q").astype(str))
+    if wanted:
+        flows = flows[flows["quarter"].isin(wanted)]
+    if flows.empty:
+        return pd.DataFrame()
+    no_estimate = flows["bill_issue"] & ~flows["published_estimate"]
+    flows = flows.assign(
+        no_estimate_issue=no_estimate,
+        cmb_only_no_estimate_issue=no_estimate & flows["cmb_only_issue"],
+    )
+    out = _group_sum_strict(flows, "quarter", ["offering_amt", "publicly_held_maturing_amt", "record_maturing_amt"])
+    counts = flows.groupby("quarter")[["bill_issue", "no_estimate_issue", "cmb_only_no_estimate_issue"]].sum()
+    out = out.join(counts).reset_index()
+    out["bucket"] = "bill_like"
+    out["gross_offering_bn"] = out["offering_amt"] / 1e9
+    out["maturing_estimate_bn"] = out["publicly_held_maturing_amt"] / 1e9
+    out["net_issuance_bn"] = out["gross_offering_bn"] - out["maturing_estimate_bn"]
+    out["maturing_from_auction_record_bn"] = out["record_maturing_amt"] / 1e9
+    out["issue_dates"] = out["bill_issue"].astype(int)
+    out["issue_dates_missing_maturing_estimate"] = out["no_estimate_issue"].astype(int)
+    out["issue_dates_cmb_only_missing_maturity"] = out["cmb_only_no_estimate_issue"].astype(int)
+    out["reconstruction_status"] = out["net_issuance_bn"].notna().map({True: "complete", False: "partial"})
+    return out
+
+
 def build_quarter_net_issuance_from_auctions(
     auctions_df: pd.DataFrame,
     *,
     quarters: list[str] | None = None,
 ) -> pd.DataFrame:
+    """Quarterly net issuance by auction bucket.
+
+    Bills come from ``bill_settlement_flows``: every bill issue and every bill maturity, cash
+    management bills included, on its settlement date. A bill quarter is ``complete`` only when
+    every flow in it has an amount. Non-bill buckets net each issue date's offerings against that
+    date's maturity estimate and remain support-only.
+    """
     missing = sorted(set(AUCTION_REQUIRED_COLUMNS) - set(auctions_df.columns))
     if missing:
         raise ValueError(
             "Auctions reconstruction is missing required columns: "
             + ", ".join(missing)
         )
+    wanted = {_string_or_empty(value) for value in quarters if _string_or_empty(value)} if quarters else None
+    bill_rows = auctions_df.apply(_classify_auction_bucket, axis=1).eq("bill_like")
+    bills = _quarter_bill_reconstruction(bill_settlement_flows(auctions_df), wanted) if bill_rows.any() else pd.DataFrame()
 
-    out = auctions_df.copy()
+    out = auctions_df.loc[~bill_rows].copy()
     out["issue_date"] = pd.to_datetime(out["issue_date"], errors="coerce")
     out["offering_amt"] = coerce_numeric(out["offering_amt"])
     out["est_pub_held_mat_by_type_amt"] = coerce_numeric(out["est_pub_held_mat_by_type_amt"])
-    out["bucket"] = out.apply(_classify_auction_bucket, axis=1)
+    out["bucket"] = out.apply(_classify_auction_bucket, axis=1) if not out.empty else pd.Series(dtype=str)
     out = out.dropna(subset=["issue_date", "offering_amt"])
     out["quarter"] = out["issue_date"].dt.to_period("Q").astype(str)
-    if quarters:
-        wanted = {_string_or_empty(value) for value in quarters if _string_or_empty(value)}
+    if wanted:
         out = out[out["quarter"].isin(wanted)]
 
-    by_date = (
-        out.groupby(["quarter", "bucket", "issue_date"], as_index=False, dropna=False)
-        .agg(
-            offering_amt=("offering_amt", "sum"),
-            est_pub_held_mat_by_type_amt=("est_pub_held_mat_by_type_amt", "min"),
-            cmb_only_issue_date=("cash_management_bill_cmb", lambda series: bool(series.fillna("").eq("Yes").all())),
+    quarter_bucket = pd.DataFrame()
+    if not out.empty:
+        by_date = (
+            out.groupby(["quarter", "bucket", "issue_date"], as_index=False)
+            .agg(
+                offering_amt=("offering_amt", "sum"),
+                est_pub_held_mat_by_type_amt=("est_pub_held_mat_by_type_amt", "min"),
+            )
         )
-        .sort_values(["quarter", "bucket", "issue_date"], kind="stable")
-    )
-    by_date["issue_date_has_maturity_estimate"] = by_date["est_pub_held_mat_by_type_amt"].notna()
-    by_date["net_issuance_amt"] = (
-        by_date["offering_amt"] - by_date["est_pub_held_mat_by_type_amt"]
-    )
-
-    quarter_bucket = (
-        by_date.groupby(["quarter", "bucket"], as_index=False)
-        .agg(
+        by_date["missing_estimate"] = by_date["est_pub_held_mat_by_type_amt"].isna()
+        by_date["net_issuance_amt"] = by_date["offering_amt"] - by_date["est_pub_held_mat_by_type_amt"]
+        quarter_bucket = by_date.groupby(["quarter", "bucket"], as_index=False).agg(
             gross_offering_amt=("offering_amt", "sum"),
             maturing_estimate_amt=("est_pub_held_mat_by_type_amt", "sum"),
             net_issuance_amt=("net_issuance_amt", "sum"),
             issue_dates=("issue_date", "nunique"),
-            issue_dates_missing_maturing_estimate=(
-                "issue_date_has_maturity_estimate",
-                lambda series: int((~series).sum()),
-            ),
+            issue_dates_missing_maturing_estimate=("missing_estimate", "sum"),
         )
-        .sort_values(["quarter", "bucket"], kind="stable")
-    )
-    cmb_only_missing = (
-        by_date.loc[~by_date["issue_date_has_maturity_estimate"]]
-        .groupby(["quarter", "bucket"], as_index=False)
-        .agg(
-            issue_dates_cmb_only_missing_maturity=(
-                "cmb_only_issue_date",
-                lambda series: int(series.fillna(False).sum()),
-            )
+        quarter_bucket["gross_offering_bn"] = quarter_bucket["gross_offering_amt"] / 1e9
+        quarter_bucket["maturing_estimate_bn"] = quarter_bucket["maturing_estimate_amt"] / 1e9
+        quarter_bucket["net_issuance_bn"] = quarter_bucket["net_issuance_amt"] / 1e9
+        quarter_bucket["issue_dates_cmb_only_missing_maturity"] = 0
+        quarter_bucket["reconstruction_status"] = (
+            quarter_bucket["issue_dates_missing_maturing_estimate"].eq(0).map({True: "complete", False: "partial"})
         )
-    )
-    quarter_bucket = quarter_bucket.merge(cmb_only_missing, on=["quarter", "bucket"], how="left")
-    quarter_bucket["issue_dates_cmb_only_missing_maturity"] = (
-        quarter_bucket["issue_dates_cmb_only_missing_maturity"].fillna(0).astype(int)
-    )
-    quarter_bucket["gross_offering_bn"] = quarter_bucket["gross_offering_amt"] / 1e9
-    quarter_bucket["maturing_estimate_bn"] = quarter_bucket["maturing_estimate_amt"] / 1e9
-    quarter_bucket["net_issuance_bn"] = quarter_bucket["net_issuance_amt"] / 1e9
-    quarter_bucket["reconstruction_status"] = quarter_bucket.apply(
-        lambda row: (
-            "complete"
-            if int(row["issue_dates_missing_maturing_estimate"])
-            == int(row["issue_dates_cmb_only_missing_maturity"])
-            else "partial"
-        ),
-        axis=1,
-    )
 
-    return quarter_bucket[
-        [
-            "quarter",
-            "bucket",
-            "gross_offering_bn",
-            "maturing_estimate_bn",
-            "net_issuance_bn",
-            "issue_dates",
-            "issue_dates_missing_maturing_estimate",
-            "issue_dates_cmb_only_missing_maturity",
-            "reconstruction_status",
-        ]
-    ].reset_index(drop=True)
+    columns = [
+        "quarter",
+        "bucket",
+        "gross_offering_bn",
+        "maturing_estimate_bn",
+        "net_issuance_bn",
+        "maturing_from_auction_record_bn",
+        "issue_dates",
+        "issue_dates_missing_maturing_estimate",
+        "issue_dates_cmb_only_missing_maturity",
+        "reconstruction_status",
+    ]
+    parts = [frame.reindex(columns=columns) for frame in (bills, quarter_bucket) if not frame.empty]
+    if not parts:
+        return pd.DataFrame(columns=columns)
+    return pd.concat(parts, ignore_index=True).sort_values(["quarter", "bucket"], kind="stable").reset_index(drop=True)
+
+
+def reconcile_net_bills_with_mspd(
+    net_bills_bn: pd.Series,
+    flows: pd.DataFrame,
+    mspd_table_1: pd.DataFrame,
+) -> pd.DataFrame:
+    """Reconcile quarterly private net bill issuance with the MSPD change in marketable bills.
+
+    Marketable bills outstanding (MSPD, quarter-end) change by every accepted bill, SOMA add-ons
+    included, less every bill maturity, SOMA-held included. Private net bill issuance counts
+    offering amounts and publicly held maturities, so
+
+        net bills = MSPD change + SOMA bill redemptions - awards above offering + residual,
+
+    where SOMA bill redemptions are SOMA-held bill maturities less SOMA add-ons. The residual
+    should be small; the part due to Treasury's published maturity estimate falling short of the
+    auction record of the same bills is reported as ``maturity_estimate_gap_bn``.
+
+    ``net_bills_bn`` is indexed by quarter label. Raises ValueError when any quarter lacks a
+    quarter-end MSPD stock at either end or any term is missing.
+    """
+    bills = mspd_table_1.loc[
+        mspd_table_1["security_type_desc"].eq("Marketable") & mspd_table_1["security_class_desc"].eq("Bills")
+    ].copy()
+    bills["record_date"] = pd.to_datetime(bills["record_date"], errors="coerce")
+    bills = bills[bills["record_date"].dt.is_month_end & bills["record_date"].dt.month.isin([3, 6, 9, 12])]
+    bills["quarter"] = bills["record_date"].dt.to_period("Q").astype(str)
+    if bills["quarter"].duplicated().any():
+        raise ValueError("MSPD has more than one quarter-end marketable bill stock for a quarter")
+    stock = bills.set_index("quarter")["total_mil_amt"].pipe(coerce_numeric) / 1e3
+
+    flows = flows.assign(quarter=pd.to_datetime(flows["date"]).dt.to_period("Q").astype(str))
+    terms = _group_sum_strict(
+        flows,
+        "quarter",
+        ["soma_held_maturing_amt", "soma_addon_amt", "award_above_offering_amt", "maturing_estimate_gap_amt"],
+    ) / 1e9
+
+    quarters = [str(quarter) for quarter in net_bills_bn.index]
+    out = pd.DataFrame({"quarter": quarters, "net_bills_bn": pd.to_numeric(net_bills_bn, errors="coerce").to_numpy()})
+    out["mspd_bills_start_bn"] = [stock.get(str(pd.Period(quarter, freq="Q") - 1)) for quarter in quarters]
+    out["mspd_bills_end_bn"] = [stock.get(quarter) for quarter in quarters]
+    out["mspd_bills_change_bn"] = out["mspd_bills_end_bn"] - out["mspd_bills_start_bn"]
+    by_quarter = terms.reindex(quarters)
+    out["soma_bill_redemptions_bn"] = (by_quarter["soma_held_maturing_amt"] - by_quarter["soma_addon_amt"]).to_numpy()
+    out["awards_above_offering_bn"] = by_quarter["award_above_offering_amt"].to_numpy()
+    out["mspd_implied_net_bills_bn"] = (
+        out["mspd_bills_change_bn"] + out["soma_bill_redemptions_bn"] - out["awards_above_offering_bn"]
+    )
+    out["residual_bn"] = out["net_bills_bn"] - out["mspd_implied_net_bills_bn"]
+    out["maturity_estimate_gap_bn"] = by_quarter["maturing_estimate_gap_amt"].to_numpy()
+    out["residual_after_estimate_gap_bn"] = out["residual_bn"] - out["maturity_estimate_gap_bn"]
+    gaps = out.loc[out.drop(columns="quarter").isna().any(axis=1), "quarter"].tolist()
+    if gaps:
+        raise ValueError("Net bill reconciliation has missing terms for quarters: " + ", ".join(gaps))
+    return out
 
 
 def enrich_capture_with_auction_reconstruction(
@@ -685,8 +861,9 @@ def enrich_capture_with_auction_reconstruction(
         )
 
     pivot = quarter_net_df.copy()
-    if "issue_dates_cmb_only_missing_maturity" not in pivot.columns:
-        pivot["issue_dates_cmb_only_missing_maturity"] = 0
+    for column in ("issue_dates_missing_maturing_estimate", "maturing_from_auction_record_bn"):
+        if column not in pivot.columns:
+            pivot[column] = 0
     pivot["quarter"] = pivot["quarter"].astype(str)
     pivot = pivot.pivot_table(
         index="quarter",
@@ -695,7 +872,8 @@ def enrich_capture_with_auction_reconstruction(
             "net_issuance_bn",
             "gross_offering_bn",
             "reconstruction_status",
-            "issue_dates_cmb_only_missing_maturity",
+            "issue_dates_missing_maturing_estimate",
+            "maturing_from_auction_record_bn",
         ],
         aggfunc="first",
     )
@@ -760,15 +938,21 @@ def enrich_capture_with_auction_reconstruction(
             "Non-bill auction buckets remain support-only because maturity estimates are not "
             "bucket-separable at the quarter level."
         )
-        cmb_only_missing = pd.to_numeric(
-            pd.Series([source.get("issue_dates_cmb_only_missing_maturity__bill_like")]),
+        unestimated = pd.to_numeric(
+            pd.Series(
+                [
+                    source.get("issue_dates_missing_maturing_estimate__bill_like"),
+                    source.get("maturing_from_auction_record_bn__bill_like"),
+                ]
+            ),
             errors="coerce",
-        ).iloc[0]
-        if pd.notna(cmb_only_missing) and int(cmb_only_missing) > 0:
+        ).fillna(0)
+        if (unestimated > 0).any():
             note = _merge_note(
                 note,
-                "CMB-only issue dates without same-day maturity estimates in the auctions feed are "
-                "treated as non-blocking for quarter-level bill reconstruction.",
+                "Bill offerings on issue dates without a published maturity estimate, mostly cash "
+                "management bills, are included, and bills maturing on such dates are netted at their "
+                f"auction-record amount ({_format_optional_float(unestimated.iloc[1])} bn).",
             )
         capture.at[idx, "notes"] = _merge_note(_string_or_empty(capture.at[idx, "notes"]), note)
     return capture

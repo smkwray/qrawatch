@@ -1,9 +1,12 @@
 """Rebuild the official quarter table and its completion table under a new directory.
 
 Runs the capture and auction-reconstruction step of script 13, the ATI step of script 17,
-and the two matching publish tables from explicit inputs. Nothing is written outside
+and the two matching publish tables from explicit inputs, then reconciles every quarter's net
+bill issuance with the MSPD change in marketable bills outstanding. Nothing is written outside
 --out-dir, so data/processed and output/publish keep their bytes. A receipt records the
-producer commit and the input and output hashes.
+producer commit and the input and output hashes. The build fails when a quarter's bill
+reconstruction is incomplete, when a reconciliation term is missing, or when a residual exceeds
+--max-mspd-residual-bn.
 """
 
 from __future__ import annotations
@@ -32,12 +35,14 @@ from ati_shadow_policy.publish import (
     build_official_capture_completion_publish_table,
 )
 from ati_shadow_policy.qra_capture import (
+    bill_settlement_flows,
     build_ati_input_from_official_capture,
     build_capture_completion_status,
     build_official_capture,
     build_quarter_net_issuance_from_auctions,
     enrich_capture_with_auction_reconstruction,
     read_capture_template,
+    reconcile_net_bills_with_mspd,
 )
 from ati_shadow_policy.research.ati_index import build_ati_index
 
@@ -48,6 +53,7 @@ OUTPUTS = {
     "ati_index": "processed/ati_index_official_capture.csv",
     "ati_quarter_table": "publish/ati_quarter_table.csv",
     "official_capture_completion": "publish/official_capture_completion.csv",
+    "net_bills_mspd_reconciliation": "publish/net_bills_mspd_reconciliation.csv",
 }
 
 
@@ -59,6 +65,13 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Official-quarter capture template (default: %(default)s).",
     )
     parser.add_argument("--auctions", required=True, help="FiscalData auctions_query CSV extract.")
+    parser.add_argument("--mspd", required=True, help="FiscalData mspd_table_1 CSV extract.")
+    parser.add_argument(
+        "--max-mspd-residual-bn",
+        type=float,
+        default=1.0,
+        help="Largest admissible absolute net-bill residual against MSPD, USD billions (default: %(default)s).",
+    )
     parser.add_argument("--out-dir", required=True, help="Directory for outputs; existing outputs are never replaced.")
     return parser.parse_args(argv)
 
@@ -107,13 +120,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     if existing:
         raise SystemExit(f"Refusing to replace existing outputs: {existing}")
 
-    template, auctions_path = Path(args.template), Path(args.auctions)
+    template, auctions_path, mspd_path = Path(args.template), Path(args.auctions), Path(args.mspd)
     auctions = pd.read_csv(auctions_path, low_memory=False)
     capture = build_official_capture(read_capture_template(template)).dataframe
-    reconstruction = build_quarter_net_issuance_from_auctions(
-        auctions,
-        quarters=capture["quarter"].dropna().astype(str).tolist(),
-    )
+    quarters = capture["quarter"].dropna().astype(str).tolist()
+    reconstruction = build_quarter_net_issuance_from_auctions(auctions, quarters=quarters)
+    bill_status = reconstruction.loc[reconstruction["bucket"].eq("bill_like")].set_index("quarter")["reconstruction_status"]
+    incomplete = [quarter for quarter in quarters if bill_status.get(quarter) != "complete"]
+    if incomplete:
+        raise SystemExit(f"Net bill reconstruction is incomplete or missing for: {', '.join(incomplete)}")
     capture = build_official_capture(enrich_capture_with_auction_reconstruction(capture, reconstruction)).dataframe
     write_df(reconstruction, targets["reconstruction"])
     write_df(build_capture_completion_status(capture, reconstruction), targets["completion_status"])
@@ -126,10 +141,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     write_df(table, targets["ati_quarter_table"])
     completion = build_official_capture_completion_publish_table(targets["completion_status"])
     write_df(completion, targets["official_capture_completion"])
+    reconciliation = reconcile_net_bills_with_mspd(
+        table.set_index("quarter")["net_bills_bn"], bill_settlement_flows(auctions), pd.read_csv(mspd_path)
+    )
+    write_df(reconciliation, targets["net_bills_mspd_reconciliation"])
+    residual = reconciliation.set_index("quarter")["residual_bn"]
+    over = residual[residual.abs() > args.max_mspd_residual_bn]
 
     documents, missing_documents = _source_documents(capture)
     status = _git("status", "--porcelain", "--untracked-files=no")
     meta_path = auctions_path.with_name(f"{auctions_path.stem}_meta.json")
+    mspd_meta = mspd_path.with_name(f"{mspd_path.stem}_meta.json")
     headline = completion["is_headline_ready"].astype(str).eq("True")
     receipt = {
         "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -142,6 +164,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                 **_file(auctions_path),
                 "max_record_date": str(auctions["record_date"].max()) if "record_date" in auctions else None,
                 "meta": _file(meta_path) if meta_path.exists() else None,
+            },
+            "mspd_table_1": {
+                **_file(mspd_path),
+                "max_record_date": str(pd.read_csv(mspd_path, usecols=["record_date"])["record_date"].max()),
+                "meta": _file(mspd_meta) if mspd_meta.exists() else None,
             },
             "source_documents": documents,
             "missing_source_documents": missing_documents,
@@ -167,10 +194,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             "max_net_bill_reconstruction_difference_usd_billions": float(
                 (pd.to_numeric(completion["net_bill_issuance_bn"]) - pd.to_numeric(completion["reconstructed_net_bill_issuance_bn"])).abs().max()
             ) if len(completion) else None,
+            "mspd_reconciliation": {
+                "identity": "net_bills_bn = mspd_bills_change_bn + soma_bill_redemptions_bn - awards_above_offering_bn + residual_bn",
+                "quarters": int(len(reconciliation)),
+                "max_abs_residual_usd_billions": float(residual.abs().max()),
+                "max_abs_residual_quarter": str(residual.abs().idxmax()),
+                "quarters_abs_residual_over_0_1bn": int((residual.abs() > 0.1).sum()),
+                "max_admissible_abs_residual_usd_billions": args.max_mspd_residual_bn,
+                "quarters_over_admissible": {quarter: float(value) for quarter, value in over.items()},
+                "max_abs_residual_after_estimate_gap_usd_billions": float(
+                    reconciliation["residual_after_estimate_gap_bn"].abs().max()
+                ),
+            },
         },
     }
     (out_dir / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
-    print(f"Saved {len(table)} official quarter rows and receipt to {out_dir}")
+    if not over.empty:
+        print(f"Net bills differ from MSPD by more than {args.max_mspd_residual_bn} bn in: {over.round(3).to_dict()}")
+        return 1
+    print(f"Saved {len(table)} official quarter rows, the MSPD reconciliation and receipt to {out_dir}")
     return 0
 
 

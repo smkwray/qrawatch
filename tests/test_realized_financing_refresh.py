@@ -126,7 +126,7 @@ def _template_row(quarter: str, release_date: str, financing: str, source: str) 
     return row
 
 
-def _inputs(tmp_path: Path, *, drop_release: str | None = None) -> tuple[Path, Path, Path]:
+def _inputs(tmp_path: Path, *, drop_release: str | None = None) -> tuple[Path, Path, Path, Path]:
     # Three quarters whose template values follow the three conventions found in the admitted
     # table: own-quarter estimate (2020Q1), following-quarter estimate misread as the quarter's
     # own (2020Q2), and the prior release's next-quarter estimate (2020Q3).
@@ -176,19 +176,36 @@ def _inputs(tmp_path: Path, *, drop_release: str | None = None) -> tuple[Path, P
             "record_date": ["2020-03-01", "2020-05-01", "2020-08-01"],
             "issue_date": ["2020-02-06", "2020-05-07", "2020-08-06"],
             "maturity_date": ["2020-05-07", "2020-08-06", "2020-11-05"],
+            "announcemt_date": ["2020-01-30", "2020-04-30", "2020-07-30"],
             "security_type": ["Bill", "Bill", "Bill"],
             "offering_amt": [100e9, 900e9, 50e9],
+            "total_accepted": [100e9, 900e9, 50e9],
+            "soma_accepted": [0.0, 0.0, 0.0],
+            "soma_holdings": [0.0, 0.0, 0.0],
             "est_pub_held_mat_by_type_amt": [60e9, 100e9, 900e9],
             "cash_management_bill_cmb": ["No", "No", "No"],
         }
     ).to_csv(auctions, index=False)
-    return out_dir, template, auctions
+    # Quarter-end marketable bills (USD millions) move by net bills of 40, 800 and -850.
+    mspd = tmp_path / "mspd_table_1.csv"
+    pd.DataFrame(
+        {
+            "record_date": ["2019-12-31", "2020-03-31", "2020-06-30", "2020-09-30"],
+            "security_type_desc": ["Marketable"] * 4,
+            "security_class_desc": ["Bills"] * 4,
+            "total_mil_amt": [1_000_000, 1_040_000, 1_840_000, 990_000],
+        }
+    ).to_csv(mspd, index=False)
+    return out_dir, template, auctions, mspd
 
 
 def test_build_puts_realized_borrowing_in_the_tilt_and_labels_what_it_replaced(tmp_path: Path):
-    out_dir, template, auctions = _inputs(tmp_path)
+    out_dir, template, auctions, mspd = _inputs(tmp_path)
     realized_csv = tmp_path / "realized.csv"
-    argv = ["build", "--out-dir", str(out_dir), "--template", str(template), "--auctions", str(auctions), "--realized", str(realized_csv)]
+    argv = [
+        "build", "--out-dir", str(out_dir), "--template", str(template), "--auctions", str(auctions),
+        "--mspd", str(mspd), "--realized", str(realized_csv),
+    ]
 
     assert realized_refresh.main(argv) == 0
 
@@ -217,11 +234,12 @@ def test_build_puts_realized_borrowing_in_the_tilt_and_labels_what_it_replaced(t
 def test_build_refuses_to_publish_a_table_with_a_missing_realized_quarter(tmp_path: Path):
     # Without the next quarter's release the quarter has no realized figure; the build must say
     # so and write no tilt table rather than drop the quarter or fall back to an estimate.
-    out_dir, template, auctions = _inputs(tmp_path, drop_release="2020Q4")
+    out_dir, template, auctions, mspd = _inputs(tmp_path, drop_release="2020Q4")
     realized_csv = tmp_path / "realized.csv"
 
     status = realized_refresh.main(
-        ["build", "--out-dir", str(out_dir), "--template", str(template), "--auctions", str(auctions), "--realized", str(realized_csv)]
+        ["build", "--out-dir", str(out_dir), "--template", str(template), "--auctions", str(auctions),
+         "--mspd", str(mspd), "--realized", str(realized_csv)]
     )
 
     assert status == 1
@@ -229,23 +247,3 @@ def test_build_refuses_to_publish_a_table_with_a_missing_realized_quarter(tmp_pa
     assert capture.loc["2020Q3", "status"] == "release_not_downloaded"
     assert pd.isna(capture.loc["2020Q3", "realized_financing_bn"])
     assert not (out_dir / "publish" / "ati_quarter_table.csv").exists()
-
-
-def test_coverage_diagnostic_counts_bill_flows_the_reconstruction_leaves_out():
-    # A CMB issued on a day with no maturing bills has no maturity estimate, so the
-    # reconstruction drops its offering; a CMB maturing on a day with no bill issue is never
-    # netted. The diagnostic reports both so the numerator gap is visible.
-    auctions = pd.DataFrame(
-        {
-            "issue_date": ["2021-10-07", "2021-10-13", "2021-10-28"],
-            "maturity_date": ["2022-01-06", "2021-10-15", "2021-12-15"],
-            "security_type": ["Bill", "Bill", "Bill"],
-            "cash_management_bill_cmb": ["No", "Yes", "Yes"],
-            "offering_amt": [100e9, 30e9, 40e9],
-            "est_pub_held_mat_by_type_amt": [90e9, None, 20e9],
-        }
-    )
-    gaps = realized_refresh.bill_coverage_gaps(auctions).set_index("quarter")
-
-    assert gaps.loc["2021Q4", "cmb_only_issue_offering_bn"] == pytest.approx(30.0)
-    assert gaps.loc["2021Q4", "unnetted_bill_maturities_bn"] == pytest.approx(70.0)
