@@ -1667,6 +1667,54 @@ def _extract_borrowing_amount_for_quarter(text: str, quarter: str) -> float | ob
     return pd.NA
 
 
+_FINANCING_SENTENCE_RE = re.compile(
+    r"(?:During|Over) the (?P<first>[A-Za-z]+)\s*[–—-]\s*(?P<last>[A-Za-z]+),?(?:\s+(?P<year>\d{4}))?\s+quarter,\s+"
+    r"(?:the\s+)?Treasury\s+(?P<verb>expects\s+to\s+(?:borrow|issue|pay\s+down)|borrowed|issued|pa[iy]ed\s+down|paid\s+down)\s+"
+    r"\$(?P<amount>\d[\d,]*(?:\.\d+)?)\s+(?P<unit>billion|trillion)(?:[^.]|(?<=\d)\.(?=\d))*\.",
+    flags=re.IGNORECASE,
+)
+_CALENDAR_QUARTER_MONTHS = {
+    ("january", "march"): 1,
+    ("april", "june"): 2,
+    ("july", "september"): 3,
+    ("october", "december"): 4,
+}
+
+
+def financing_sentences(text: str, release_date: str | None = None) -> list[dict[str, object]]:
+    """Each "During the <months> [year] quarter, Treasury ..." borrowing sentence in a release.
+
+    A financing release reports the completed quarter in the past tense ("borrowed", "paid
+    down") and estimates the current and next quarters ("expects to borrow"). kind is
+    "realized" or "estimate"; paydowns are negative. Some 2009 releases omit the year; it is
+    resolved from release_date as the only quarter with those months within one quarter of
+    the release. quarter is None when the months are not a calendar quarter or the year
+    cannot be resolved.
+    """
+    release = pd.Period(release_date, freq="Q") if release_date else None
+    rows: list[dict[str, object]] = []
+    for match in _FINANCING_SENTENCE_RE.finditer(text.replace("\xa0", " ")):
+        qnum = _CALENDAR_QUARTER_MONTHS.get((match.group("first").lower(), match.group("last").lower()))
+        quarter = None
+        if qnum and match.group("year"):
+            quarter = f"{match.group('year')}Q{qnum}"
+        elif qnum and release is not None:
+            near = [p for p in (release - 1, release, release + 1) if p.quarter == qnum]
+            quarter = f"{near[0].year}Q{qnum}" if near else None
+        verb = " ".join(match.group("verb").lower().split())
+        amount = float(match.group("amount").replace(",", ""))
+        amount = round(amount * (1000.0 if match.group("unit").lower() == "trillion" else 1.0), 6)
+        rows.append(
+            {
+                "quarter": quarter,
+                "kind": "estimate" if verb.startswith("expects") else "realized",
+                "amount_bn": -amount if verb.endswith("down") else amount,
+                "sentence": " ".join(match.group(0).split()),
+            }
+        )
+    return rows
+
+
 def _merge_pipe_values(primary: str, secondary: str) -> str:
     values: list[str] = []
     for raw in (primary, secondary):
