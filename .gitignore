@@ -50,7 +50,7 @@ docs/GPT_PRO_PRICING_AUDIT_PROMPT.md
 docs/GUIDANCE_KEYWORD_LIBRARY.md
 notes/
 references/
-site/data/_rsync_probe.csv
+site/
 
 # Private configuration and local session state
 .env.*

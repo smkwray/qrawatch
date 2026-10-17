@@ -1,6 +1,6 @@
 # QRA Watch
 
-[Results site](https://smkwray.github.io/qrawatch/) · [Data sources](DATA_SOURCES.md) · [Pricing methods](docs/PRICING_METHODS.md)
+[Data sources](DATA_SOURCES.md) · [Pricing methods](docs/PRICING_METHODS.md)
 
 QRA Watch measures the bill-versus-coupon composition of US Treasury financing and studies its associations with public duration supply, money-market conditions and interest rates. **QRA** means Quarterly Refunding Announcement. The project combines Treasury releases and auction data with Federal Reserve and public regulatory sources; it does not infer Treasury's motives from financing composition.
 
@@ -14,11 +14,11 @@ QRA Watch measures the bill-versus-coupon composition of US Treasury financing a
 | Release-level pricing at a fixed 63-business-day horizon | Supporting, provisional pricing design with one observation per release |
 | Financing-announcement event pilot | Bounded evidence requiring independently timed pre-release benchmarks |
 
-The retained site evidence covers official quarters from 2009Q1 through 2025Q4 and pricing results from the March 2026 snapshot. It does not establish fresh upstream data, a full-sample causal effect on long rates, a structural elasticity, or a stable regime coefficient. Illustrative scenario translations are not forecasts. A versioned measurement refresh is separate from the site snapshot and does not automatically update its pricing evidence.
+The retained pricing results use the March 2026 snapshot. They do not establish fresh upstream data, a full-sample causal effect on long rates, a structural elasticity, or a stable regime coefficient. Illustrative scenario translations are not forecasts. A versioned measurement refresh does not automatically update the pricing evidence.
 
 Financing estimates and realized financing are distinct objects with different information dates. The quarterly refresh supports realized privately held net borrowing, settlement-date bill issues and maturities, and reconciliation with the Monthly Statement of the Public Debt (MSPD). Realized borrowing cannot substitute for a pre-announcement expectation in an event design.
 
-The weekly plumbing/duration flow builder uses the same bill-settlement reconstruction as the quarterly path, including cash-management bills and maturity-only dates within the observed issue-date span. Missing amounts remain unavailable. The retained site snapshot has not been rebuilt with this arithmetic correction; its generating inputs and pricing conclusions remain unchanged.
+The weekly plumbing/duration flow builder uses the same bill-settlement reconstruction as the quarterly path, including cash-management bills and maturity-only dates within the observed issue-date span. Missing amounts remain unavailable. Changed financing inputs require a separately validated pricing rebuild before supporting new conclusions.
 
 ## Main measures
 
@@ -51,34 +51,17 @@ This runs the network-dependent acquisition and analytical pipeline and writes l
 
 The pipeline needs official capture inputs and source coverage beyond what unit tests prove. Missing benchmarks, uncertain event timing and failed identification checks remain explicit. Successful execution alone does not make a causal result admissible.
 
-The separate refresh entry points are `scripts/34_build_official_quarter_refresh.py` and `scripts/35_build_realized_financing_refresh.py`; use their `--help` output for required inputs and versioned output destinations. Their receipts keep source hashes and financing conventions separate from the default site bundle.
+The separate refresh entry points are `scripts/34_build_official_quarter_refresh.py` and `scripts/35_build_realized_financing_refresh.py`; use their `--help` output for required inputs and versioned output destinations. Their receipts retain source hashes and financing conventions separately from the pricing artifacts.
 
-## Outputs and website
+## Outputs
 
 | Path | Contents |
 |---|---|
 | `data/raw/`, `data/interim/`, `data/processed/` | Downloaded inputs and locally constructed panels |
 | `output/publish/` | Backend JSON/CSV summaries and evidence-status tables |
 | `output/figures/` | Backend-generated figures |
-| `site/data/`, `site/figures/` | Curated tracked snapshots consumed by the static frontend |
-| `site/data/index.json` | Manifest controlling which artifacts the frontend renders |
 
-Raw and processed data, output reports, logs, environments and caches are ignored. The site snapshots and documented manual capture inputs are intentional tracked release artifacts.
-
-To rebuild the local site snapshot after a backend build:
-
-```bash
-make pricing-figures PYTHON=python
-make site PYTHON=python
-```
-
-`make site` rebuilds publication summaries, validates and mirrors them into the tracked site bundle; it does not deploy the website. To view the existing snapshot without rebuilding it:
-
-```bash
-python -m http.server 8000 --directory site
-```
-
-The frontend reads the published JSON/CSV artifacts and figures, not raw or interim data. Numeric results, coverage, status counts and evidence roles come from backend artifacts.
+Raw and processed data, output reports, logs, environments and caches are ignored. Documented manual capture inputs are intentionally tracked. Numeric results, coverage, status counts and evidence roles come from backend artifacts with their generating inputs and producer identities.
 
 ## Documentation
 

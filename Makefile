@@ -1,7 +1,7 @@
 PYTHON ?= python3
 RUN = "$(PYTHON)" -B
 
-.PHONY: guard-env bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity causal-review identification identification-refresh absorption test download-core qra investor primary sec event plumbing duration pricing-panels pricing-regressions publish qra-quality backend-validate regenerate pricing-figures site
+.PHONY: guard-env bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity causal-review identification identification-refresh absorption test download-core qra investor primary sec event plumbing duration pricing-panels pricing-regressions publish qra-quality backend-validate regenerate pricing-figures
 
 guard-env:
 	@"$(PYTHON)" -c "import sys; assert sys.version_info >= (3, 10), 'Python 3.10 or later is required'"
@@ -94,16 +94,3 @@ backend-validate: guard-env
 	$(RUN) scripts/21_validate_backend.py
 
 regenerate: download-core qra qra-enrich official-capture official-ati investor primary sec seed event shock-template elasticity identification causal-review identification-refresh absorption plumbing duration pricing-panels pricing-regressions pricing-figures publish qra-quality backend-validate
-
-site: guard-env publish
-	@echo "Copying publish artifacts to site/data/..."
-	@mkdir -p site/data
-	@find site/data -maxdepth 1 -type f \( -name '*.json' -o -name '*.csv' \) -delete
-	@rsync -a --delete --include='*.json' --include='*.csv' --exclude='*' output/publish/ site/data/
-	$(RUN) scripts/32_build_site_bundle_manifest.py
-	$(RUN) scripts/21_validate_backend.py --site-dir site/data
-	@if [[ -d output/figures ]]; then \
-		mkdir -p site/figures; \
-		rsync -a --delete output/figures/ site/figures/ 2>/dev/null || true; \
-	fi
-	@echo "Site ready. Serve with: cd site && python3 -m http.server 8000"
