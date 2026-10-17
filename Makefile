@@ -1,20 +1,10 @@
-PYTHON := $(HOME)/venvs/qrawatch/bin/python
-SHELL := /bin/zsh
-EXPECTED_VENV := $(HOME)/venvs/qrawatch
-RUN = source .env && "$(MAKE)" --no-print-directory guard-env >/dev/null && "$(PYTHON)" -B
+PYTHON ?= python3
+RUN = "$(PYTHON)" -B
 
 .PHONY: guard-env bootstrap seed qra-enrich official-capture official-ati historical-seed shock-template elasticity causal-review identification identification-refresh absorption test download-core qra investor primary sec event plumbing duration pricing-panels pricing-regressions publish qra-quality backend-validate regenerate pricing-figures site
 
 guard-env:
-	@source .env && \
-	[[ "$${UV_PROJECT_ENVIRONMENT:-}" == "$(EXPECTED_VENV)" ]] || { echo "Error: UV_PROJECT_ENVIRONMENT must be $(EXPECTED_VENV)"; exit 1; } && \
-	[[ -x "$(PYTHON)" ]] || { echo "Error: expected external python at $(PYTHON)"; exit 1; } && \
-	forbidden="$$(find . -type d \( -name '.venv' -o -name 'venv' -o -name 'env' -o -name '__pycache__' -o -name '.pytest_cache' -o -name '.ruff_cache' -o -name '.mypy_cache' -o -name '.cache' \) -prune -print)"; \
-	if [[ -n "$$forbidden" ]]; then \
-		echo "Error: forbidden local env/cache directories found:"; \
-		echo "$$forbidden"; \
-		exit 1; \
-	fi
+	@"$(PYTHON)" -c "import sys; assert sys.version_info >= (3, 10), 'Python 3.10 or later is required'"
 
 bootstrap: guard-env
 	$(RUN) scripts/00_bootstrap.py

@@ -101,6 +101,11 @@ def test_aggregate_auction_net_flows_reconstructs_bill_and_nonbill_without_doubl
                 "Treasury Bond",
             ],
             "offering_amt": [100.0, 20.0, 50.0, 30.0, 40.0],
+            "announcemt_date": ["2025-12-30"] * 5,
+            "maturity_date": ["2026-02-05", "2026-02-05", "2028-01-06", "2028-01-06", "2056-01-13"],
+            "total_accepted": [100.0, 20.0, 50.0, 30.0, 40.0],
+            "soma_accepted": [0.0] * 5,
+            "soma_holdings": [0.0] * 5,
             "est_pub_held_mat_by_type_amt": [70.0, 70.0, 60.0, 60.0, 10.0],
             "cash_management_bill_cmb": ["No", "Yes", "No", "No", "No"],
             "floating_rate": ["No", "No", "No", "Yes", "No"],
@@ -141,3 +146,46 @@ def test_aggregate_auction_net_flows_reconstructs_bill_and_nonbill_without_doubl
     week2 = out.loc[out["date"] == pd.Timestamp("2026-01-14")].iloc[0]
     assert week2["bill_net_exact"] == 0.0
     assert week2["nonbill_net_exact"] == 30.0
+
+
+@pytest.mark.parametrize("missing_maturity_amount", [False, True])
+def test_weekly_bill_maturity_only_dates_and_missing_amounts(missing_maturity_amount):
+    auctions = pd.DataFrame({
+        "issue_date": ["2026-01-02", "2026-01-16"],
+        "announcemt_date": ["2025-12-30", "2026-01-13"],
+        "maturity_date": ["2026-01-09", "2026-02-13"],
+        "security_type": ["Cash Management Bill", "Bill"],
+        "cash_management_bill_cmb": ["Yes", "No"],
+        "offering_amt": [25.0, 80.0],
+        "total_accepted": [None if missing_maturity_amount else 27.0, 80.0],
+        "soma_accepted": [2.0, 0.0],
+        "soma_holdings": [0.0, 0.0],
+        "est_pub_held_mat_by_type_amt": [0.0, 60.0],
+    })
+    out = aggregate_auction_net_flows(auctions).set_index("date")
+    maturity = out.loc[pd.Timestamp("2026-01-14")]
+    assert maturity["bill_net_gross"] == 0.0
+    assert maturity["bill_net_issue_dates"] == 0
+    assert maturity["nonbill_net_exact"] == 0.0
+    if missing_maturity_amount:
+        assert pd.isna(maturity["bill_net_exact"])
+        assert pd.isna(maturity["headline_treasury_net_exact"])
+        assert maturity["bill_net_reconstruction_status"] == "partial"
+    else:
+        assert maturity["bill_net_maturing"] == 25.0
+        assert maturity["bill_net_exact"] == -25.0
+        assert maturity["headline_treasury_net_exact"] == -25.0
+        assert maturity["bill_net_reconstruction_status"] == "complete"
+        assert out["bill_net_exact"].sum() == 20.0
+    assert out.index.max() == pd.Timestamp("2026-01-21")
+
+
+def test_weekly_bill_flow_requires_settlement_schema():
+    auctions = pd.DataFrame({
+        "issue_date": ["2026-01-05"],
+        "security_type": ["Bill"],
+        "offering_amt": [100.0],
+        "est_pub_held_mat_by_type_amt": [70.0],
+    })
+    with pytest.raises(ValueError, match="missing required auction columns"):
+        aggregate_auction_net_flows(auctions)

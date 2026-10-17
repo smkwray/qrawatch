@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Iterable, Sequence
 
 import numpy as np
 import pandas as pd
 
 from ..io_utils import coerce_numeric, pick_first_existing
+from ..qra_capture import bill_settlement_flows
 
 
 TARGETS = (0.15, 0.18, 0.20)
@@ -120,6 +120,13 @@ def aggregate_auction_flows(df: pd.DataFrame, freq: str = "W-WED") -> pd.DataFra
 
 
 def aggregate_auction_net_flows(df: pd.DataFrame, freq: str = "W-WED") -> pd.DataFrame:
+    """Aggregate settlement flows within the input's observed issue-date span.
+
+    Bill maturities use the same reconstruction as the quarterly capture, including
+    maturity-only dates. Future maturities beyond the last observed issue date do
+    not establish future net financing. Nonbill maturity estimates retain their
+    issue-date convention.
+    """
     date_col = _require_auction_column(df.columns, AUCTION_DATE_CANDIDATES, "date")
     type_col = _require_auction_column(df.columns, AUCTION_TYPE_CANDIDATES, "security-type")
     amount_col = _require_auction_column(df.columns, AUCTION_AMOUNT_CANDIDATES, "amount")
@@ -131,17 +138,32 @@ def aggregate_auction_net_flows(df: pd.DataFrame, freq: str = "W-WED") -> pd.Dat
     out[maturity_col] = coerce_numeric(out[maturity_col])
     out["bucket"] = out.apply(lambda row: _classify_auction_row(row, type_col), axis=1)
     out["net_group"] = np.where(out["bucket"] == "bill_like", "bill_net", "nonbill_net")
+    scope_start, scope_end = out[date_col].min(), out[date_col].max()
+    has_bills = out["bucket"].eq("bill_like").any()
     out = out.dropna(subset=[date_col, amount_col])
 
     by_issue_date = (
-        out.groupby([date_col, "net_group"], as_index=False, dropna=False)
+        out.loc[out["bucket"].ne("bill_like")].groupby([date_col, "net_group"], as_index=False, dropna=False)
         .agg(
             gross_offering_amt=(amount_col, "sum"),
             maturing_estimate_amt=(maturity_col, "min"),
         )
         .sort_values([date_col, "net_group"], kind="stable")
     )
+    by_issue_date["issue_dates"] = 1
+    if has_bills:
+        bill_daily = bill_settlement_flows(df)
+        bill_daily = bill_daily.loc[bill_daily["date"].between(scope_start, scope_end)].copy()
+        bill_daily = bill_daily.rename(columns={
+            "date": date_col,
+            "offering_amt": "gross_offering_amt",
+            "publicly_held_maturing_amt": "maturing_estimate_amt",
+        })
+        bill_daily["net_group"] = "bill_net"
+        bill_daily["issue_dates"] = bill_daily["bill_issue"].astype(int)
+        by_issue_date = pd.concat([by_issue_date, bill_daily[by_issue_date.columns]], ignore_index=True)
     by_issue_date["has_maturity_estimate"] = by_issue_date["maturing_estimate_amt"].notna()
+    by_issue_date["has_required_amounts"] = by_issue_date[["gross_offering_amt", "maturing_estimate_amt"]].notna().all(axis=1)
     by_issue_date["net_issuance_amt"] = (
         by_issue_date["gross_offering_amt"] - by_issue_date["maturing_estimate_amt"]
     )
@@ -149,15 +171,16 @@ def aggregate_auction_net_flows(df: pd.DataFrame, freq: str = "W-WED") -> pd.Dat
     weekly = (
         by_issue_date.groupby([pd.Grouper(key=date_col, freq=freq), "net_group"], as_index=False, dropna=False)
         .agg(
-            gross_offering_amt=("gross_offering_amt", "sum"),
-            maturing_estimate_amt=("maturing_estimate_amt", "sum"),
-            net_issuance_amt=("net_issuance_amt", "sum"),
-            issue_dates=(date_col, "nunique"),
+            gross_offering_amt=("gross_offering_amt", lambda values: values.sum(min_count=len(values))),
+            maturing_estimate_amt=("maturing_estimate_amt", lambda values: values.sum(min_count=len(values))),
+            net_issuance_amt=("net_issuance_amt", lambda values: values.sum(min_count=len(values))),
+            issue_dates=("issue_dates", "sum"),
             issue_dates_missing_maturity=("has_maturity_estimate", lambda values: int((~values).sum())),
+            dates_missing_amounts=("has_required_amounts", lambda values: int((~values).sum())),
         )
         .sort_values([date_col, "net_group"], kind="stable")
     )
-    weekly["reconstruction_status"] = weekly["issue_dates_missing_maturity"].map(
+    weekly["reconstruction_status"] = weekly["dates_missing_amounts"].map(
         lambda count: "complete" if int(count) == 0 else "partial"
     )
 

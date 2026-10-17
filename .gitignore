@@ -51,3 +51,8 @@ docs/GUIDANCE_KEYWORD_LIBRARY.md
 notes/
 references/
 site/data/_rsync_probe.csv
+
+# Private configuration and local session state
+.env.*
+.private-denylist
+.*-private-denylist

@@ -1,108 +1,92 @@
 # QRA Watch
 
-**Treasury Maturity Composition Research**
+[Results site](https://smkwray.github.io/qrawatch/) · [Data sources](DATA_SOURCES.md) · [Pricing methods](docs/PRICING_METHODS.md)
 
-[View the public site](https://smkwray.github.io/qrawatch/)
+QRA Watch measures the bill-versus-coupon composition of US Treasury financing and studies its associations with public duration supply, money-market conditions and interest rates. **QRA** means Quarterly Refunding Announcement. The project combines Treasury releases and auction data with Federal Reserve and public regulatory sources; it does not infer Treasury's motives from financing composition.
 
-QRA Watch is an open, reproducible research and data product measuring whether Treasury's bill-versus-coupon mix operates like a shadow form of balance-sheet policy — changing public duration supply, term premia, and market plumbing. All data is sourced from public APIs and official filings: FiscalData, FRED, Treasury QRA documents, and SEC EDGAR.
+## Measurement and claim boundaries
 
-The project stays neutral about motive. It treats the underlying proposition as a testable empirical question, then maps it into official measurement, duration/plumbing mechanisms, and reduced-form pricing.
+| Evidence layer | Interpretation |
+|---|---|
+| Official quarterly financing and issuance | Descriptive measurement of Treasury maturity composition |
+| Plumbing and duration-supply regressions | Supporting, provisional mechanism context |
+| Monthly pricing regressions | Reduced-form associations with a longer sample and weaker identification |
+| Release-level pricing at a fixed 63-business-day horizon | Supporting, provisional pricing design with one observation per release |
+| Financing-announcement event pilot | Bounded evidence requiring independently timed pre-release benchmarks |
 
-## Claim boundary
+The retained site evidence covers official quarters from 2009Q1 through 2025Q4 and pricing results from the March 2026 snapshot. It does not establish fresh upstream data, a full-sample causal effect on long rates, a structural elasticity, or a stable regime coefficient. Illustrative scenario translations are not forecasts. A versioned measurement refresh is separate from the site snapshot and does not automatically update its pricing evidence.
 
-The evidence below describes the retained March 2026 snapshot. It does not establish fresh upstream evidence or new empirical results.
+Financing estimates and realized financing are distinct objects with different information dates. The quarterly refresh supports realized privately held net borrowing, settlement-date bill issues and maturities, and reconciliation with the Monthly Statement of the Public Debt (MSPD). Realized borrowing cannot substitute for a pre-announcement expectation in an event design.
 
-**What the evidence supports:** Official maturity-composition measurement, with exact official quarter coverage from 2009Q1 through 2025Q4 in the retained snapshot. Plumbing and duration-supply regressions provide supporting/provisional context. The snapshot also contains a narrow financing pilot with 14 financing components, 6 verified pre-release external benchmarks, 5 Tier A components, 8 source-family-exhausted blocked rows, and 0 open benchmark candidates.
+The weekly plumbing/duration flow builder uses the same bill-settlement reconstruction as the quarterly path, including cash-management bills and maturity-only dates within the observed issue-date span. Missing amounts remain unavailable. The retained site snapshot has not been rebuilt with this arithmetic correction; its generating inputs and pricing conclusions remain unchanged.
 
-**What the evidence does not establish:** A settled or full-sample causal estimate of Treasury issuance effects on long rates. The pricing layer remains supporting/provisional reduced-form evidence. Scenario translations are illustrative only.
+## Main measures
 
-## Evidence hierarchy
+- **Maturity Tilt:** bill-versus-coupon composition relative to a stated financing baseline.
+- **Maturity-Tilt Flow:** signed quarterly coupon shortfall relative to the 18% baseline bill share; positive values mean more bill-heavy financing.
+- **Excess Bills Stock:** the accumulated flow measure, distinct from a quarterly financing flow.
+- **Public Duration Supply:** duration placed with private holders. Federal Reserve Treasury runoff adds supply; buybacks remove it. The headline combines non-bill net supply with a quantitative-tightening proxy.
 
-| Lane | Description | Status |
-|------|-------------|--------|
-| **Official measurement** | Official maturity composition in the retained snapshot | Measurement only |
-| **Mechanism context** | Plumbing regressions and public duration supply in the retained snapshot | Supporting/provisional |
-| **Reduced-form context** | Monthly carry-forward Maturity-Tilt Flow specification | Supporting/provisional |
-| **Reduced-form credibility anchor** | Unique-release fixed-horizon +63bd flow design | Supporting/provisional |
-| **Bounded causal pilot** | Post-2022Q3 financing-estimates event design | Supporting, bounded |
-| **Supporting extensions** | Investor allotments, primary dealer, SEC N-MFP | Summary ready |
+See the [data dictionary](docs/DATA_DICTIONARY.md) for units, fields and construction details.
 
-The release-level +63bd design is the credibility anchor for the pricing layer. The monthly flow spec provides supporting context with a longer sample but weaker identification. The causal pilot is narrower and supporting — not the main pricing coefficient source in the retained snapshot.
+## Install and validate
 
-## Key terminology
-
-- **Maturity Tilt** — the quarter-level bill-versus-coupon composition object from official Treasury financing arithmetic
-- **Maturity-Tilt Flow** — the signed quarterly flow object measuring coupon shortfall relative to baseline
-- **Excess Bills Stock** — the cumulative stock object derived from the flow series
-- **Public Duration Supply** — the weekly duration-supply construction used in the duration and pricing layers
-
-See `docs/DATA_DICTIONARY.md` for internal field-level definitions.
-
-## Site architecture
-
-The public site at `site/index.html` is a static frontend (HTML + CSS + vanilla JS) that reads only from published backend artifacts:
-
-- **`site/data/`** — JSON and CSV artifacts mirrored from `output/publish/`
-- **`site/figures/`** — SVG figures mirrored from `output/figures/`
-- **`site/data/index.json`** — the artifact manifest used for conditional rendering
-
-The frontend never accesses raw or interim backend data. Numeric values, status counts, coverage windows, claim boundaries, and evidence-hierarchy roles are loaded from backend-generated artifacts at runtime. Some display labels, section prose, and model display ordering remain in frontend code. `make site` mirrors the current `output/publish/` artifacts into the site bundle.
-
-## Quickstart
+Requires Python 3.10 or later. In an activated environment:
 
 ```bash
-python3 -m venv ~/venvs/qrawatch
-"$HOME/venvs/qrawatch/bin/python" -m ensurepip --upgrade
-"$HOME/venvs/qrawatch/bin/python" -m pip install -r requirements.txt
-"$HOME/venvs/qrawatch/bin/python" -m pip install -e .
+python -m pip install -e ".[test]"
+make test PYTHON=python
+make bootstrap PYTHON=python
 ```
 
-If you have a local `.env` file with environment overrides (e.g. `VIRTUAL_ENV`), source it before running `make` commands.
+Tests use synthetic fixtures. `make bootstrap` only creates local data/output directories; it does not download data. No private configuration file or API key is needed for these commands.
 
-With network access:
+## Build with public data
 
 ```bash
-make bootstrap
-make test
-make regenerate
-make pricing-figures
-make site
+make regenerate PYTHON=python
 ```
 
-`make regenerate` runs the full backend pipeline. `make site` mirrors publish artifacts into the frontend bundle.
+This runs the network-dependent acquisition and analytical pipeline and writes local generated outputs. An exported `FRED_API_KEY` selects the FRED API; otherwise downloads use the public graph endpoint. Set `SEC_USER_AGENT` to an appropriate contact-bearing identifier for SEC acquisition. Keep credentials in the environment, outside tracked files.
 
-## Repository map
+The pipeline needs official capture inputs and source coverage beyond what unit tests prove. Missing benchmarks, uncertain event timing and failed identification checks remain explicit. Successful execution alone does not make a causal result admissible.
 
-- `README.md` — project overview, claim boundary, and evidence hierarchy
-- `DATA_SOURCES.md` — source registry
-- `docs/PRICING_METHODS.md` — pricing estimands, panel design, interpretation boundaries
-- `docs/PRICING_RESULTS_MEMO.md` — March 2026 coefficients and claim boundary
-- `docs/BENCHMARK_SEARCH_CLOSURE.md` — bounded benchmark-search closure memo
-- `docs/STATUS_GLOSSARY.md` — readiness/source-quality labels
-- `docs/DATA_DICTIONARY.md` — field-level definitions
-- `docs/REGRESSION_SPECS.md` — regression equations and layouts
-- `docs/QRA_CAPTURE_PROTOCOL.md` — official quarter-capture workflow
-- `src/ati_shadow_policy/` — reusable modules
-- `scripts/` — pipeline entry points
-- `tests/` — unit tests
+The separate refresh entry points are `scripts/34_build_official_quarter_refresh.py` and `scripts/35_build_realized_financing_refresh.py`; use their `--help` output for required inputs and versioned output destinations. Their receipts keep source hashes and financing conventions separate from the default site bundle.
 
-## Sign conventions
+## Outputs and website
 
-- Positive Maturity-Tilt Flow = more bill-heavy financing relative to the 18% baseline
-- Positive Public Duration Supply = more duration pushed into private hands
-- Positive QT contribution = Fed Treasury holdings falling
-- Buybacks enter the duration construction with opposite sign (they remove duration from public hands)
+| Path | Contents |
+|---|---|
+| `data/raw/`, `data/interim/`, `data/processed/` | Downloaded inputs and locally constructed panels |
+| `output/publish/` | Backend JSON/CSV summaries and evidence-status tables |
+| `output/figures/` | Backend-generated figures |
+| `site/data/`, `site/figures/` | Curated tracked snapshots consumed by the static frontend |
+| `site/data/index.json` | Manifest controlling which artifacts the frontend renders |
 
-## What is intentionally provisional
+Raw and processed data, output reports, logs, environments and caches are ignored. The site snapshots and documented manual capture inputs are intentional tracked release artifacts.
 
-- The pricing layer is reduced-form and published as supporting/provisional
-- Extension modules remain supporting context, not headline evidence
-- The duration headline combines exact non-bill net supply with a QT proxy
-- The QRA event and causal layers remain supporting audit surfaces
-- Pre-2009Q1 historical extension remains out of scope
+To rebuild the local site snapshot after a backend build:
 
-## What comes next
+```bash
+make pricing-figures PYTHON=python
+make site PYTHON=python
+```
 
-- Keep the QRA causal lane bounded rather than reopening broad benchmark hunts
-- Freeze the pricing claim boundary after the completed-month monthly lock
-- Shift effort toward frontend communication if no remaining backend task moves the claim boundary materially
+`make site` rebuilds publication summaries, validates and mirrors them into the tracked site bundle; it does not deploy the website. To view the existing snapshot without rebuilding it:
+
+```bash
+python -m http.server 8000 --directory site
+```
+
+The frontend reads the published JSON/CSV artifacts and figures, not raw or interim data. Numeric results, coverage, status counts and evidence roles come from backend artifacts.
+
+## Documentation
+
+- [Data sources](DATA_SOURCES.md)
+- [Pricing methods](docs/PRICING_METHODS.md) and [retained pricing results](docs/PRICING_RESULTS_MEMO.md)
+- [Regression specifications](docs/REGRESSION_SPECS.md)
+- [Official capture protocol](docs/QRA_CAPTURE_PROTOCOL.md)
+- [Evidence-status glossary](docs/STATUS_GLOSSARY.md)
+- [Data dictionary](docs/DATA_DICTIONARY.md)
+
+Reusable modules are under `src/ati_shadow_policy/`, command entry points under `scripts/`, and synthetic test fixtures under `tests/`.

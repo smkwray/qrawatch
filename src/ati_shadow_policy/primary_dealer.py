@@ -4,7 +4,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 from urllib.parse import urlparse
 
 import pandas as pd

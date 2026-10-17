@@ -17,7 +17,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from ati_shadow_policy.paths import MANUAL_DIR, OUTPUT_DIR, PROCESSED_DIR
-from ati_shadow_policy.qra_capture import ALLOWED_QA_STATUSES, OFFICIAL_QA_STATUSES
+from ati_shadow_policy.qra_capture import OFFICIAL_QA_STATUSES
 
 DEFAULT_OFFICIAL_CAPTURE = PROCESSED_DIR / "official_quarterly_refunding_capture.csv"
 DEFAULT_OFFICIAL_ATI = PROCESSED_DIR / "ati_index_official_capture.csv"

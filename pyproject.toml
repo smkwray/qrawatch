@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ati-shadow-policy"
 version = "0.1.0"
-description = "Research scaffold for Treasury maturity composition as shadow balance-sheet policy"
+description = "Public-data measurement of Treasury maturity composition and provisional pricing associations"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -32,3 +32,10 @@ where = ["src"]
 pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = "-p no:cacheprovider"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+# Script entry points add the checkout's src directory before package imports.
+"scripts/*.py" = ["E402"]

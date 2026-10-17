@@ -168,7 +168,7 @@ def main() -> None:
     )
 
     panel = (
-        auction_flows.merge(auction_net, on="date", how="left")
+        auction_flows.merge(auction_net, on="date", how="outer")
         .merge(fred[["date", "qt_proxy"]], on="date", how="left")
         .merge(buybacks_weekly, on="date", how="left")
     )

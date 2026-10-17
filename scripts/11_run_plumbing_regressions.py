@@ -239,7 +239,7 @@ def main() -> None:
     fred = fred[keep].copy().sort_values("date")
 
     panel = (
-        auction_flows.merge(auction_net, on="date", how="left")
+        auction_flows.merge(auction_net, on="date", how="outer")
         .merge(fred, on="date", how="left")
         .sort_values("date")
     )
