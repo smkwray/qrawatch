@@ -1,75 +1,104 @@
 # QRA Watch
 
-[Data sources](DATA_SOURCES.md) · [Pricing methods](docs/PRICING_METHODS.md)
+QRA Watch measures the bill-versus-coupon mix of US Treasury financing from Quarterly Refunding Announcements (QRAs) and FiscalData auction records, and estimates reduced-form regressions linking maturity mix and public duration supply to Treasury yields, term premia, and money-market conditions.
 
-QRA Watch measures the bill-versus-coupon composition of US Treasury financing and studies its associations with public duration supply, money-market conditions and interest rates. **QRA** means Quarterly Refunding Announcement. The project combines Treasury releases and auction data with Federal Reserve and public regulatory sources; it does not infer Treasury's motives from financing composition.
+## Data
 
-## Measurement and claim boundaries
+All inputs come from public US government sources (see [DATA_SOURCES.md](DATA_SOURCES.md)):
 
-| Evidence layer | Interpretation |
-|---|---|
-| Official quarterly financing and issuance | Descriptive measurement of Treasury maturity composition |
-| Plumbing and duration-supply regressions | Supporting, provisional mechanism context |
-| Monthly pricing regressions | Reduced-form associations with a longer sample and weaker identification |
-| Release-level pricing at a fixed 63-business-day horizon | Supporting, provisional pricing design with one observation per release |
-| Financing-announcement event pilot | Bounded evidence requiring independently timed pre-release benchmarks |
+- US Treasury Quarterly Refunding pages and archives: refunding statements, financing estimates, and Treasury Borrowing Advisory Committee (TBAC) materials.
+- FiscalData API: Treasury security auctions, Monthly Statement of the Public Debt (MSPD), Treasury buyback operations, average interest rates, debt outstanding, Daily Treasury Statement cash balances, and Monthly Treasury Statement receipts and outlays.
+- FRED: Treasury yields and 10-year term premia, federal funds rate, S&P 500, VIX, Federal Reserve balance-sheet items, and ON RRP balances.
+- Treasury Investor Class Auction Allotments, New York Fed Primary Dealer Statistics, and SEC Form N-MFP monthly and quarterly archives.
 
-The retained pricing results use the March 2026 snapshot. They do not establish fresh upstream data, a full-sample causal effect on long rates, a structural elasticity, or a stable regime coefficient. Illustrative scenario translations are not forecasts. A versioned measurement refresh does not automatically update the pricing evidence.
-
-Financing estimates and realized financing are distinct objects with different information dates. The quarterly refresh supports realized privately held net borrowing, settlement-date bill issues and maturities, and reconciliation with the Monthly Statement of the Public Debt (MSPD). Realized borrowing cannot substitute for a pre-announcement expectation in an event design.
-
-The weekly plumbing/duration flow builder uses the same bill-settlement reconstruction as the quarterly path, including cash-management bills and maturity-only dates within the observed issue-date span. Missing amounts remain unavailable. Changed financing inputs require a separately validated pricing rebuild before supporting new conclusions.
+Tracked CSV files under `data/manual/` hold hand-verified QRA release dates and financing figures.
 
 ## Main measures
 
-- **Maturity Tilt:** bill-versus-coupon composition relative to a stated financing baseline.
-- **Maturity-Tilt Flow:** signed quarterly coupon shortfall relative to the 18% baseline bill share; positive values mean more bill-heavy financing.
-- **Excess Bills Stock:** the accumulated flow measure, distinct from a quarterly financing flow.
-- **Public Duration Supply:** duration placed with private holders. Federal Reserve Treasury runoff adds supply; buybacks remove it. The headline combines non-bill net supply with a quantitative-tightening proxy.
+All three measures are reported in USD billions (see [the data dictionary](docs/DATA_DICTIONARY.md) for CSV column names):
 
-See the [data dictionary](docs/DATA_DICTIONARY.md) for units, fields and construction details.
+- Quarterly maturity-tilt flow: quarterly net bill issuance minus 18% of quarterly financing need (with 15% and 20% comparisons). Positive values indicate heavier bill issuance than an 18% bill share.
+- Monthly excess bills stock: monthly MSPD marketable bill share minus 18%, multiplied by total marketable debt outstanding. A separate cumulative series sums quarterly maturity-tilt flow over time.
+- Weekly public duration supply: weekly exact non-bill net Treasury issuance plus a quantitative-tightening proxy from Federal Reserve Treasury holdings minus accepted Treasury buybacks.
 
-## Install and validate
+## Install
 
-Requires Python 3.10 or later. In an activated environment:
+Requires Python 3.10 or later. From the repository root:
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate
 python -m pip install -e ".[test]"
-make test PYTHON=python
+```
+
+## Configuration
+
+Set credentials in the environment rather than tracked files:
+
+- `FRED_API_KEY` (optional) — selects the FRED JSON API (`api.stlouisfed.org`); when unset, downloads use the public FRED CSV endpoint.
+- `SEC_USER_AGENT` — contact-bearing User-Agent header for SEC Form N-MFP downloads (`scripts/06_download_sec_nmfp.py`).
+
+## Usage
+
+Create the local `data/` and `output/` directory tree without downloading data:
+
+```bash
 make bootstrap PYTHON=python
 ```
 
-Tests use synthetic fixtures. `make bootstrap` only creates local data/output directories; it does not download data. No private configuration file or API key is needed for these commands.
-
-## Build with public data
+Run the full public-data download, panel construction, regression, chart, and validation pipeline:
 
 ```bash
 make regenerate PYTHON=python
 ```
 
-This runs the network-dependent acquisition and analytical pipeline and writes local generated outputs. An exported `FRED_API_KEY` selects the FRED API; otherwise downloads use the public graph endpoint. Set `SEC_USER_AGENT` to an appropriate contact-bearing identifier for SEC acquisition. Keep credentials in the environment, outside tracked files.
+Individual pipeline steps are available as `Makefile` targets (`download-core`, `qra`, `official-capture`, `official-ati`, `investor`, `primary`, `sec`, `event`, `plumbing`, `duration`, `pricing-panels`, `pricing-regressions`, `pricing-figures`, `publish`, `qra-quality`, `backend-validate`).
 
-The pipeline needs official capture inputs and source coverage beyond what unit tests prove. Missing benchmarks, uncertain event timing and failed identification checks remain explicit. Successful execution alone does not make a causal result admissible.
+Two standalone scripts rebuild the quarterly financing table into a separate output directory without overwriting `data/processed/` or `output/publish/`:
 
-The separate refresh entry points are `scripts/34_build_official_quarter_refresh.py` and `scripts/35_build_realized_financing_refresh.py`; use their `--help` output for required inputs and versioned output destinations. Their receipts retain source hashes and financing conventions separately from the pricing artifacts.
+```bash
+python scripts/34_build_official_quarter_refresh.py \
+  --auctions data/raw/fiscaldata/auctions_query.csv \
+  --mspd data/raw/fiscaldata/mspd_table_1.csv \
+  --out-dir output/refresh_official
 
-## Outputs
+python scripts/35_build_realized_financing_refresh.py capture --out-dir output/refresh_realized
+python scripts/35_build_realized_financing_refresh.py build \
+  --auctions data/raw/fiscaldata/auctions_query.csv \
+  --mspd data/raw/fiscaldata/mspd_table_1.csv \
+  --out-dir output/refresh_realized
+```
 
-| Path | Contents |
-|---|---|
-| `data/raw/`, `data/interim/`, `data/processed/` | Downloaded inputs and locally constructed panels |
-| `output/publish/` | Backend JSON/CSV summaries and evidence-status tables |
-| `output/figures/` | Backend-generated figures |
+`scripts/34_build_official_quarter_refresh.py` reconciles settlement-date net bill issuance against MSPD Table 1 (default tolerance `$1.0B` via `--max-mspd-residual-bn`). `scripts/35_build_realized_financing_refresh.py` captures Treasury borrowing-estimate releases and replaces planned financing estimates with realized privately held net marketable borrowing reported in the following quarter's release.
 
-Raw and processed data, output reports, logs, environments and caches are ignored. Documented manual capture inputs are intentionally tracked. Numeric results, coverage, status counts and evidence roles come from backend artifacts with their generating inputs and producer identities.
+## Output
+
+Generated files are gitignored:
+
+- `data/raw/`, `data/interim/`, and `data/processed/` — downloaded source files and constructed weekly, monthly, and quarterly panels.
+- `output/publish/` — JSON and CSV summary tables for maturity mix, public duration supply, and pricing regressions.
+- `output/tables/` and `output/figures/` — intermediate analytical tables and generated charts.
+
+## Limits
+
+- Pricing regressions (release-level at horizons up to 63 business days, monthly carry-forward, and weekly duration-supply models) and money-market regressions are reduced-form associations; they do not establish structural interest-rate elasticities, Treasury policy motives, or forecasts.
+- Quarterly financing estimates and realized privately held net marketable borrowing have different publication dates; realized borrowing cannot stand in for pre-announcement expectations in an event study.
+- Full-pipeline builds require official QRA capture inputs beyond the synthetic test fixtures, and rebuilding financing tables via scripts 34 or 35 does not automatically rerun the pricing regressions.
 
 ## Documentation
 
 - [Data sources](DATA_SOURCES.md)
-- [Pricing methods](docs/PRICING_METHODS.md) and [retained pricing results](docs/PRICING_RESULTS_MEMO.md)
+- [Data dictionary](docs/DATA_DICTIONARY.md)
+- [Pricing methods](docs/PRICING_METHODS.md)
 - [Regression specifications](docs/REGRESSION_SPECS.md)
 - [Official capture protocol](docs/QRA_CAPTURE_PROTOCOL.md)
-- [Evidence-status glossary](docs/STATUS_GLOSSARY.md)
-- [Data dictionary](docs/DATA_DICTIONARY.md)
+- [Status glossary](docs/STATUS_GLOSSARY.md)
 
-Reusable modules are under `src/ati_shadow_policy/`, command entry points under `scripts/`, and synthetic test fixtures under `tests/`.
+## Tests
+
+The test suite uses synthetic fixtures and requires no network access or API keys:
+
+```bash
+make test PYTHON=python
+ruff check src tests scripts
+```
