@@ -21,6 +21,12 @@ All three measures are reported in USD billions (see [the data dictionary](docs/
 - Monthly excess bills stock: monthly MSPD marketable bill share minus 18%, multiplied by total marketable debt outstanding. A separate cumulative series sums quarterly maturity-tilt flow over time.
 - Weekly public duration supply: weekly exact non-bill net Treasury issuance plus a quantitative-tightening proxy from Federal Reserve Treasury holdings minus accepted Treasury buybacks.
 
+## Coverage
+
+Exact official quarter coverage currently spans 2009Q1 through 2026Q2.
+
+The causal test of quarterly financing estimates is a current-sample financing pilot with 14 current-sample financing components, 6 verified pre-release external benchmarks, 5 Tier A components, 8 source-family-exhausted blocked rows, and 0 open benchmark candidates. The current sample starts in 2022Q3. Tier A components pass every timing, separability, benchmark, and contamination check; source-family-exhausted rows have no credible pre-release public benchmark in any reviewed Treasury source (see the [status glossary](docs/STATUS_GLOSSARY.md)).
+
 ## Install
 
 Requires Python 3.10 or later. From the repository root:
