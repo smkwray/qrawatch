@@ -4,7 +4,7 @@
 
 The pricing layer estimates how Treasury maturity composition and public duration supply relate to long rates in reduced form.
 
-Public labels used in this round:
+Public labels:
 
 - `Maturity Tilt` = quarter-level financing composition object built from official quarter capture
 - `Maturity-Tilt Flow` = public label for internal field `ati_baseline_bn`
@@ -22,7 +22,7 @@ Supporting pricing outcome:
 
 ## Headline estimands
 
-The locked public estimand in this round is:
+The headline estimand is:
 
 **basis-point change in `DGS10` and `THREEFYTP10` per `$100bn` shock on the named quantity input.**
 
@@ -63,7 +63,7 @@ For the monthly carry-forward specifications, the panel is labeled at month-end 
 - sample start: `2009Q1`
 - role: published supporting context
 - interpretation: carry-forward monthly context spec; useful for scale and persistence, but not the main effective-shock design
-- note: this published context spec now carries `public_claim_role = supporting_context`; backend bookkeeping remains available through `pipeline_*` fields
+- note: this context spec carries `public_claim_role = supporting_context`; backend bookkeeping uses the `pipeline_*` fields
 
 `monthly_stock_baseline`
 
@@ -87,7 +87,7 @@ Inference uses HAC / Newey-West standard errors in every published pricing table
 
 ## Robustness pack
 
-Published robustness families in this round:
+Published robustness families:
 
 - `post_2009`
 - `post_2014`
@@ -111,7 +111,7 @@ Artifacts:
 - `pricing_tau_sensitivity_grid`
 - `pricing_scenario_translation`
 
-Published pricing artifacts now separate public claim fields from backend bookkeeping:
+Published pricing artifacts separate public claim fields from backend bookkeeping:
 
 - `public_claim_role` is the frontend/public field for rows such as `supporting_anchor`, `supporting_context`, or `supporting`
 - `public_readiness` carries the public readiness tier for the pricing pack, currently `supporting_provisional`
@@ -119,7 +119,7 @@ Published pricing artifacts now separate public claim fields from backend bookke
 
 ## Figure pack
 
-This round also publishes five SVG figures:
+The pricing layer also publishes five SVG figures:
 
 - `maturity_tilt_flow_vs_dgs10.svg`
 - `excess_bills_stock_vs_threefytp10.svg`
@@ -129,29 +129,23 @@ This round also publishes five SVG figures:
 
 The two overlay charts are standardized time-series comparisons. They are meant to show timing and sign patterns, not literal level equivalence.
 
-## Why the QRA lane stays supporting
+## Why the QRA event results are supporting only
 
-The event-causal lane is intentionally kept as supporting/pilot because benchmark-ready clean financing rows are still narrow relative to full-sample claims.
+The QRA event-causal results are a supporting pilot because benchmark-ready clean financing rows are few relative to the full sample:
 
-Current boundary:
-
-- the current-sample financing pilot exists and is audited
 - causal review fields and blocker states are explicit and machine-readable
-- the benchmark-search closure round is complete within the documented Treasury-hosted source universe
-- but the event sample remains too thin to serve as the sole headline pricing coefficient source
+- the documented Treasury-hosted benchmark sources were searched for every current-sample financing row
+- the event sample remains too thin to serve as the sole headline pricing coefficient source
 
-So the project structure in this round is:
-
-- headline center of gravity: official Maturity Tilt measurement + duration/plumbing + reduced-form pricing
-- supporting validation: QRA event and causal-pilot surfaces, used for auditability and consistency checks
+Headline results come from official Maturity Tilt measurement, duration/plumbing, and reduced-form pricing; the QRA event and causal-pilot outputs are used for auditability and consistency checks.
 
 ## Interpretation boundary
 
-Pricing coefficients should be interpreted as reduced-form relationships in this round. They are useful for direction, scale checks, and scenario arithmetic, but they are not yet a settled structural causal estimate.
+Pricing coefficients are reduced-form relationships. They are useful for direction, scale checks, and scenario arithmetic, but they are not yet a settled structural causal estimate.
 
 In practice:
 
-- the release-level Maturity-Tilt Flow design is now a unique-release fixed-horizon credibility test because it avoids repeating the same quarterly shock across many monthly rows and avoids variable next-release endpoints
+- the release-level Maturity-Tilt Flow design is a unique-release fixed-horizon credibility test because it avoids repeating the same quarterly shock across many monthly rows and avoids variable next-release endpoints
 - the monthly Maturity-Tilt Flow coefficient remains important context because it is currently the strongest negative reduced-form signal in the public outputs
 - the weekly Public Duration Supply coefficient is a useful duration-style pricing bridge, but it still needs careful sample scrutiny
 - the Excess Bills Stock coefficient is published because it is substantively important, not because it is already the strongest signal

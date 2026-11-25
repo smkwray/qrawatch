@@ -14,11 +14,11 @@ This project is designed around **free public data**.
 | FiscalData: DTS operating cash balance | Treasury cash balance detail | optional daily TGA / cash-management controls | `scripts/01_download_fiscaldata.py` |
 | FRED / H.4.1 core series | reserves, TGA, Fed Treasury holdings, term premium, yields | plumbing channel and price outcomes | `scripts/02_download_fred.py` |
 | Treasury Investor Class Auction Allotments | bidder / allotment splits by auction | investor-absorption extension | `scripts/05_download_investor_allotments.py` |
-| Treasury International Capital (TIC) | foreign transactions and holdings context | foreign-absorption extension | manual for now; add script later |
+| Treasury International Capital (TIC) | foreign transactions and holdings context | foreign-absorption extension | none (manual) |
 | SEC Form N-MFP | money market fund holdings and flows | MMF demand for bills and ON RRP substitution story | `scripts/06_download_sec_nmfp.py` |
 | New York Fed Primary Dealer Statistics | dealer positions, transactions, financing, and related activity | dealer-balance-sheet / market-plumbing extension | `scripts/07_download_primary_dealer.py` |
 
-## Core FRED series included in the scaffold
+## Core FRED series
 
 | Series ID | Use |
 |---|---|
@@ -37,7 +37,7 @@ This project is designed around **free public data**.
 | `TREAST` | Fed Treasury holdings |
 | `WALCL` | Fed total assets |
 
-## Core FiscalData datasets included in the scaffold
+## Core FiscalData datasets
 
 | Key | Endpoint |
 |---|---|
@@ -68,16 +68,4 @@ The SEC page notes a format transition: the datasets were updated to include **N
 The New York Fed provides export formats intended for automated consumption. Use those exports instead of scraping rendered tables.
 
 ### Investor allotments
-These are excellent for an extension on who absorbed the issuance, but they should not block the main pricing and plumbing paper.
-
-## Recommended minimal data set for a first paper draft
-
-You can get a publishable first pass from just these:
-
-1. manual quarter ATI seed
-2. QRA documents
-3. auctions data
-4. core FRED series
-5. buyback operations
-
-Everything else is an upgrade, not a prerequisite.
+These support an extension on who absorbed the issuance.

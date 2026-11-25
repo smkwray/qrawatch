@@ -170,7 +170,7 @@
 
 ### `data/processed/qra_release_component_registry.csv`
 
-- component-level registry used by the causal-credibility upgrade
+- component-level registry used for causal eligibility review
 - carries release timestamps, component separability, expectation/surprise provenance, contamination review, `quality_tier`, `eligibility_blockers`, and `causal_eligible`
 
 ### `data/processed/qra_causal_qa_ledger.csv`
@@ -180,14 +180,14 @@
 
 ### `data/processed/event_design_status.csv`
 
-- compact status surface for the causal-design upgrade
+- compact status surface for the causal event design
 - reports counts such as `tier_a_count`, `exact_time_component_count`, `reviewed_surprise_ready_count`, and `reviewed_clean_component_count`
 
 ### `data/processed/qra_event_elasticity.csv`
 
 - `shock_bn` — reviewed/manual canonical shock used for supporting event-layer summaries
 - `schedule_diff_10y_eq_bn` / `schedule_diff_dynamic_10y_eq_bn` / `schedule_diff_dv01_usd` — comparison treatments for audit and diagnostics
-- `descriptive_headline_reason` / `usable_for_descriptive_headline` — preferred descriptive-usability aliases for one round of public compatibility
+- `descriptive_headline_reason` / `usable_for_descriptive_headline` — preferred descriptive-usability aliases
 - `usable_for_headline` — compatibility field; descriptive usability flag, not a guarantee of causal eligibility
 
 ### `data/processed/qra_event_shock_summary.csv`
@@ -242,7 +242,7 @@
 
 ### Event-quality terminology
 
-The causal-credibility upgrade uses `quality_tier` values rather than prose labels:
+Event-facing outputs use `quality_tier` values rather than prose labels:
 
 - `Tier A` — causal-eligible
 - `Tier B` — reviewed descriptive-only

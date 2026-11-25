@@ -32,7 +32,7 @@ Headline estimand:
   - controls: `DFF`, `debt_limit_dummy`
   - sample: `2009-02-28` through `2026-02-28`
   - effective shocks shown in the current table equal monthly rows, so this spec remains context rather than the main credibility anchor
-  - note: monthly carry-forward tables are labeled at month-end and now publish only through the last completed month
+  - note: monthly carry-forward tables are labeled at month-end and publish only through the last completed month
 - `monthly_stock_baseline`
   - outcomes: `THREEFYTP10`, `DGS10`
   - controls: `DFF`, `debt_limit_dummy`
@@ -80,7 +80,7 @@ Current baseline coefficients in bp per `$100bn`:
 
 ## What survives robustness
 
-The fixed-horizon redesign cleaned up the release panel, but it did **not** yet produce a persuasive release-level elasticity.
+The fixed-horizon release panel does **not** yet produce a persuasive release-level elasticity.
 
 - the `+63bd` anchor keeps the expected negative sign
   - `post_2014`
@@ -160,7 +160,7 @@ The `+63bd` release-level anchor does not appear to be driven by one single rele
   - coefficient range: `-1.414` to `0.055` bp
   - p-value range: `0.265` to `0.959`
 
-So the fixed-horizon release-level flow design is cleaner than the prior variable-window implementation, but still too imprecise to displace the monthly flow result as the strongest published signal.
+So the fixed-horizon release-level flow design is still too imprecise to displace the monthly flow result as the strongest published signal.
 
 ## Horse race, standardized checks, and scenarios
 
@@ -199,14 +199,14 @@ Published scenario arithmetic:
   - `DGS10`: `14.557` bp
   - role: `illustrative_only`
 
-## Current claim boundary
+## Interpretation
 
 The strongest current reduced-form claim is:
 
-- the repo now has a cleaner unique-release fixed-horizon pricing panel, with same-day duplicate release rows collapsed into one pricing shock and a published horizon profile around the `+63bd` scalar
-- the monthly carry-forward pricing surface is now locked to completed months only; the strongest monthly flow signal survives that lock with nearly unchanged coefficients
+- the release-level pricing panel has one row per unique release, with same-day duplicate release rows collapsed into one pricing shock and a published horizon profile around the `+63bd` scalar
+- the monthly carry-forward pricing surface uses completed months only
 - the strongest current negative Maturity-Tilt signal still remains the **monthly carry-forward Maturity-Tilt Flow** relationship rather than the release-level anchor
-- the `+63bd` release-flow coefficient is directionally plausible, but still too small and imprecise to anchor the project by itself
+- the `+63bd` release-flow coefficient is directionally plausible, but still too small and imprecise to serve as the headline estimate by itself
 
 What remains out of bounds:
 

@@ -47,7 +47,7 @@ If a row is not `claim_scope = headline`, it should not be described as the head
 
 ## Event-quality tiers
 
-The causal-credibility upgrade uses a hard `quality_tier` ladder for event-facing outputs:
+Event-facing outputs use a hard `quality_tier` ladder:
 
 - `Tier A` — causal-eligible component or event summary. Exact timing, component separability, benchmark coverage, and contamination checks are satisfied.
 - `Tier B` — reviewed descriptive-only component or event summary. The release object is usable for descriptive monitoring, but at least one hard causal gate is still missing.
